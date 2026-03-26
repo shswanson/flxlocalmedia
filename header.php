@@ -49,7 +49,6 @@ function flxlm_fallback_menu() {
 		<li><a href="<?php echo esc_url( home_url( '/solutions/' ) ); ?>">Solutions</a></li>
 		<li><a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>">Client Stories</a></li>
 		<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>">About</a></li>
-		<li><a href="<?php echo esc_url( home_url( '/resources/' ) ); ?>">Resources</a></li>
 		<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact</a></li>
 	</ul>
 	<?php

@@ -70,15 +70,6 @@ get_header();
 						</p>
 					</div>
 				</div>
-
-				<!-- Calendar booking placeholder -->
-				<div style="margin-top: var(--space-2xl);">
-					<h2>Schedule a Conversation</h2>
-					<p style="color: var(--color-gray-500); font-size: var(--fs-sm);">Calendar booking embed will be added here.</p>
-					<div id="flxlm-calendar-embed">
-						<!-- Calendar embed (HubSpot Meetings or Calendly) goes here -->
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
