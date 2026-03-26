@@ -15,8 +15,9 @@ $featured = flxlm_get_testimonials( array(
 <section class="hero">
 	<div class="container hero__inner">
 		<div class="hero__content">
-			<h1 class="hero__title">Grow Your Business in the Finger Lakes</h1>
-			<p class="hero__subtitle">Radio. Digital. Events. Content. One team with total market reach across the Finger Lakes region.</p>
+			<p class="hero__problem">The problem local businesses face</p>
+			<h1 class="hero__title">Your customers drive 30&nbsp;minutes a day across the Finger&nbsp;Lakes. What are they hearing about&nbsp;you?</h1>
+			<p class="hero__subtitle">Most local businesses advertise in one place and hope for the best. We put you everywhere your customers already are — on 7 radio stations, across digital, at community events, and in the local news.</p>
 			<div class="hero__actions">
 				<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary btn--lg">Let's Talk</a>
 				<a href="<?php echo esc_url( home_url( '/solutions/' ) ); ?>" class="btn btn--outline btn--lg">Our Solutions</a>

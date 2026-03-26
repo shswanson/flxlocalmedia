@@ -10,20 +10,20 @@
 <section class="stats-row">
 	<div class="container stats-row__inner">
 		<div class="stats-row__item">
+			<div class="stats-row__number">160K<span>+</span></div>
+			<div class="stats-row__label">People in your market</div>
+		</div>
+		<div class="stats-row__item">
 			<div class="stats-row__number">7</div>
-			<div class="stats-row__label">Radio Stations</div>
+			<div class="stats-row__label">Stations reaching them daily</div>
 		</div>
 		<div class="stats-row__item">
-			<div class="stats-row__number">160K+</div>
-			<div class="stats-row__label">Market Reach</div>
+			<div class="stats-row__number">700K<span>+</span></div>
+			<div class="stats-row__label">Monthly digital pageviews</div>
 		</div>
 		<div class="stats-row__item">
-			<div class="stats-row__number">700K+</div>
-			<div class="stats-row__label">Digital Pageviews</div>
-		</div>
-		<div class="stats-row__item">
-			<div class="stats-row__number">3</div>
-			<div class="stats-row__label">Offices</div>
+			<div class="stats-row__number">3K<span>+</span></div>
+			<div class="stats-row__label">Newsletter subscribers</div>
 		</div>
 	</div>
 </section>
