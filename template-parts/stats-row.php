@@ -14,16 +14,12 @@
 			<div class="stats-row__label">People in your market</div>
 		</div>
 		<div class="stats-row__item">
-			<div class="stats-row__number">7</div>
-			<div class="stats-row__label">Stations reaching them daily</div>
-		</div>
-		<div class="stats-row__item">
 			<div class="stats-row__number">700K<span>+</span></div>
 			<div class="stats-row__label">Monthly digital pageviews</div>
 		</div>
 		<div class="stats-row__item">
-			<div class="stats-row__number">3K<span>+</span></div>
-			<div class="stats-row__label">Newsletter subscribers</div>
+			<div class="stats-row__number">7.5K<span>+</span></div>
+			<div class="stats-row__label">Monthly streaming listeners</div>
 		</div>
 	</div>
 </section>

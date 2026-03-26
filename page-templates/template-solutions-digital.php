@@ -77,20 +77,38 @@ get_header();
 </section>
 
 <!-- Stats -->
-<section class="section">
+<section class="section section--dark">
 	<div class="container">
-		<div class="stats-row">
-			<div class="stat">
-				<span class="stat__number">94%</span>
-				<span class="stat__label">of smartphone users search for local business info on their device</span>
+		<div class="stat-cards">
+			<div class="stat-card">
+				<div class="stat-card__ring" style="--stat-pct: 94;">
+					<svg viewBox="0 0 120 120" class="stat-card__svg">
+						<circle cx="60" cy="60" r="52" class="stat-card__track"/>
+						<circle cx="60" cy="60" r="52" class="stat-card__fill"/>
+					</svg>
+					<span class="stat-card__number">94<span>%</span></span>
+				</div>
+				<p class="stat-card__label">of smartphone users search for local business info on their device</p>
 			</div>
-			<div class="stat">
-				<span class="stat__number">85%</span>
-				<span class="stat__label">of consumers search online before choosing a local business</span>
+			<div class="stat-card">
+				<div class="stat-card__ring" style="--stat-pct: 85;">
+					<svg viewBox="0 0 120 120" class="stat-card__svg">
+						<circle cx="60" cy="60" r="52" class="stat-card__track"/>
+						<circle cx="60" cy="60" r="52" class="stat-card__fill"/>
+					</svg>
+					<span class="stat-card__number">85<span>%</span></span>
+				</div>
+				<p class="stat-card__label">of consumers search online before choosing a local business</p>
 			</div>
-			<div class="stat">
-				<span class="stat__number">86%</span>
-				<span class="stat__label">increase in conversions when landing pages include video</span>
+			<div class="stat-card">
+				<div class="stat-card__ring" style="--stat-pct: 86;">
+					<svg viewBox="0 0 120 120" class="stat-card__svg">
+						<circle cx="60" cy="60" r="52" class="stat-card__track"/>
+						<circle cx="60" cy="60" r="52" class="stat-card__fill"/>
+					</svg>
+					<span class="stat-card__number">86<span>%</span></span>
+				</div>
+				<p class="stat-card__label">increase in conversions when landing pages include video</p>
 			</div>
 		</div>
 	</div>

@@ -717,6 +717,82 @@ p + p {
 	font-weight: var(--fw-medium);
 }
 
+/* ---------- Dark Section ---------- */
+.section--dark {
+	background: var(--color-primary, #1a2e3b);
+	color: var(--color-white, #fff);
+}
+
+/* ---------- Stat Cards (ring charts) ---------- */
+.stat-cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 2.5rem;
+	text-align: center;
+}
+
+@media (max-width: 640px) {
+	.stat-cards {
+		grid-template-columns: 1fr;
+		max-width: 280px;
+		margin: 0 auto;
+	}
+}
+
+.stat-card__ring {
+	position: relative;
+	width: 140px;
+	height: 140px;
+	margin: 0 auto 1.25rem;
+}
+
+.stat-card__svg {
+	width: 100%;
+	height: 100%;
+	transform: rotate(-90deg);
+}
+
+.stat-card__track {
+	fill: none;
+	stroke: rgba(255, 255, 255, 0.15);
+	stroke-width: 8;
+}
+
+.stat-card__fill {
+	fill: none;
+	stroke: var(--color-accent, #d2613a);
+	stroke-width: 8;
+	stroke-linecap: round;
+	stroke-dasharray: calc(2 * 3.14159 * 52);
+	stroke-dashoffset: calc(2 * 3.14159 * 52 * (1 - var(--stat-pct) / 100));
+	transition: stroke-dashoffset 1s ease;
+}
+
+.stat-card__number {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: var(--font-display);
+	font-size: 2.5rem;
+	font-weight: 400;
+	color: var(--color-white, #fff);
+}
+
+.stat-card__number span {
+	font-size: 1.5rem;
+	opacity: 0.7;
+}
+
+.stat-card__label {
+	font-size: var(--fs-sm);
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.8);
+	max-width: 220px;
+	margin: 0 auto;
+}
+
 /* ---------- Video Facade ---------- */
 .video-facade {
 	position: relative;
