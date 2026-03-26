@@ -37,7 +37,8 @@ function flxlm_enqueue_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'flxlm_enqueue_assets' );
 
-// Include CPT, helpers, forms.
+// Include CPT, helpers, forms, SEO.
 require_once get_template_directory() . '/inc/cpt-testimonials.php';
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/forms.php';
+require_once get_template_directory() . '/inc/seo.php';
