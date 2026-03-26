@@ -448,27 +448,7 @@ function flxlm_seo_jsonld_review() {
 }
 
 /*--------------------------------------------------------------
- * 4. robots.txt — add sitemap directive
- *--------------------------------------------------------------*/
-
-add_filter( 'robots_txt', 'flxlm_seo_robots_txt', 10, 2 );
-
-/**
- * Append Sitemap directive to WordPress virtual robots.txt.
- *
- * @param string $output Current robots.txt content.
- * @param bool   $public Whether the site is public.
- * @return string
- */
-function flxlm_seo_robots_txt( $output, $public ) {
-	if ( $public ) {
-		$output .= "\nSitemap: " . home_url( '/wp-sitemap.xml' ) . "\n";
-	}
-	return $output;
-}
-
-/*--------------------------------------------------------------
- * 5. Utility
+ * 4. Utility
  *--------------------------------------------------------------*/
 
 /**
