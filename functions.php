@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FLXLM_VERSION', '1.0.0' );
+define( 'FLXLM_VERSION', '2.0.0' );
 
 /**
  * Theme setup.
@@ -31,7 +31,7 @@ add_action( 'after_setup_theme', 'flxlm_setup' );
  * Enqueue styles and scripts.
  */
 function flxlm_enqueue_assets() {
-	wp_enqueue_style( 'flxlm-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', array(), null );
+	wp_enqueue_style( 'flxlm-fonts', 'https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap', array(), null );
 	wp_enqueue_style( 'flxlm-style', get_template_directory_uri() . '/assets/css/style.css', array( 'flxlm-fonts' ), FLXLM_VERSION );
 	wp_enqueue_script( 'flxlm-main', get_template_directory_uri() . '/assets/js/main.js', array(), FLXLM_VERSION, true );
 }

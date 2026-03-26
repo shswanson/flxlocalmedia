@@ -18,8 +18,8 @@ $featured = flxlm_get_testimonials( array(
 			<h1 class="hero__title">Grow Your Business in the Finger Lakes</h1>
 			<p class="hero__subtitle">Radio. Digital. Events. Content. One team with total market reach across the Finger Lakes region.</p>
 			<div class="hero__actions">
-				<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--white btn--lg">Request Pricing</a>
-				<a href="<?php echo esc_url( home_url( '/resources/checklist/' ) ); ?>" class="btn btn--secondary btn--lg" style="border-color: rgba(255,255,255,0.4); color: var(--color-white);">Take the Assessment</a>
+				<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary btn--lg">Let's Talk</a>
+				<a href="<?php echo esc_url( home_url( '/solutions/' ) ); ?>" class="btn btn--outline btn--lg">Our Solutions</a>
 			</div>
 		</div>
 		<div class="hero__media">

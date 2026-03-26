@@ -22,17 +22,10 @@ get_header();
 	<div class="container">
 		<div class="resources-featured">
 			<div class="resource-card">
-				<span class="resource-card__tag">Free Tool</span>
-				<h2 class="resource-card__title">Marketing Assessment</h2>
-				<p class="resource-card__desc">Answer 40 quick questions to see how your marketing stacks up. Get a personalized score and actionable recommendations.</p>
-				<a href="<?php echo esc_url( home_url( '/resources/checklist/' ) ); ?>" class="btn btn--primary">Take the Assessment</a>
-			</div>
-
-			<div class="resource-card">
 				<span class="resource-card__tag">Client Stories</span>
 				<h2 class="resource-card__title">Video Testimonials</h2>
 				<p class="resource-card__desc">Watch Finger Lakes business owners share how radio, digital, and multi-channel marketing helped them grow.</p>
-				<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="btn btn--secondary">Watch Stories</a>
+				<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="btn btn--primary">Watch Stories</a>
 			</div>
 		</div>
 	</div>

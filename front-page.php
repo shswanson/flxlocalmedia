@@ -79,7 +79,4 @@ get_template_part( 'template-parts/stats-row' );
 </section>
 
 <?php
-// Assessment CTA.
-get_template_part( 'template-parts/cta-assessment' );
-
 get_footer();
