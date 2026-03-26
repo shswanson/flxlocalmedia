@@ -29,9 +29,14 @@ $featured = flxlm_get_testimonials( array(
 					<?php flxlm_video_facade( get_the_ID() ); ?>
 				<?php endwhile; wp_reset_postdata(); ?>
 			<?php else : ?>
-				<div class="video-facade">
-					<div class="video-facade__placeholder"></div>
-				</div>
+				<img
+					class="hero__image"
+					src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=1200&q=80"
+					alt="Finger Lakes vineyard overlooking the water"
+					width="1200"
+					height="800"
+					loading="eager"
+				/>
 			<?php endif; ?>
 		</div>
 	</div>

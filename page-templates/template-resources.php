@@ -7,6 +7,10 @@
  * @package flxlm
  */
 
+// Resources page is hidden until content is ready.
+wp_safe_redirect( home_url( '/' ), 302 );
+exit;
+
 get_header();
 ?>
 
