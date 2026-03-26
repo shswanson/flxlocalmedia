@@ -20,8 +20,9 @@ get_header();
 	<div class="container">
 		<div class="post-content" style="max-width: 720px; margin: 0 auto;">
 			<h2>Our Story</h2>
-			<p>FLX Local Media is a full-service marketing company rooted in the Finger Lakes region. We combine the trusted reach of 7 radio stations with modern digital marketing to help local businesses grow.</p>
-			<p>We know this market because we live in it. Our team is in Geneva, Canandaigua, and Penn Yan — attending the same events, shopping at the same stores, and supporting the same communities as your customers.</p>
+			<p>FLX Local Media is a full-service marketing company rooted in the Finger Lakes region. We combine the trusted reach of 7 radio stations with a full-service digital marketing team and Finger Lakes Daily News to help local businesses grow.</p>
+			<p>Our digital division — formerly FLX Digital — brings over a decade of experience in web design, SEO, video production, social media, and targeted advertising. That expertise now works hand-in-hand with our radio stations and events team to give businesses a truly integrated marketing partner.</p>
+			<p>We know this market because we live in it. Our team is in Geneva, Auburn, and Penn Yan — attending the same events, shopping at the same stores, and supporting the same communities as your customers.</p>
 			<p>That local knowledge, combined with professional marketing expertise, is what sets us apart from agencies that "cover" the Finger Lakes from an office in Rochester or Syracuse.</p>
 		</div>
 	</div>

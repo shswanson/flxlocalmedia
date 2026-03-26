@@ -51,22 +51,22 @@ get_header();
 					<div class="office">
 						<h3 class="office__name">Geneva</h3>
 						<p class="office__address">
-							Geneva, NY 14456<br />
-							<!-- Full address to be added -->
+							3568 Lenox Road, Suite A<br />
+							Geneva, NY 14456
 						</p>
 					</div>
 					<div class="office">
-						<h3 class="office__name">Canandaigua</h3>
+						<h3 class="office__name">Auburn</h3>
 						<p class="office__address">
-							Canandaigua, NY 14424<br />
-							<!-- Full address to be added -->
+							5998 Experimental Road, Suite A<br />
+							Auburn, NY 13021
 						</p>
 					</div>
 					<div class="office">
 						<h3 class="office__name">Penn Yan</h3>
 						<p class="office__address">
-							Penn Yan, NY 14527<br />
-							<!-- Full address to be added -->
+							103 Main Street, Suite A<br />
+							Penn Yan, NY 14527
 						</p>
 					</div>
 				</div>

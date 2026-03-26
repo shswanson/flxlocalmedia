@@ -42,9 +42,9 @@
 			<div class="site-footer__col">
 				<h4 class="site-footer__heading">Contact</h4>
 				<ul>
-					<li>Geneva, NY</li>
-					<li>Canandaigua, NY</li>
-					<li>Penn Yan, NY</li>
+					<li>Geneva, NY 14456</li>
+					<li>Auburn, NY 13021</li>
+					<li>Penn Yan, NY 14527</li>
 				</ul>
 			</div>
 		</div>
