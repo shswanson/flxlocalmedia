@@ -136,14 +136,14 @@ function flxlm_get_stations() {
 		array(
 			'name'      => 'WGVA',
 			'call_sign' => 'WGVA',
-			'frequency' => '95.9 FM / 1240 AM',
+			'frequency' => '95.9 / 106.3 FM / 1240 AM',
 			'format'    => 'News, talk, and community information',
 			'demo'      => '',
 		),
 		array(
 			'name'      => 'WAUB',
 			'call_sign' => 'WAUB',
-			'frequency' => '98.1 FM / 1590 AM',
+			'frequency' => '96.3 / 98.1 FM / 1590 AM',
 			'format'    => 'News, talk, and local sports',
 			'demo'      => '',
 		),
