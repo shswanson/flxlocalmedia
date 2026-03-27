@@ -189,6 +189,9 @@ function flxlm_seo_page_descriptions() {
 		'content-marketing' => 'Content marketing on Finger Lakes Daily News. Sponsored content, display advertising, and native articles reaching 700,000+ monthly pageviews.',
 		'about'             => 'FLX Local Media owns seven radio stations and Finger Lakes Daily News. Offices in Geneva, Auburn, and Penn Yan serving the Finger Lakes region.',
 		'contact'           => 'Contact FLX Local Media for advertising, marketing, and media solutions in the Finger Lakes. Offices in Geneva, Auburn, and Penn Yan.',
+		'geneva'            => 'Contact FLX Local Media\'s Geneva office for radio, digital, events, and content marketing solutions in the Finger Lakes.',
+		'auburn'            => 'Contact FLX Local Media\'s Auburn office for radio, digital, events, and content marketing solutions in the Finger Lakes.',
+		'penn-yan'          => 'Contact FLX Local Media\'s Penn Yan office for radio, digital, events, and content marketing solutions in the Finger Lakes.',
 		'testimonials'      => 'Hear from Finger Lakes businesses growing with FLX Local Media. Video testimonials, results, and real stories from our clients.',
 	);
 }
@@ -207,8 +210,34 @@ function flxlm_seo_title_overrides() {
 		'content-marketing' => 'Content Marketing on Finger Lakes Daily News | FLX Local Media',
 		'about'             => 'About FLX Local Media | Local Media Company in the Finger Lakes',
 		'contact'           => 'Contact Us | FLX Local Media | Geneva, Auburn & Penn Yan',
+		'geneva'            => 'Contact Our Geneva Office | FLX Local Media',
+		'auburn'            => 'Contact Our Auburn Office | FLX Local Media',
+		'penn-yan'          => 'Contact Our Penn Yan Office | FLX Local Media',
 		'testimonials'      => 'Client Stories | FLX Local Media',
 	);
+}
+
+/*--------------------------------------------------------------
+ * 1b. Canonical Override for Contact Child Pages
+ *--------------------------------------------------------------*/
+
+add_filter( 'get_canonical_url', 'flxlm_seo_contact_canonical', 10, 2 );
+
+/**
+ * Point contact child pages (Geneva, Auburn, Penn Yan) to /contact/.
+ *
+ * @param string  $canonical The canonical URL.
+ * @param WP_Post $post      The post object.
+ * @return string
+ */
+function flxlm_seo_contact_canonical( $canonical, $post ) {
+	if ( $post->post_parent ) {
+		$parent = get_post( $post->post_parent );
+		if ( $parent && 'contact' === $parent->post_name ) {
+			return get_permalink( $parent );
+		}
+	}
+	return $canonical;
 }
 
 /*--------------------------------------------------------------
@@ -377,6 +406,16 @@ function flxlm_seo_jsonld_breadcrumbs() {
 				'position' => $pos++,
 				'name'     => 'Solutions',
 				'item'     => home_url( '/solutions/' ),
+			);
+		}
+
+		$contact_location_slugs = array( 'geneva', 'auburn', 'penn-yan' );
+		if ( in_array( $slug, $contact_location_slugs, true ) ) {
+			$items[] = array(
+				'@type'    => 'ListItem',
+				'position' => $pos++,
+				'name'     => 'Contact',
+				'item'     => home_url( '/contact/' ),
 			);
 		}
 

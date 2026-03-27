@@ -38,6 +38,7 @@ function flxlm_render_contact_form() {
 	<form class="flxlm-form" method="post" action="<?php echo esc_url( $action ); ?>">
 		<?php wp_nonce_field( $nonce_action, 'flxlm_form_nonce' ); ?>
 		<input type="hidden" name="action" value="flxlm_contact_submit" />
+		<input type="hidden" name="source_page" value="<?php echo esc_attr( get_the_title() . ' (' . get_permalink() . ')' ); ?>" />
 
 		<div class="flxlm-form__row flxlm-form__row--two">
 			<div class="flxlm-form__field">
@@ -113,6 +114,7 @@ function flxlm_handle_contact_submit() {
 		'business_name' => sanitize_text_field( $_POST['business_name'] ?? '' ),
 		'interest'      => sanitize_text_field( $_POST['interest'] ?? '' ),
 		'message'       => sanitize_textarea_field( $_POST['message'] ?? '' ),
+		'source_page'   => sanitize_text_field( $_POST['source_page'] ?? '' ),
 	);
 
 	// Send notification email.
@@ -122,7 +124,8 @@ function flxlm_handle_contact_submit() {
 	$body .= "Email: {$data['email']}\n";
 	$body .= "Phone: {$data['phone']}\n";
 	$body .= "Business: {$data['business_name']}\n";
-	$body .= "Interest: {$data['interest']}\n\n";
+	$body .= "Interest: {$data['interest']}\n";
+	$body .= "Source: {$data['source_page']}\n\n";
 	$body .= "Message:\n{$data['message']}\n";
 
 	wp_mail( $to, $subject, $body );

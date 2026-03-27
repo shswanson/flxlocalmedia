@@ -58,7 +58,9 @@ function flxlm_fallback_menu() {
 	?>
 	<ul class="site-nav__list">
 		<li><a href="<?php echo esc_url( home_url( '/solutions/' ) ); ?>">Solutions</a></li>
-		<li><a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>">Client Stories</a></li>
+		<?php if ( wp_count_posts( 'flxlm_testimonial' )->publish > 0 ) : ?>
+			<li><a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>">Client Stories</a></li>
+		<?php endif; ?>
 		<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>">About</a></li>
 		<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact</a></li>
 	</ul>

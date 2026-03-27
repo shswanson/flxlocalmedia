@@ -33,7 +33,9 @@
 				<h4 class="site-footer__heading">Company</h4>
 				<ul>
 					<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>">About Us</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>">Client Stories</a></li>
+					<?php if ( wp_count_posts( 'flxlm_testimonial' )->publish > 0 ) : ?>
+						<li><a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>">Client Stories</a></li>
+					<?php endif; ?>
 					<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact</a></li>
 				</ul>
 			</div>
@@ -41,9 +43,9 @@
 			<div class="site-footer__col">
 				<h4 class="site-footer__heading">Contact</h4>
 				<ul>
-					<li>Geneva, NY 14456</li>
-					<li>Auburn, NY 13021</li>
-					<li>Penn Yan, NY 14527</li>
+					<li><a href="<?php echo esc_url( home_url( '/contact/geneva/' ) ); ?>">Geneva</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/contact/auburn/' ) ); ?>">Auburn</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/contact/penn-yan/' ) ); ?>">Penn Yan</a></li>
 				</ul>
 			</div>
 		</div>

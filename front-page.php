@@ -56,6 +56,10 @@ get_template_part( 'template-parts/stats-row' );
 </section>
 
 <!-- Testimonials Section -->
+<?php
+$testimonials = flxlm_get_testimonials( array( 'posts_per_page' => 3 ) );
+if ( $testimonials->have_posts() ) :
+?>
 <section class="section section--wash" style="background: var(--color-white, #fff);">
 	<div class="container">
 		<div class="section__header section__header--center">
@@ -63,22 +67,17 @@ get_template_part( 'template-parts/stats-row' );
 			<h2 class="section__title">Your Neighbors Trust Us With Their Marketing</h2>
 			<p class="section__subtitle">Auto dealers, restaurants, insurance agents, flooring companies — hundreds of businesses across the Finger Lakes.</p>
 		</div>
-
-		<?php
-		$testimonials = flxlm_get_testimonials( array( 'posts_per_page' => 3 ) );
-		if ( $testimonials->have_posts() ) :
-		?>
-			<div class="testimonial-grid">
-				<?php while ( $testimonials->have_posts() ) : $testimonials->the_post(); ?>
-					<?php get_template_part( 'template-parts/testimonial-card' ); ?>
-				<?php endwhile; wp_reset_postdata(); ?>
-			</div>
-			<div class="text-center" style="margin-top: var(--space-2xl);">
-				<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="btn btn--secondary">See All Client Stories</a>
-			</div>
-		<?php endif; ?>
+		<div class="testimonial-grid">
+			<?php while ( $testimonials->have_posts() ) : $testimonials->the_post(); ?>
+				<?php get_template_part( 'template-parts/testimonial-card' ); ?>
+			<?php endwhile; wp_reset_postdata(); ?>
+		</div>
+		<div class="text-center" style="margin-top: var(--space-2xl);">
+			<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="btn btn--secondary">See All Client Stories</a>
+		</div>
 	</div>
 </section>
+<?php endif; ?>
 
 <?php
 get_footer();

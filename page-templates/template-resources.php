@@ -24,14 +24,16 @@ get_header();
 <!-- Featured Resources -->
 <section class="section">
 	<div class="container">
-		<div class="resources-featured">
-			<div class="resource-card">
-				<span class="resource-card__tag">Client Stories</span>
-				<h2 class="resource-card__title">Video Testimonials</h2>
-				<p class="resource-card__desc">Watch Finger Lakes business owners share how radio, digital, and multi-channel marketing helped them grow.</p>
-				<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="btn btn--primary">Watch Stories</a>
+		<?php if ( wp_count_posts( 'flxlm_testimonial' )->publish > 0 ) : ?>
+			<div class="resources-featured">
+				<div class="resource-card">
+					<span class="resource-card__tag">Client Stories</span>
+					<h2 class="resource-card__title">Video Testimonials</h2>
+					<p class="resource-card__desc">Watch Finger Lakes business owners share how radio, digital, and multi-channel marketing helped them grow.</p>
+					<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="btn btn--primary">Watch Stories</a>
+				</div>
 			</div>
-		</div>
+		<?php endif; ?>
 	</div>
 </section>
 
