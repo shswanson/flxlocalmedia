@@ -164,7 +164,7 @@ function flxlm_get_stations() {
 		array(
 			'name'      => 'WFLR',
 			'call_sign' => 'WFLR',
-			'frequency' => '96.1 FM / 1570 AM',
+			'frequency' => '96.1 / 96.9 / 101.9 FM / 1570 AM',
 			'format'    => 'New country and classic favorites',
 			'demo'      => '',
 		),
