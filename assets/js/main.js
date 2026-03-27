@@ -54,6 +54,21 @@
 		facade.appendChild(video);
 
 		video.play();
+
+		/* Push video_play event to GTM dataLayer */
+		var title = facade.getAttribute('data-title') || facade.getAttribute('alt') || '';
+		if (!title) {
+			var card = facade.closest('.testimonial-card');
+			if (card) {
+				var nameEl = card.querySelector('.testimonial-card__name');
+				title = nameEl ? nameEl.textContent.trim() : '';
+			}
+		}
+		window.dataLayer = window.dataLayer || [];
+		window.dataLayer.push({
+			event: 'video_play',
+			video_title: title
+		});
 	});
 
 	/* ---------- Transcript Toggle ---------- */
