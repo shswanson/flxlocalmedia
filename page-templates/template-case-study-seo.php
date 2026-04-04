@@ -9,9 +9,6 @@
  */
 
 get_header();
-
-// Pull the static case study HTML from the dashboard repo (or inline it).
-// Using a self-contained approach: all styles + charts inline.
 ?>
 
 <style>
@@ -21,10 +18,15 @@ get_header();
 .cs-wrap img { max-width: 100%; height: auto; }
 .cs-wrap a { color: #1E5B70; }
 .cs-wrap ul { list-style: disc; }
+/* Fix hero h1 — site heading styles override to blue; force white in the dark hero */
+.cs-wrap .hero h1,
+.cs-wrap .hero__title,
+.cs-wrap h1 { color: #fff !important; }
+/* Hide the site-wide "Ready to grow?" CTA on this page */
+.cta-banner { display: none !important; }
 </style>
 
 <?php
-// Read the static HTML and extract only the body content (between <body> and </body>)
 $html_path = get_template_directory() . '/case-study-seo-content.html';
 if ( file_exists( $html_path ) ) {
 	echo '<div class="cs-wrap">';
@@ -33,7 +35,7 @@ if ( file_exists( $html_path ) ) {
 	echo '</div>';
 } else {
 	echo '<div class="container" style="padding:4rem 0;text-align:center;">';
-	echo '<h1>Case Study</h1><p>Content file not found. Deploy case-study-seo-content.html to the theme directory.</p>';
+	echo '<h1>Case Study</h1><p>Content file not found.</p>';
 	echo '</div>';
 }
 
