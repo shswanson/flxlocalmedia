@@ -882,6 +882,18 @@ a:hover { text-decoration: underline; }
             <div class="impl-card__stat">73% of all organic clicks</div>
         </div>
     </div>
+
+    <div class="two-col mt-lg" style="align-items:center;">
+        <div>
+            <h3 style="font-size:18px; font-weight:800; margin-bottom:8px; letter-spacing:-0.3px;">AI Search Is Already Here</h3>
+            <p style="font-size:13px; line-height:1.7; color:var(--color-text-light);">One of the less obvious benefits of comprehensive structured data: it makes your content legible to AI systems, not just traditional search crawlers. Since the structured data rollout, referral traffic from ChatGPT has grown from ~3 sessions/week to over 60&mdash;a 20x increase. AI engines like ChatGPT, Perplexity, and Copilot are citing FLDN articles directly in their responses.</p>
+            <p style="font-size:13px; line-height:1.7; color:var(--color-text-light); margin-top:12px;">This is the emerging discipline of <a href="https://huckabuy.com/generative-engine-optimization-geo/" target="_blank" rel="noopener"><strong>Generative Engine Optimization (GEO)</strong></a>&mdash;ensuring your content surfaces in AI-generated answers, not just traditional SERPs. The structured data architecture Huckabuy designed is already paying dividends in this new channel, and we expect it to accelerate as AI search adoption grows.</p>
+        </div>
+        <div class="card">
+            <div class="card__head">Weekly Sessions from ChatGPT (GA4)</div>
+            <div class="card__body"><canvas id="chartGEO"></canvas></div>
+        </div>
+    </div>
 </div>
 </section>
 
@@ -979,5 +991,11 @@ new Chart(document.getElementById('chartCache'),{type:'line',data:{
     labels:['Mar 2','Mar 10','Mar 11','Mar 19','Mar 27','Mar 28','Mar 30','Mar 31','Apr 1','Apr 2','Apr 3','Apr 4'],
     datasets:[{data:[64.9,51.0,33.0,28.2,69.2,62.3,76.4,58.5,87.5,88.4,87.4,87.5],borderColor:sage,backgroundColor:'rgba(90,158,111,0.08)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:sage,borderWidth:2}]
 },options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,grid:{color:gridColor},ticks:{callback:function(v){return v+'%';}}},x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10}}}}}});
+
+// GEO - ChatGPT referral traffic
+new Chart(document.getElementById('chartGEO'),{type:'bar',data:{
+    labels:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'],
+    datasets:[{data:[10,7,7,6,5,6,14,20,22],backgroundColor:function(ctx){return ctx.dataIndex>=6?teal:'rgba(30,91,112,0.25)';},borderRadius:4,barPercentage:0.7}]
+},options:{responsive:true,plugins:{legend:{display:false},annotation:{annotations:{line1:{type:'line',xMin:5.5,xMax:5.5,borderColor:'rgba(148,110,22,0.4)',borderWidth:1,borderDash:[4,4],label:{display:true,content:'Acquisition',position:'start',font:{size:9},color:ochre}}}}},scales:{y:{beginAtZero:true,grid:{color:gridColor},title:{display:true,text:'Avg weekly sessions',font:{size:10}}},x:{grid:{display:false}}}}});
 })();
 </script>
