@@ -1,0 +1,981 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --color-primary: #1E5B70;
+    --color-primary-dark: #164350;
+    --color-ochre: #946E16;
+    --color-purple: #6B2FA0;
+    --color-blue: #2B7AB8;
+    --color-text: #1d2327;
+    --color-text-light: #646970;
+    --color-text-muted: #8c8f94;
+    --color-border: #e2e4e8;
+    --color-bg: #f6f7f9;
+    --color-white: #fff;
+    --color-success: #00a32a;
+    --color-error: #d63638;
+    --color-warn: #dba617;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Layout */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+.wrap--wide { max-width: 1080px; }
+
+/* Hero */
+.hero {
+    background: linear-gradient(135deg, #1E5B70 0%, #164350 40%, #0d2f3a 100%);
+    color: #fff;
+    padding: 56px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(148,110,22,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.hero__eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+}
+.hero__title {
+    font-size: clamp(28px, 4.5vw, 42px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    max-width: 720px;
+    margin-bottom: 16px;
+}
+.hero__sub {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    max-width: 600px;
+}
+
+/* KPI row */
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: -48px;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 2;
+}
+@media (max-width: 700px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+.kpi {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px;
+    text-align: center;
+}
+.kpi__value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+}
+.kpi__value--sm { font-size: 26px; }
+.kpi__label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 6px;
+}
+.kpi__delta {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-success);
+    margin-top: 4px;
+}
+
+/* Sections */
+.sect {
+    padding: 48px 0;
+}
+.sect--alt {
+    background: var(--color-white);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+.sect--dark {
+    background: linear-gradient(135deg, #1E5B70 0%, #0d2f3a 100%);
+    color: #fff;
+    border: none;
+}
+.sect__eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-ochre);
+    margin-bottom: 6px;
+}
+.sect--dark .sect__eyebrow { color: rgba(255,255,255,0.4); }
+.sect__title {
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+.sect--dark .sect__title { color: #fff; }
+.sect__lead {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    max-width: 640px;
+    margin-bottom: 32px;
+}
+.sect--dark .sect__lead { color: rgba(255,255,255,0.7); }
+
+/* Cards */
+.card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.card__head {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+.card__body { padding: 16px; }
+.card canvas { max-height: 300px; }
+
+/* Before/After */
+.ba-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+@media (max-width: 600px) { .ba-grid { grid-template-columns: 1fr; } }
+.ba-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+}
+.ba-card--before { border-left: 3px solid var(--color-text-muted); }
+.ba-card--after { border-left: 3px solid var(--color-success); }
+.ba-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+    margin-bottom: 12px;
+}
+.ba-score {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+.ba-card--before .ba-score { color: var(--color-text-muted); }
+.ba-card--after .ba-score { color: var(--color-success); }
+.ba-ctx {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 6px;
+}
+
+/* Implementation grid */
+.impl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+.impl-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px;
+}
+.impl-card__icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.impl-card__icon--teal { background: rgba(30,91,112,0.1); }
+.impl-card__icon--ochre { background: rgba(148,110,22,0.1); }
+.impl-card__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 6px;
+}
+.impl-card__desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-light);
+}
+.impl-card__stat {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Schema table */
+.schema-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.schema-tbl thead { background: var(--color-primary); color: #fff; }
+.schema-tbl th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.schema-tbl td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+.schema-tbl tbody tr:hover { background: #f9fafb; }
+.schema-tbl code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: #f0f0f2;
+    padding: 2px 5px;
+    border-radius: 3px;
+    color: var(--color-primary);
+}
+
+/* Two-col */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+/* Timeline */
+.timeline { padding-left: 24px; position: relative; }
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--color-border);
+}
+.tl-item { position: relative; margin-bottom: 24px; }
+.tl-item::before {
+    content: '';
+    position: absolute;
+    left: -21px; top: 5px;
+    width: 10px; height: 10px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    border: 2px solid var(--color-bg);
+}
+.tl-date {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-ochre);
+    margin-bottom: 2px;
+}
+.tl-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.tl-desc { font-size: 13px; color: var(--color-text-light); line-height: 1.6; }
+
+/* Callout */
+.callout {
+    background: rgba(30,91,112,0.06);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--color-primary);
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-light);
+}
+.callout strong { color: var(--color-text); }
+
+/* Storm banner */
+.storm-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    margin: 24px 0;
+}
+@media (max-width: 700px) { .storm-grid { grid-template-columns: 1fr; } }
+.storm-num {
+    text-align: center;
+}
+.storm-num__val {
+    font-size: clamp(36px, 7vw, 56px);
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    letter-spacing: -1px;
+}
+.storm-num__label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+}
+.storm-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+}
+.storm-row .storm-num__val { font-size: clamp(24px, 4vw, 32px); }
+
+/* Index list */
+.idx-col { font-size: 13px; line-height: 1.8; color: var(--color-text-light); }
+.idx-col ul { padding-left: 20px; margin: 4px 0 12px; }
+.idx-label { font-weight: 700; font-size: 12px; }
+.idx-label--yes { color: var(--color-success); }
+.idx-label--no { color: var(--color-error); }
+.idx-label--gone { color: var(--color-text-muted); }
+
+/* Footer */
+.cs-footer {
+    background: var(--color-primary);
+    color: #fff;
+    text-align: center;
+    padding: 48px 0;
+}
+.cs-footer__title {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+}
+.cs-footer__sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    max-width: 520px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+}
+.cs-footer .btn {
+    display: inline-block;
+    background: #fff;
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 28px;
+    border-radius: var(--radius);
+    transition: background 0.2s;
+}
+.cs-footer .btn:hover { background: #f0f0f0; text-decoration: none; }
+
+/* Storm photo */
+.storm-photo {
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 24px 0;
+}
+.storm-photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.storm-photo__caption {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    padding: 8px 0 0;
+    font-style: italic;
+}
+
+/* JSON-LD code block */
+.code-block {
+    background: #1d2327;
+    color: #e0e4e8;
+    border-radius: var(--radius);
+    padding: 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 16px 0;
+    max-height: 320px;
+    overflow-y: auto;
+}
+.code-block .key { color: #7ec8e3; }
+.code-block .str { color: #a8d4a0; }
+.code-block .punct { color: #8c8f94; }
+
+/* Early results banner */
+.early-banner {
+    background: rgba(219,166,23,0.08);
+    border: 1px solid rgba(219,166,23,0.25);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 24px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.early-banner__icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.early-banner__text { font-size: 13px; line-height: 1.6; color: var(--color-text-light); }
+.early-banner__text strong { color: var(--color-text); }
+
+/* Utility */
+.mb-sm { margin-bottom: 12px; }
+.mb-md { margin-bottom: 24px; }
+.mb-lg { margin-bottom: 32px; }
+.mt-md { margin-top: 24px; }
+.mt-lg { margin-top: 32px; }
+.text-sm { font-size: 13px; }
+.text-muted { color: var(--color-text-light); }
+.tbl-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--color-border); }
+</style>
+
+<!-- Hero -->
+<section class="hero">
+<div class="wrap">
+    <p class="hero__eyebrow">Case Study &mdash; Finger Lakes Daily News</p>
+    <h1 class="hero__title">AI-Driven Technical SEO: 90 Days From Acquisition to Storm-Proof</h1>
+    <p class="hero__sub">How a local news site rebuilt its entire technical SEO foundation with AI-powered engineering &mdash; then a major storm proved the system could scale.</p>
+</div>
+</section>
+
+<!-- KPIs -->
+<div class="wrap wrap--wide">
+<div class="kpi-row">
+    <div class="kpi">
+        <div class="kpi__value">54&rarr;99</div>
+        <div class="kpi__label">Mobile PageSpeed</div>
+        <div class="kpi__delta">+45 points</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value">7.4%</div>
+        <div class="kpi__label">Organic CTR</div>
+        <div class="kpi__delta">Up from 4.6%</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value kpi__value--sm">1.6M</div>
+        <div class="kpi__label">Storm Day Requests</div>
+        <div class="kpi__delta">87.5% cache hit rate</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value kpi__value--sm">12+</div>
+        <div class="kpi__label">Schema Types</div>
+        <div class="kpi__delta">Full structured data</div>
+    </div>
+</div>
+</div>
+
+<!-- Challenge -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">The Challenge</p>
+    <h2 class="sect__title">A Legacy News Site With Untapped Potential</h2>
+    <p class="sect__lead">When FLX Local Media acquired Finger Lakes Daily News in January 2026, the site had loyal readership but virtually no technical SEO infrastructure. No structured data. No performance optimization. No monitoring. No strategy for which content should&mdash;or shouldn't&mdash;be indexed.</p>
+    <div class="two-col">
+        <div>
+            <p class="text-sm text-muted" style="line-height:1.7;">The site was running on WordPress with default settings, serving a mix of original local reporting and syndicated national content through unoptimized templates. Lighthouse scores hovered around 54 on mobile and 69 on desktop. There was no JSON-LD structured data, no canonical URL strategy, and no mechanism to prevent thin or duplicate content from diluting the site's authority in search.</p>
+            <p class="text-sm text-muted mt-md" style="line-height:1.7;">The goal: build a technical SEO foundation that lets the journalism shine in search&mdash;without months of manual optimization cycles. We needed a system that could audit, implement, and monitor at the pace of a 24/7 newsroom.</p>
+        </div>
+        <div class="card">
+            <div class="card__head">Google Search Average Position (Jan&ndash;Apr 2026)</div>
+            <div class="card__body"><canvas id="chartPosition"></canvas></div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Approach -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="sect__eyebrow">The Approach</p>
+    <h2 class="sect__title">AI as the Engineering Engine</h2>
+    <p class="sect__lead">We used Claude, Anthropic's AI assistant, as a core engineering tool across the entire technical SEO stack&mdash;from structured data implementation to edge caching configuration to automated health monitoring.</p>
+
+    <div class="callout">
+        <strong>This is not "AI-generated content."</strong> Every optimization was a technical infrastructure change: schema markup, server configuration, edge caching, image delivery, script loading, and monitoring pipelines. The AI accelerated engineering work that would otherwise take a team of specialists months to complete.
+    </div>
+
+    <div class="timeline mt-lg">
+        <div class="tl-item">
+            <div class="tl-date">January 2026</div>
+            <div class="tl-title">Acquisition &amp; Baseline</div>
+            <div class="tl-desc">Data pipelines established: GA4, Google Search Console, BigQuery warehouse. Documented every metric, confounder, and data source before touching code.</div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-date">February 2026</div>
+            <div class="tl-title">Structured Data &amp; Indexing</div>
+            <div class="tl-desc">12+ JSON-LD schema types implemented. Noindex strategy deployed for syndicated content. Custom sitemaps built including Google News and obituary providers. 410 Gone for expired content.</div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-date">March 2026</div>
+            <div class="tl-title">Performance Sprint &amp; Edge Infrastructure</div>
+            <div class="tl-desc">DNS migrated to Cloudflare. APO enabled. LCP images optimized across every template. GTM replaced with Zaraz, cutting 730ms of blocking time. Weather Worker built for automated storm coverage.</div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-date">Late March 2026</div>
+            <div class="tl-title">Domain Cutover &amp; Stress Test</div>
+            <div class="tl-desc">Migrated from .dev to .com. Days later, a major storm system hit&mdash;driving 1.6M requests in a single day. Infrastructure held. Cache hit rates reached 87.5%.</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Structured Data -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">Structured Data</p>
+    <h2 class="sect__title">12 Schema Types. Every Page Covered.</h2>
+    <p class="sect__lead">We built a comprehensive structured data layer from scratch. Each schema type is generated dynamically from WordPress data&mdash;no manual markup, no plugins, no maintenance burden.</p>
+
+    <div class="tbl-wrap mb-md">
+    <table class="schema-tbl">
+        <thead><tr><th>Content Type</th><th>Schema</th><th>Key Signals</th></tr></thead>
+        <tbody>
+            <tr><td>News Articles</td><td><code>NewsArticle</code></td><td>headline, author, dates, contentLocation with geo, isAccessibleForFree</td></tr>
+            <tr><td>Homepage</td><td><code>ItemList</code></td><td>Latest 9 articles for Top Stories carousel eligibility</td></tr>
+            <tr><td>Events</td><td><code>Event</code></td><td>Date range, venue Place with geo, Offer pricing, attendance mode</td></tr>
+            <tr><td>Obituaries</td><td><code>NewsArticle</code></td><td>Custom table data &mdash; funeral home as author, residence, dates</td></tr>
+            <tr><td>Radio Stations</td><td><code>RadioStation</code></td><td>Call sign, broadcast timezone, area served, app links</td></tr>
+            <tr><td>Local Businesses</td><td><code>LocalBusiness</code></td><td>Address, phone, email, sameAs links</td></tr>
+            <tr><td>Town Hubs</td><td><code>CollectionPage</code> + <code>City</code></td><td>Geo coordinates, population, parent county, article list</td></tr>
+            <tr><td>Weather</td><td><code>FAQPage</code></td><td>5 Q&amp;A pairs on conditions, radar, update frequency</td></tr>
+            <tr><td>Storm Alerts</td><td><code>LiveBlogPosting</code></td><td>Coverage start/end time, continuous updates format</td></tr>
+            <tr><td>All Pages</td><td><code>BreadcrumbList</code></td><td>Full hierarchy: Home &rarr; Category &rarr; Article</td></tr>
+            <tr><td>Site-Wide</td><td><code>NewsMediaOrganization</code></td><td>Identity, SearchAction for sitelinks search box</td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <div class="two-col mt-lg">
+        <div class="callout" style="margin:0;">
+            Every schema is generated from live data&mdash;no static templates, no stale markup. When a reporter publishes a breaking story at 2 AM, the structured data is correct before Google's next crawl. AI-generated meta descriptions provide search-optimized summaries without editorial overhead.
+        </div>
+        <div>
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--color-text-muted); margin-bottom:8px;">Live JSON-LD &mdash; Storm Article</div>
+            <div class="code-block"><span class="punct">{</span>
+  <span class="key">"@type"</span><span class="punct">:</span> <span class="str">"NewsArticle"</span><span class="punct">,</span>
+  <span class="key">"headline"</span><span class="punct">:</span> <span class="str">"Heavy Rain Leads to Flooded Roads, Ongoing Cleanup in Finger Lakes"</span><span class="punct">,</span>
+  <span class="key">"datePublished"</span><span class="punct">:</span> <span class="str">"2026-03-31T18:21:45-04:00"</span><span class="punct">,</span>
+  <span class="key">"author"</span><span class="punct">:</span> <span class="punct">{</span> <span class="key">"@type"</span><span class="punct">:</span> <span class="str">"Person"</span><span class="punct">,</span> <span class="key">"name"</span><span class="punct">:</span> <span class="str">"Lucas Day"</span> <span class="punct">},</span>
+  <span class="key">"publisher"</span><span class="punct">:</span> <span class="punct">{</span> <span class="key">"@type"</span><span class="punct">:</span> <span class="str">"Organization"</span><span class="punct">,</span> <span class="key">"name"</span><span class="punct">:</span> <span class="str">"Finger Lakes Daily News"</span> <span class="punct">},</span>
+  <span class="key">"isAccessibleForFree"</span><span class="punct">:</span> <span class="str">true</span><span class="punct">,</span>
+  <span class="key">"contentLocation"</span><span class="punct">:</span> <span class="punct">{</span>
+    <span class="key">"@type"</span><span class="punct">:</span> <span class="str">"Place"</span><span class="punct">,</span>
+    <span class="key">"name"</span><span class="punct">:</span> <span class="str">"Benton, NY"</span><span class="punct">,</span>
+    <span class="key">"geo"</span><span class="punct">:</span> <span class="punct">{</span> <span class="key">"latitude"</span><span class="punct">:</span> <span class="str">42.714</span><span class="punct">,</span> <span class="key">"longitude"</span><span class="punct">:</span> <span class="str">-77.041</span> <span class="punct">},</span>
+    <span class="key">"containedInPlace"</span><span class="punct">:</span> <span class="punct">{</span> <span class="key">"name"</span><span class="punct">:</span> <span class="str">"Yates County, NY"</span> <span class="punct">}</span>
+  <span class="punct">}</span>
+<span class="punct">}</span></div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Page Speed -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="sect__eyebrow">Page Speed</p>
+    <h2 class="sect__title">Below Average to Near-Perfect</h2>
+    <p class="sect__lead">A focused optimization sprint addressed every Core Web Vital across all page templates. Systematic, not incremental&mdash;root causes, not symptoms.</p>
+
+    <div class="ba-grid">
+        <div class="ba-card ba-card--before"><div class="ba-label">Before &mdash; Mobile</div><div class="ba-score">54</div><div class="ba-ctx">Lighthouse Performance</div></div>
+        <div class="ba-card ba-card--after"><div class="ba-label">After &mdash; Mobile</div><div class="ba-score">99</div><div class="ba-ctx">Lighthouse Performance</div></div>
+    </div>
+    <div class="ba-grid">
+        <div class="ba-card ba-card--before"><div class="ba-label">Before &mdash; Desktop</div><div class="ba-score">69</div><div class="ba-ctx">Lighthouse Performance</div></div>
+        <div class="ba-card ba-card--after"><div class="ba-label">After &mdash; Desktop</div><div class="ba-score">100</div><div class="ba-ctx">Lighthouse Performance</div></div>
+    </div>
+
+    <div class="card mb-md">
+        <div class="card__head">Daily Lighthouse Scores &mdash; Automated Monitoring (BQ)</div>
+        <div class="card__body"><canvas id="chartLighthouse"></canvas></div>
+    </div>
+
+    <h3 style="font-size:18px; font-weight:800; margin: 32px 0 16px; letter-spacing:-0.3px;">What We Changed</h3>
+
+    <div class="impl-grid">
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#9889;</div>
+            <div class="impl-card__title">GTM &rarr; Zaraz Migration</div>
+            <div class="impl-card__desc">Google Tag Manager's client-side container consumed 730ms+ of Total Blocking Time. Cloudflare Zaraz runs at the edge&mdash;TBT dropped to under 10ms.</div>
+            <div class="impl-card__stat">TBT: 730ms &rarr; 0ms</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#128247;</div>
+            <div class="impl-card__title">LCP Image Strategy</div>
+            <div class="impl-card__desc">Every template audited for above-fold images. First visible images get <code>loading="eager"</code> with <code>fetchpriority="high"</code>. Preload hints include <code>imagesrcset</code> to prevent double-downloads.</div>
+            <div class="impl-card__stat">Obit archive LCP: 5.6s &rarr; 1.2s</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#127760;</div>
+            <div class="impl-card__title">Third-Party Deferral</div>
+            <div class="impl-card__desc">Leaflet (maps) and Chart.js were render-blocking on weather pages. Deferred loading with async CSS and polling guards cut weather page LCP from 6.5s to under 2s.</div>
+            <div class="impl-card__stat">Weather LCP: 6.5s &rarr; 1.4s</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--ochre">&#128295;</div>
+            <div class="impl-card__title">DOM Mutation Guards</div>
+            <div class="impl-card__desc">Station now-playing widgets were resetting LCP timestamps with every track update. Content-comparison guards only touch the DOM when values change.</div>
+            <div class="impl-card__stat">Prevents LCP regression on 7 pages</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--ochre">&#128218;</div>
+            <div class="impl-card__title">Font &amp; Connection Hints</div>
+            <div class="impl-card__desc">Preload Open Sans Latin subset. Preconnect to Tukios CDN (obituary photos) and Google APIs. DNS-prefetch as fallback for older browsers.</div>
+            <div class="impl-card__stat">Eliminates render-blocking font loads</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--ochre">&#9940;</div>
+            <div class="impl-card__title">CF Bot JS Disabled</div>
+            <div class="impl-card__desc">Cloudflare's JS Challenge script added 2,900&ndash;3,800ms of main-thread scripting. Disabled it, relied on other bot management layers. Immediate 20+ point mobile improvement.</div>
+            <div class="impl-card__stat">Main-thread scripting: 3.8s &rarr; 0s</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Indexing Strategy -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">Indexing Strategy</p>
+    <h2 class="sect__title">Pruning the Index to Sharpen the Signal</h2>
+    <p class="sect__lead">Not everything should be in Google's index. We made data-driven decisions about what to show and what to hide.</p>
+
+    <div class="two-col">
+        <div>
+            <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;">The Syndicated Content Problem</h3>
+            <p class="text-sm text-muted" style="line-height:1.7;">Entertainment and national news sections were syndicated RSS feeds&mdash;identical content on hundreds of sites. They generated <strong style="color:var(--color-text);">683,000 impressions/month</strong> at 0.3% CTR from position 28. Actively hurting the site: diluting topical authority, wasting crawl budget, dragging down domain quality signals.</p>
+            <p class="text-sm text-muted mt-md" style="line-height:1.7;"><strong style="color:var(--color-text);">Solution:</strong> Noindex all syndicated sections. Results were immediate.</p>
+            <div class="ba-grid mt-md">
+                <div class="ba-card ba-card--before" style="padding:16px;"><div class="ba-label">Before</div><div class="ba-score" style="font-size:36px;">4.6%</div><div class="ba-ctx">Organic CTR</div></div>
+                <div class="ba-card ba-card--after" style="padding:16px;"><div class="ba-label">After</div><div class="ba-score" style="font-size:36px;">7.4%</div><div class="ba-ctx">Organic CTR</div></div>
+            </div>
+        </div>
+        <div class="idx-col">
+            <h3 style="font-size:16px; font-weight:700; margin-bottom:12px;">Complete Indexing Rules</h3>
+            <p class="idx-label idx-label--yes">&#10003; Indexed</p>
+            <ul>
+                <li>Local news articles (core content)</li>
+                <li>Obituaries (high local demand)</li>
+                <li>Police blotter &amp; crime (82% share of voice)</li>
+                <li>Events, weather, storm coverage</li>
+                <li>County/town archives, station pages</li>
+            </ul>
+            <p class="idx-label idx-label--no">&#10007; Noindexed</p>
+            <ul>
+                <li>Entertainment &amp; national news (syndicated)</li>
+                <li>Sponsored content</li>
+                <li>Tag archives (16,000+ thin pages)</li>
+                <li>Author archives, old thin posts</li>
+            </ul>
+            <p class="idx-label idx-label--gone">&#9760; 410 Gone</p>
+            <ul>
+                <li>Expired crime posts (auto-removed)</li>
+                <li>Legacy redirect URLs (~15,000)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-lg">
+        <div class="card__head">Organic CTR by Week (Google Search Console)</div>
+        <div class="card__body"><canvas id="chartCTR"></canvas></div>
+    </div>
+</div>
+</section>
+
+<!-- Infrastructure -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="sect__eyebrow">Infrastructure</p>
+    <h2 class="sect__title">Edge Delivery. Real-Time Monitoring. Automated Publishing.</h2>
+    <p class="sect__lead">Technical SEO is more than markup and meta tags. It's the infrastructure that determines whether your site can serve the right content, fast, under load, with full observability.</p>
+
+    <div class="impl-grid">
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#9729;</div>
+            <div class="impl-card__title">Cloudflare APO + Edge Cache</div>
+            <div class="impl-card__desc">Full HTML caching at the edge. Polish (lossy WebP compression). Smart cache purging on publish. Most visitors never hit the origin server.</div>
+            <div class="impl-card__stat">87.5% cache hit rate under peak load</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#128225;</div>
+            <div class="impl-card__title">Nowplaying Edge API</div>
+            <div class="impl-card__desc">Cloudflare Worker intercepts radio now-playing API requests with 5-second edge cache. Origin requests dropped 99.8%&mdash;from 83,000/day to ~120.</div>
+            <div class="impl-card__stat">Response: 660ms &rarr; 2-5ms</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--ochre">&#127786;</div>
+            <div class="impl-card__title">Weather Worker</div>
+            <div class="impl-card__desc">Dedicated Cloudflare Worker polls NWS and Open-Meteo, pushes forecasts to WordPress, auto-generates severe weather articles with radar map screenshots via Puppeteer.</div>
+            <div class="impl-card__stat">Storm articles in &lt;60 seconds</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--ochre">&#128202;</div>
+            <div class="impl-card__title">Request-Level Analytics</div>
+            <div class="impl-card__desc">Every request logged to BigQuery: cache status, origin time, geo, bot classification, TLS version. Full visibility into how the site is consumed.</div>
+            <div class="impl-card__stat">387K+ requests/day to BQ</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#128737;</div>
+            <div class="impl-card__title">AI Labyrinth (Bot Protection)</div>
+            <div class="impl-card__desc">Traps unauthorized AI crawlers in an endless maze of generated content, protecting original journalism without blocking legitimate search bots.</div>
+            <div class="impl-card__stat">Enabled via undocumented CF API</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#128263;</div>
+            <div class="impl-card__title">Automated Health Checks</div>
+            <div class="impl-card__desc">Health checks every 6 hours: endpoint availability, data pipeline integrity, external dependencies. Post-deploy QA runs automatically. Failures go to Slack.</div>
+            <div class="impl-card__stat">Every deploy verified automatically</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Storm -->
+<section class="sect sect--dark">
+<div class="wrap">
+    <p class="sect__eyebrow">The Proof Point</p>
+    <h2 class="sect__title">When the Storm Hit, the Infrastructure Held</h2>
+    <p class="sect__lead">On March 30&ndash;31, 2026, a severe storm brought heavy rain, hail, and flooding to the Finger Lakes. The Weather Worker auto-published coverage. Social sharing drove a massive surge. In 48 hours, we served more requests than the previous month combined.</p>
+
+    <div class="storm-grid">
+        <div>
+            <div class="storm-num">
+                <div class="storm-num__val">1.6M</div>
+                <div class="storm-num__label">Requests on March 31</div>
+            </div>
+            <div class="storm-row">
+                <div class="storm-num">
+                    <div class="storm-num__val">17,104</div>
+                    <div class="storm-num__label">Active users (Apr 1)</div>
+                </div>
+                <div class="storm-num">
+                    <div class="storm-num__val">37,691</div>
+                    <div class="storm-num__label">Pageviews (Apr 1)</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="card" style="background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.1);">
+                <div class="card__head" style="border-color:rgba(255,255,255,0.1); color:rgba(255,255,255,0.6);">Cloudflare Requests During Storm</div>
+                <div class="card__body"><canvas id="chartStorm"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="two-col mt-lg">
+        <div>
+            <h3 style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">What Happened</h3>
+            <p style="color:rgba(255,255,255,0.75); font-size:13px; line-height:1.7;">The Weather Worker detected NWS alerts and auto-published storm coverage with embedded radar maps&mdash;within 60 seconds of alert issuance. Google picked them up via the News Sitemap. The query "flood watch" generated 19,000+ impressions that week alone.</p>
+            <p style="color:rgba(255,255,255,0.75); font-size:13px; line-height:1.7; margin-top:12px;">Edge caching absorbed the load. On March 31, Cloudflare served 58.5% from cache. By April 1, cache hit rate climbed to 87.5% as hot pages warmed. Average origin response time dropped from 300ms to 35ms.</p>
+        </div>
+        <div>
+            <h3 style="color:rgba(255,255,255,0.5); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Why It Matters</h3>
+            <p style="color:rgba(255,255,255,0.75); font-size:13px; line-height:1.7;">For a local news site, weather events are the moments that matter most. When roads flood and power goes out, people need local information fast. This storm was the first real test of the entire technical stack built over the previous 90 days.</p>
+            <p style="color:rgba(255,255,255,0.75); font-size:13px; line-height:1.7; margin-top:12px;"><strong style="color:#fff;">Zero downtime. Zero performance degradation. Automated publishing. Full observability.</strong> The system didn't just survive&mdash;it was designed for exactly this moment.</p>
+        </div>
+    </div>
+
+    <div class="two-col mt-lg">
+        <div class="storm-photo">
+            <img src="https://www.fingerlakesdailynews.com/wp-content/uploads/2026/03/North-Main-Prattsburgh.jpg" alt="A Prattsburgh fire truck drives through floodwaters in a residential area of Prattsburgh, NY." loading="lazy" width="800" height="533">
+            <div class="storm-photo__caption">Prattsburgh, NY &mdash; A fire truck navigates floodwaters on North Main Street after the March 31 storm. Photo published within minutes of submission via the automated weather pipeline.</div>
+        </div>
+        <div class="storm-photo">
+            <img src="https://www.fingerlakesdailynews.com/wp-content/uploads/2026/03/Cook-School-.jpg" alt="A road in a wooded area scattered with debris and hail after a storm in the Finger Lakes." loading="lazy" width="800" height="533">
+            <div class="storm-photo__caption">Near Cook School &mdash; Hail and debris on a Finger Lakes road during the March 31 severe weather event. The Weather Worker auto-published coverage before the first reader photos arrived.</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Results -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">Results</p>
+    <h2 class="sect__title">Steady Gains, Strong Foundation</h2>
+    <p class="sect__lead">Technical SEO doesn't produce overnight hockey sticks. It produces a steadily improving baseline&mdash;better indexing, better CTR, better position&mdash;that compounds over time and makes every piece of content work harder.</p>
+
+    <div class="early-banner">
+        <div class="early-banner__icon">&#128337;</div>
+        <div class="early-banner__text"><strong>Early indicators, not final results.</strong> We're 90 days into a long-term project. Google typically takes 3&ndash;6 months to fully reflect structural changes in rankings. The data below shows strong directional improvement, but we'll revisit with mature results in Q3 2026 when the full impact of structured data, indexing changes, and domain authority consolidation has had time to compound.</div>
+    </div>
+
+    <div class="card mb-md">
+        <div class="card__head">Daily Organic Clicks (Google Search Console)</div>
+        <div class="card__body"><canvas id="chartClicks"></canvas></div>
+    </div>
+
+    <div class="two-col mb-md">
+        <div class="card">
+            <div class="card__head">Weekly Sessions: 2025 vs 2026 (GA4)</div>
+            <div class="card__body"><canvas id="chartSessions"></canvas></div>
+        </div>
+        <div class="card">
+            <div class="card__head">Cache Hit Rate Evolution</div>
+            <div class="card__body"><canvas id="chartCache"></canvas></div>
+        </div>
+    </div>
+
+    <div class="impl-grid">
+        <div class="impl-card" style="border-top:3px solid var(--color-ochre);">
+            <div class="impl-card__title">Average Position</div>
+            <div class="impl-card__desc">GSC average position improved as syndicated content was deindexed and structured data signaled topical relevance.</div>
+            <div class="impl-card__stat">13.2 &rarr; 8.2 (37% better)</div>
+        </div>
+        <div class="impl-card" style="border-top:3px solid var(--color-ochre);">
+            <div class="impl-card__title">Police Blotter CTR</div>
+            <div class="impl-card__desc">Crime reporting CTR surged as structured data and focused indexing reinforced topical authority. 82% share of voice for crime queries.</div>
+            <div class="impl-card__stat">8.3% &rarr; 10.6%</div>
+        </div>
+        <div class="impl-card" style="border-top:3px solid var(--color-ochre);">
+            <div class="impl-card__title">Mobile Traffic Share</div>
+            <div class="impl-card__desc">With mobile PageSpeed at 99, the mobile experience matches desktop. Important for a news site where 73% of traffic is from phones.</div>
+            <div class="impl-card__stat">73% of all organic clicks</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Observability -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="sect__eyebrow">Observability</p>
+    <h2 class="sect__title">If You Can't Measure It, You Can't Improve It</h2>
+    <p class="sect__lead">Every metric in this case study is tracked in real-time through a custom analytics dashboard backed by BigQuery. Not a monthly PDF&mdash;a live operational tool.</p>
+
+    <div class="impl-grid">
+        <div class="impl-card">
+            <div class="impl-card__title">BigQuery Data Warehouse</div>
+            <div class="impl-card__desc">GA4, Google Search Console, Cloudflare request logs, advertising data, and health checks all flow into a single dataset. Every query is reproducible.</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__title">Custom SEO Dashboard</div>
+            <div class="impl-card__desc">Share of voice by vertical, CTR trends, position tracking, indexing status&mdash;refreshed 4x daily. Built for daily editorial decisions, not quarterly board decks.</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__title">Automated QA Pipeline</div>
+            <div class="impl-card__desc">Every deploy triggers: HTTP status checks, PHP error detection, cache verification, REST API health, plugin-specific validation. Failures go to Slack instantly.</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Footer CTA -->
+<section class="cs-footer">
+<div class="wrap">
+    <h2 class="cs-footer__title">Technical SEO That Works as Hard as Your Newsroom</h2>
+    <p class="cs-footer__sub">FLX Local Media combines AI-accelerated engineering with deep local market knowledge. We build infrastructure that makes every story findable, fast, and reliable.</p>
+    <a href="https://flxlocalmedia.com/contact/" class="btn">Let's Talk</a>
+</div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+var teal='#1E5B70', ochre='#946E16', sage='#5A9E6F', blue='#2B7AB8', muted='#8c8f94';
+Chart.defaults.font.family="'Inter',-apple-system,BlinkMacSystemFont,sans-serif";
+Chart.defaults.font.size=11;
+Chart.defaults.color='#646970';
+var gridColor='rgba(0,0,0,0.04)';
+
+// Position
+new Chart(document.getElementById('chartPosition'),{type:'line',data:{
+    labels:['Jan 1','Jan 7','Jan 15','Jan 21','Jan 27','Feb 3','Feb 8','Feb 14','Feb 20','Feb 24','Mar 3','Mar 9','Mar 17','Mar 19','Mar 24','Mar 30','Apr 2'],
+    datasets:[{data:[12.9,11.9,8.8,9.5,10.0,8.8,5.9,9.1,8.8,6.9,8.0,6.8,7.8,8.7,7.4,7.9,10.1],borderColor:ochre,backgroundColor:'rgba(148,110,22,0.06)',fill:true,tension:0.3,pointRadius:2,pointBackgroundColor:ochre,borderWidth:2}]
+},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{reverse:true,min:4,max:14,grid:{color:gridColor},title:{display:true,text:'Position (lower = better)',font:{size:10}}},x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10}}}}}});
+
+// Daily Clicks
+new Chart(document.getElementById('chartClicks'),{type:'line',data:{
+    labels:['1/1','1/5','1/9','1/13','1/17','1/21','1/25','1/29','2/2','2/6','2/10','2/14','2/18','2/22','2/26','3/2','3/6','3/10','3/14','3/18','3/22','3/26','3/30','4/2'],
+    datasets:[{label:'Clicks',data:[1537,2009,2133,2002,1475,2264,3746,2261,2432,2192,2289,1513,2202,1678,2636,2709,2127,2241,1480,2195,1485,2106,2531,2540],borderColor:blue,backgroundColor:'rgba(43,122,184,0.08)',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2}]
+},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor}},x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10}}}}}});
+
+// CTR
+var ctrD=[5.85,5.74,5.30,5.08,4.49,4.90,5.32,4.32,4.91,4.59,7.36,6.21];
+new Chart(document.getElementById('chartCTR'),{type:'bar',data:{
+    labels:['Jan W1','Jan W2','Jan W3','Jan W4','Feb W1','Feb W2','Feb W3','Feb W4','Mar W1','Mar W2','Mar W3','Mar W4'],
+    datasets:[{data:ctrD,backgroundColor:ctrD.map(function(v){return v>=6.5?teal:'rgba(30,91,112,0.3)';}),borderRadius:4,barPercentage:0.7}]
+},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:10,grid:{color:gridColor},ticks:{callback:function(v){return v+'%';}}},x:{grid:{display:false}}}}});
+
+// Storm
+var sR=[2050,2116,103899,67235,138477,1606176,1456430,950427,578397,387615];
+new Chart(document.getElementById('chartStorm'),{type:'bar',data:{
+    labels:['Mar 25','Mar 26','Mar 27','Mar 28','Mar 30','Mar 31','Apr 1','Apr 2','Apr 3','Apr 4'],
+    datasets:[{data:sR,backgroundColor:sR.map(function(v){return v>500000?'rgba(210,97,58,0.85)':'rgba(91,143,168,0.6)';}),borderRadius:3,barPercentage:0.8}]
+},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.06)'},ticks:{color:'rgba(255,255,255,0.5)',callback:function(v){return v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?Math.round(v/1e3)+'K':v;}}},x:{grid:{display:false},ticks:{color:'rgba(255,255,255,0.5)',font:{size:10}}}}}});
+
+// Sessions Y/Y
+new Chart(document.getElementById('chartSessions'),{type:'line',data:{
+    labels:['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12','W13'],
+    datasets:[
+        {label:'2025',data:[30547,68725,52248,62073,54483,71638,83969,66593,61387,51937,51993,75331,49556],borderColor:sage,borderDash:[5,3],tension:0.3,pointRadius:0,borderWidth:2,backgroundColor:'transparent'},
+        {label:'2026',data:[32543,67310,65316,67261,73666,76096,55885,68045,72303,59649,57389,66895,67808],borderColor:teal,backgroundColor:'rgba(30,91,112,0.06)',fill:true,tension:0.3,pointRadius:0,borderWidth:2}
+    ]
+},options:{responsive:true,plugins:{legend:{position:'top',labels:{usePointStyle:true,pointStyle:'line',font:{size:10}}}},scales:{y:{beginAtZero:false,grid:{color:gridColor},ticks:{callback:function(v){return Math.round(v/1000)+'K';}}},x:{grid:{display:false}}}}});
+
+// Lighthouse (from BQ lighthouse_scores table)
+var lhDates=['2/17','2/19','2/21','2/23','2/25','2/27','3/1','3/3','3/10','3/12','3/14','3/16','3/18'];
+var lhDesktop=[69,82,85,83,83,82,80,83,80,84,84,82,83];
+var lhMobile=[56,67,62,59,60,61,56,62,64,69,67,68,69];
+new Chart(document.getElementById('chartLighthouse'),{type:'line',data:{
+    labels:lhDates,
+    datasets:[
+        {label:'Desktop',data:lhDesktop,borderColor:teal,backgroundColor:'rgba(30,91,112,0.06)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:teal,borderWidth:2},
+        {label:'Mobile',data:lhMobile,borderColor:ochre,backgroundColor:'rgba(148,110,22,0.04)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:ochre,borderWidth:2}
+    ]
+},options:{responsive:true,plugins:{legend:{position:'top',labels:{usePointStyle:true,pointStyle:'circle',font:{size:10}}},annotation:{annotations:{perf:{type:'box',xMin:lhDates.length-1.5,xMax:lhDates.length-0.5,backgroundColor:'rgba(0,163,42,0.05)',borderColor:'rgba(0,163,42,0.2)',borderWidth:1,label:{display:true,content:'Sprint',position:'start',font:{size:9}}}}}},scales:{y:{min:40,max:105,grid:{color:gridColor},ticks:{callback:function(v){return v;},stepSize:20},title:{display:true,text:'Performance Score',font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
+
+// Cache
+new Chart(document.getElementById('chartCache'),{type:'line',data:{
+    labels:['Mar 2','Mar 10','Mar 11','Mar 19','Mar 27','Mar 28','Mar 30','Mar 31','Apr 1','Apr 2','Apr 3','Apr 4'],
+    datasets:[{data:[64.9,51.0,33.0,28.2,69.2,62.3,76.4,58.5,87.5,88.4,87.4,87.5],borderColor:sage,backgroundColor:'rgba(90,158,111,0.08)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:sage,borderWidth:2}]
+},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,grid:{color:gridColor},ticks:{callback:function(v){return v+'%';}}},x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10}}}}}});
+})();
+</script>
