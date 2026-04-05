@@ -1056,7 +1056,7 @@ new Chart(document.getElementById('chartLighthouse'),{type:'line',data:{
         {label:'Desktop',data:lhDesktop,borderColor:teal,backgroundColor:'rgba(30,91,112,0.06)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:teal,borderWidth:2},
         {label:'Mobile',data:lhMobile,borderColor:ochre,backgroundColor:'rgba(148,110,22,0.04)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:ochre,borderWidth:2}
     ]
-},options:{responsive:true,plugins:{legend:{position:'top',labels:{usePointStyle:true,pointStyle:'circle',font:{size:10}}},annotation:{annotations:{perf:{type:'box',xMin:lhDates.length-1.5,xMax:lhDates.length-0.5,backgroundColor:'rgba(0,163,42,0.05)',borderColor:'rgba(0,163,42,0.2)',borderWidth:1,label:{display:true,content:'Sprint',position:'start',font:{size:9}}}}}},scales:{y:{min:40,max:105,grid:{color:gridColor},ticks:{callback:function(v){return v;},stepSize:20},title:{display:true,text:'Performance Score',font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
+},options:{responsive:true,plugins:{legend:{position:'top',labels:{usePointStyle:true,pointStyle:'circle',font:{size:10}}},annotation:{annotations:{perf:{type:'box',xMin:lhDates.length-1.5,xMax:lhDates.length-0.5,backgroundColor:'rgba(0,163,42,0.05)',borderColor:'rgba(0,163,42,0.2)',borderWidth:1,label:{display:true,content:'Sprint',position:'start',font:{size:9}}}}}},scales:{y:{min:40,max:108,grid:{color:gridColor},ticks:{callback:function(v){return v;},stepSize:20},title:{display:true,text:'Performance Score',font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
 
 // Cache
 new Chart(document.getElementById('chartCache'),{type:'line',data:{
