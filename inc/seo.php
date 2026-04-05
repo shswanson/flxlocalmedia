@@ -148,11 +148,17 @@ function flxlm_seo_get_meta() {
 			$title = $title_overrides[ $slug ];
 		}
 
+		// Per-page OG images.
+		$page_images = array(
+			'finger-lakes-daily-news-com-seo' => get_theme_file_uri( 'assets/images/og-case-study-seo.png' ),
+		);
+		$page_image = isset( $page_images[ $slug ] ) ? $page_images[ $slug ] : $default_image;
+
 		return array_merge( $defaults, array(
 			'title'       => $title,
 			'description' => $desc,
 			'url'         => get_permalink(),
-			'image'       => $default_image,
+			'image'       => $page_image,
 		) );
 	}
 

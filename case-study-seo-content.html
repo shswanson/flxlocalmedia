@@ -875,6 +875,16 @@ a:hover { text-decoration: underline; }
         <strong>Why SOV matters:</strong> Before the technical SEO overhaul, FLDN was competing against its own syndicated content in search results. After noindexing syndicated sections and deploying structured data, Google's understanding of FLDN's topical authority sharpened dramatically. For crime and police blotter queries&mdash;FLDN's strongest original content vertical&mdash;the site now captures 82% of visible search results. When the April 1 storm hit, FLDN's News tab performance hit its all-time high: 176 clicks from 12,961 impressions, driven by auto-published weather coverage that Google surfaced within minutes.
     </div>
 
+    <div class="two-col mb-md" style="align-items:start;">
+        <div>
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--color-ochre); margin-bottom:8px;">100% Share of Voice &mdash; Flood Warning</div>
+            <p class="text-sm text-muted mb-md" style="line-height:1.7;">Three days after the storm, FLDN owned the entire first page of Google for &ldquo;Flood Warning for Finger Lakes Region&rdquo;&mdash;position 1, all four Top Stories slots, and position 2. Every visible result was FLDN content. This is what structured data + fast automated publishing + topical authority looks like in practice.</p>
+        </div>
+        <div class="card" style="overflow:hidden;">
+            <img src="https://www.flxlocalmedia.com/wp-content/themes/flxlocalmedia/assets/images/serp-flood-warning-sov.png" alt="Google search results for 'Flood Warning for Finger Lakes Region' showing FLDN owning position 1, all Top Stories, and position 2 — 100% share of voice." loading="lazy" width="1025" height="868" style="width:100%; height:auto; display:block;">
+        </div>
+    </div>
+
     <div class="card mb-md">
         <div class="card__head">Daily Clicks &mdash; All Google Traffic (Search + Discover + News)</div>
         <div class="card__body"><canvas id="chartClicks"></canvas></div>
@@ -973,8 +983,24 @@ var newsData=[51,76,82,42,81,67,91,66,80,59,41,73,85,76,84,71,52,44,64,80,75,89,
 // Combined total for stacked chart
 var totalData=webData.map(function(v,i){return v+discoverData[i]+newsData[i];});
 
-// Spike annotations
-var spikeNotes={24:'Winter storm\n(closings/delays)',54:'Bills stadium\nlogo story',90:'Apr 1 storm\n+ Discover surge'};
+// Spike annotations (any day >3K total)
+var spikeNotes={
+14:'School closings (snow day)',
+19:'USDA farmer + landfill stories (Discover)',
+24:'Winter storm (closings/delays)',
+25:'Winter storm day 2',
+38:'"Best in NY for seniors" (Discover)',
+39:'Seniors story (Discover trailing)',
+48:'Thrift store closure (Discover)',
+53:'Bills stadium story ramp-up',
+54:'Bills stadium logo (1,131 clicks)',
+55:'Bills story trailing',
+62:'Watkins Glen local law (Discover)',
+88:'Storm begins (flood watch)',
+89:'Flood watch + storm coverage',
+90:'Apr 1 storm + Discover surge (9.6K)',
+91:'Prattsburgh emergency (Discover)'
+};
 
 // Hero — all Google traffic stacked (Challenge section)
 new Chart(document.getElementById('chartHero'),{type:'line',data:{
