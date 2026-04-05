@@ -53,7 +53,7 @@
 
 	<div class="site-footer__bottom">
 		<div class="container">
-			<p>&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. All rights reserved.</p>
+			<p>&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. All rights reserved. <a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>">Privacy Policy</a> &middot; <a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>">Terms of Service</a></p>
 		</div>
 	</div>
 </footer>
