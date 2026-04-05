@@ -525,7 +525,7 @@ a:hover { text-decoration: underline; }
             <p class="text-sm text-muted mt-md" style="line-height:1.7;">The goal: build a technical SEO foundation that lets the journalism shine in search&mdash;without months of manual optimization cycles. We needed a system that could audit, implement, and monitor at the pace of a 24/7 newsroom.</p>
         </div>
         <div class="card">
-            <div class="card__head">Google Search Traffic &mdash; Daily Clicks <span style="font-weight:400; color:var(--color-text-muted); font-size:11px;">(Jan&ndash;Apr 2026, GSC)</span></div>
+            <div class="card__head">All Google Traffic &mdash; Search + Discover + News <span style="font-weight:400; color:var(--color-text-muted); font-size:11px;">(Jan&ndash;Apr 2026, GSC)</span></div>
             <div class="card__body"><canvas id="chartHero"></canvas></div>
         </div>
     </div>
@@ -860,9 +860,9 @@ a:hover { text-decoration: underline; }
             <div class="kpi__delta">Dominant in local crime search</div>
         </div>
         <div class="kpi" style="border-top:3px solid var(--color-ochre);">
-            <div class="kpi__value kpi__value--sm">3,296</div>
+            <div class="kpi__value kpi__value--sm">9,602</div>
             <div class="kpi__label">Peak Storm Day Clicks</div>
-            <div class="kpi__delta">+55% vs Q1 daily avg</div>
+            <div class="kpi__delta">3,296 Search + 6,130 Discover + 176 News</div>
         </div>
         <div class="kpi" style="border-top:3px solid var(--color-blue);">
             <div class="kpi__value kpi__value--sm">#1</div>
@@ -876,7 +876,7 @@ a:hover { text-decoration: underline; }
     </div>
 
     <div class="card mb-md">
-        <div class="card__head">Daily Organic Clicks (Google Search Console)</div>
+        <div class="card__head">Daily Clicks &mdash; All Google Traffic (Search + Discover + News)</div>
         <div class="card__body"><canvas id="chartClicks"></canvas></div>
     </div>
 
@@ -965,24 +965,37 @@ Chart.defaults.font.size=11;
 Chart.defaults.color='#646970';
 var gridColor='rgba(0,0,0,0.04)';
 
-// Full daily data (92 days, Jan 1 – Apr 2)
+// Full daily data (92 days, Jan 1 – Apr 2) — drop Apr 3 (zeros/lag)
 var allLabels=["1/1","1/2","1/3","1/4","1/5","1/6","1/7","1/8","1/9","1/10","1/11","1/12","1/13","1/14","1/15","1/16","1/17","1/18","1/19","1/20","1/21","1/22","1/23","1/24","1/25","1/26","1/27","1/28","1/29","1/30","1/31","2/1","2/2","2/3","2/4","2/5","2/6","2/7","2/8","2/9","2/10","2/11","2/12","2/13","2/14","2/15","2/16","2/17","2/18","2/19","2/20","2/21","2/22","2/23","2/24","2/25","2/26","2/27","2/28","3/1","3/2","3/3","3/4","3/5","3/6","3/7","3/8","3/9","3/10","3/11","3/12","3/13","3/14","3/15","3/16","3/17","3/18","3/19","3/20","3/21","3/22","3/23","3/24","3/25","3/26","3/27","3/28","3/29","3/30","3/31","4/1","4/2"];
-var allData=[1537,1913,1530,1417,2009,2133,2343,2249,2133,1584,1462,2046,2002,2333,2892,1935,1475,1378,1974,2150,2264,2214,2021,1658,3746,3460,2399,2396,2261,2353,1606,1591,2432,2390,2173,2214,2192,2115,2670,2440,2289,2345,2079,1863,1513,1414,1809,1962,2202,2233,2088,2161,1678,2936,3559,2748,2636,2309,1636,1366,2162,2709,2630,2178,2127,1479,1462,2047,2241,2252,2100,1966,1480,1416,2328,2402,2195,2509,2171,1557,1485,2222,2344,2141,2106,2180,2070,2053,2531,2650,3296,2540];
+var webData=[1537,1913,1530,1417,2009,2133,2343,2249,2133,1584,1462,2046,2002,2333,2892,1935,1475,1378,1974,2150,2264,2214,2021,1658,3746,3460,2399,2396,2261,2353,1606,1591,2432,2390,2173,2214,2192,2115,2670,2440,2289,2345,2079,1863,1513,1414,1809,1962,2202,2233,2088,2161,1678,2936,3559,2748,2636,2309,1636,1366,2162,2709,2630,2178,2127,1479,1462,2047,2241,2252,2100,1966,1480,1416,2328,2402,2195,2509,2171,1557,1485,2222,2344,2141,2106,2180,2070,2053,2531,2650,3296,2540];
+var discoverData=[156,52,286,763,847,134,25,12,372,1273,238,37,134,149,134,69,18,3,136,874,444,68,25,7,255,268,68,13,7,0,1,0,0,63,186,55,6,432,1131,856,328,127,63,19,12,1,55,793,1058,186,92,25,6,30,164,300,84,27,14,11,3,6,244,56,22,373,218,94,39,515,150,40,17,2,6,6,7,18,16,8,3,2,5,9,1,143,705,547,432,585,6130,1343,0];
+var newsData=[51,76,82,42,81,67,91,66,80,59,41,73,85,76,84,71,52,44,64,80,75,89,76,57,72,131,87,115,76,67,51,45,77,84,90,74,93,65,48,76,79,73,65,68,47,38,67,94,97,100,94,56,58,129,121,108,128,94,53,45,94,96,145,84,63,60,40,74,96,98,87,75,45,41,81,71,86,66,78,45,35,90,73,65,71,71,108,87,128,132,176,133,0];
+// Combined total for stacked chart
+var totalData=webData.map(function(v,i){return v+discoverData[i]+newsData[i];});
 
-// Hero — GSC daily clicks (Challenge section)
-var heroPoints=allData.map(function(v,i){return i===90?6:0;});
-var heroPointColors=allData.map(function(v,i){return i===90?'#d6613a':blue;});
+// Spike annotations
+var spikeNotes={24:'Winter storm\n(closings/delays)',54:'Bills stadium\nlogo story',90:'Apr 1 storm\n+ Discover surge'};
+
+// Hero — all Google traffic stacked (Challenge section)
 new Chart(document.getElementById('chartHero'),{type:'line',data:{
     labels:allLabels,
-    datasets:[{label:'Clicks',data:allData,borderColor:blue,backgroundColor:'rgba(43,122,184,0.10)',fill:true,tension:0.35,pointRadius:heroPoints,pointHoverRadius:5,pointBackgroundColor:heroPointColors,borderWidth:2}]
-},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{title:function(t){return t[0].label+'/2026';},label:function(t){return t.parsed.y.toLocaleString()+' clicks'+(t.dataIndex===90?' \u2014 Storm day':'');}}}},scales:{y:{beginAtZero:false,min:1000,grid:{color:gridColor},ticks:{callback:function(v){return (v/1000).toFixed(1)+'K';}}},x:{grid:{display:false},ticks:{maxRotation:45,font:{size:9},callback:function(v,i){return i%7===0?allLabels[i]:'';}}}}
+    datasets:[
+        {label:'Web Search',data:webData,borderColor:blue,backgroundColor:'rgba(43,122,184,0.15)',fill:true,tension:0.35,pointRadius:0,pointHoverRadius:4,borderWidth:1.5,order:3},
+        {label:'Discover',data:discoverData,borderColor:'#d6613a',backgroundColor:'rgba(214,97,58,0.20)',fill:true,tension:0.35,pointRadius:0,pointHoverRadius:4,borderWidth:1.5,order:2},
+        {label:'News',data:newsData,borderColor:sage,backgroundColor:'rgba(90,158,111,0.15)',fill:true,tension:0.35,pointRadius:0,pointHoverRadius:4,borderWidth:1.5,order:1}
+    ]
+},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{usePointStyle:true,pointStyle:'circle',font:{size:10},padding:16}},tooltip:{callbacks:{title:function(t){return t[0].label+'/2026';},label:function(t){var note=spikeNotes[t.dataIndex];var suffix=note?(' \u2014 '+note.replace(/\n/g,' ')):'';return t.dataset.label+': '+t.parsed.y.toLocaleString()+suffix;},footer:function(t){var total=0;t.forEach(function(i){total+=i.parsed.y;});return 'Total: '+total.toLocaleString()+' clicks';}}}},scales:{y:{stacked:true,beginAtZero:true,grid:{color:gridColor},ticks:{callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}}},x:{grid:{display:false},ticks:{maxRotation:45,font:{size:9},callback:function(v,i){return i%7===0?allLabels[i]:'';}}}}
 }});
 
-// Daily Clicks (Results section)
+// Daily Clicks (Results section) — total across all types
 new Chart(document.getElementById('chartClicks'),{type:'line',data:{
     labels:allLabels,
-    datasets:[{label:'Clicks',data:allData,borderColor:blue,backgroundColor:'rgba(43,122,184,0.08)',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2}]
-},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor}},x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10},callback:function(v,i){return i%7===0?allLabels[i]:'';}}}}}});
+    datasets:[
+        {label:'Web Search',data:webData,borderColor:blue,backgroundColor:'rgba(43,122,184,0.12)',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:1.5,order:3},
+        {label:'Discover',data:discoverData,borderColor:'#d6613a',backgroundColor:'rgba(214,97,58,0.18)',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:1.5,order:2},
+        {label:'News',data:newsData,borderColor:sage,backgroundColor:'rgba(90,158,111,0.12)',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:1.5,order:1}
+    ]
+},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{usePointStyle:true,pointStyle:'circle',font:{size:10}}},tooltip:{callbacks:{footer:function(t){var total=0;t.forEach(function(i){total+=i.parsed.y;});return 'Total: '+total.toLocaleString();}}}},scales:{y:{stacked:true,beginAtZero:true,grid:{color:gridColor}},x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10},callback:function(v,i){return i%7===0?allLabels[i]:'';}}}}}});
 
 // CTR
 var ctrD=[5.85,5.74,5.30,5.08,4.49,4.90,5.32,4.32,4.91,4.59,7.36,6.21];
