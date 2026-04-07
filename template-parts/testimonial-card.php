@@ -24,6 +24,6 @@ $quote    = get_post_meta( get_the_ID(), 'quote_short', true );
 			<span class="testimonial-card__name"><?php echo esc_html( $person ); ?></span>
 			<span class="testimonial-card__business"><?php echo esc_html( $business ); ?></span>
 		</div>
-		<a href="<?php the_permalink(); ?>" class="testimonial-card__link sr-only">Read full story</a>
+		<a href="<?php the_permalink(); ?>" class="testimonial-card__link">Read full story &rarr;</a>
 	</div>
 </article>

@@ -916,6 +916,29 @@ p + p {
 	color: var(--color-text-muted);
 }
 
+.testimonial-card__link {
+	display: inline-block;
+	margin-top: var(--space-md);
+	font-size: var(--fs-sm);
+	font-weight: var(--fw-semibold);
+	color: var(--color-accent);
+	text-decoration: none;
+	transition: color var(--transition);
+}
+
+.testimonial-card__link:hover {
+	color: var(--color-accent-hover);
+}
+
+.testimonial-card__link::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
 /* Testimonial card grid */
 .testimonial-grid {
 	display: grid;
