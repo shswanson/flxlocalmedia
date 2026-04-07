@@ -136,6 +136,11 @@ if ( ! empty( $meta_items ) ) : ?>
 </div>
 <?php endif; ?>
 
+<?php
+$current_id = get_the_ID();
+endwhile;
+?>
+
 <!-- More Stories -->
 <section class="section section--warm-gray">
 	<div class="container">
@@ -145,10 +150,10 @@ if ( ! empty( $meta_items ) ) : ?>
 		<?php
 		$more = flxlm_get_testimonials( array(
 			'posts_per_page' => 3,
-			'post__not_in'   => array( get_the_ID() ),
+			'post__not_in'   => array( $current_id ),
 			'orderby'        => 'rand',
 		) );
-		if ( $more->have_posts() ) :
+		if ( $more && $more->have_posts() ) :
 		?>
 			<div class="testimonial-grid">
 				<?php while ( $more->have_posts() ) : $more->the_post(); ?>
@@ -158,7 +163,5 @@ if ( ! empty( $meta_items ) ) : ?>
 		<?php endif; ?>
 	</div>
 </section>
-
-<?php endwhile; ?>
 
 <?php get_footer(); ?>
