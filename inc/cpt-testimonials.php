@@ -76,6 +76,9 @@ function flxlm_register_testimonial_meta() {
 		'person_title',
 		'business_name',
 		'industry',
+		'location',
+		'company_size',
+		'products_used',
 		'quote_short',
 		'quote_full',
 		'video_4k',
@@ -83,6 +86,7 @@ function flxlm_register_testimonial_meta() {
 		'video_720p',
 		'poster_webp',
 		'poster_jpg',
+		'hero_object_position',
 		'captions_vtt',
 		'transcript_full',
 	);
@@ -128,18 +132,22 @@ function flxlm_render_testimonial_meta_box( $post ) {
 	wp_nonce_field( 'flxlm_testimonial_meta', 'flxlm_testimonial_nonce' );
 
 	$fields = array(
-		array( 'key' => 'person_name',      'label' => 'Person Name' ),
-		array( 'key' => 'person_title',     'label' => 'Person Title' ),
-		array( 'key' => 'business_name',    'label' => 'Business Name' ),
-		array( 'key' => 'industry',         'label' => 'Industry' ),
-		array( 'key' => 'quote_short',      'label' => 'Short Quote (one line, for cards)' ),
-		array( 'key' => 'quote_full',       'label' => 'Full Quote (for hero/detail)' ),
-		array( 'key' => 'video_4k',         'label' => 'Video URL (4K)' ),
-		array( 'key' => 'video_1080p',      'label' => 'Video URL (1080p)' ),
-		array( 'key' => 'video_720p',       'label' => 'Video URL (720p)' ),
-		array( 'key' => 'poster_webp',      'label' => 'Poster Image (WebP)' ),
-		array( 'key' => 'poster_jpg',       'label' => 'Poster Image (JPG)' ),
-		array( 'key' => 'captions_vtt',     'label' => 'Captions (WebVTT URL)' ),
+		array( 'key' => 'person_name',            'label' => 'Person Name' ),
+		array( 'key' => 'person_title',           'label' => 'Person Title' ),
+		array( 'key' => 'business_name',          'label' => 'Business Name' ),
+		array( 'key' => 'industry',               'label' => 'Industry' ),
+		array( 'key' => 'location',               'label' => 'Location' ),
+		array( 'key' => 'company_size',           'label' => 'Company Size' ),
+		array( 'key' => 'products_used',          'label' => 'Products Used (e.g. Radio, Digital, FLX Finest)' ),
+		array( 'key' => 'quote_short',            'label' => 'Short Quote (one line, for cards)' ),
+		array( 'key' => 'quote_full',             'label' => 'Full Quote (for hero/detail)' ),
+		array( 'key' => 'video_4k',               'label' => 'Video URL (4K)' ),
+		array( 'key' => 'video_1080p',            'label' => 'Video URL (1080p)' ),
+		array( 'key' => 'video_720p',             'label' => 'Video URL (720p)' ),
+		array( 'key' => 'poster_webp',            'label' => 'Poster Image (WebP)' ),
+		array( 'key' => 'poster_jpg',             'label' => 'Poster Image (JPG)' ),
+		array( 'key' => 'hero_object_position',   'label' => 'Hero Image Position (e.g. 47% 38%)' ),
+		array( 'key' => 'captions_vtt',           'label' => 'Captions (WebVTT URL)' ),
 	);
 
 	echo '<table class="form-table">';
@@ -187,9 +195,10 @@ function flxlm_save_testimonial_meta( $post_id ) {
 
 	$string_fields = array(
 		'person_name', 'person_title', 'business_name', 'industry',
+		'location', 'company_size', 'products_used',
 		'quote_short', 'quote_full',
 		'video_4k', 'video_1080p', 'video_720p',
-		'poster_webp', 'poster_jpg', 'captions_vtt',
+		'poster_webp', 'poster_jpg', 'hero_object_position', 'captions_vtt',
 	);
 
 	foreach ( $string_fields as $field ) {

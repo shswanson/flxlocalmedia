@@ -84,6 +84,57 @@
 		btn.textContent = isOpen ? 'Show Full Transcript' : 'Hide Transcript';
 	});
 
+	/* ---------- Video Lightbox ---------- */
+	var lightbox = document.getElementById('video-lightbox');
+	if (lightbox) {
+		var lightboxVideo = document.getElementById('lightbox-video');
+		var closeBtn = lightbox.querySelector('.video-lightbox__close');
+		var playBtns = document.querySelectorAll('[data-video-lightbox]');
+
+		function openLightbox() {
+			lightbox.classList.add('video-lightbox--open');
+			document.body.style.overflow = 'hidden';
+			if (lightboxVideo) {
+				lightboxVideo.play();
+			}
+			window.dataLayer = window.dataLayer || [];
+			window.dataLayer.push({
+				event: 'video_play',
+				video_title: document.title,
+				video_source: 'lightbox'
+			});
+		}
+
+		function closeLightbox() {
+			if (lightboxVideo) {
+				lightboxVideo.pause();
+				lightboxVideo.currentTime = 0;
+			}
+			lightbox.classList.remove('video-lightbox--open');
+			document.body.style.overflow = '';
+		}
+
+		for (var i = 0; i < playBtns.length; i++) {
+			playBtns[i].addEventListener('click', openLightbox);
+		}
+
+		if (closeBtn) {
+			closeBtn.addEventListener('click', closeLightbox);
+		}
+
+		lightbox.addEventListener('click', function(e) {
+			if (e.target === lightbox) {
+				closeLightbox();
+			}
+		});
+
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape' && lightbox.classList.contains('video-lightbox--open')) {
+				closeLightbox();
+			}
+		});
+	}
+
 	/* ---------- Sticky Header Shadow ---------- */
 	var header = document.getElementById('site-header');
 	if (header) {
