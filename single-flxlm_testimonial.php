@@ -117,7 +117,7 @@ if ( ! empty( $meta_items ) ) : ?>
 		<div class="transcript">
 			<button class="transcript__toggle">Show Full Transcript</button>
 			<div class="transcript__content">
-				<?php echo nl2br( esc_html( $transcript ) ); ?>
+				<?php echo wp_kses( $transcript, array( 'p' => array(), 'strong' => array(), 'br' => array(), 'em' => array() ) ); ?>
 			</div>
 		</div>
 	</div>
