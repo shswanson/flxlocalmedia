@@ -1786,8 +1786,7 @@ p + p {
 	margin-bottom: var(--space-lg);
 }
 
-.case-study__narrative blockquote,
-.case-study__narrative blockquote p {
+.case-study__narrative blockquote {
 	font-family: var(--font-display);
 	font-size: clamp(1.375rem, 2.5vw, 1.75rem);
 	font-style: italic;
@@ -1796,6 +1795,17 @@ p + p {
 	border-left: 4px solid var(--color-accent);
 	padding: var(--space-lg) 0 var(--space-lg) var(--space-xl);
 	margin: var(--space-2xl) 0;
+}
+
+.case-study__narrative blockquote p {
+	font-family: inherit;
+	font-size: inherit;
+	font-style: inherit;
+	color: inherit;
+	line-height: inherit;
+	border: none;
+	padding: 0;
+	margin: 0;
 }
 
 /* ---------- Video Lightbox ---------- */
