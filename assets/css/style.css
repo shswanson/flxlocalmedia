@@ -1786,7 +1786,8 @@ p + p {
 	margin-bottom: var(--space-lg);
 }
 
-.case-study__narrative blockquote {
+.case-study__narrative blockquote,
+.case-study__narrative blockquote p {
 	font-family: var(--font-display);
 	font-size: var(--fs-2xl);
 	font-style: italic;
