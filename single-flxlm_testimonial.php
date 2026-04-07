@@ -148,12 +148,14 @@ endwhile;
 			<h2 class="section__title">More Client Stories</h2>
 		</div>
 		<?php
-		$more = flxlm_get_testimonials( array(
+		$more = new WP_Query( array(
+			'post_type'      => 'flxlm_testimonial',
 			'posts_per_page' => 3,
-			'post__not_in'   => array( $current_id ),
+			'post__not_in'   => array( (int) $current_id ),
 			'orderby'        => 'rand',
+			'post_status'    => 'publish',
 		) );
-		if ( $more && $more->have_posts() ) :
+		if ( $more->have_posts() ) :
 		?>
 			<div class="testimonial-grid">
 				<?php while ( $more->have_posts() ) : $more->the_post(); ?>
