@@ -31,9 +31,12 @@ add_action( 'after_setup_theme', 'flxlm_setup' );
  * Enqueue styles and scripts.
  */
 function flxlm_enqueue_assets() {
+	$css_ver = filemtime( get_template_directory() . '/assets/css/style.css' );
+	$js_ver  = filemtime( get_template_directory() . '/assets/js/main.js' );
+
 	wp_enqueue_style( 'flxlm-fonts', 'https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap', array(), null );
-	wp_enqueue_style( 'flxlm-style', get_template_directory_uri() . '/assets/css/style.css', array( 'flxlm-fonts' ), FLXLM_VERSION );
-	wp_enqueue_script( 'flxlm-main', get_template_directory_uri() . '/assets/js/main.js', array(), FLXLM_VERSION, true );
+	wp_enqueue_style( 'flxlm-style', get_template_directory_uri() . '/assets/css/style.css', array( 'flxlm-fonts' ), $css_ver );
+	wp_enqueue_script( 'flxlm-main', get_template_directory_uri() . '/assets/js/main.js', array(), $js_ver, true );
 }
 add_action( 'wp_enqueue_scripts', 'flxlm_enqueue_assets' );
 
