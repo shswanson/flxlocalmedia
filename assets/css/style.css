@@ -853,11 +853,11 @@ p + p {
 .testimonial-card {
 	background: var(--color-white);
 	border-radius: var(--radius-lg);
-	padding: 2rem;
 	border: 1px solid var(--color-border-light);
 	display: flex;
 	flex-direction: column;
 	position: relative;
+	overflow: hidden;
 	transition: box-shadow var(--transition), transform var(--transition);
 }
 
@@ -866,22 +866,43 @@ p + p {
 	transform: translateY(-2px);
 }
 
-.testimonial-card__video {
-	position: relative;
-	margin: -2rem -2rem 1.5rem;
-	border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+.testimonial-card__image {
+	aspect-ratio: 16 / 10;
 	overflow: hidden;
 }
 
+.testimonial-card__image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform var(--transition);
+}
+
+.testimonial-card:hover .testimonial-card__image img {
+	transform: scale(1.03);
+}
+
 .testimonial-card__body {
-	padding: 0;
+	padding: var(--space-lg);
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.testimonial-card__industry {
+	font-size: 0.6875rem;
+	font-weight: var(--fw-bold);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--color-accent);
+	margin-bottom: var(--space-sm);
 }
 
 .testimonial-card__quote {
-	font-size: var(--fs-base);
+	font-size: var(--fs-sm);
 	font-style: italic;
 	color: var(--color-text);
-	line-height: 1.65;
+	line-height: 1.6;
 	margin-bottom: var(--space-lg);
 	flex: 1;
 }
@@ -889,11 +910,11 @@ p + p {
 .testimonial-card__quote::before {
 	content: '\201C';
 	font-family: var(--font-display);
-	font-size: 4rem;
+	font-size: 2.5rem;
 	color: var(--color-sage);
 	font-weight: 400;
 	line-height: 0;
-	vertical-align: -0.3em;
+	vertical-align: -0.25em;
 	margin-right: 2px;
 	opacity: 0.5;
 }
@@ -901,14 +922,14 @@ p + p {
 .testimonial-card__cite {
 	display: flex;
 	flex-direction: column;
-	padding-top: 1.25rem;
+	padding-top: var(--space-md);
 	border-top: 1px solid var(--color-border-light);
 }
 
 .testimonial-card__name {
 	font-weight: var(--fw-semibold);
 	color: var(--color-primary);
-	font-size: 0.9375rem;
+	font-size: var(--fs-sm);
 }
 
 .testimonial-card__business {
@@ -926,7 +947,7 @@ p + p {
 	transition: color var(--transition);
 }
 
-.testimonial-card__link:hover {
+.testimonial-card:hover .testimonial-card__link {
 	color: var(--color-accent-hover);
 }
 
