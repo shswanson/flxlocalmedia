@@ -142,28 +142,29 @@ endwhile;
 ?>
 
 <!-- More Stories -->
+<?php
+$more_args = array(
+	'post_type'      => 'flxlm_testimonial',
+	'posts_per_page' => 3,
+	'post__not_in'   => array( (int) $current_id ),
+	'orderby'        => 'rand',
+	'post_status'    => 'publish',
+);
+$more_query = new WP_Query( $more_args );
+?>
+<?php if ( is_object( $more_query ) && $more_query->have_posts() ) : ?>
 <section class="section section--warm-gray">
 	<div class="container">
 		<div class="section__header" style="text-align: center; margin-bottom: var(--space-xl);">
 			<h2 class="section__title">More Client Stories</h2>
 		</div>
-		<?php
-		$more = new WP_Query( array(
-			'post_type'      => 'flxlm_testimonial',
-			'posts_per_page' => 3,
-			'post__not_in'   => array( (int) $current_id ),
-			'orderby'        => 'rand',
-			'post_status'    => 'publish',
-		) );
-		if ( $more->have_posts() ) :
-		?>
-			<div class="testimonial-grid">
-				<?php while ( $more->have_posts() ) : $more->the_post(); ?>
-					<?php get_template_part( 'template-parts/testimonial-card' ); ?>
-				<?php endwhile; wp_reset_postdata(); ?>
-			</div>
-		<?php endif; ?>
+		<div class="testimonial-grid">
+			<?php while ( $more_query->have_posts() ) : $more_query->the_post(); ?>
+				<?php get_template_part( 'template-parts/testimonial-card' ); ?>
+			<?php endwhile; wp_reset_postdata(); ?>
+		</div>
 	</div>
 </section>
+<?php endif; ?>
 
 <?php get_footer(); ?>
