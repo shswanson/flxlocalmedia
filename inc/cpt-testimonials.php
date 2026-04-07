@@ -88,7 +88,6 @@ function flxlm_register_testimonial_meta() {
 		'poster_jpg',
 		'hero_object_position',
 		'captions_vtt',
-		'transcript_full',
 	);
 
 	foreach ( $string_fields as $field ) {
@@ -100,6 +99,14 @@ function flxlm_register_testimonial_meta() {
 		) );
 	}
 
+	// Transcript allows limited HTML (p, strong, em, br).
+	register_post_meta( 'flxlm_testimonial', 'transcript_full', array(
+		'type'              => 'string',
+		'single'            => true,
+		'show_in_rest'      => true,
+		'sanitize_callback' => 'flxlm_sanitize_transcript',
+	) );
+
 	register_post_meta( 'flxlm_testimonial', 'is_featured', array(
 		'type'              => 'boolean',
 		'single'            => true,
@@ -109,6 +116,21 @@ function flxlm_register_testimonial_meta() {
 	) );
 }
 add_action( 'init', 'flxlm_register_testimonial_meta' );
+
+/**
+ * Sanitize transcript: allow limited HTML.
+ *
+ * @param string $value Raw transcript.
+ * @return string Sanitized transcript.
+ */
+function flxlm_sanitize_transcript( $value ) {
+	return wp_kses( $value, array(
+		'p'      => array(),
+		'strong' => array(),
+		'em'     => array(),
+		'br'     => array(),
+	) );
+}
 
 /**
  * Add meta box.
@@ -208,7 +230,7 @@ function flxlm_save_testimonial_meta( $post_id ) {
 	}
 
 	if ( isset( $_POST['transcript_full'] ) ) {
-		update_post_meta( $post_id, 'transcript_full', sanitize_textarea_field( $_POST['transcript_full'] ) );
+		update_post_meta( $post_id, 'transcript_full', flxlm_sanitize_transcript( $_POST['transcript_full'] ) );
 	}
 
 	update_post_meta( $post_id, 'is_featured', ! empty( $_POST['is_featured'] ) );
