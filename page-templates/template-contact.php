@@ -15,8 +15,40 @@ get_header();
 	</div>
 </div>
 
-<!-- Studios Section -->
+<!-- Contact Form Section -->
 <section class="section">
+	<div class="container">
+
+		<!-- Testimonial quote above form -->
+		<?php
+		$quote_testimonial = flxlm_get_testimonials( array(
+			'posts_per_page' => 1,
+			'orderby'        => 'rand',
+		) );
+		if ( $quote_testimonial->have_posts() ) :
+			while ( $quote_testimonial->have_posts() ) : $quote_testimonial->the_post();
+				get_template_part( 'template-parts/testimonial-quote' );
+			endwhile;
+			wp_reset_postdata();
+		endif;
+		?>
+
+		<div class="contact-form-wrap">
+			<h2>Send Us a Message</h2>
+
+			<?php if ( isset( $_GET['contact'] ) && 'success' === $_GET['contact'] ) : ?>
+				<div class="flxlm-form-success">
+					Thanks for reaching out! We'll be in touch within one business day.
+				</div>
+			<?php endif; ?>
+
+			<?php flxlm_render_contact_form(); ?>
+		</div>
+	</div>
+</section>
+
+<!-- Studios Section -->
+<section class="section" style="padding-top: 0;">
 	<div class="container">
 		<div class="section__header section__header--center">
 			<span class="section__eyebrow">Visit us</span>
@@ -54,56 +86,6 @@ get_header();
 					</div>
 				</div>
 			<?php endforeach; ?>
-		</div>
-	</div>
-</section>
-
-<!-- Contact Form Section -->
-<section class="section" style="padding-top: 0;">
-	<div class="container">
-
-		<!-- Testimonial quote above form -->
-		<?php
-		$quote_testimonial = flxlm_get_testimonials( array(
-			'posts_per_page' => 1,
-			'orderby'        => 'rand',
-		) );
-		if ( $quote_testimonial->have_posts() ) :
-			while ( $quote_testimonial->have_posts() ) : $quote_testimonial->the_post();
-				get_template_part( 'template-parts/testimonial-quote' );
-			endwhile;
-			wp_reset_postdata();
-		endif;
-		?>
-
-		<div class="contact-layout">
-			<div class="contact-layout__form">
-				<h2>Send Us a Message</h2>
-
-				<?php if ( isset( $_GET['contact'] ) && 'success' === $_GET['contact'] ) : ?>
-					<div class="flxlm-form-success">
-						Thanks for reaching out! We'll be in touch within one business day.
-					</div>
-				<?php endif; ?>
-
-				<?php flxlm_render_contact_form(); ?>
-			</div>
-
-			<div class="contact-layout__info">
-				<h2>Other Ways to Reach Us</h2>
-				<div class="office-list">
-					<?php foreach ( $studios as $studio ) : ?>
-						<div class="office">
-							<h3 class="office__name"><?php echo esc_html( $studio['name'] ); ?></h3>
-							<p class="office__address">
-								<?php echo esc_html( $studio['address'] ); ?><br>
-								<?php echo esc_html( $studio['city'] . ', ' . $studio['state'] . ' ' . $studio['zip'] ); ?><br>
-								<a href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $studio['phone'] ) ); ?>"><?php echo esc_html( $studio['phone'] ); ?></a>
-							</p>
-						</div>
-					<?php endforeach; ?>
-				</div>
-			</div>
 		</div>
 	</div>
 </section>

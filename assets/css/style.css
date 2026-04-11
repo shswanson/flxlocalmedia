@@ -1957,6 +1957,18 @@ p + p {
 }
 
 /* ---------- Contact Page ---------- */
+.contact-form-wrap {
+	max-width: 680px;
+	margin: 0 auto;
+}
+
+.contact-form-wrap h2 {
+	font-family: var(--font-display);
+	font-weight: 400;
+	color: var(--color-primary);
+	margin-bottom: var(--space-lg);
+}
+
 .contact-layout {
 	display: grid;
 	grid-template-columns: 1fr;
