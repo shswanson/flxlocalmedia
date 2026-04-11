@@ -2485,6 +2485,222 @@ p + p {
 	margin-bottom: var(--space-2xl);
 }
 
+/* ---------- Station Page: Personality Grid ---------- */
+.personality-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: var(--space-md);
+	max-width: 720px;
+	margin: 0 auto;
+}
+
+@media (min-width: 576px) {
+	.personality-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+@media (min-width: 768px) {
+	.personality-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+.personality-card {
+	background: rgba(255,255,255,0.85);
+	border: 1px solid var(--color-border-light);
+	border-radius: var(--radius-lg);
+	padding: 1.25rem var(--space-md);
+	text-align: center;
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+}
+
+.personality-card__name {
+	font-family: var(--font-display);
+	font-size: var(--fs-base);
+	font-weight: 400;
+	color: var(--color-primary);
+	margin-bottom: 0.25rem;
+}
+
+.personality-card__show {
+	font-size: var(--fs-sm);
+	color: var(--color-text-muted);
+	font-weight: var(--fw-medium);
+	margin-bottom: 0.125rem;
+}
+
+.personality-card__time {
+	font-size: var(--fs-xs);
+	color: var(--color-lake);
+	font-weight: var(--fw-semibold);
+}
+
+/* ---------- Why Radio: Hero Stat ---------- */
+.why-radio-stat-hero {
+	text-align: center;
+	padding: var(--space-2xl) var(--space-xl);
+}
+
+.why-radio-stat-hero__number {
+	font-family: var(--font-display);
+	font-size: var(--fs-5xl);
+	font-weight: 400;
+	color: var(--color-primary);
+	line-height: 1;
+}
+
+@media (min-width: 768px) {
+	.why-radio-stat-hero__number {
+		font-size: 4.5rem;
+	}
+}
+
+.why-radio-stat-hero__label {
+	font-size: var(--fs-lg);
+	font-weight: var(--fw-medium);
+	color: var(--color-text);
+	margin-top: var(--space-sm);
+}
+
+.why-radio-stat-hero__detail {
+	font-size: var(--fs-sm);
+	color: var(--color-text-muted);
+	margin-top: var(--space-xs);
+}
+
+/* ---------- Why Radio: ROI Grid ---------- */
+.why-radio-roi-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: var(--space-md);
+	max-width: 720px;
+	margin: var(--space-2xl) auto;
+}
+
+@media (min-width: 768px) {
+	.why-radio-roi-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+.why-radio-roi-card {
+	background: var(--color-white);
+	border: 1px solid var(--color-border-light);
+	border-radius: var(--radius-lg);
+	padding: var(--space-lg);
+	text-align: center;
+}
+
+.why-radio-roi-card--highlight {
+	border-color: var(--color-accent);
+	background: var(--color-accent-soft);
+}
+
+.why-radio-roi-card__channel {
+	font-size: var(--fs-sm);
+	font-weight: var(--fw-bold);
+	color: var(--color-primary);
+	margin-bottom: var(--space-sm);
+}
+
+.why-radio-roi-card__roi {
+	font-family: var(--font-display);
+	font-size: var(--fs-3xl);
+	font-weight: 400;
+	color: var(--color-primary);
+	line-height: 1;
+}
+
+.why-radio-roi-card--highlight .why-radio-roi-card__roi {
+	color: var(--color-accent);
+}
+
+.why-radio-roi-card__label {
+	font-size: var(--fs-xs);
+	color: var(--color-text-muted);
+	margin-top: var(--space-xs);
+}
+
+.why-radio-roi-card__note {
+	font-size: var(--fs-xs);
+	font-weight: var(--fw-semibold);
+	color: var(--color-lake);
+	margin-top: var(--space-xs);
+}
+
+/* ---------- Why Radio: Market Stats Grid ---------- */
+.why-radio-market-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: var(--space-md);
+	max-width: 720px;
+	margin: var(--space-2xl) auto;
+}
+
+@media (min-width: 768px) {
+	.why-radio-market-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+.why-radio-market-stat {
+	background: var(--color-white);
+	border: 1px solid var(--color-border-light);
+	border-radius: var(--radius-lg);
+	padding: var(--space-lg);
+	text-align: center;
+}
+
+.why-radio-market-stat__number {
+	font-family: var(--font-display);
+	font-size: var(--fs-2xl);
+	font-weight: 400;
+	color: var(--color-primary);
+	line-height: 1;
+}
+
+.why-radio-market-stat__label {
+	font-size: var(--fs-sm);
+	font-weight: var(--fw-medium);
+	color: var(--color-text-muted);
+	margin-top: var(--space-sm);
+}
+
+/* ---------- Why Radio: In-Car Dominance Grid ---------- */
+.why-radio-dominance-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: var(--space-md);
+	max-width: 720px;
+	margin: var(--space-2xl) auto;
+}
+
+.why-radio-dominance-stat {
+	background: var(--color-white);
+	border: 1px solid var(--color-border-light);
+	border-radius: var(--radius-lg);
+	padding: var(--space-lg);
+	text-align: center;
+}
+
+.why-radio-dominance-stat__number {
+	font-family: var(--font-display);
+	font-size: var(--fs-3xl);
+	font-weight: 400;
+	color: var(--color-primary);
+	line-height: 1;
+}
+
+.why-radio-dominance-stat__label {
+	font-size: var(--fs-sm);
+	color: var(--color-text-muted);
+	font-weight: var(--fw-medium);
+	margin-top: var(--space-sm);
+	line-height: 1.4;
+}
+
 /* ---------- Utility ---------- */
 .text-center {
 	text-align: center;
