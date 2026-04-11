@@ -191,8 +191,8 @@ function flxlm_get_station_data( $slug = '' ) {
 			'demo'                => 'Women 25-54',
 			'tagline'             => 'The Finger Lakes at-work station',
 			'market_population'   => 338147,
-			'median_hhi'          => 69906,
-			'homeownership_pct'   => 74.2,
+			'median_hhi'          => 81353,
+			'homeownership_pct'   => 69.9,
 			'drive_alone_pct'     => 86.9,
 			'description'         => '<p>Mix 98.5 is the Finger Lakes at-work station. From offices in Geneva to shops in Canandaigua, Mix 98.5 is the soundtrack of the workday for women across Ontario, Cayuga, Seneca, Wayne, and Yates counties. The station plays the music people know and love — a mix of current hits and familiar favorites that keeps the energy up without overwhelming the room.</p>
 <p>Mornings start with Jim Schreck and Sorah Devlin, who have become the way tens of thousands of Finger Lakes residents begin their day. Jim stays on through mid-morning, Lisa Cruz takes over afternoons, and John Tesh brings his nationally syndicated Intelligence for Your Life show to the evening hours. It is a lineup that keeps listeners engaged from the first alarm to dinnertime.</p>
@@ -230,8 +230,8 @@ function flxlm_get_station_data( $slug = '' ) {
 			'demo'                => 'Adults 35-64',
 			'tagline'             => 'Greatest hits of the \'70s, \'80s, and \'90s',
 			'market_population'   => 313434,
-			'median_hhi'          => 70374,
-			'homeownership_pct'   => 74.0,
+			'median_hhi'          => 83993,
+			'homeownership_pct'   => 78.2,
 			'drive_alone_pct'     => 87.3,
 			'description'         => '<p>Classic Hits 99.3 plays the greatest hits of the \'70s, \'80s, and \'90s — the songs that everyone knows, from Fleetwood Mac to Tom Petty to Whitney Houston. It is the station where people sing along on the drive to work and nod their heads while running errands. The format appeals to adults 35-64 with balanced gender reach, making it one of the most versatile advertising platforms in the market.</p>
 <p>Lisa Cruz starts the day with mornings, bringing familiar energy and local connection to the Finger Lakes audience. Ken Paradise takes over for afternoons, rounding out a lineup that keeps listeners tuned in through the full workday.</p>
@@ -259,8 +259,8 @@ function flxlm_get_station_data( $slug = '' ) {
 			'demo'                => 'Men 25-64',
 			'tagline'             => 'Classic rock for the Finger Lakes',
 			'market_population'   => 237263,
-			'median_hhi'          => 72669,
-			'homeownership_pct'   => 75.3,
+			'median_hhi'          => 86376,
+			'homeownership_pct'   => 74.8,
 			'drive_alone_pct'     => 87.2,
 			'description'         => '<p>101.7 The Wall is the Finger Lakes\' home for classic rock — Led Zeppelin, AC/DC, Pink Floyd, the Stones, and everything that defined rock and roll. The format skews male and attracts a loyal audience of men 25-64, many of whom work in trades, construction, manufacturing, and management across the region.</p>
 <p>Mornings belong to Ken Paradise and Jeff "Woody" Woodruff, whose Ken and Woody show has built a dedicated following. Woody stays on through mid-morning, keeping the energy and the rock going. It is the kind of station where listeners do not just tune in — they turn it up.</p>
@@ -288,8 +288,8 @@ function flxlm_get_station_data( $slug = '' ) {
 			'demo'                => 'Adults 25-64',
 			'tagline'             => 'Finger Lakes Country!',
 			'market_population'   => 137001,
-			'median_hhi'          => 74325,
-			'homeownership_pct'   => 73.3,
+			'median_hhi'          => 89727,
+			'homeownership_pct'   => 72.6,
 			'drive_alone_pct'     => 84.8,
 			'description'         => '<p>Finger Lakes Country is the region\'s only country music station, broadcasting across five frequencies to cover the widest geographic area of any station in the group. From Penn Yan to Dundee, Watkins Glen to Corning, Geneva to Elmira — if you are in the southern Finger Lakes, WFLR is the station people know.</p>
 <p>Mornings start with Larry Timko, a Marconi Award-winning host who has been a fixture of the Finger Lakes for decades. Larry does not just play music — he is a trusted voice in the community, the kind of host whose live read carries the weight of a personal recommendation. Lucas Day handles local news throughout the day, keeping the community connected.</p>
@@ -317,8 +317,8 @@ function flxlm_get_station_data( $slug = '' ) {
 			'demo'                => 'Adults 35+',
 			'tagline'             => 'Finger Lakes News Radio',
 			'market_population'   => 112288,
-			'median_hhi'          => 76603,
-			'homeownership_pct'   => 72.5,
+			'median_hhi'          => 96513,
+			'homeownership_pct'   => 77.1,
 			'drive_alone_pct'     => 85.7,
 			'description'         => '<p>WGVA is the Finger Lakes\' flagship news and talk station, serving Geneva, Canandaigua, Seneca Falls, Victor, and the broader Ontario County area. For listeners who want to know what is happening — locally, nationally, and in the world — WGVA is where they turn.</p>
 <p>Paul Szmal anchors FLX Mornings with local news, community conversation, and the kind of coverage that only a station rooted in the community can deliver. The rest of the day features Gordon Deal, Brian Kilmeade, Jimmy Failla, Markley Van Camp and Robbins, and Mark Levin — a lineup that keeps news and talk listeners engaged from early morning through the evening.</p>
@@ -356,8 +356,8 @@ function flxlm_get_station_data( $slug = '' ) {
 			'demo'                => 'Adults 35+',
 			'tagline'             => 'Finger Lakes News Radio',
 			'market_population'   => 76171,
-			'median_hhi'          => 63227,
-			'homeownership_pct'   => 70.0,
+			'median_hhi'          => 79345,
+			'homeownership_pct'   => 75.4,
 			'drive_alone_pct'     => 87.6,
 			'description'         => '<p>WAUB is Auburn and Cayuga County\'s news and talk station, delivering the same strong programming lineup as its sister station WGVA but focused on the Auburn market. For the communities of Auburn, Weedsport, Skaneateles, and surrounding Cayuga County, WAUB is the station that keeps people informed.</p>
 <p>Paul Szmal\'s FLX Mornings provides the local connection, with Gordon Deal, Brian Kilmeade, Jimmy Failla, and Mark Levin rounding out a full day of news and talk. WAUB also carries Buffalo Bills and Syracuse University sports, along with Auburn and Cayuga County high school sports — a deep commitment to the local sports community that builds listener loyalty.</p>
@@ -395,8 +395,8 @@ function flxlm_get_station_data( $slug = '' ) {
 			'demo'                => 'Women 35-64',
 			'tagline'             => 'The Lake 100.1 / 104.5',
 			'market_population'   => 756406,
-			'median_hhi'          => 71450,
-			'homeownership_pct'   => 63.7,
+			'median_hhi'          => 83154,
+			'homeownership_pct'   => 69.9,
 			'drive_alone_pct'     => 82.4,
 			'description'         => '<p>The Lake is a premium easy rock station with a strict six-minute-per-hour commercial limit — the lowest commercial load of any station in the group. That means when your ad runs on The Lake, it is not buried in a long commercial break. It stands out. Listeners stay tuned because they know the music is never far away.</p>
 <p>The format features the easy rock classics — Eagles, Springsteen, Jackson Browne, James Taylor, and the artists that define relaxed, feel-good listening. The Lake broadcasts on two frequencies, 100.1 and 104.5 FM, covering the largest potential audience of any station in the group by reaching deep into the Rochester market.</p>
