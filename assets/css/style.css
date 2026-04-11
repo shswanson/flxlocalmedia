@@ -1349,7 +1349,23 @@ p + p {
 
 .station-card__demo {
 	font-size: var(--fs-xs);
+	color: var(--color-primary);
+	font-weight: var(--fw-semibold);
+	margin-top: var(--space-xs);
+}
+
+.station-card__personalities {
+	font-size: 0.6875rem;
 	color: var(--color-text-muted);
+	margin-top: var(--space-xs);
+	line-height: 1.4;
+}
+
+.station-card__reach {
+	font-size: 0.6875rem;
+	color: var(--color-lake);
+	font-weight: var(--fw-semibold);
+	margin-top: var(--space-xs);
 }
 
 /* ---------- CTA Banner ---------- */
