@@ -119,6 +119,7 @@ get_header();
 		<div class="text-center">
 			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary btn--lg">Contact Us</a>
 		</div>
+		<p class="methodology-link">Market data sourced from US Census Bureau ACS 2022 and Nielsen Audio Today 2026. <a href="<?php echo esc_url( home_url( '/methodology/' ) ); ?>">See our methodology.</a></p>
 	</div>
 </section>
 

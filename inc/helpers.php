@@ -114,21 +114,17 @@ function flxlm_video_facade( $post_id, $args = array() ) {
  * @param array $station Station data array.
  */
 function flxlm_station_card( $station ) {
+	$slug = isset( $station['slug'] ) ? $station['slug'] : sanitize_title( $station['name'] );
+	$link = home_url( '/solutions/radio/' . $slug . '/' );
 	?>
-	<div class="station-card">
+	<a href="<?php echo esc_url( $link ); ?>" class="station-card" style="text-decoration: none; color: inherit; display: block;">
 		<h3 class="station-card__name"><?php echo esc_html( $station['name'] ); ?></h3>
 		<p class="station-card__call"><?php echo esc_html( $station['call_sign'] ); ?> — <?php echo esc_html( $station['frequency'] ); ?></p>
 		<p class="station-card__format"><?php echo esc_html( $station['format'] ); ?></p>
 		<?php if ( ! empty( $station['demo'] ) ) : ?>
 			<p class="station-card__demo"><?php echo esc_html( $station['demo'] ); ?></p>
 		<?php endif; ?>
-		<?php if ( ! empty( $station['personalities'] ) ) : ?>
-			<p class="station-card__personalities"><?php echo esc_html( $station['personalities'] ); ?></p>
-		<?php endif; ?>
-		<?php if ( ! empty( $station['reach'] ) ) : ?>
-			<p class="station-card__reach"><?php echo esc_html( $station['reach'] ); ?></p>
-		<?php endif; ?>
-	</div>
+	</a>
 	<?php
 }
 
@@ -431,60 +427,55 @@ function flxlm_get_stations() {
 	return array(
 		array(
 			'name'          => 'Mix 98.5',
+			'slug'          => 'mix-985',
 			'call_sign'     => 'WNYR',
 			'frequency'     => '98.5 FM',
 			'format'        => 'Adult contemporary',
 			'demo'          => 'Women 25-54',
-			'personalities' => 'Jim & Sorah (mornings) · Lisa Cruz · John Tesh',
-			'reach'         => '338K market · $70K median HHI',
 		),
 		array(
 			'name'          => 'Classic Hits 99.3',
+			'slug'          => 'classic-hits-993',
 			'call_sign'     => 'WFLK',
 			'frequency'     => '99.3 FM',
 			'format'        => 'Greatest hits of the \'70s, \'80s, and \'90s',
 			'demo'          => 'Adults 35-64',
-			'personalities' => 'Lisa Cruz (mornings) · Ken Paradise',
-			'reach'         => '313K market · $70K median HHI',
 		),
 		array(
 			'name'          => '101.7 The Wall',
+			'slug'          => 'the-wall',
 			'call_sign'     => 'WLLW',
 			'frequency'     => '101.7 FM',
 			'format'        => 'Classic rock',
 			'demo'          => 'Men 25-64',
-			'personalities' => 'Ken & Woody (mornings)',
-			'reach'         => '237K market · $73K median HHI',
 		),
 		array(
 			'name'          => 'Finger Lakes Country',
+			'slug'          => 'finger-lakes-country',
 			'call_sign'     => 'WFLR',
 			'frequency'     => '95.9 / 96.1 / 96.9 / 101.9 FM / 1570 AM',
 			'format'        => 'Country — #1 format nationally',
 			'demo'          => 'Adults 25-64',
-			'personalities' => 'Larry Timko (mornings) · Lucas Day (news)',
-			'reach'         => '137K market · NASCAR · HS sports',
 		),
 		array(
 			'name'          => 'WGVA News Radio',
+			'slug'          => 'wgva',
 			'call_sign'     => 'WGVA',
 			'frequency'     => '106.3 FM / 1240 AM',
 			'format'        => 'News, talk, and community',
 			'demo'          => 'Adults 35+',
-			'personalities' => 'Paul Szmal (mornings) · Kilmeade · Levin',
-			'reach'         => '112K market · $77K median HHI · Bills/SU sports',
 		),
 		array(
 			'name'          => 'WAUB News Radio',
+			'slug'          => 'waub',
 			'call_sign'     => 'WAUB',
 			'frequency'     => '96.3 FM / 1590 AM',
 			'format'        => 'News, talk, and local sports',
 			'demo'          => 'Adults 35+',
-			'personalities' => 'Paul Szmal (mornings) · Kilmeade · Levin',
-			'reach'         => '76K market · Auburn/Cayuga County · HS sports',
 		),
 		array(
 			'name'          => 'The Lake',
+			'slug'          => 'the-lake',
 			'call_sign'     => 'WCGR',
 			'frequency'     => '100.1 / 104.5 FM',
 			'format'        => 'Easy rock — 6 min/hr commercial limit',

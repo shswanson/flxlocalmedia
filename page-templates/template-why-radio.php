@@ -205,6 +205,7 @@ get_header();
 		<div class="text-center">
 			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary btn--lg">Get in Touch</a>
 		</div>
+		<p class="methodology-link">All statistics sourced from Nielsen Audio Today 2026, Edison Research Q4 2025, and US Census Bureau ACS 2022. <a href="<?php echo esc_url( home_url( '/methodology/' ) ); ?>">See our full methodology.</a></p>
 	</div>
 </section>
 
