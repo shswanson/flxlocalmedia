@@ -493,7 +493,39 @@ function flxlm_seo_jsonld_review() {
 }
 
 /*--------------------------------------------------------------
- * 4. Utility
+ * 4. Sitemap Exclusions
+ *--------------------------------------------------------------*/
+
+add_filter( 'wp_sitemaps_posts_query_args', 'flxlm_seo_sitemap_exclude', 10, 2 );
+
+/**
+ * Exclude specific pages from the WP core sitemap.
+ *
+ * @param array  $args      WP_Query args for the sitemap.
+ * @param string $post_type The post type.
+ * @return array
+ */
+function flxlm_seo_sitemap_exclude( $args, $post_type ) {
+	if ( 'page' !== $post_type ) {
+		return $args;
+	}
+
+	// Page IDs to exclude from sitemap.
+	$exclude = array(
+		39, // fldn-seo case study
+	);
+
+	if ( ! empty( $args['post__not_in'] ) ) {
+		$args['post__not_in'] = array_merge( $args['post__not_in'], $exclude );
+	} else {
+		$args['post__not_in'] = $exclude;
+	}
+
+	return $args;
+}
+
+/*--------------------------------------------------------------
+ * 5. Utility
  *--------------------------------------------------------------*/
 
 /**
