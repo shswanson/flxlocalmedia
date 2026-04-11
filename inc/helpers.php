@@ -127,6 +127,53 @@ function flxlm_station_card( $station ) {
 }
 
 /**
+ * Get studio locations with mapped stations.
+ *
+ * @return array
+ */
+function flxlm_get_studios() {
+	return array(
+		array(
+			'name'     => 'Geneva',
+			'address'  => '3568 Lenox Road, Suite A',
+			'city'     => 'Geneva',
+			'state'    => 'NY',
+			'zip'      => '14456',
+			'phone'    => '(315) 781-7000',
+			'stations' => array(
+				array( 'name' => 'Mix 98.5', 'slug' => 'mix985' ),
+				array( 'name' => 'Classic Hits 99.3', 'slug' => 'classichits993' ),
+				array( 'name' => 'The Lake', 'slug' => 'thelake' ),
+			),
+		),
+		array(
+			'name'     => 'Auburn',
+			'address'  => '5998 Experimental Road, Suite A',
+			'city'     => 'Auburn',
+			'state'    => 'NY',
+			'zip'      => '13021',
+			'phone'    => '(315) 258-8413',
+			'stations' => array(
+				array( 'name' => 'WGVA', 'slug' => 'wgva' ),
+				array( 'name' => 'WAUB', 'slug' => 'waub' ),
+				array( 'name' => '101.7 The Wall', 'slug' => '1017thewall' ),
+			),
+		),
+		array(
+			'name'     => 'Penn Yan',
+			'address'  => '103 Main Street, Suite A',
+			'city'     => 'Penn Yan',
+			'state'    => 'NY',
+			'zip'      => '14527',
+			'phone'    => '(800) 776-9357',
+			'stations' => array(
+				array( 'name' => 'WFLR', 'slug' => 'wflr' ),
+			),
+		),
+	);
+}
+
+/**
  * Get station data.
  *
  * @return array

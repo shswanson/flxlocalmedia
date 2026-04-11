@@ -1990,6 +1990,133 @@ p + p {
 	line-height: 1.5;
 }
 
+.office__address a {
+	color: var(--color-accent);
+	text-decoration: none;
+}
+
+.office__address a:hover {
+	color: var(--color-accent-hover);
+}
+
+/* ---------- Studio Cards ---------- */
+.studio-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+	.studio-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+.studio-card {
+	background: var(--color-white);
+	border: 1px solid var(--color-border-light);
+	border-radius: var(--radius-lg);
+	overflow: hidden;
+	transition: box-shadow var(--transition), transform var(--transition);
+	position: relative;
+}
+
+.studio-card:hover {
+	box-shadow: var(--shadow-lg);
+	transform: translateY(-2px);
+}
+
+.studio-card::after {
+	content: '';
+	position: absolute;
+	bottom: -15px;
+	right: -15px;
+	width: 80px;
+	height: 80px;
+	border-radius: 45% 55% 40% 60% / 55% 45% 55% 45%;
+	background: var(--color-sage-wash);
+	opacity: 0.6;
+	filter: blur(4px);
+	pointer-events: none;
+}
+
+.studio-card:nth-child(2)::after {
+	background: var(--color-lake-wash);
+	border-radius: 55% 45% 50% 50% / 45% 55% 45% 55%;
+}
+
+.studio-card:nth-child(3)::after {
+	background: var(--color-terracotta-wash);
+	border-radius: 50% 50% 45% 55% / 50% 50% 50% 50%;
+}
+
+.studio-card__map {
+	width: 100%;
+	height: 180px;
+	border: none;
+	display: block;
+}
+
+.studio-card__body {
+	padding: var(--space-lg);
+	position: relative;
+	z-index: 1;
+}
+
+.studio-card__name {
+	font-family: var(--font-display);
+	font-size: var(--fs-xl);
+	font-weight: 400;
+	color: var(--color-primary);
+	margin-bottom: var(--space-sm);
+}
+
+.studio-card__stations {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-xs);
+	margin-bottom: var(--space-md);
+}
+
+.studio-card__badge {
+	display: inline-block;
+	padding: 0.2rem 0.5rem;
+	border-radius: 4px;
+	font-size: var(--fs-xs);
+	font-weight: var(--fw-semibold);
+	color: var(--color-white);
+	letter-spacing: 0.02em;
+}
+
+.studio-card__badge--mix985 { background: #C41E3A; }
+.studio-card__badge--classichits993 { background: #2B7AB8; }
+.studio-card__badge--thelake { background: #5BA4CF; }
+.studio-card__badge--wgva { background: #1E3A5F; }
+.studio-card__badge--waub { background: #1E3A5F; }
+.studio-card__badge--1017thewall { background: #6B4226; }
+.studio-card__badge--wflr { background: #C41E3A; }
+
+.studio-card__address {
+	font-size: var(--fs-sm);
+	color: var(--color-text-muted);
+	line-height: 1.5;
+	margin-bottom: var(--space-sm);
+}
+
+.studio-card__phone {
+	font-size: var(--fs-sm);
+}
+
+.studio-card__phone a {
+	color: var(--color-accent);
+	text-decoration: none;
+	font-weight: var(--fw-medium);
+}
+
+.studio-card__phone a:hover {
+	color: var(--color-accent-hover);
+}
+
 /* ---------- Footer ---------- */
 .site-footer {
 	background: var(--color-primary);

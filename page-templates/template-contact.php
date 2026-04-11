@@ -15,7 +15,51 @@ get_header();
 	</div>
 </div>
 
+<!-- Studios Section -->
 <section class="section">
+	<div class="container">
+		<div class="section__header section__header--center">
+			<span class="section__eyebrow">Visit us</span>
+			<h2 class="section__title">Our Studios</h2>
+			<p class="section__subtitle">Three studios across the Finger Lakes, broadcasting seven stations to the region.</p>
+		</div>
+
+		<div class="studio-grid">
+			<?php
+			$studios = flxlm_get_studios();
+			foreach ( $studios as $studio ) :
+				$map_query = urlencode( $studio['address'] . ', ' . $studio['city'] . ', ' . $studio['state'] . ' ' . $studio['zip'] );
+			?>
+				<div class="studio-card">
+					<iframe
+						class="studio-card__map"
+						src="https://maps.google.com/maps?q=<?php echo esc_attr( $map_query ); ?>&amp;z=15&amp;output=embed"
+						loading="lazy"
+						title="<?php echo esc_attr( $studio['name'] ); ?> studio location"
+					></iframe>
+					<div class="studio-card__body">
+						<h3 class="studio-card__name"><?php echo esc_html( $studio['name'] ); ?></h3>
+						<div class="studio-card__stations">
+							<?php foreach ( $studio['stations'] as $station ) : ?>
+								<span class="studio-card__badge studio-card__badge--<?php echo esc_attr( $station['slug'] ); ?>"><?php echo esc_html( $station['name'] ); ?></span>
+							<?php endforeach; ?>
+						</div>
+						<p class="studio-card__address">
+							<?php echo esc_html( $studio['address'] ); ?><br>
+							<?php echo esc_html( $studio['city'] . ', ' . $studio['state'] . ' ' . $studio['zip'] ); ?>
+						</p>
+						<p class="studio-card__phone">
+							<a href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $studio['phone'] ) ); ?>"><?php echo esc_html( $studio['phone'] ); ?></a>
+						</p>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	</div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="section" style="padding-top: 0;">
 	<div class="container">
 
 		<!-- Testimonial quote above form -->
@@ -46,29 +90,18 @@ get_header();
 			</div>
 
 			<div class="contact-layout__info">
-				<h2>Our Offices</h2>
+				<h2>Other Ways to Reach Us</h2>
 				<div class="office-list">
-					<div class="office">
-						<h3 class="office__name">Geneva</h3>
-						<p class="office__address">
-							3568 Lenox Road, Suite A<br />
-							Geneva, NY 14456
-						</p>
-					</div>
-					<div class="office">
-						<h3 class="office__name">Auburn</h3>
-						<p class="office__address">
-							5998 Experimental Road, Suite A<br />
-							Auburn, NY 13021
-						</p>
-					</div>
-					<div class="office">
-						<h3 class="office__name">Penn Yan</h3>
-						<p class="office__address">
-							103 Main Street, Suite A<br />
-							Penn Yan, NY 14527
-						</p>
-					</div>
+					<?php foreach ( $studios as $studio ) : ?>
+						<div class="office">
+							<h3 class="office__name"><?php echo esc_html( $studio['name'] ); ?></h3>
+							<p class="office__address">
+								<?php echo esc_html( $studio['address'] ); ?><br>
+								<?php echo esc_html( $studio['city'] . ', ' . $studio['state'] . ' ' . $studio['zip'] ); ?><br>
+								<a href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $studio['phone'] ) ); ?>"><?php echo esc_html( $studio['phone'] ); ?></a>
+							</p>
+						</div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>
