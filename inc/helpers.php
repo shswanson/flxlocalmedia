@@ -221,6 +221,19 @@ function flxlm_get_station_data( $slug = '' ) {
 			),
 			'coverage_counties'    => array( 'Ontario', 'Cayuga', 'Seneca', 'Wayne', 'Yates' ),
 			'coverage_description' => 'Mix 98.5 covers the heart of the Finger Lakes, reaching Geneva, Canandaigua, Auburn, Penn Yan, Seneca Falls, and surrounding communities across five counties. The signal also extends into Rochester\'s eastern suburbs.',
+			'estimated_reach'      => array(
+				'weekly'  => 44622,
+				'daily'   => 32496,
+				'monthly' => 58008,
+				'in_car'  => 13680,
+			),
+			'programming'          => array(
+				array( 'time' => '5:30 - 9:00 AM', 'show' => 'Jim and Sorah' ),
+				array( 'time' => '9:00 AM - 12:00 PM', 'show' => 'Jim Schreck' ),
+				array( 'time' => '12:00 - 5:00 PM', 'show' => 'Lisa Cruz' ),
+				array( 'time' => '5:00 - 9:00 PM', 'show' => 'John Tesh' ),
+			),
+			'sports'               => array(),
 		),
 		'classic-hits-993' => array(
 			'name'                => 'Classic Hits 99.3',
@@ -250,6 +263,17 @@ function flxlm_get_station_data( $slug = '' ) {
 			),
 			'coverage_counties'    => array( 'Ontario', 'Cayuga', 'Seneca', 'Wayne' ),
 			'coverage_description' => 'Classic Hits 99.3 covers Geneva, Auburn, Seneca Falls, Canandaigua, and the surrounding communities across four counties, with signal extending into Rochester\'s eastern suburbs and Syracuse\'s western suburbs.',
+			'estimated_reach'      => array(
+				'weekly'  => 38423,
+				'daily'   => 27981,
+				'monthly' => 49949,
+				'in_car'  => 10984,
+			),
+			'programming'          => array(
+				array( 'time' => '5:30 AM - 12:00 PM', 'show' => 'Lisa Cruz' ),
+				array( 'time' => '12:00 - 5:00 PM', 'show' => 'Ken Paradise' ),
+			),
+			'sports'               => array(),
 		),
 		'the-wall' => array(
 			'name'                => '101.7 The Wall',
@@ -279,6 +303,17 @@ function flxlm_get_station_data( $slug = '' ) {
 			),
 			'coverage_counties'    => array( 'Ontario', 'Seneca', 'Wayne' ),
 			'coverage_description' => 'The Wall covers Geneva, Penn Yan, Canandaigua, Bath, and Watkins Glen across Ontario, Seneca, and Wayne counties.',
+			'estimated_reach'      => array(
+				'weekly'  => 19610,
+				'daily'   => 14281,
+				'monthly' => 25493,
+				'in_car'  => 7778,
+			),
+			'programming'          => array(
+				array( 'time' => '5:30 - 9:00 AM', 'show' => 'Ken and Woody' ),
+				array( 'time' => '9:00 AM - 12:00 PM', 'show' => 'Woody' ),
+			),
+			'sports'               => array(),
 		),
 		'finger-lakes-country' => array(
 			'name'                => 'Finger Lakes Country',
