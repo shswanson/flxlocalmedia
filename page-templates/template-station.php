@@ -63,6 +63,21 @@ get_header();
 	</div>
 </section>
 
+<!-- Coverage Map -->
+<section class="section section--gray">
+	<div class="container">
+		<div class="section__header">
+			<h2 class="section__title">Coverage Area</h2>
+			<p class="section__subtitle">FCC-licensed broadcast coverage</p>
+		</div>
+		<div id="station-map" class="station-map" data-station-call="<?php echo esc_attr( $station_data['call_sign'] ); ?>"></div>
+		<div class="post-content" style="margin-top: var(--space-lg);">
+			<p><?php echo esc_html( $station_data['coverage_description'] ); ?></p>
+			<p><strong>Counties served:</strong> <?php echo esc_html( implode( ', ', $station_data['coverage_counties'] ) ); ?>.</p>
+		</div>
+	</div>
+</section>
+
 <!-- About This Station -->
 <section class="section">
 	<div class="container">
@@ -95,19 +110,6 @@ get_header();
 	</div>
 </section>
 <?php endif; ?>
-
-<!-- Coverage Area -->
-<section class="section">
-	<div class="container">
-		<div class="section__header">
-			<h2 class="section__title">Coverage Area</h2>
-		</div>
-		<div class="post-content">
-			<p><?php echo esc_html( $station_data['coverage_description'] ); ?></p>
-			<p><strong>Counties served:</strong> <?php echo esc_html( implode( ', ', $station_data['coverage_counties'] ) ); ?>.</p>
-		</div>
-	</div>
-</section>
 
 <!-- CTA -->
 <section class="section section--wash">

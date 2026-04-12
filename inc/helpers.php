@@ -256,13 +256,13 @@ function flxlm_get_station_data( $slug = '' ) {
 			'call_sign'           => 'WLLW',
 			'frequency'           => '101.7 FM',
 			'format'              => 'Classic Rock',
-			'demo'                => 'Men 25-64',
+			'demo'                => 'Men 35-64',
 			'tagline'             => 'Classic rock for the Finger Lakes',
 			'market_population'   => 237263,
-			'median_hhi'          => 86376,
-			'homeownership_pct'   => 74.8,
+			'median_hhi'          => 88143,
+			'homeownership_pct'   => 79.0,
 			'drive_alone_pct'     => 87.2,
-			'description'         => '<p>101.7 The Wall is the Finger Lakes\' home for classic rock — Led Zeppelin, AC/DC, Pink Floyd, the Stones, and everything that defined rock and roll. The format skews male and attracts a loyal audience of men 25-64, many of whom work in trades, construction, manufacturing, and management across the region.</p>
+			'description'         => '<p>101.7 The Wall is the Finger Lakes\' home for classic rock — Led Zeppelin, AC/DC, Pink Floyd, the Stones, and everything that defined rock and roll. The format skews male and attracts a loyal audience of men 35-64 — the generation that grew up on this music and still turns it up on the way to work.</p>
 <p>Mornings belong to Ken Paradise and Jeff "Woody" Woodruff, whose Ken and Woody show has built a dedicated following. Woody stays on through mid-morning, keeping the energy and the rock going. It is the kind of station where listeners do not just tune in — they turn it up.</p>
 <p>The Wall\'s audience has the highest concentration of construction and trades workers of any station in the group, making it a natural fit for building materials, auto services, equipment suppliers, and any business that serves the working men of the Finger Lakes.</p>',
 			'personalities'       => array(
@@ -447,7 +447,7 @@ function flxlm_get_stations() {
 			'call_sign'     => 'WLLW',
 			'frequency'     => '101.7 FM',
 			'format'        => 'Classic rock',
-			'demo'          => 'Men 25-64',
+			'demo'          => 'Men 35-64',
 		),
 		array(
 			'name'          => 'Finger Lakes Country',
