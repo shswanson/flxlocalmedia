@@ -519,6 +519,14 @@ a:hover { text-decoration: underline; }
     <h2 class="sect__title">Something Was Telling Google to Come Back for More</h2>
     <p class="sect__lead">Google Search Console's feed-crawler report showed a strange pattern: every two weeks, crawl requests against Finger Lakes Daily News jumped from ~200/day to <strong>2,000&ndash;4,000/day</strong>, then returned to baseline. Like clockwork&mdash;Jan 27, Feb 10, Feb 24, Mar 10, Mar 24, Apr 7. Exactly 14 days apart.</p>
     <p class="sect__lead">Normal crawl behavior doesn't spike on a calendar. Something was pulling Googlebot back on a schedule.</p>
+
+    <div class="card mt-md">
+        <div class="card__head">Feed-Crawler Requests &mdash; Google Search Console (Jan 20 &ndash; Apr 18, 2026)</div>
+        <div class="card__body">
+            <img src="/wp-content/themes/flxlocalmedia/assets/images/case-study-feed-spam-crawl-spikes.png" alt="GSC feed-crawler requests chart showing six biweekly spikes between 2,000 and 4,000 requests between late January and early April, with a ~200/day baseline." style="width:100%;height:auto;display:block;">
+        </div>
+    </div>
+
     <div class="callout">
         <strong>Why it matters:</strong> Crawl-budget anomalies are usually the first visible symptom of an SEO attack&mdash;long before polluted results appear in SERPs. Most sites never look. We only saw it because our overnight review pipeline reads the GSC feed-crawler report into BigQuery every morning.
     </div>
