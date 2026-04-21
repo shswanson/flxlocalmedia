@@ -137,7 +137,7 @@ function flxlm_get_studios() {
 	return array(
 		array(
 			'name'     => 'Geneva',
-			'address'  => '3568 Lenox Road, Suite A',
+			'address'  => '3568 Lenox Road',
 			'city'     => 'Geneva',
 			'state'    => 'NY',
 			'zip'      => '14456',
@@ -150,7 +150,7 @@ function flxlm_get_studios() {
 		),
 		array(
 			'name'     => 'Auburn',
-			'address'  => '5998 Experimental Road, Suite A',
+			'address'  => '5998 Experimental Road',
 			'city'     => 'Auburn',
 			'state'    => 'NY',
 			'zip'      => '13021',
@@ -163,7 +163,7 @@ function flxlm_get_studios() {
 		),
 		array(
 			'name'     => 'Penn Yan',
-			'address'  => '103 Main Street, Suite A',
+			'address'  => '103 Main Street',
 			'city'     => 'Penn Yan',
 			'state'    => 'NY',
 			'zip'      => '14527',
