@@ -144,7 +144,7 @@ function flxlm_get_studios() {
 			'phone'    => '(315) 781-7000',
 			'stations' => array(
 				array( 'name' => 'Mix 98.5', 'slug' => 'mix985' ),
-				array( 'name' => 'Classic Hits 99.3', 'slug' => 'classichits993' ),
+				array( 'name' => '101.7 The Wall', 'slug' => '1017thewall' ),
 				array( 'name' => 'The Lake', 'slug' => 'thelake' ),
 			),
 		),
@@ -158,7 +158,7 @@ function flxlm_get_studios() {
 			'stations' => array(
 				array( 'name' => 'WGVA', 'slug' => 'wgva' ),
 				array( 'name' => 'WAUB', 'slug' => 'waub' ),
-				array( 'name' => '101.7 The Wall', 'slug' => '1017thewall' ),
+				array( 'name' => 'Classic Hits 99.3', 'slug' => 'classichits993' ),
 			),
 		),
 		array(
@@ -167,7 +167,7 @@ function flxlm_get_studios() {
 			'city'     => 'Penn Yan',
 			'state'    => 'NY',
 			'zip'      => '14527',
-			'phone'    => '(800) 776-9357',
+			'phone'    => '607-243-7158',
 			'stations' => array(
 				array( 'name' => 'WFLR', 'slug' => 'wflr' ),
 			),

@@ -33,7 +33,7 @@ get_header();
 	<div class="container">
 		<div class="section__header">
 			<h2 class="section__title">Market Coverage</h2>
-			<p class="section__subtitle">7 stations across the Finger Lakes region, serving Ontario, Yates, Seneca, Wayne, and Schuyler counties.</p>
+			<p class="section__subtitle">7 stations across the Finger Lakes region, serving Ontario, Cayuga, Yates, Seneca, Wayne, and Schuyler counties.</p>
 		</div>
 
 		<?php get_template_part( 'template-parts/stats-row' ); ?>
