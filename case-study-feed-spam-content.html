@@ -1,0 +1,649 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --color-primary: #1E5B70;
+    --color-primary-dark: #164350;
+    --color-ochre: #946E16;
+    --color-purple: #6B2FA0;
+    --color-blue: #2B7AB8;
+    --color-text: #1d2327;
+    --color-text-light: #726b62;
+    --color-text-muted: #95918b;
+    --color-border: #e9e6e1;
+    --color-bg: #f9f8f6;
+    --color-white: #ffffff;
+    --color-success: #00a32a;
+    --color-error: #d63638;
+    --color-warn: #dba617;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
+    --radius: 8px;
+    --color-card: #ffffff;
+    --color-alt: #ffffff;
+    --shadow: 0 1px 3px rgba(42,36,28,0.05), 0 1px 2px rgba(42,36,28,0.03);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Layout */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+.wrap--wide { max-width: 1080px; }
+
+/* Hero */
+.hero {
+    background: linear-gradient(135deg, #1E5B70 0%, #164350 40%, #0d2f3a 100%);
+    color: #fff;
+    padding: 56px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(148,110,22,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.hero__eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+}
+.hero__title {
+    font-size: clamp(28px, 4.5vw, 42px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    max-width: 720px;
+    margin-bottom: 16px;
+}
+.hero__sub {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    max-width: 600px;
+}
+
+/* KPI row */
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: -48px;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 2;
+}
+@media (max-width: 700px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+.kpi {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px;
+    text-align: center;
+}
+.kpi__value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+}
+.kpi__value--sm { font-size: 26px; }
+.kpi__label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 6px;
+}
+.kpi__delta {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-success);
+    margin-top: 4px;
+}
+
+/* Sections */
+.sect {
+    padding: 48px 0;
+}
+.sect--alt {
+    background: var(--color-alt);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+.sect--dark {
+    background: linear-gradient(135deg, #1E5B70 0%, #0d2f3a 100%);
+    color: #fff;
+    border: none;
+}
+.sect__eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-ochre);
+    margin-bottom: 6px;
+}
+.sect--dark .sect__eyebrow { color: rgba(255,255,255,0.4); }
+.sect__title {
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+.sect--dark .sect__title { color: #fff; }
+.sect__lead {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    max-width: 640px;
+    margin-bottom: 32px;
+}
+.sect--dark .sect__lead { color: rgba(255,255,255,0.7); }
+
+/* Cards */
+.card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.card__head {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+.card__body { padding: 16px; }
+.card canvas { max-height: 300px; }
+
+/* Before/After */
+.ba-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+@media (max-width: 600px) { .ba-grid { grid-template-columns: 1fr; } }
+.ba-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+}
+.ba-card--before { border-left: 3px solid var(--color-text-muted); }
+.ba-card--after { border-left: 3px solid var(--color-success); }
+.ba-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+    margin-bottom: 12px;
+}
+.ba-score {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+.ba-card--before .ba-score { color: var(--color-text-muted); }
+.ba-card--after .ba-score { color: var(--color-success); }
+.ba-ctx {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 6px;
+}
+
+/* Implementation grid */
+.impl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+.impl-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px;
+}
+.impl-card__icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.impl-card__icon--teal { background: rgba(30,91,112,0.1); }
+.impl-card__icon--ochre { background: rgba(148,110,22,0.1); }
+.impl-card__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 6px;
+}
+.impl-card__desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-light);
+}
+.impl-card__stat {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Schema table */
+.schema-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.schema-tbl thead { background: var(--color-primary); color: #fff; }
+.schema-tbl th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.schema-tbl td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+.schema-tbl tbody tr:hover { background: #faf8f5; }
+.schema-tbl code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: #f3ede6;
+    padding: 2px 5px;
+    border-radius: 3px;
+    color: var(--color-primary);
+}
+
+/* Two-col */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+/* Timeline */
+.timeline { padding-left: 24px; position: relative; }
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--color-border);
+}
+.tl-item { position: relative; margin-bottom: 24px; }
+.tl-item::before {
+    content: '';
+    position: absolute;
+    left: -21px; top: 5px;
+    width: 10px; height: 10px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    border: 2px solid var(--color-bg);
+}
+.tl-date {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-ochre);
+    margin-bottom: 2px;
+}
+.tl-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.tl-desc { font-size: 13px; color: var(--color-text-light); line-height: 1.6; }
+
+/* Callout */
+.callout {
+    background: rgba(30,91,112,0.06);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--color-primary);
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-light);
+}
+.callout strong { color: var(--color-text); }
+
+/* Storm banner */
+.storm-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    margin: 24px 0;
+}
+@media (max-width: 700px) { .storm-grid { grid-template-columns: 1fr; } }
+.storm-num {
+    text-align: center;
+}
+.storm-num__val {
+    font-size: clamp(36px, 7vw, 56px);
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    letter-spacing: -1px;
+}
+.storm-num__label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+}
+.storm-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+}
+.storm-row .storm-num__val { font-size: clamp(24px, 4vw, 32px); }
+
+/* Index list */
+.idx-col { font-size: 13px; line-height: 1.8; color: var(--color-text-light); }
+.idx-col ul { padding-left: 20px; margin: 4px 0 12px; }
+.idx-label { font-weight: 700; font-size: 12px; }
+.idx-label--yes { color: var(--color-success); }
+.idx-label--no { color: var(--color-error); }
+.idx-label--gone { color: var(--color-text-muted); }
+
+/* Footer */
+.cs-footer {
+    background: var(--color-primary);
+    color: #fff;
+    text-align: center;
+    padding: 48px 0;
+}
+.cs-footer__title {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+}
+.cs-footer__sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    max-width: 520px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+}
+.cs-footer .btn {
+    display: inline-block;
+    background: #fff;
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 28px;
+    border-radius: var(--radius);
+    transition: background 0.2s;
+}
+.cs-footer .btn:hover { background: #f0f0f0; text-decoration: none; }
+
+/* Storm photo */
+.storm-photo {
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 24px 0;
+}
+.storm-photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.storm-photo__caption {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    padding: 8px 0 0;
+    font-style: italic;
+}
+
+/* JSON-LD code block */
+.code-block {
+    background: #1d2327;
+    color: #e0e4e8;
+    border-radius: var(--radius);
+    padding: 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 16px 0;
+    max-height: 320px;
+    overflow-y: auto;
+}
+.code-block .key { color: #7ec8e3; }
+.code-block .str { color: #a8d4a0; }
+.code-block .punct { color: #8c8f94; }
+
+/* Early results banner */
+.early-banner {
+    background: rgba(219,166,23,0.08);
+    border: 1px solid rgba(219,166,23,0.25);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 24px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.early-banner__icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.early-banner__text { font-size: 13px; line-height: 1.6; color: var(--color-text-light); }
+.early-banner__text strong { color: var(--color-text); }
+
+/* Utility */
+.mb-sm { margin-bottom: 12px; }
+.mb-md { margin-bottom: 24px; }
+.mb-lg { margin-bottom: 32px; }
+.mt-md { margin-top: 24px; }
+.mt-lg { margin-top: 32px; }
+.text-sm { font-size: 13px; }
+.text-muted { color: var(--color-text-light); }
+.tbl-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--color-border); }
+</style>
+
+<!-- Hero -->
+<section class="hero">
+<div class="wrap">
+    <p class="hero__eyebrow">Case Study &mdash; Finger Lakes Daily News</p>
+    <h1 class="hero__title">When Pharma Spammers Try to Poison a Local News Site</h1>
+    <p class="hero__sub">How we caught and killed an SEO attack that was weaponizing WordPress's own RSS feeds&mdash;in a single afternoon.</p>
+</div>
+</section>
+
+<!-- KPIs -->
+<div class="wrap wrap--wide">
+<div class="kpi-row">
+    <div class="kpi">
+        <div class="kpi__value">4,080</div>
+        <div class="kpi__label">Peak Crawl Spike</div>
+        <div class="kpi__delta">vs ~200/day baseline</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value">14 days</div>
+        <div class="kpi__label">Attack Cadence</div>
+        <div class="kpi__delta">Jan 27 &rarr; Apr 7, +/-0 days</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value kpi__value--sm">410 Gone</div>
+        <div class="kpi__label">Response Now Served</div>
+        <div class="kpi__delta">Was 200 OK before</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value">0</div>
+        <div class="kpi__label">Legitimate Feeds Broken</div>
+        <div class="kpi__delta">Verified URL-by-URL</div>
+    </div>
+</div>
+</div>
+
+<!-- Signal -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">The Signal</p>
+    <h2 class="sect__title">Something Was Telling Google to Come Back for More</h2>
+    <p class="sect__lead">Google Search Console's feed-crawler report showed a strange pattern: every two weeks, crawl requests against Finger Lakes Daily News jumped from ~200/day to <strong>2,000&ndash;4,000/day</strong>, then returned to baseline. Like clockwork&mdash;Jan 27, Feb 10, Feb 24, Mar 10, Mar 24, Apr 7. Exactly 14 days apart.</p>
+    <p class="sect__lead">Normal crawl behavior doesn't spike on a calendar. Something was pulling Googlebot back on a schedule.</p>
+    <div class="callout">
+        <strong>Why it matters:</strong> Crawl-budget anomalies are usually the first visible symptom of an SEO attack&mdash;long before polluted results appear in SERPs. Most sites never look. We only saw it because our overnight review pipeline reads the GSC feed-crawler report into BigQuery every morning.
+    </div>
+</div>
+</section>
+
+<!-- Investigation -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="sect__eyebrow">The Investigation</p>
+    <h2 class="sect__title">Three Problems in the URL List &mdash; One of Them an Active Attack</h2>
+    <p class="sect__lead">We pulled the list of URLs Google's feed crawler was hitting. The pattern was immediately obvious&mdash;and it wasn't just one thing going wrong.</p>
+
+    <div class="impl-grid mt-md">
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--ochre">&#9888;</div>
+            <div class="impl-card__title">1. Pharma Spam Injection</div>
+            <div class="impl-card__desc">Dozens of crafted URLs hitting <code>/search/&lt;pharma-query&gt;/feed/rss2/</code>. WordPress turns <em>any</em> search query into an indexable RSS feed. Attackers link to those URLs from compromised sites, Google crawls them, and pharmacy spam ends up indexed under our domain.</div>
+            <div class="impl-card__stat">Active, ongoing &mdash; P0</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#128203;</div>
+            <div class="impl-card__title">2. Low-Value Feed Surface</div>
+            <div class="impl-card__desc">Thousands of crawls against <code>/tag/*/feed</code>, <code>/author/&hellip;/page/850/feed</code>, <code>/category/local/page/559/feed</code>, and <code>/ad_block/&hellip;/feed/</code>&mdash;archive pages with no unique content, burning crawl budget that should be going to actual journalism.</div>
+            <div class="impl-card__stat">High &mdash; crawl waste</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#128736;</div>
+            <div class="impl-card__title">3. Slugification Bug</div>
+            <div class="impl-card__desc">Thousands of tag slugs starting with <code>8216</code> &mdash; the HTML entity number for a left-single-quote (<code>&amp;#8216;</code>). The RSS-import pipeline was slugifying article titles without decoding HTML entities first, generating a trail of broken tag pages Googlebot kept revisiting.</div>
+            <div class="impl-card__stat">Medium &mdash; data hygiene</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Fix -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">The Fix</p>
+    <h2 class="sect__title">410 Gone, at the Origin, Before Anything Else Runs</h2>
+    <p class="sect__lead">Two commits to the theme's SEO module&mdash;roughly 70 lines of PHP. The fix had to neutralize the active attack without breaking the feeds that actual readers and syndication partners depend on.</p>
+
+    <div class="two-col mt-md">
+        <div>
+            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">1. Hard-fail the spam vector</h3>
+            <p class="text-sm text-muted">A <code>template_redirect</code> hook at priority <code>-1</code> intercepts <code>/search/*/feed/</code>, <code>/tag/*/feed/</code>, <code>/author/*/feed/</code>, and deep-pagination archive feeds <em>before</em> WordPress tries to render them. Returns <strong>410 Gone</strong> with <code>X-Robots-Tag: noindex, nofollow</code>. 410 is the strongest signal we can send Google: <em>this URL existed, it's gone, stop asking.</em></p>
+        </div>
+        <div>
+            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">2. Seal it off at robots.txt</h3>
+            <p class="text-sm text-muted">Five new <code>Disallow:</code> rules covering tag feeds, author feeds, category deep-pagination feeds, the <code>/ad_block/</code> taxonomy leak, and generic paginated feeds. Belt-and-suspenders: 410 handles already-indexed URLs; robots.txt prevents <em>new</em> crawlers from hitting them in the first place.</p>
+        </div>
+    </div>
+
+    <div class="callout">
+        <strong>Careful carve-outs.</strong> The legitimate feeds real readers use&mdash;the main site feed, single-post comment feeds, top-level category feeds, the Google News sitemap&mdash;are all untouched. Verified URL-by-URL on production after the deploy.
+    </div>
+
+    <div class="code-block">
+<span class="punct">// Intercept spam-vector and low-value feeds before WordPress rewrites kick in.</span>
+<span class="key">add_action</span>( <span class="str">'template_redirect'</span>, <span class="str">'fldn_seo_gone_low_value_feeds'</span>, <span class="str">-1</span> );
+
+<span class="key">function</span> fldn_seo_gone_low_value_feeds() {
+    <span class="key">$path</span> = <span class="key">strtok</span>( <span class="key">$_SERVER</span>[<span class="str">'REQUEST_URI'</span>], <span class="str">'?'</span> );
+    <span class="key">if</span> ( <span class="str">0</span> === <span class="key">strpos</span>( <span class="key">$path</span>, <span class="str">'/search/'</span> ) &amp;&amp; <span class="key">strpos</span>( <span class="key">$path</span>, <span class="str">'/feed'</span> ) !== <span class="key">false</span> ) {
+        <span class="key">status_header</span>( <span class="str">410</span> );
+        <span class="key">header</span>( <span class="str">'X-Robots-Tag: noindex, nofollow'</span> );
+        <span class="key">exit</span>;
+    }
+    <span class="key">if</span> ( <span class="key">preg_match</span>( <span class="str">'#^/(tag|author)/[^/]+/(feed|page/\d+/feed)/?$#'</span>, <span class="key">$path</span> ) ) {
+        <span class="key">status_header</span>( <span class="str">410</span> );
+        <span class="key">exit</span>;
+    }
+}</div>
+</div>
+</section>
+
+<!-- Verification -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="sect__eyebrow">Verification</p>
+    <h2 class="sect__title">What Changed, What Didn't</h2>
+    <p class="sect__lead">Measured on production after CF cache purge. Every URL confirmed with <code>curl -sI</code>.</p>
+
+    <div class="tbl-wrap mt-md">
+    <table class="schema-tbl">
+        <thead>
+            <tr><th>URL</th><th>Before</th><th>After</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>/search/cialis/feed/rss2/</code></td><td><span class="idx-label idx-label--no">200 OK</span> (served spam)</td><td><span class="idx-label idx-label--gone">410 Gone</span></td></tr>
+            <tr><td><code>/author/lucas/feed/</code></td><td><span class="idx-label idx-label--no">200 OK</span></td><td><span class="idx-label idx-label--gone">410 Gone</span></td></tr>
+            <tr><td><code>/tag/geneva/feed/</code></td><td>301 &rarr; homepage</td><td><span class="idx-label idx-label--gone">410 Gone</span></td></tr>
+            <tr><td><code>/category/local/page/559/feed</code></td><td>200 (deep pagination)</td><td>301 &rarr; top-level feed</td></tr>
+            <tr><td><code>/feed/</code> (home)</td><td>200</td><td><span class="idx-label idx-label--yes">200 &#10003;</span></td></tr>
+            <tr><td><code>/&lt;slug&gt;/feed/</code> (single-post comments)</td><td>200</td><td><span class="idx-label idx-label--yes">200 &#10003;</span></td></tr>
+            <tr><td><code>/news-sitemap.xml</code></td><td>200</td><td><span class="idx-label idx-label--yes">200 &#10003;</span></td></tr>
+            <tr><td><code>/local/feed/</code> (top-level category)</td><td>200</td><td><span class="idx-label idx-label--yes">200 &#10003;</span></td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <div class="early-banner mt-md">
+        <div class="early-banner__icon">&#128337;</div>
+        <div class="early-banner__text"><strong>Next check: April 28.</strong> Based on the 14-day attack pattern, that's the next expected spike. If the fix works, that day looks like every other day. Follow-up: GSC URL Removal sweep for already-polluted <code>/search/*</code> entries to accelerate the cleanup Google will eventually do on its own.</div>
+    </div>
+</div>
+</section>
+
+<!-- Why it matters -->
+<section class="sect sect--dark">
+<div class="wrap">
+    <p class="sect__eyebrow">Why It Matters</p>
+    <h2 class="sect__title">This Is Running Against Thousands of Sites Right Now</h2>
+    <p class="sect__lead">This kind of attack isn't rare. It's quietly running against thousands of WordPress sites this week. Cheap for attackers&mdash;just links from compromised sites, nothing installed, nothing exploited. Expensive for the targets&mdash;index pollution, crawl-budget waste, potential manual spam penalties. And invisible unless someone is actually reading their crawl-stats reports.</p>
+    <p class="sect__lead">Local newsrooms don't have a dedicated SEO engineer watching GSC every week. What caught this was the monitoring infrastructure we built out earlier this year: daily crawl-stats ingested into BigQuery, anomaly detection running on the droplet, and an AI assistant reading the report so humans don't have to.</p>
+    <p class="sect__lead">The attackers have 14 days to notice they're being rejected. We have 14 days of clean data coming.</p>
+</div>
+</section>
+
+<!-- Footer -->
+<section class="cs-footer">
+<div class="wrap">
+    <h2 class="cs-footer__title">Want this kind of monitoring on your site?</h2>
+    <p class="cs-footer__sub">FLX Local Media operates seven radio stations and a news site. We build and share the infrastructure we run on.</p>
+    <a href="/contact/" class="btn">Get in Touch</a>
+</div>
+</section>
