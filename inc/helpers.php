@@ -167,7 +167,7 @@ function flxlm_get_studios() {
 			'city'     => 'Penn Yan',
 			'state'    => 'NY',
 			'zip'      => '14527',
-			'phone'    => '607-243-7158',
+			'phone'    => '(607) 243-7158',
 			'stations' => array(
 				array( 'name' => 'WFLR', 'slug' => 'wflr' ),
 			),
