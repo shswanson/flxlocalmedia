@@ -97,13 +97,101 @@ get_header();
 	</div>
 </section>
 
+<!-- The Full Suite -->
+<section class="section">
+	<div class="container">
+		<div class="section__header section__header--center">
+			<span class="section__eyebrow section__eyebrow--terracotta">The Full Suite</span>
+			<h2 class="section__title">One operator. Four product lines.</h2>
+			<p class="section__subtitle">Most local-media operators sell one or two of these. We sell across all four &mdash; bundled by data, billed by line.</p>
+		</div>
+
+		<div class="suite-grid">
+			<article class="suite-line">
+				<span class="suite-line__order">01</span>
+				<span class="suite-line__priority">Priority &middot; Core Business</span>
+				<h3 class="suite-line__title">Broadcast</h3>
+				<p class="suite-line__lede">Owned audio reach.</p>
+				<ul class="suite-line__list">
+					<li>7 radio stations</li>
+					<li>flx.fm streaming</li>
+					<li>News Radio (cross-channel)</li>
+					<li>FLX Sports play-by-play</li>
+				</ul>
+			</article>
+
+			<article class="suite-line">
+				<span class="suite-line__order">02</span>
+				<span class="suite-line__priority">Priority &middot; 35% YoY</span>
+				<h3 class="suite-line__title">Digital O&amp;O</h3>
+				<p class="suite-line__lede">Owned digital reach.</p>
+				<ul class="suite-line__list">
+					<li>Finger Lakes Daily News</li>
+					<li>FLX Newsletter</li>
+					<li>DiscoverFLX (in development)</li>
+					<li>Station socials</li>
+				</ul>
+			</article>
+
+			<article class="suite-line">
+				<span class="suite-line__order">03</span>
+				<span class="suite-line__priority">Managed Service</span>
+				<h3 class="suite-line__title">Paid Media</h3>
+				<p class="suite-line__lede">3rd-party reach extension.</p>
+				<ul class="suite-line__list">
+					<li>SEM campaigns</li>
+					<li>Programmatic display</li>
+					<li>Paid social</li>
+					<li>Geofencing</li>
+				</ul>
+			</article>
+
+			<article class="suite-line">
+				<span class="suite-line__order">04</span>
+				<span class="suite-line__priority">Managed Service</span>
+				<h3 class="suite-line__title">Professional Services</h3>
+				<p class="suite-line__lede">Client digital infrastructure.</p>
+				<ul class="suite-line__list">
+					<li>Web development</li>
+					<li>SEO &amp; content</li>
+					<li>Hosting</li>
+					<li>Customer Dashboard</li>
+				</ul>
+			</article>
+		</div>
+
+		<aside class="data-network">
+			<span class="data-network__eyebrow">The Connective Tissue</span>
+			<h3 class="data-network__title">FLX Data Network</h3>
+			<p class="data-network__lede">First-party data flows across all four lines &mdash; the same audience graph powers every product.</p>
+			<div class="data-network__flow">
+				<div class="data-network__inputs">
+					<span class="data-network__node">Newsletter subscribers</span>
+					<span class="data-network__node">FLDN audience</span>
+					<span class="data-network__node">Form submissions</span>
+					<span class="data-network__node">Client site analytics</span>
+				</div>
+				<div class="data-network__pipe" aria-hidden="true">&darr;</div>
+				<div class="data-network__core">BigQuery &middot; identity resolution &middot; audience graph</div>
+				<div class="data-network__pipe" aria-hidden="true">&darr;</div>
+				<div class="data-network__outputs">
+					<span class="data-network__output">Targeting</span>
+					<span class="data-network__output">Reporting</span>
+					<span class="data-network__output">Personalization</span>
+					<span class="data-network__output">Audience extension</span>
+				</div>
+			</div>
+		</aside>
+	</div>
+</section>
+
 <!-- The Cohesion Story -->
 <section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow section__eyebrow--lake">The Cohesion Story</span>
-			<h2 class="section__title">Content moves across channels.</h2>
-			<p class="section__subtitle">The brands above aren't silos &mdash; they're distribution channels. The same piece of content moves across multiple channels. This is the matrix.</p>
+			<span class="section__eyebrow section__eyebrow--lake">Owned-Media Distribution</span>
+			<h2 class="section__title">Editorial content moves across owned channels.</h2>
+			<p class="section__subtitle">Inside the Broadcast and Digital O&amp;O lines, one piece of content moves across multiple distribution channels. This is the matrix.</p>
 		</div>
 
 		<div class="content-matrix-wrap">
