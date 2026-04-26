@@ -101,64 +101,70 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow">The Cohesion Story</span>
-			<h2 class="section__title">How content flows from teams to audiences.</h2>
-			<p class="section__subtitle">The brands above are <strong>distribution channels, not silos.</strong> Two production teams &mdash; one editorial, one entertainment &mdash; create content that flows across all of them.</p>
+			<span class="section__eyebrow section__eyebrow--lake">The Cohesion Story</span>
+			<h2 class="section__title">Content moves across channels.</h2>
+			<p class="section__subtitle">The brands above aren't silos &mdash; they're distribution channels. The same piece of content moves across multiple channels. This is the matrix.</p>
 		</div>
 
-		<div class="flow-diagram">
-			<div class="flow-diagram__row">
-				<div class="flow-diagram__team">
-					<span class="flow-diagram__team-label">Team</span>
-					<span class="flow-diagram__team-name">Newsroom</span>
-				</div>
-				<div class="flow-diagram__arrow" aria-hidden="true">&rarr;</div>
-				<div class="flow-diagram__channels">
-					<span class="flow-diagram__pill">Finger Lakes Daily News<span class="flow-diagram__pill-type">digital</span></span>
-					<span class="flow-diagram__pill">Finger Lakes News Radio<span class="flow-diagram__pill-type">broadcast</span></span>
-					<span class="flow-diagram__pill">FLX Newsletter<span class="flow-diagram__pill-type">email</span></span>
-					<span class="flow-diagram__pill">Weather page<span class="flow-diagram__pill-type">digital</span></span>
-					<span class="flow-diagram__pill">Social<span class="flow-diagram__pill-type">all</span></span>
-				</div>
-			</div>
-
-			<div class="flow-diagram__row">
-				<div class="flow-diagram__team">
-					<span class="flow-diagram__team-label">Team</span>
-					<span class="flow-diagram__team-name">Programming</span>
-				</div>
-				<div class="flow-diagram__arrow" aria-hidden="true">&rarr;</div>
-				<div class="flow-diagram__channels">
-					<span class="flow-diagram__pill">7 Broadcast Stations<span class="flow-diagram__pill-type">terrestrial</span></span>
-					<span class="flow-diagram__pill">flx.fm<span class="flow-diagram__pill-type">streaming</span></span>
-					<span class="flow-diagram__pill">Station Apps &amp; Sites<span class="flow-diagram__pill-type">digital</span></span>
-					<span class="flow-diagram__pill">Station Socials<span class="flow-diagram__pill-type">social</span></span>
-				</div>
-			</div>
-
-			<div class="flow-diagram__row">
-				<div class="flow-diagram__team flow-diagram__team--cross">
-					<span class="flow-diagram__team-label">Cross-Functional</span>
-					<span class="flow-diagram__team-name">FLX Sports</span>
-				</div>
-				<div class="flow-diagram__arrow" aria-hidden="true">&rarr;</div>
-				<div class="flow-diagram__channels">
-					<span class="flow-diagram__pill">Broadcast Play-by-Play<span class="flow-diagram__pill-type">terrestrial</span></span>
-					<span class="flow-diagram__pill">Streaming<span class="flow-diagram__pill-type">audio</span></span>
-					<span class="flow-diagram__pill">FLDN Sports Section<span class="flow-diagram__pill-type">digital</span></span>
-				</div>
-			</div>
+		<div class="content-matrix-wrap">
+			<table class="content-matrix">
+				<thead>
+					<tr>
+						<th class="content-matrix__corner" scope="col"><span class="content-matrix__corner-label">Content &times; Channel</span></th>
+						<th scope="col">Broadcast</th>
+						<th scope="col">Streaming</th>
+						<th scope="col">Web</th>
+						<th scope="col">Email</th>
+						<th scope="col">Social</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">News</th>
+						<td class="content-matrix__cell--filled">News Radio</td>
+						<td class="content-matrix__cell--filled">flx.fm</td>
+						<td class="content-matrix__cell--filled">FLDN</td>
+						<td class="content-matrix__cell--filled">Newsletter</td>
+						<td class="content-matrix__cell--filled">All</td>
+					</tr>
+					<tr>
+						<th scope="row">Music &amp; Entertainment</th>
+						<td class="content-matrix__cell--filled">7 Stations</td>
+						<td class="content-matrix__cell--filled">flx.fm</td>
+						<td class="content-matrix__cell--empty">&mdash;</td>
+						<td class="content-matrix__cell--empty">&mdash;</td>
+						<td class="content-matrix__cell--filled">Stations</td>
+					</tr>
+					<tr>
+						<th scope="row">Sports</th>
+						<td class="content-matrix__cell--filled">News Radio</td>
+						<td class="content-matrix__cell--filled">flx.fm</td>
+						<td class="content-matrix__cell--filled">FLDN Sports</td>
+						<td class="content-matrix__cell--empty">&mdash;</td>
+						<td class="content-matrix__cell--filled">Stations</td>
+					</tr>
+					<tr>
+						<th scope="row">Weather</th>
+						<td class="content-matrix__cell--filled">All Stations</td>
+						<td class="content-matrix__cell--filled">flx.fm</td>
+						<td class="content-matrix__cell--filled">FLDN Weather</td>
+						<td class="content-matrix__cell--filled">Newsletter</td>
+						<td class="content-matrix__cell--filled">Alerts</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
 		<aside class="story-callout">
 			<span class="story-callout__label">A Day in the Newsroom</span>
 			<h3 class="story-callout__title">A house fire on Castle Street happens at 2:30 PM.</h3>
-			<p class="story-callout__lede">One reporter covers the story. One piece of work. Multiple touchpoints.</p>
+			<p class="story-callout__lede">One reporter covers the story. One piece of work. Five touchpoints across the matrix.</p>
 			<div class="story-callout__trace">
-				<span class="story-callout__item">Newsroom <span class="story-callout__arrow">&rarr;</span> FLDN article</span>
-				<span class="story-callout__item">Newsroom <span class="story-callout__arrow">&rarr;</span> News Radio top-of-hour</span>
-				<span class="story-callout__item">Newsroom <span class="story-callout__arrow">&rarr;</span> Newsletter blurb</span>
-				<span class="story-callout__item">Newsroom <span class="story-callout__arrow">&rarr;</span> Social posts</span>
+				<span class="story-callout__item">News Radio top-of-hour</span>
+				<span class="story-callout__item">flx.fm stream</span>
+				<span class="story-callout__item">FLDN article</span>
+				<span class="story-callout__item">Newsletter blurb</span>
+				<span class="story-callout__item">Station socials</span>
 			</div>
 		</aside>
 	</div>
@@ -168,7 +174,7 @@ get_header();
 <section class="section section--gray">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow">Three Views, One Company</span>
+			<span class="section__eyebrow section__eyebrow--sage">Three Views, One Company</span>
 			<h2 class="section__title">Each audience sees a different lens.</h2>
 			<p class="section__subtitle">Consumers see brands. Advertisers see product lines. Internal teams see roles. Same organization, three optimizations.</p>
 		</div>
@@ -222,28 +228,74 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow">Style Guide</span>
-			<h2 class="section__title">Crediting the work.</h2>
-			<p class="section__subtitle">The team that produced earns the byline; the channel where it appears earns the dateline.</p>
+			<span class="section__eyebrow section__eyebrow--terracotta">Style Guide</span>
+			<h2 class="section__title">The brand in the wild.</h2>
+			<p class="section__subtitle">How "FLX Local Media" appears across the surfaces audiences and partners encounter.</p>
 		</div>
 
-		<div class="examples-grid">
-			<div class="example-card">
-				<span class="example-card__label">Digital Article Byline</span>
-				<div class="example-card__demo">By [Name]<br>FLX Local Media Newsroom</div>
-			</div>
-			<div class="example-card">
-				<span class="example-card__label">Footer / Brand Bar</span>
-				<div class="example-card__demo example-card__demo--bar"><strong>FLX Local Media</strong> <span class="example-card__div">|</span> Newsroom</div>
-			</div>
-			<div class="example-card">
-				<span class="example-card__label">On-Air Credit</span>
-				<div class="example-card__demo example-card__demo--quote">"An FLX Local Media report"<br>"Heard on Finger Lakes News Radio"</div>
-			</div>
-			<div class="example-card">
-				<span class="example-card__label">Sales Materials</span>
-				<div class="example-card__demo"><strong>FLX Local Media</strong> &mdash; Broadcast<br><strong>FLX Local Media</strong> &mdash; Digital O&amp;O</div>
-			</div>
+		<div class="mockups-grid">
+
+			<figure class="mockup mockup--byline">
+				<figcaption class="mockup__label">Digital Article Byline</figcaption>
+				<div class="mockup__frame">
+					<span class="mockup__tag">News</span>
+					<h4 class="mockup__headline">Geneva firefighters respond to overnight Castle Street blaze</h4>
+					<div class="mockup__byline-rule"></div>
+					<p class="mockup__byline-text">By <strong>Kalysta Donaghy-Robinson</strong><br>
+					<span class="mockup__byline-meta">FLX Local Media Newsroom &middot; April 26, 2026</span></p>
+				</div>
+			</figure>
+
+			<figure class="mockup mockup--brand-bar">
+				<figcaption class="mockup__label">Footer / Brand Bar</figcaption>
+				<div class="mockup__frame mockup__frame--dark">
+					<span class="mockup__lockup">
+						<strong class="mockup__lockup-master">FLX Local Media</strong>
+						<span class="mockup__lockup-sep">|</span>
+						<span class="mockup__lockup-division">Newsroom</span>
+					</span>
+				</div>
+				<div class="mockup__frame mockup__frame--dark">
+					<span class="mockup__lockup">
+						<strong class="mockup__lockup-master">FLX Local Media</strong>
+						<span class="mockup__lockup-sep">|</span>
+						<span class="mockup__lockup-division">Digital</span>
+					</span>
+				</div>
+				<div class="mockup__frame mockup__frame--dark">
+					<span class="mockup__lockup">
+						<strong class="mockup__lockup-master">FLX Local Media</strong>
+						<span class="mockup__lockup-sep">|</span>
+						<span class="mockup__lockup-division">Broadcast</span>
+					</span>
+				</div>
+			</figure>
+
+			<figure class="mockup mockup--email">
+				<figcaption class="mockup__label">Email Signature</figcaption>
+				<div class="mockup__frame">
+					<p class="mockup__email-greeting">Best,</p>
+					<p class="mockup__email-name"><strong>Lucas Day</strong></p>
+					<p class="mockup__email-role">News Director</p>
+					<p class="mockup__email-division">FLX Local Media <span class="mockup__email-pipe">|</span> Newsroom</p>
+					<div class="mockup__email-rule"></div>
+					<p class="mockup__email-contact">
+						<a href="#" class="mockup__email-link">lucas@flxlocalmedia.com</a><br>
+						<span class="mockup__email-meta">flxlocalmedia.com &middot; (315) 555&middot;0100</span>
+					</p>
+				</div>
+			</figure>
+
+			<figure class="mockup mockup--onair">
+				<figcaption class="mockup__label">On-Air Script / Sweeper</figcaption>
+				<div class="mockup__frame mockup__frame--script">
+					<span class="mockup__script-cue">7:00 AM &middot; SWEEPER</span>
+					<p class="mockup__script-line">&ldquo;An FLX Local Media report.&rdquo;</p>
+					<p class="mockup__script-line">&ldquo;Heard on Finger Lakes News Radio.&rdquo;</p>
+					<span class="mockup__script-end">&mdash;END&mdash;</span>
+				</div>
+			</figure>
+
 		</div>
 	</div>
 </section>
@@ -252,7 +304,7 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow">Corporate Structure</span>
+			<span class="section__eyebrow section__eyebrow--navy">Corporate Structure</span>
 			<h2 class="section__title">The formal record.</h2>
 		</div>
 
