@@ -139,9 +139,10 @@ get_header();
 				<h3 class="suite-line__title">Paid Media</h3>
 				<p class="suite-line__lede">3rd-party reach extension.</p>
 				<ul class="suite-line__list">
-					<li>SEM campaigns</li>
+					<li>Connected TV (CTV / OTT)</li>
 					<li>Programmatic display</li>
 					<li>Paid social</li>
+					<li>SEM campaigns</li>
 					<li>Geofencing</li>
 				</ul>
 			</article>
