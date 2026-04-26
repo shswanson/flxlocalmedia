@@ -34,7 +34,7 @@ get_header();
 				<p class="brand-card__meta">All 7 stations &middot; cross-promotion &middot; streaming</p>
 			</article>
 
-			<article class="brand-card brand-card--featured">
+			<article class="brand-card">
 				<span class="brand-card__tag">Adult Contemporary</span>
 				<h3 class="brand-card__name">MIX 98.5</h3>
 				<p class="brand-card__meta">WNYR &middot; Geneva</p>
@@ -174,7 +174,7 @@ get_header();
 		</div>
 
 		<div class="views-grid">
-			<article class="view-card view-card--consumer">
+			<article class="view-card">
 				<span class="view-card__num">01</span>
 				<span class="view-card__audience">For Audiences</span>
 				<h3 class="view-card__title">Consumer-Facing Brands</h3>
@@ -188,7 +188,7 @@ get_header();
 				</ul>
 			</article>
 
-			<article class="view-card view-card--b2b">
+			<article class="view-card">
 				<span class="view-card__num">02</span>
 				<span class="view-card__audience">For Advertisers</span>
 				<h3 class="view-card__title">B2B Sales Taxonomy</h3>
@@ -201,7 +201,7 @@ get_header();
 				</ul>
 			</article>
 
-			<article class="view-card view-card--internal">
+			<article class="view-card">
 				<span class="view-card__num">03</span>
 				<span class="view-card__audience">For Internal &amp; Partners</span>
 				<h3 class="view-card__title">Functional Teams</h3>
@@ -249,7 +249,7 @@ get_header();
 </section>
 
 <!-- Corporate Structure -->
-<section class="section section--gray">
+<section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
 			<span class="section__eyebrow">Corporate Structure</span>

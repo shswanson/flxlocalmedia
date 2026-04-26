@@ -2974,9 +2974,9 @@ p + p {
 
 .brand-card__tag {
 	display: block;
-	font-size: 0.6875rem;
-	font-weight: var(--fw-semibold);
-	letter-spacing: 0.12em;
+	font-size: var(--fs-xs);
+	font-weight: var(--fw-bold);
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	color: var(--color-text-muted);
 	margin-bottom: var(--space-sm);
@@ -2997,15 +2997,6 @@ p + p {
 	line-height: 1.4;
 	margin: 0;
 }
-
-.brand-card--featured {
-	background: var(--color-primary);
-	border-color: var(--color-primary);
-}
-
-.brand-card--featured .brand-card__name { color: var(--color-cream); }
-.brand-card--featured .brand-card__meta { color: var(--color-warm-gray); }
-.brand-card--featured .brand-card__tag { color: var(--color-accent); }
 
 .brand-card--digital {
 	background: var(--color-sage-light);
@@ -3081,9 +3072,9 @@ p + p {
 
 .flow-diagram__team-label {
 	display: block;
-	font-size: 0.625rem;
-	font-weight: var(--fw-semibold);
-	letter-spacing: 0.12em;
+	font-size: var(--fs-xs);
+	font-weight: var(--fw-bold);
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	color: var(--color-accent);
 	margin-bottom: 0.15rem;
@@ -3129,7 +3120,7 @@ p + p {
 
 .flow-diagram__pill {
 	background: var(--color-white);
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--color-border-light);
 	padding: 0.35rem 0.75rem;
 	border-radius: 100px;
 	font-size: var(--fs-sm);
@@ -3163,8 +3154,8 @@ p + p {
 .story-callout__label {
 	display: block;
 	font-size: var(--fs-xs);
-	font-weight: var(--fw-semibold);
-	letter-spacing: 0.18em;
+	font-weight: var(--fw-bold);
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	color: var(--color-accent);
 	margin-bottom: var(--space-sm);
@@ -3195,7 +3186,7 @@ p + p {
 	background: rgba(255, 255, 255, 0.08);
 	border: 1px solid rgba(255, 255, 255, 0.15);
 	padding: 0.35rem 0.75rem;
-	border-radius: var(--radius);
+	border-radius: 100px;
 	font-size: var(--fs-sm);
 	color: var(--color-cream);
 }
@@ -3222,34 +3213,29 @@ p + p {
 	background: var(--color-white);
 	border: 1px solid var(--color-border-light);
 	border-radius: var(--radius);
-	padding: var(--space-lg);
-	border-top: 3px solid var(--color-accent);
+	padding: var(--space-md);
 }
 
-.view-card--b2b { border-top-color: var(--color-lake); }
-
-.view-card--internal {
-	border-top-color: var(--color-sage);
-	background: var(--color-parchment);
+@media (min-width: 768px) {
+	.view-card {
+		padding: var(--space-lg);
+	}
 }
 
 .view-card__num {
 	display: block;
 	font-family: var(--font-display);
-	font-size: var(--fs-2xl);
+	font-size: var(--fs-xl);
 	color: var(--color-accent);
 	line-height: 1;
 	margin-bottom: var(--space-xs);
 }
 
-.view-card--b2b .view-card__num { color: var(--color-lake-deep); }
-.view-card--internal .view-card__num { color: var(--color-text); }
-
 .view-card__audience {
 	display: block;
-	font-size: 0.6875rem;
-	font-weight: var(--fw-semibold);
-	letter-spacing: 0.12em;
+	font-size: var(--fs-xs);
+	font-weight: var(--fw-bold);
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	color: var(--color-text-muted);
 	margin-bottom: var(--space-sm);
@@ -3301,16 +3287,16 @@ p + p {
 
 .example-card {
 	background: var(--color-white);
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--color-border-light);
 	border-radius: var(--radius);
 	padding: var(--space-md);
 }
 
 .example-card__label {
 	display: block;
-	font-size: 0.6875rem;
-	font-weight: var(--fw-semibold);
-	letter-spacing: 0.12em;
+	font-size: var(--fs-xs);
+	font-weight: var(--fw-bold);
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	color: var(--color-text-muted);
 	margin-bottom: var(--space-sm);
@@ -3369,7 +3355,8 @@ p + p {
 
 .entity-table__name {
 	font-family: var(--font-display);
-	font-size: var(--fs-lg);
+	font-size: var(--fs-xl);
+	font-weight: 400;
 	color: var(--color-primary);
 	line-height: 1.2;
 }
