@@ -33,6 +33,9 @@
 				<h4 class="site-footer__heading">Company</h4>
 				<ul>
 					<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>">About Us</a></li>
+					<?php if ( wp_count_posts( 'flxlm_job' )->publish > 0 ) : ?>
+						<li><a href="<?php echo esc_url( home_url( '/careers/' ) ); ?>">Careers</a></li>
+					<?php endif; ?>
 					<?php if ( wp_count_posts( 'flxlm_testimonial' )->publish > 0 ) : ?>
 						<li><a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>">Client Stories</a></li>
 					<?php endif; ?>
