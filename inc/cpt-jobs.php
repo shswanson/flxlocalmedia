@@ -85,9 +85,10 @@ function flxlm_render_job_meta_box( $post ) {
 	wp_nonce_field( 'flxlm_job_meta', 'flxlm_job_nonce' );
 
 	$single_fields = array(
-		array( 'key' => 'job_location', 'label' => 'Location (e.g. Geneva, NY)' ),
-		array( 'key' => 'job_type',     'label' => 'Type (e.g. Full-Time / Part-Time / Contract)' ),
-		array( 'key' => 'job_email',    'label' => 'Application Email (comma-separated for multiple)' ),
+		array( 'key' => 'job_location',      'label' => 'Location (e.g. Geneva, NY)' ),
+		array( 'key' => 'job_type',          'label' => 'Type (e.g. Full-Time / Part-Time / Contract)' ),
+		array( 'key' => 'job_email',         'label' => 'Application Email (comma-separated for multiple)' ),
+		array( 'key' => 'job_canonical_url', 'label' => 'Canonical URL (e.g. FLDN equivalent — leave blank for self-canonical)' ),
 	);
 
 	$multi_fields = array(
@@ -138,6 +139,10 @@ function flxlm_save_job_meta( $post_id ) {
 		if ( isset( $_POST[ $field ] ) ) {
 			update_post_meta( $post_id, $field, sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) );
 		}
+	}
+
+	if ( isset( $_POST['job_canonical_url'] ) ) {
+		update_post_meta( $post_id, 'job_canonical_url', esc_url_raw( wp_unslash( $_POST['job_canonical_url'] ) ) );
 	}
 
 	$multi_fields = array( 'job_responsibilities', 'job_qualifications', 'job_offer' );

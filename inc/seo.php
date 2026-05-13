@@ -111,6 +111,32 @@ function flxlm_seo_get_meta() {
 		) );
 	}
 
+	// Singular job (flxlm_job CPT).
+	if ( is_singular( 'flxlm_job' ) ) {
+		$pid       = get_the_ID();
+		$location  = get_post_meta( $pid, 'job_location', true );
+		$type      = get_post_meta( $pid, 'job_type', true );
+		$canonical = get_post_meta( $pid, 'job_canonical_url', true );
+
+		$title_parts = array_filter( array( get_the_title(), $location ) );
+		$title       = implode( ' — ', $title_parts ) . ' | Careers at ' . $site_name;
+
+		$excerpt = get_the_excerpt();
+		if ( ! $excerpt ) {
+			$excerpt = wp_strip_all_tags( get_the_content() );
+		}
+		$desc_bits = array_filter( array( $location && $type ? "$location · $type." : '' ) );
+		$desc      = trim( implode( ' ', $desc_bits ) . ' ' . $excerpt );
+
+		return array_merge( $defaults, array(
+			'title'       => $title,
+			'description' => flxlm_seo_truncate( $desc, 160 ),
+			'url'         => $canonical ?: get_permalink(),
+			'image'       => has_post_thumbnail() ? get_the_post_thumbnail_url( $pid, 'full' ) : $default_image,
+			'og_type'     => 'article',
+		) );
+	}
+
 	// Singular testimonial.
 	if ( is_singular( 'flxlm_testimonial' ) ) {
 		$person   = get_post_meta( get_the_ID(), 'person_name', true );
@@ -159,6 +185,16 @@ function flxlm_seo_get_meta() {
 			'description' => $desc,
 			'url'         => get_permalink(),
 			'image'       => $page_image,
+		) );
+	}
+
+	// Archive: careers (flxlm_job).
+	if ( is_post_type_archive( 'flxlm_job' ) ) {
+		return array_merge( $defaults, array(
+			'title'       => 'Careers | ' . $site_name,
+			'description' => 'Open positions at FLX Local Media — seven radio stations plus Finger Lakes Daily News, based in Geneva, NY.',
+			'url'         => get_post_type_archive_link( 'flxlm_job' ),
+			'image'       => $default_image,
 		) );
 	}
 
@@ -246,6 +282,27 @@ function flxlm_seo_contact_canonical( $canonical, $post ) {
 	return $canonical;
 }
 
+add_filter( 'get_canonical_url', 'flxlm_seo_job_canonical', 10, 2 );
+
+/**
+ * Honor `job_canonical_url` meta on flxlm_job singles.
+ *
+ * Jobs are mirrored on fingerlakesdailynews.com which owns the JobPosting
+ * schema and the Indexing API ping; this points the canonical signal at
+ * the FLDN twin so search engines treat them as one listing.
+ *
+ * @param string  $canonical The canonical URL.
+ * @param WP_Post $post      The post object.
+ * @return string
+ */
+function flxlm_seo_job_canonical( $canonical, $post ) {
+	if ( 'flxlm_job' !== $post->post_type ) {
+		return $canonical;
+	}
+	$override = get_post_meta( $post->ID, 'job_canonical_url', true );
+	return $override ?: $canonical;
+}
+
 /*--------------------------------------------------------------
  * 2. Title Tag Filter
  *--------------------------------------------------------------*/
@@ -270,6 +327,16 @@ function flxlm_seo_document_title( $title ) {
 		if ( isset( $overrides[ $slug ] ) ) {
 			return $overrides[ $slug ];
 		}
+	}
+
+	if ( is_singular( 'flxlm_job' ) ) {
+		$location    = get_post_meta( get_the_ID(), 'job_location', true );
+		$title_parts = array_filter( array( get_the_title(), $location ) );
+		return implode( ' — ', $title_parts ) . ' | Careers at FLX Local Media';
+	}
+
+	if ( is_post_type_archive( 'flxlm_job' ) ) {
+		return 'Careers | FLX Local Media';
 	}
 
 	return $title;
@@ -430,6 +497,32 @@ function flxlm_seo_jsonld_breadcrumbs() {
 			'position' => $pos++,
 			'name'     => get_the_title(),
 			'item'     => get_permalink(),
+		);
+	}
+
+	// Job single — Home › Careers › {Title}.
+	if ( is_singular( 'flxlm_job' ) ) {
+		$items[] = array(
+			'@type'    => 'ListItem',
+			'position' => $pos++,
+			'name'     => 'Careers',
+			'item'     => get_post_type_archive_link( 'flxlm_job' ),
+		);
+		$items[] = array(
+			'@type'    => 'ListItem',
+			'position' => $pos++,
+			'name'     => get_the_title(),
+			'item'     => get_permalink(),
+		);
+	}
+
+	// Careers archive — Home › Careers.
+	if ( is_post_type_archive( 'flxlm_job' ) ) {
+		$items[] = array(
+			'@type'    => 'ListItem',
+			'position' => $pos++,
+			'name'     => 'Careers',
+			'item'     => get_post_type_archive_link( 'flxlm_job' ),
 		);
 	}
 
