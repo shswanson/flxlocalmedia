@@ -313,6 +313,59 @@ get_header();
 	</div>
 </section>
 
+<!-- Brand Hierarchy & Lockups -->
+<section class="section">
+	<div class="container">
+		<div class="section__header section__header--center">
+			<span class="section__eyebrow section__eyebrow--terracotta">Brand Hierarchy &amp; Lockups</span>
+			<h2 class="section__title">Three tiers. One umbrella.</h2>
+			<p class="section__subtitle">How the portfolio is grouped by who it&rsquo;s for &mdash; and how lockups attach to FLX Local Media as the master brand.</p>
+		</div>
+
+		<div class="views-grid">
+			<article class="view-card">
+				<span class="view-card__audience">B2B Brands</span>
+				<h3 class="view-card__title">Advertisers, partners, operators</h3>
+				<p class="view-card__lede">Sold under the umbrella. Divisions lock up as <strong>FLX Local Media | Division</strong>.</p>
+				<ul class="view-card__list">
+					<li><strong>FLX Local Media | Newsroom</strong> &mdash; editorial production across all formats</li>
+					<li><strong>FLX Local Media | Broadcast</strong> &mdash; 7 stations + streaming</li>
+					<li><strong>FLX Local Media | Digital</strong> &mdash; FLDN, newsletter, digital O&amp;O</li>
+				</ul>
+				<p class="view-card__note"><strong>Open:</strong> Divisions split awkwardly between content (Newsroom) and distribution channel (Broadcast, Digital). The lockup works for each individually, but the grouping isn&rsquo;t perfectly orthogonal.</p>
+			</article>
+
+			<article class="view-card">
+				<span class="view-card__audience">Consumer Brands</span>
+				<h3 class="view-card__title">Audiences &mdash; standalone identities</h3>
+				<p class="view-card__lede">Consumer brands stand alone. No FLX Local Media co-lockup in front of an audience.</p>
+				<ul class="view-card__list">
+					<li><strong>flx.fm</strong> &mdash; the complete streaming experience. Primary mobile app for all stations + news, weather, sports.</li>
+					<li><strong>DiscoverFLX</strong> (DiscoverFLX.com)</li>
+					<li><strong>FLX Finest</strong> (FLXFinest.com) &mdash; sub-brand under DiscoverFLX</li>
+					<li><strong>FingerLakesDailyNews.com</strong></li>
+				</ul>
+				<p class="view-card__note"><strong>Open:</strong> Where does Finger Lakes News Radio sit &mdash; pure consumer (its own mark) or B2B lockup (<em>FLX Local Media | Newsroom</em>)?</p>
+			</article>
+
+			<article class="view-card">
+				<span class="view-card__audience">Crossover Brands</span>
+				<h3 class="view-card__title">Operates in both worlds</h3>
+				<p class="view-card__lede">Carries the FLX endorsement without being consumer-marketed in the traditional sense.</p>
+				<ul class="view-card__list">
+					<li><strong>inFLX.org</strong> &mdash; systematized charitable giving (small sponsorships, uniforms, etc.). Lives at <a href="https://www.fingerlakesdailynews.com/inflx-giving/">fingerlakesdailynews.com/inflx-giving</a>.</li>
+				</ul>
+			</article>
+		</div>
+
+		<aside class="story-callout">
+			<span class="story-callout__label">Open Consideration</span>
+			<h3 class="story-callout__title">Should consumer logos flex for moments?</h3>
+			<p class="story-callout__lede">Holidays, civic milestones (America 250), and seasonal moments (Veterans Day, Memorial Day) are an open question. Treatments could apply to the &ldquo;FLX&rdquo; portion of a consumer mark only, to the whole logo, or only to the umbrella FLX Local Media mark &mdash; each option has different implications for recognition and consistency.</p>
+		</aside>
+	</div>
+</section>
+
 <!-- Style Guide -->
 <section class="section">
 	<div class="container">

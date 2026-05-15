@@ -3401,6 +3401,19 @@ p + p {
 
 .view-card__list li { margin-bottom: var(--space-xs); }
 
+.view-card__note {
+	margin-top: var(--space-md);
+	padding: var(--space-sm) var(--space-md);
+	border-left: 3px solid var(--color-accent);
+	background: var(--color-cream);
+	border-radius: 0 var(--radius) var(--radius) 0;
+	font-size: var(--fs-sm);
+	color: var(--color-text-light);
+	line-height: 1.5;
+}
+
+.view-card__note strong { color: var(--color-primary); }
+
 /* ---------- Style Guide mockups ---------- */
 .mockups-grid {
 	display: grid;
