@@ -863,17 +863,45 @@ p + p {
 	flex-direction: column;
 	position: relative;
 	overflow: hidden;
-	transition: box-shadow var(--transition), transform var(--transition);
+	transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+}
+
+.testimonial-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	background: var(--color-accent);
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform var(--transition);
+	z-index: 3;
 }
 
 .testimonial-card:hover {
-	box-shadow: var(--shadow-md);
-	transform: translateY(-2px);
+	box-shadow: var(--shadow-lg);
+	transform: translateY(-4px);
+	border-color: var(--color-border);
+}
+
+.testimonial-card:hover::before {
+	transform: scaleX(1);
 }
 
 .testimonial-card__image {
+	position: relative;
 	aspect-ratio: 16 / 10;
 	overflow: hidden;
+}
+
+.testimonial-card__image::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(26, 39, 68, 0.22), transparent 45%);
+	pointer-events: none;
 }
 
 .testimonial-card__image img {
@@ -884,7 +912,7 @@ p + p {
 }
 
 .testimonial-card:hover .testimonial-card__image img {
-	transform: scale(1.03);
+	transform: scale(1.04);
 }
 
 .testimonial-card__body {
@@ -895,19 +923,25 @@ p + p {
 }
 
 .testimonial-card__industry {
-	font-size: 0.6875rem;
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	padding: 0.32rem 0.7rem;
+	border-radius: 999px;
+	background: var(--color-accent-soft);
+	font-size: 0.625rem;
 	font-weight: var(--fw-bold);
 	text-transform: uppercase;
-	letter-spacing: 0.08em;
+	letter-spacing: 0.09em;
 	color: var(--color-accent);
-	margin-bottom: var(--space-sm);
+	margin-bottom: var(--space-md);
 }
 
 .testimonial-card__quote {
-	font-size: var(--fs-sm);
+	font-size: var(--fs-base);
 	font-style: italic;
-	color: var(--color-text);
-	line-height: 1.6;
+	color: var(--color-primary);
+	line-height: 1.55;
 	margin-bottom: var(--space-lg);
 	flex: 1;
 }
@@ -915,13 +949,13 @@ p + p {
 .testimonial-card__quote::before {
 	content: '\201C';
 	font-family: var(--font-display);
-	font-size: 2.5rem;
-	color: var(--color-sage);
+	font-size: 2.75rem;
+	color: var(--color-accent);
 	font-weight: 400;
 	line-height: 0;
-	vertical-align: -0.25em;
-	margin-right: 2px;
-	opacity: 0.5;
+	vertical-align: -0.3em;
+	margin-right: 3px;
+	opacity: 0.85;
 }
 
 .testimonial-card__cite {
@@ -969,7 +1003,7 @@ p + p {
 .testimonial-grid {
 	display: grid;
 	grid-template-columns: 1fr;
-	gap: var(--space-lg);
+	gap: var(--space-xl);
 }
 
 @media (min-width: 576px) {
