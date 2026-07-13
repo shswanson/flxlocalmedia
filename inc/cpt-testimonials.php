@@ -114,6 +114,14 @@ function flxlm_register_testimonial_meta() {
 		'sanitize_callback' => 'rest_sanitize_boolean',
 		'default'           => false,
 	) );
+
+	register_post_meta( 'flxlm_testimonial', 'is_hidden', array(
+		'type'              => 'boolean',
+		'single'            => true,
+		'show_in_rest'      => true,
+		'sanitize_callback' => 'rest_sanitize_boolean',
+		'default'           => false,
+	) );
 }
 add_action( 'init', 'flxlm_register_testimonial_meta' );
 
@@ -196,6 +204,13 @@ function flxlm_render_testimonial_meta_box( $post ) {
 	echo '<td><label><input type="checkbox" id="flxlm_is_featured" name="is_featured" value="1" ' . checked( $is_featured, true, false ) . ' /> Show in hero sections</label></td>';
 	echo '</tr>';
 
+	// Hidden (unlisted): reachable by direct URL only.
+	$is_hidden = get_post_meta( $post->ID, 'is_hidden', true );
+	echo '<tr>';
+	echo '<th><label for="flxlm_is_hidden">Hidden</label></th>';
+	echo '<td><label><input type="checkbox" id="flxlm_is_hidden" name="is_hidden" value="1" ' . checked( $is_hidden, true, false ) . ' /> Unlisted &mdash; reachable by direct link only; hidden from the grid, related stories, sitemap &amp; search. Un-tick to go fully live.</label></td>';
+	echo '</tr>';
+
 	echo '</table>';
 }
 
@@ -234,5 +249,6 @@ function flxlm_save_testimonial_meta( $post_id ) {
 	}
 
 	update_post_meta( $post_id, 'is_featured', ! empty( $_POST['is_featured'] ) );
+	update_post_meta( $post_id, 'is_hidden', ! empty( $_POST['is_hidden'] ) );
 }
 add_action( 'save_post_flxlm_testimonial', 'flxlm_save_testimonial_meta' );

@@ -146,7 +146,7 @@ endwhile;
 $more_args = array(
 	'post_type'      => 'flxlm_testimonial',
 	'posts_per_page' => 3,
-	'post__not_in'   => array( (int) $current_id ),
+	'post__not_in'   => flxlm_exclude_hidden( array( (int) $current_id ) ),
 	'orderby'        => 'rand',
 	'post_status'    => 'publish',
 );

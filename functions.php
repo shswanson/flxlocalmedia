@@ -83,6 +83,7 @@ add_action( 'wp_enqueue_scripts', 'flxlm_enqueue_station_assets' );
 require_once get_template_directory() . '/inc/cpt-testimonials.php';
 require_once get_template_directory() . '/inc/cpt-jobs.php';
 require_once get_template_directory() . '/inc/helpers.php';
+require_once get_template_directory() . '/inc/hidden-testimonials.php';
 require_once get_template_directory() . '/inc/forms.php';
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/disable-block-editor.php';

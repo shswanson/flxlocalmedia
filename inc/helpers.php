@@ -20,6 +20,8 @@ function flxlm_get_testimonials( $args = array() ) {
 		'post_type'      => 'flxlm_testimonial',
 		'posts_per_page' => -1,
 		'post_status'    => 'publish',
+		// Hidden ("unlisted") testimonials never appear in any listing.
+		'post__not_in'   => flxlm_hidden_testimonial_ids(),
 	);
 
 	// Filter by service taxonomy.
