@@ -1,0 +1,605 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --color-primary: #1E5B70;
+    --color-primary-dark: #164350;
+    --color-ochre: #946E16;
+    --color-purple: #6B2FA0;
+    --color-blue: #2B7AB8;
+    --color-text: #1d2327;
+    --color-text-light: #726b62;
+    --color-text-muted: #95918b;
+    --color-border: #e9e6e1;
+    --color-bg: #f9f8f6;
+    --color-white: #ffffff;
+    --color-success: #00a32a;
+    --color-error: #d63638;
+    --color-warn: #dba617;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
+    --radius: 8px;
+    --color-card: #ffffff;
+    --color-alt: #ffffff;
+    --shadow: 0 1px 3px rgba(42,36,28,0.05), 0 1px 2px rgba(42,36,28,0.03);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Layout */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+.wrap--wide { max-width: 1080px; }
+
+/* Hero */
+.hero {
+    background: linear-gradient(135deg, #1E5B70 0%, #164350 40%, #0d2f3a 100%);
+    color: #fff;
+    padding: 56px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(148,110,22,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.hero__eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+}
+.hero__title {
+    font-size: clamp(28px, 4.5vw, 42px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    max-width: 760px;
+    margin-bottom: 16px;
+}
+.hero__sub {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+}
+
+/* KPI row */
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: -48px;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 2;
+}
+@media (max-width: 700px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+.kpi {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px;
+    text-align: center;
+}
+.kpi__value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+}
+.kpi__value--sm { font-size: 26px; }
+.kpi__label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 6px;
+}
+.kpi__delta {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-success);
+    margin-top: 4px;
+}
+
+/* Sections */
+.sect { padding: 48px 0; }
+.sect--alt {
+    background: var(--color-alt);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+.sect--dark {
+    background: linear-gradient(135deg, #1E5B70 0%, #0d2f3a 100%);
+    color: #fff;
+    border: none;
+}
+.sect__eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-ochre);
+    margin-bottom: 6px;
+}
+.sect--dark .sect__eyebrow { color: rgba(255,255,255,0.4); }
+.sect__title {
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+.sect--dark .sect__title { color: #fff; }
+.sect__lead {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    max-width: 660px;
+    margin-bottom: 32px;
+}
+.sect--dark .sect__lead { color: rgba(255,255,255,0.7); }
+
+/* Cards */
+.card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.card__head {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+.card__body { padding: 16px; }
+
+/* Implementation grid */
+.impl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+}
+.impl-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px;
+}
+.impl-card__icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.impl-card__icon--teal { background: rgba(30,91,112,0.1); }
+.impl-card__icon--ochre { background: rgba(148,110,22,0.1); }
+.impl-card__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 6px;
+}
+.impl-card__desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-light);
+}
+.impl-card__stat {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Two-col */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+/* Timeline */
+.timeline { padding-left: 24px; position: relative; }
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--color-border);
+}
+.tl-item { position: relative; margin-bottom: 22px; }
+.tl-item::before {
+    content: '';
+    position: absolute;
+    left: -21px; top: 5px;
+    width: 10px; height: 10px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    border: 2px solid var(--color-bg);
+}
+.tl-item--watch::before { background: var(--color-warn); }
+.tl-item--warning::before { background: var(--color-error); }
+.tl-item--clear::before { background: var(--color-success); }
+.tl-date {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-ochre);
+    margin-bottom: 2px;
+}
+.tl-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.tl-desc { font-size: 13px; color: var(--color-text-light); line-height: 1.6; }
+.tl-tag {
+    display: inline-block;
+    font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 20px; margin-left: 6px; vertical-align: middle;
+}
+.tl-tag--watch { background: rgba(219,166,23,0.14); color: #8a6a12; }
+.tl-tag--warning { background: rgba(214,54,56,0.12); color: #b32527; }
+.tl-tag--clear { background: rgba(0,163,42,0.12); color: #0a7d28; }
+
+/* Callout */
+.callout {
+    background: rgba(30,91,112,0.06);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--color-primary);
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-light);
+}
+.callout strong { color: var(--color-text); }
+
+/* Pull quote */
+.pquote {
+    border-left: 4px solid var(--color-ochre);
+    padding: 8px 0 8px 24px;
+    margin: 8px 0 4px;
+}
+.pquote__text {
+    font-size: clamp(19px, 2.6vw, 24px);
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.3px;
+    color: var(--color-text);
+}
+.pquote__by {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 12px;
+}
+
+/* Screenshot exhibit */
+.shot {
+    max-width: 620px;
+    margin: 0 auto;
+}
+.shot__frame {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    background: #fff;
+    max-height: 660px;
+    overflow-y: auto;
+}
+.shot__frame img { width: 100%; height: auto; display: block; }
+.shot__cap {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    padding: 10px 2px 0;
+    font-style: italic;
+    text-align: center;
+}
+.wide-img {
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin: 8px 0;
+}
+.wide-img img { width: 100%; height: auto; display: block; }
+
+/* Storm/SOV numbers on dark */
+.storm-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+}
+@media (max-width: 600px) { .storm-row { grid-template-columns: 1fr; } }
+.storm-num { text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 22px 14px; }
+.storm-num__val { font-size: clamp(28px, 5vw, 40px); font-weight: 800; line-height: 1; color: #fff; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.storm-num__label { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.4; }
+
+/* Early results banner */
+.early-banner {
+    background: rgba(219,166,23,0.08);
+    border: 1px solid rgba(219,166,23,0.25);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 24px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.early-banner__icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.early-banner__text { font-size: 13px; line-height: 1.6; color: var(--color-text-light); }
+.early-banner__text strong { color: var(--color-text); }
+
+/* Footer */
+.cs-footer { background: var(--color-primary); color: #fff; text-align: center; padding: 48px 0; }
+.cs-footer__title { font-size: clamp(20px, 3vw, 28px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 12px; }
+.cs-footer__sub { font-size: 14px; color: rgba(255,255,255,0.7); max-width: 520px; margin: 0 auto 24px; line-height: 1.6; }
+.cs-footer .btn { display: inline-block; background: #fff; color: var(--color-primary); font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: var(--radius); transition: background 0.2s; }
+.cs-footer .btn:hover { background: #f0f0f0; text-decoration: none; }
+
+/* Utility */
+.mb-md { margin-bottom: 24px; }
+.mt-md { margin-top: 24px; }
+.mt-lg { margin-top: 32px; }
+.text-sm { font-size: 13px; }
+.text-muted { color: var(--color-text-light); }
+</style>
+
+<!-- Hero -->
+<section class="hero">
+<div class="wrap">
+    <p class="hero__eyebrow">Case Study &mdash; Finger Lakes Daily News</p>
+    <h1 class="hero__title">Live Before You Reach Your Desk</h1>
+    <p class="hero__sub">An automated storm desk that reads the National Weather Service feed every 60 seconds and publishes branded, self-updating alert coverage&mdash;the watch hours before the warning, the warning before the broadcast cycle catches up. No staff. No paid data.</p>
+</div>
+</section>
+
+<!-- KPIs -->
+<div class="wrap wrap--wide">
+<div class="kpi-row">
+    <div class="kpi">
+        <div class="kpi__value">60 sec</div>
+        <div class="kpi__label">Feed Check Interval</div>
+        <div class="kpi__delta">Around the clock</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value">3h 07m</div>
+        <div class="kpi__label">Watch-Before-Warning Lead</div>
+        <div class="kpi__delta">Jun 14 storm, on our page</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value">4,961</div>
+        <div class="kpi__label">Google Clicks / 120 Days</div>
+        <div class="kpi__delta">Alert pages, avg position 6.3</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value">$0</div>
+        <div class="kpi__label">Paid Data &amp; Staff Time</div>
+        <div class="kpi__delta">Written &amp; lifted by machine</div>
+    </div>
+</div>
+</div>
+
+<!-- The Moment -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">The Moment</p>
+    <h2 class="sect__title">It&rsquo;s Already Up by the Time You Walk Over</h2>
+    <p class="sect__lead">The tell that this actually works isn&rsquo;t a dashboard. It&rsquo;s what happens in the office when the sky turns.</p>
+
+    <div class="pquote">
+        <p class="pquote__text">&ldquo;I hear the weather alert tone go off in the office&mdash;and by the time I get to my computer, the alert is already live on the site.&rdquo;</p>
+        <p class="pquote__by">Scott Swanson &middot; Owner, FLX Local Media</p>
+    </div>
+
+    <p class="sect__lead mt-md">No one wrote it. No one was on shift. A background service caught the National Weather Service alert off the wire, wrote a branded, plain-English story, drew the map, and pushed it live&mdash;in the seconds it took to cross the room. When the storm changes, the same story updates itself. When it&rsquo;s over, it marks itself lifted.</p>
+
+    <div class="callout" style="border-left-color:var(--color-ochre);background:rgba(148,110,22,0.06);">
+        <strong>And none of it existed in January.</strong> When FLX Local Media took over Finger Lakes Daily News at the start of 2026, the site had <em>no weather section at all</em>&mdash;not a forecast, not an alert, nothing. Every piece of this&mdash;the alert desk, the self-updating live-blogs, the town forecast pages, the search dominance&mdash;was built from zero in a few months.
+    </div>
+</div>
+</section>
+
+<!-- How it works -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="sect__eyebrow">How It Works</p>
+    <h2 class="sect__title">The Same Official Feed&mdash;Just Faster to Our Audience</h2>
+    <p class="sect__lead">We don&rsquo;t front-run the National Weather Service or replace anyone&rsquo;s emergency alerting. We read the <em>same</em> public NWS alert feed that EAS and NOAA Weather Radio pull from&mdash;and surface it on our own site the instant it changes, before it has finished cycling onto the airwaves.</p>
+
+    <div class="impl-grid mt-md">
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#128225;</div>
+            <div class="impl-card__title">Polls every 60 seconds</div>
+            <div class="impl-card__desc">A cloud worker checks the NWS active-alerts feed across <strong>19 Finger Lakes zones and counties</strong>, around the clock, and fingerprints the state so it never double-posts.</div>
+            <div class="impl-card__stat">api.weather.gov &middot; every minute</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--ochre">&#9888;</div>
+            <div class="impl-card__title">Reads the whole ladder</div>
+            <div class="impl-card__desc">Watches, Warnings, Advisories, Statements&mdash;every tier. That&rsquo;s why the storm threat shows on the site as a <strong>Watch, hours before there&rsquo;s a Warning</strong> for anyone to broadcast.</div>
+            <div class="impl-card__stat">Watch &rarr; Warning &rarr; Advisory</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#128221;</div>
+            <div class="impl-card__title">Writes it in our voice</div>
+            <div class="impl-card__desc">Each alert becomes a branded, plain-English story with a live radar map&mdash;county names, timing, what to do&mdash;sourced strictly from the NWS text, no embellishment.</div>
+            <div class="impl-card__stat">Branded, fact-checked</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--ochre">&#128260;</div>
+            <div class="impl-card__title">Updates &amp; lifts itself</div>
+            <div class="impl-card__desc">One evolving live-blog per storm: it extends as the warning extends, stacks a new timestamped entry each change, and flips to <strong>LIFTED</strong> when it clears. Nobody has to remember to take it down.</div>
+            <div class="impl-card__stat">Zero staff touches</div>
+        </div>
+    </div>
+
+    <div class="callout">
+        <strong>The important guardrail:</strong> the system is built to report <em>on warnings, not events</em>. It restates what the National Weather Service said and links the full official alert text&mdash;it never invents a threat. Smart and fast, not reckless.
+    </div>
+</div>
+</section>
+
+<!-- Receipt 1: watch before warning -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">The Receipt &mdash; June 14, 2026</p>
+    <h2 class="sect__title">The Threat Was on Our Site 3 Hours Before the Warning</h2>
+    <p class="sect__lead">A real severe-weather afternoon, reconstructed from the timestamps on our own live page. The Severe Thunderstorm <strong>Watch</strong> posted at 2:46 p.m. The <strong>Warning</strong> that follows on the airwaves didn&rsquo;t come until 5:53 p.m.&mdash;<strong>3 hours and 7 minutes later</strong>. Our readers had the head start the whole time.</p>
+
+    <div class="two-col mt-md">
+        <div class="timeline">
+            <div class="tl-item tl-item--watch">
+                <div class="tl-date">2:46 PM</div>
+                <div class="tl-title">Severe Thunderstorm Watch issued<span class="tl-tag tl-tag--watch">Watch</span></div>
+                <div class="tl-desc">Schuyler, Seneca, Steuben, Tompkins &amp; Yates. On our site within the minute&mdash;the storm threat is live while it&rsquo;s still just a watch.</div>
+            </div>
+            <div class="tl-item">
+                <div class="tl-date">4:10 PM</div>
+                <div class="tl-title">Beach Hazards Statement added</div>
+                <div class="tl-desc">A second NWS product stacks onto the same live-blog automatically.</div>
+            </div>
+            <div class="tl-item tl-item--warning">
+                <div class="tl-date">5:53 PM</div>
+                <div class="tl-title">Severe Thunderstorm Warning issued<span class="tl-tag tl-tag--warning">Warning</span></div>
+                <div class="tl-desc">Schuyler &amp; Steuben&mdash;60 mph winds, quarter-size hail. Posted straight from the feed, before the broadcast cycle catches up.</div>
+            </div>
+            <div class="tl-item tl-item--warning">
+                <div class="tl-date">6:38 PM</div>
+                <div class="tl-title">Warning extended &amp; updated</div>
+                <div class="tl-desc">The same story re-writes its own headline and adds a &ldquo;what&rsquo;s new&rdquo; note.</div>
+            </div>
+            <div class="tl-item tl-item--clear">
+                <div class="tl-date">6:46 &ndash; 8:08 PM</div>
+                <div class="tl-title">Warning, then Watch, expire<span class="tl-tag tl-tag--clear">Lifted</span></div>
+                <div class="tl-desc">Each alert flips to lifted on its own as NWS clears it&mdash;no stale warning left glowing on the page.</div>
+            </div>
+        </div>
+        <div class="shot">
+            <div class="shot__frame">
+                <a href="/wp-content/themes/flxlocalmedia/assets/images/wx-watch-to-warning-timeline.png" target="_blank" rel="noopener">
+                    <img src="/wp-content/themes/flxlocalmedia/assets/images/wx-watch-to-warning-timeline.png" alt="Live Finger Lakes Daily News weather-alert page for June 14, 2026, showing a self-updating timeline: Severe Thunderstorm Watch issued 2:46 PM, Warning issued 5:53 PM, and every alert marked expired, each entry citing the National Weather Service issuance time.">
+                </a>
+            </div>
+            <p class="shot__cap">As it appeared on fingerlakesdailynews.com &mdash; every entry stamped with the NWS issuance time. Scroll to see the full self-updating timeline.</p>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Receipt 2: self-updating live-blog -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="sect__eyebrow">The Receipt &mdash; July 21, 2026</p>
+    <h2 class="sect__title">One Story That Writes, Extends, and Retires Itself</h2>
+    <p class="sect__lead">A single storm, one live page, four automatic updates&mdash;issued at 12:32 p.m., extended at 1:10, cleared at 2:16, expired at 5:16&mdash;then closed out with related coverage. The footer says it plainly: <em>&ldquo;Sourced from the National Weather Service alert feed. Auto-updates as alerts are issued, upgraded, and lifted.&rdquo;</em></p>
+    <div class="shot mt-md">
+        <div class="shot__frame">
+            <a href="/wp-content/themes/flxlocalmedia/assets/images/wx-liveblog-storm-timeline.png" target="_blank" rel="noopener">
+                <img src="/wp-content/themes/flxlocalmedia/assets/images/wx-liveblog-storm-timeline.png" alt="Live Finger Lakes Daily News severe thunderstorm warning page for July 21, 2026, showing a self-updating timeline from warning issued at 12:32 PM through cleared and expired, with a weather-alert email signup and a live Beach Hazards Statement card in the sidebar.">
+            </a>
+        </div>
+        <p class="shot__cap">Note the sidebar: a live Beach Hazards Statement (issued that day) and a &ldquo;Weather Alert Email&rdquo; signup&mdash;the audience surface a sponsor attaches to.</p>
+    </div>
+</div>
+</section>
+
+<!-- Live right now -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">Not a Demo &mdash; It&rsquo;s On Right Now</p>
+    <h2 class="sect__title">Every Alert, Automatically, Every Day</h2>
+    <p class="sect__lead">This isn&rsquo;t a highlight reel of two storms. The alert desk runs continuously&mdash;severe thunderstorms, floods, winter storms, heat and air-quality advisories, beach hazards. Here it is handling a live NWS Beach Hazards Statement, captured straight off the site.</p>
+    <div class="wide-img">
+        <img src="/wp-content/themes/flxlocalmedia/assets/images/wx-live-alert-map.png" alt="Live weather-alert article on fingerlakesdailynews.com showing a current NWS Beach Hazards Statement for the Finger Lakes with an auto-generated regional radar map.">
+    </div>
+</div>
+</section>
+
+<!-- SOV payoff -->
+<section class="sect sect--dark">
+<div class="wrap">
+    <p class="sect__eyebrow">The Payoff &mdash; Share of Voice</p>
+    <h2 class="sect__title">When a Storm Hits, We Own the Results Page</h2>
+    <p class="sect__lead">Speed isn&rsquo;t just a nice story&mdash;it&rsquo;s search dominance in the exact moment demand spikes. Because our alert pages publish and get indexed <em>during</em> the event, not after, they land at the top of Google when the whole region is searching. On a live &ldquo;Flood Warning for Finger Lakes Region&rdquo; query, Finger Lakes Daily News is the #1 organic result <strong>and every single Top Story.</strong></p>
+
+    <div class="wide-img">
+        <img src="/wp-content/themes/flxlocalmedia/assets/images/serp-flood-warning-sov.png" alt="Google results page for 'Flood Warning for Finger Lakes Region' with Finger Lakes Daily News as the #1 organic result and all four Top Stories, each carrying an auto-generated radar map thumbnail.">
+    </div>
+
+    <div class="storm-row">
+        <div class="storm-num">
+            <div class="storm-num__val">4,961</div>
+            <div class="storm-num__label">Google clicks to alert pages in 120 days<br>(259,056 impressions, avg position 6.3)</div>
+        </div>
+        <div class="storm-num">
+            <div class="storm-num__val">2,480</div>
+            <div class="storm-num__label">Clicks to a single storm day&rsquo;s auto-built page (Apr 5)</div>
+        </div>
+        <div class="storm-num">
+            <div class="storm-num__val">4 of 4</div>
+            <div class="storm-num__label">Top Stories owned on the live flood-warning SERP</div>
+        </div>
+    </div>
+
+    <div class="early-banner" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15);">
+        <div class="early-banner__icon">&#128200;</div>
+        <div class="early-banner__text" style="color:rgba(255,255,255,0.8);"><strong style="color:#fff;">Honest framing:</strong> across everyday weather we&rsquo;re still the challenger&mdash;a regional competitor holds the majority of general weather search share, and we&rsquo;re climbing it from a standing start this January, when we had no weather section at all. The win the automation already delivers is the one that matters most: the severe-weather moments, where being first <em>is</em> being seen.</div>
+    </div>
+</div>
+</section>
+
+<!-- Why it matters / steal this -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="sect__eyebrow">Why It Matters</p>
+    <h2 class="sect__title">Weather Is the Moment Local Media Is For</h2>
+    <p class="sect__lead">Severe weather is the single biggest reason people turn to a local station&rsquo;s website and social&mdash;and it&rsquo;s exactly when a lean newsroom is slammed or off the clock. Turning the free government alert feed into instant, on-brand, self-updating coverage means you own the storm story instead of losing that audience to TV or weather.com. We built the whole thing from a standing start in a few months this year&mdash;proof it&rsquo;s a realistic play, not a moonshot.</p>
+    <div class="two-col mt-md">
+        <div>
+            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Free input, owned audience</h3>
+            <p class="text-sm text-muted">The NWS alert feed is public and license-free. The cost isn&rsquo;t data or talent&mdash;it&rsquo;s the plumbing that turns a warning into a branded post the instant it&rsquo;s issued, and takes it down the instant it clears.</p>
+        </div>
+        <div>
+            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">A sponsorable franchise</h3>
+            <p class="text-sm text-muted">Always-on weather coverage&mdash;alerts, the live-blog, the email signup beside it&mdash;is a natural &ldquo;Weather brought to you by&nbsp;___&rdquo; package. Automated public service that funds itself, not a cost center.</p>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Footer -->
+<section class="cs-footer">
+<div class="wrap">
+    <h2 class="cs-footer__title">Want your stations first on the storm?</h2>
+    <p class="cs-footer__sub">FLX Local Media operates seven radio stations and a news site. We build&mdash;and share&mdash;the infrastructure we run on.</p>
+    <a href="/contact/" class="btn">Get in Touch</a>
+</div>
+</section>
