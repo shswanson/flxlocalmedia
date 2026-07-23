@@ -171,6 +171,7 @@ a:hover { text-decoration: underline; }
     color: var(--color-text-light);
 }
 .card__body { padding: 16px; }
+.chart-box { position: relative; height: 260px; }
 
 /* Implementation grid */
 .impl-grid {
@@ -543,6 +544,26 @@ a:hover { text-decoration: underline; }
 </div>
 </section>
 
+<!-- Growth charts: from zero -->
+<section class="sect">
+<div class="wrap">
+    <p class="sect__eyebrow">The Curve &mdash; Google Search Console</p>
+    <h2 class="sect__title">From 3,568 to 457,933 &mdash; in Six Months</h2>
+    <p class="sect__lead">In January the weather section had almost no search footprint, because it didn&rsquo;t exist. As the alert desk and forecast pages came online this spring, the reach compounded: monthly Google impressions for the weather pages grew <strong>128&times;</strong> from January to June 2026. Visits (clicks) follow the storms&mdash;every severe-weather event is a spike.</p>
+    <div class="two-col mt-md">
+        <div class="card">
+            <div class="card__head">Weather-section Google impressions / month &mdash; Jan&ndash;Jun 2026</div>
+            <div class="card__body"><div class="chart-box"><canvas id="wxImpr"></canvas></div></div>
+        </div>
+        <div class="card">
+            <div class="card__head">Weather-section Google clicks / month &mdash; Jan&ndash;Jun 2026</div>
+            <div class="card__body"><div class="chart-box"><canvas id="wxClicks"></canvas></div></div>
+        </div>
+    </div>
+    <p class="text-sm text-muted mt-md" style="text-align:center;">Source: Google Search Console &mdash; fingerlakesdailynews.com weather pages. The section did not exist before 2026.</p>
+</div>
+</section>
+
 <!-- SOV payoff -->
 <section class="sect sect--dark">
 <div class="wrap">
@@ -603,3 +624,51 @@ a:hover { text-decoration: underline; }
     <a href="/contact/" class="btn">Get in Touch</a>
 </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+  function draw() {
+    if (typeof Chart === 'undefined') { return setTimeout(draw, 200); }
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    var impressions = [3568, 4773, 9195, 148064, 175856, 457933];
+    var clicks = [6, 14, 25, 3321, 524, 2162];
+    var teal = '#1E5B70', ochre = '#946E16', grid = 'rgba(30,91,112,0.08)', ink = '#726b62';
+    var base = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: ink, font: { size: 11 } } },
+        y: { beginAtZero: true, grid: { color: grid }, border: { display: false },
+             ticks: { color: ink, font: { size: 11 },
+                      callback: function (v) { return v >= 1000 ? (v / 1000) + 'k' : v; } } }
+      }
+    };
+    var imprEl = document.getElementById('wxImpr');
+    if (imprEl) {
+      new Chart(imprEl, {
+        type: 'line',
+        data: { labels: months, datasets: [{ data: impressions, borderColor: teal,
+          backgroundColor: 'rgba(30,91,112,0.10)', borderWidth: 2, tension: 0.3, fill: true,
+          pointBackgroundColor: teal, pointRadius: 3, pointHoverRadius: 5 }] },
+        options: Object.assign({}, base, { plugins: { legend: { display: false },
+          tooltip: { backgroundColor: '#1d2327', padding: 10, displayColors: false,
+            callbacks: { label: function (c) { return c.parsed.y.toLocaleString() + ' impressions'; } } } } })
+      });
+    }
+    var clicksEl = document.getElementById('wxClicks');
+    if (clicksEl) {
+      new Chart(clicksEl, {
+        type: 'bar',
+        data: { labels: months, datasets: [{ data: clicks, backgroundColor: ochre,
+          borderRadius: 4, borderSkipped: false, maxBarThickness: 44 }] },
+        options: Object.assign({}, base, { plugins: { legend: { display: false },
+          tooltip: { backgroundColor: '#1d2327', padding: 10, displayColors: false,
+            callbacks: { label: function (c) { return c.parsed.y.toLocaleString() + ' clicks'; } } } } })
+      });
+    }
+  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', draw); } else { draw(); }
+})();
+</script>
