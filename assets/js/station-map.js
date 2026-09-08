@@ -46,9 +46,22 @@
     attributionControl: true
   }).setView([42.75, -77.0], 9);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/">CARTO</a>',
+  /* Esri light-grey canvas, base + labels. Replaces CARTO light_all, which
+     started stamping "API KEY REQUIRED" diagonally across every unkeyed tile
+     (we never had a CARTO key) - it was printing that across the coverage map
+     on this page. Esri needs no key. Note the {z}/{y}/{x} order. */
+  L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri, HERE, Garmin, USGS',
     maxZoom: 16
+  }).addTo(map);
+
+  map.createPane('mapLabels');
+  map.getPane('mapLabels').style.zIndex = 650;
+  map.getPane('mapLabels').style.pointerEvents = 'none';
+  L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 16,
+    pane: 'mapLabels',
+    opacity: 0.95
   }).addTo(map);
 
   /* ------------------------------------------------------------------ */
