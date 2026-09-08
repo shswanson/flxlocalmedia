@@ -169,7 +169,7 @@ get_header();
 			<h2 class="section__title">More Than Background Noise</h2>
 		</div>
 		<div class="post-content">
-			<p>A banner ad disappears. A social post scrolls by. But when Larry Timko talks about your business during the morning commute from Penn Yan, that is a personal recommendation from someone people have been waking up with for years. Jim and Sorah are the voices that get people through the morning. Paul Szmal is how Geneva and Seneca Falls start their day. Ken and Woody are what the guys at the shop are listening to. These are not just hosts &mdash; they are neighbors.</p>
+			<p>A banner ad disappears. A social post scrolls by. But when Larry Timko talks about your business during the morning commute from Penn Yan, that is a personal recommendation from someone people have been waking up with for years. Jim and Sorah are the voices that get people through the morning. Paul Szmal is how Geneva and Seneca Falls start their day. Ken and Rockin&rsquo; Rob are what the guys at the shop are listening to. These are not just hosts &mdash; they are neighbors.</p>
 			<p>When Lisa Cruz mentions a restaurant on Classic Hits, people go. When Larry reads a live spot for a local business, his listeners try it &mdash; because they trust him the way you trust a friend's recommendation. You cannot buy that kind of credibility with a digital ad. It is earned over years of being in people's ears, day after day, through snowstorms and school closings and Friday night football.</p>
 		</div>
 	</div>
