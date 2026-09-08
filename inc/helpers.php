@@ -289,18 +289,13 @@ function flxlm_get_station_data( $slug = '' ) {
 			'homeownership_pct'   => 79.0,
 			'drive_alone_pct'     => 87.2,
 			'description'         => '<p>101.7 The Wall is the Finger Lakes\' home for classic rock — Led Zeppelin, AC/DC, Pink Floyd, the Stones, and everything that defined rock and roll. The format skews male and attracts a loyal audience of men 35-64 — the generation that grew up on this music and still turns it up on the way to work.</p>
-<p>Mornings belong to Ken Paradise and Jeff "Woody" Woodruff, whose Ken and Woody show has built a dedicated following. Woody stays on through mid-morning, keeping the energy and the rock going. It is the kind of station where listeners do not just tune in — they turn it up.</p>
+<p>Mornings belong to Ken Paradise and Rockin\' Rob, weekdays 6 to 9. Weekends bring the syndicated rock franchises listeners plan their night around — Sammy Hagar\'s Top Rock Countdown and Dee Snider\'s House of Hair on Saturday, Classic Rock Live and Floydian Slip on Sunday. It is the kind of station where listeners do not just tune in — they turn it up.</p>
 <p>The Wall\'s audience has the highest concentration of construction and trades workers of any station in the group, making it a natural fit for building materials, auto services, equipment suppliers, and any business that serves the working men of the Finger Lakes.</p>',
 			'personalities'       => array(
 				array(
-					'name' => 'Ken Paradise & Jeff "Woody" Woodruff',
-					'show' => 'Ken and Woody',
-					'time' => '5:30 - 9:00 AM',
-				),
-				array(
-					'name' => 'Jeff "Woody" Woodruff',
-					'show' => 'Woody',
-					'time' => '9:00 AM - 12:00 PM',
+					'name' => 'Ken Paradise & Rockin\' Rob',
+					'show' => 'Ken and Rockin\' Rob',
+					'time' => 'Weekdays 6:00 - 9:00 AM',
 				),
 			),
 			'coverage_counties'    => array( 'Ontario', 'Seneca', 'Wayne' ),
@@ -312,8 +307,11 @@ function flxlm_get_station_data( $slug = '' ) {
 				'in_car'  => 7778,
 			),
 			'programming'          => array(
-				array( 'time' => '5:30 - 9:00 AM', 'show' => 'Ken and Woody' ),
-				array( 'time' => '9:00 AM - 12:00 PM', 'show' => 'Woody' ),
+				array( 'time' => 'Weekdays 6:00 - 9:00 AM', 'show' => 'Ken and Rockin\' Rob' ),
+				array( 'time' => 'Sat 6:00 - 8:00 PM', 'show' => 'Sammy Hagar\'s Top Rock Countdown' ),
+				array( 'time' => 'Sat 8:00 - 11:00 PM', 'show' => 'Dee Snider\'s House of Hair' ),
+				array( 'time' => 'Sun 7:00 - 9:00 PM', 'show' => 'Classic Rock Live' ),
+				array( 'time' => 'Sun 9:00 - 11:00 PM', 'show' => 'Floydian Slip' ),
 			),
 			'sports'               => array(),
 		),
