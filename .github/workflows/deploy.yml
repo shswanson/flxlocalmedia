@@ -37,11 +37,105 @@ jobs:
             --exclude '.github' \
             --exclude '.vscode' \
             --exclude 'tests' \
+            --exclude 'plugin' \
             --exclude '*.md' \
             ./ ${SERVER_USER}@${SERVER_HOST}:/home/claude/site/public_html/wp-content/themes/flxlocalmedia/
 
-  cache-purge:
+  # ---------------------------------------------------------------------------
+  # The ATS ships as a plugin, not theme code, because applicant records are FCC
+  # compliance evidence and must survive a theme swap and the host migration.
+  # 'plugin' is excluded from the theme rsync above so the two never overlap.
+  #
+  # Three steps, not one. rsync alone is not a deploy here:
+  #   - rsync puts the files on the box
+  #   - wp plugin activate makes them actually run; a plugin that is merely
+  #     present is inert, and a green rsync would otherwise report success while
+  #     nothing changed
+  #   - the verify step compares the file on the box against the commit, because
+  #     a sibling repo has already shipped a green deploy that landed nothing
+  #     and was only caught by comparing hashes by hand
+  # ---------------------------------------------------------------------------
+  deploy-plugin:
     needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync the ATS plugin
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p ${SERVER_PORT:-22} $SERVER_HOST >> ~/.ssh/known_hosts 2>/dev/null
+
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p ${SERVER_PORT:-22}" \
+            --exclude '.DS_Store' \
+            plugin/flxlm-ats/ \
+            ${SERVER_USER}@${SERVER_HOST}:/home/claude/site/public_html/wp-content/plugins/flxlm-ats/
+
+      - name: Activate the plugin
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        run: |
+          # Idempotent: safe to run on every deploy, no-op when already active.
+          ssh -i ~/.ssh/deploy_key -p ${SERVER_PORT:-22} ${SERVER_USER}@${SERVER_HOST} \
+            "wp plugin activate flxlm-ats --path=/home/claude/site/public_html || true"
+
+      - name: Verify the plugin actually landed
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        run: |
+          LOCAL=$(sha256sum plugin/flxlm-ats/inc/storage.php | cut -d' ' -f1)
+          REMOTE=$(ssh -i ~/.ssh/deploy_key -p ${SERVER_PORT:-22} ${SERVER_USER}@${SERVER_HOST} \
+            "sha256sum /home/claude/site/public_html/wp-content/plugins/flxlm-ats/inc/storage.php | cut -d' ' -f1")
+
+          echo "local  $LOCAL"
+          echo "remote $REMOTE"
+
+          if [ "$LOCAL" != "$REMOTE" ]; then
+            echo "::error::Plugin file on the server does not match this commit. The deploy did not land."
+            exit 1
+          fi
+
+          STATUS=$(ssh -i ~/.ssh/deploy_key -p ${SERVER_PORT:-22} ${SERVER_USER}@${SERVER_HOST} \
+            "wp plugin get flxlm-ats --field=status --path=/home/claude/site/public_html")
+          echo "plugin status: $STATUS"
+
+          if [ "$STATUS" != "active" ]; then
+            echo "::error::Plugin is on the box but not active (status: $STATUS)."
+            exit 1
+          fi
+
+      - name: Confirm the intake endpoint answers
+        run: |
+          # A plugin-defined route returning 200 is the only proof the code is
+          # really executing, as opposed to merely present and activated.
+          CODE=$(curl -s -o /tmp/ping.json -w '%{http_code}' \
+            https://www.flxlocalmedia.com/wp-json/flxlm-ats/v1/ping)
+          echo "ping -> $CODE"
+          cat /tmp/ping.json
+
+          if [ "$CODE" != "200" ]; then
+            echo "::error::The ATS REST endpoint did not answer 200."
+            exit 1
+          fi
+
+  cache-purge:
+    needs: [deploy, deploy-plugin]
     runs-on: ubuntu-latest
     timeout-minutes: 2
 
