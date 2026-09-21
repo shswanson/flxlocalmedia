@@ -9,21 +9,14 @@
  * transfer. The equivalent proof for a document is its magic bytes, checked
  * against the claimed extension, and that is what happens here.
  *
- * WHY RESUMES ARE NOT IN wp-content/uploads
+ * WHERE THE FILE ENDS UP
  *
- * This host runs nginx, which has no .htaccess mechanism at all, so the usual
- * "drop a deny-all .htaccess in the folder" protection is not weak here, it is
- * inert. Verified against the live site: any file under wp-content/uploads is
- * served directly, unauthenticated, and Cloudflare caches it with
- * max-age=315360000 (ten years). Verified separately: a .php file dropped into
- * wp-content EXECUTES when requested over the web.
- *
- * Put those two facts together and the uploads directory is the worst possible
- * home for a file a stranger chose the contents and the name of. A resume holds
- * someone's full name, home address, phone number and work history. So resumes
- * are written outside the docroot, where no URL maps to them under any
- * webserver configuration, and served back only through
- * flxlm_ats_serve_resume() after a capability check.
+ * Nowhere on disk. This file proves an upload is what it claims to be and then
+ * hands the bytes to inc/resume-store.php, which keeps them in the database.
+ * The reasoning for that is written out in full there; the short version is
+ * that this host serves everything inside the docroot and lets the web user
+ * write nothing outside it, so there is no directory on this machine that can
+ * safely hold a resume.
  *
  * WHAT THIS FILE NEVER DOES
  *
@@ -174,70 +167,6 @@ function flxlm_ats_allowed_resume_types() {
 }
 
 /**
- * The directory resumes are written to, proven to be outside the docroot.
- *
- * Returns a WP_Error rather than a path when the configured directory is inside
- * the web root. That is a fail-closed check with a specific migration in mind:
- * when this site moves off WPMU DEV hosting, someone will set
- * FLXLM_ATS_PRIVATE_DIR on the new box, and if they point it somewhere servable
- * every resume the company holds becomes public at once. Better that uploads
- * stop working loudly than that they keep working dangerously.
- *
- * @return string|WP_Error Absolute path with no trailing slash.
- */
-function flxlm_ats_private_dir() {
-	$dir = rtrim( (string) FLXLM_ATS_PRIVATE_DIR, '/' );
-
-	if ( '' === $dir ) {
-		return new WP_Error( 'flxlm_ats_no_private_dir', 'No private resume directory is configured.' );
-	}
-
-	$docroot = rtrim( (string) ABSPATH, '/' );
-
-	// Compare resolved paths where possible so a symlink cannot hide the fact
-	// that the "private" directory is actually inside the docroot.
-	$real_dir     = realpath( $dir );
-	$real_docroot = realpath( $docroot );
-	$check_dir    = $real_dir ? $real_dir : $dir;
-	$check_root   = $real_docroot ? $real_docroot : $docroot;
-
-	if ( 0 === strpos( $check_dir . '/', $check_root . '/' ) ) {
-		return new WP_Error(
-			'flxlm_ats_private_dir_public',
-			'Refusing to store resumes at ' . $dir . ' because it is inside the web root (' . $check_root . '). '
-				. 'Set FLXLM_ATS_PRIVATE_DIR in wp-config.php to a directory outside the docroot.'
-		);
-	}
-
-	return $dir;
-}
-
-/**
- * Create the private directory if it is missing.
- *
- * @return true|WP_Error
- */
-function flxlm_ats_prepare_private_dir() {
-	$dir = flxlm_ats_private_dir();
-	if ( is_wp_error( $dir ) ) {
-		return $dir;
-	}
-
-	if ( ! is_dir( $dir ) && ! wp_mkdir_p( $dir ) ) {
-		return new WP_Error( 'flxlm_ats_mkdir_failed', 'Could not create the resume directory at ' . $dir );
-	}
-
-	// 0700: only the user PHP runs as. Nothing else on the box needs to read it.
-	@chmod( $dir, 0700 );
-
-	if ( ! is_writable( $dir ) ) {
-		return new WP_Error( 'flxlm_ats_dir_not_writable', 'The resume directory at ' . $dir . ' is not writable.' );
-	}
-
-	return true;
-}
-
-/**
  * Whether a buffer looks like plain text a human typed.
  *
  * Used only for .txt, which has no magic number. A NUL byte means the file is
@@ -378,36 +307,20 @@ function flxlm_ats_store_resume( $file ) {
 		return new WP_Error( 'flxlm_ats_content_mismatch', 'That file does not look like a text document.' );
 	}
 
-	// ---- Only now is there a destination. ----
+	// ---- Proven. Now store it. ----
 
-	$dir = flxlm_ats_private_dir();
-	if ( is_wp_error( $dir ) ) {
-		return $dir;
+	$bytes = @file_get_contents( $file['tmp_name'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+	if ( false === $bytes ) {
+		return new WP_Error( 'flxlm_ats_unreadable', 'That file could not be read.' );
 	}
 
-	$prepared = flxlm_ats_prepare_private_dir();
-	if ( is_wp_error( $prepared ) ) {
-		return $prepared;
+	$resume_id = flxlm_ats_put_resume( $bytes, $ext, sanitize_file_name( $original ) );
+	if ( is_wp_error( $resume_id ) ) {
+		return $resume_id;
 	}
-
-	// The stored name is ours, not theirs. wp_generate_password with special
-	// characters off gives 32 alphanumerics from a CSPRNG.
-	$stored = gmdate( 'Y/m' ) . '/' . wp_generate_password( 32, false, false ) . '.' . $ext;
-	$target = $dir . '/' . $stored;
-
-	if ( ! wp_mkdir_p( dirname( $target ) ) ) {
-		return new WP_Error( 'flxlm_ats_mkdir_failed', 'Could not prepare storage for that file.' );
-	}
-
-	if ( ! move_uploaded_file( $file['tmp_name'], $target ) ) {
-		return new WP_Error( 'flxlm_ats_move_failed', 'That file could not be saved. Please try again.' );
-	}
-
-	// 0600: readable only by the user PHP runs as.
-	@chmod( $target, 0600 );
 
 	return array(
-		'stored_name'   => $stored,
+		'stored_name'   => (string) $resume_id,
 		'original_name' => sanitize_file_name( $original ),
 		'bytes'         => $size,
 	);
@@ -430,99 +343,6 @@ function flxlm_ats_upload_mimes() {
 		'rtf'  => 'application/rtf',
 		'txt'  => 'text/plain',
 	);
-}
-
-/**
- * Turn a stored filename back into an absolute path, safely.
- *
- * The containment re-check is the point of this function. A stored name comes
- * out of the database, and a database value is not automatically trustworthy:
- * if anything ever wrote "../../../../etc/passwd" into that column, naive
- * concatenation would happily read it. Resolving the path and confirming it is
- * still under the private directory makes that impossible.
- *
- * @param string $stored_name Value of _flxlm_resume_file.
- * @return string|WP_Error
- */
-function flxlm_ats_resume_path( $stored_name ) {
-	$stored_name = (string) $stored_name;
-	if ( '' === $stored_name ) {
-		return new WP_Error( 'flxlm_ats_no_resume', 'No resume on file.' );
-	}
-
-	$dir = flxlm_ats_private_dir();
-	if ( is_wp_error( $dir ) ) {
-		return $dir;
-	}
-
-	$candidate = $dir . '/' . ltrim( $stored_name, '/' );
-	$real      = realpath( $candidate );
-	$real_dir  = realpath( $dir );
-
-	if ( ! $real || ! $real_dir || 0 !== strpos( $real, $real_dir . '/' ) ) {
-		return new WP_Error( 'flxlm_ats_resume_missing', 'That resume file is not available.' );
-	}
-
-	if ( ! is_file( $real ) || ! is_readable( $real ) ) {
-		return new WP_Error( 'flxlm_ats_resume_missing', 'That resume file is not available.' );
-	}
-
-	return $real;
-}
-
-/**
- * Content type to send when handing a resume back to a browser.
- *
- * @param string $path File path.
- * @return string
- */
-function flxlm_ats_resume_content_type( $path ) {
-	$ext   = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
-	$mimes = flxlm_ats_upload_mimes();
-	return isset( $mimes[ $ext ] ) ? $mimes[ $ext ] : 'application/octet-stream';
-}
-
-/**
- * Stream a resume to the current request and exit.
- *
- * The caller is responsible for authorising the request; this function only
- * moves bytes. Both callers (the admin download link and the signed hiring
- * manager link) check first.
- *
- * Content-Disposition is "inline" for PDFs so a manager can read the resume in
- * the browser without downloading it, and "attachment" for everything else,
- * because telling a browser to render an arbitrary document inline is how
- * stored-XSS happens. X-Content-Type-Options stops MIME sniffing either way.
- *
- * @param int $application_id Application ID.
- * @return void|WP_Error Exits on success.
- */
-function flxlm_ats_serve_resume( $application_id ) {
-	$stored = get_post_meta( (int) $application_id, '_flxlm_resume_file', true );
-	$path   = flxlm_ats_resume_path( $stored );
-
-	if ( is_wp_error( $path ) ) {
-		return $path;
-	}
-
-	$type     = flxlm_ats_resume_content_type( $path );
-	$original = (string) get_post_meta( (int) $application_id, '_flxlm_resume_name', true );
-	$filename = $original ? $original : basename( $path );
-	$inline   = ( 'application/pdf' === $type );
-
-	nocache_headers();
-	header( 'Content-Type: ' . $type );
-	header( 'Content-Length: ' . filesize( $path ) );
-	header( 'X-Content-Type-Options: nosniff' );
-	header( 'X-Robots-Tag: noindex, nofollow, noarchive' );
-	header( 'Referrer-Policy: no-referrer' );
-	header(
-		'Content-Disposition: ' . ( $inline ? 'inline' : 'attachment' )
-			. '; filename="' . sanitize_file_name( $filename ) . '"'
-	);
-
-	readfile( $path );
-	exit;
 }
 
 /**
@@ -573,32 +393,67 @@ function flxlm_ats_store_relayed_resume( $base64, $filename ) {
 		return new WP_Error( 'flxlm_ats_content_mismatch', 'That file does not look like a text document.' );
 	}
 
-	$dir = flxlm_ats_private_dir();
-	if ( is_wp_error( $dir ) ) {
-		return $dir;
+	$resume_id = flxlm_ats_put_resume( $raw, $ext, sanitize_file_name( (string) $filename ) );
+	if ( is_wp_error( $resume_id ) ) {
+		return $resume_id;
 	}
-
-	$prepared = flxlm_ats_prepare_private_dir();
-	if ( is_wp_error( $prepared ) ) {
-		return $prepared;
-	}
-
-	$stored = gmdate( 'Y/m' ) . '/' . wp_generate_password( 32, false, false ) . '.' . $ext;
-	$target = $dir . '/' . $stored;
-
-	if ( ! wp_mkdir_p( dirname( $target ) ) ) {
-		return new WP_Error( 'flxlm_ats_mkdir_failed', 'Could not prepare storage for that file.' );
-	}
-
-	if ( false === file_put_contents( $target, $raw ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions
-		return new WP_Error( 'flxlm_ats_move_failed', 'That file could not be saved.' );
-	}
-
-	@chmod( $target, 0600 );
 
 	return array(
-		'stored_name'   => $stored,
+		'stored_name'   => (string) $resume_id,
 		'original_name' => sanitize_file_name( (string) $filename ),
 		'bytes'         => $size,
 	);
+}
+
+/**
+ * Stream a resume to the current request and exit.
+ *
+ * The caller is responsible for authorising the request; this function only
+ * moves bytes. Both callers check first: the admin link on a capability, the
+ * emailed link on a signed token.
+ *
+ * Content-Disposition is "inline" for PDFs so a hiring manager can read a
+ * resume in the browser without downloading it, and "attachment" for
+ * everything else, because telling a browser to render an arbitrary document
+ * inline is how stored XSS happens. X-Content-Type-Options stops the browser
+ * second-guessing the type either way, and X-Robots-Tag keeps the response out
+ * of any crawler that somehow reaches it.
+ *
+ * @param int $application_id Application ID.
+ * @return WP_Error|void Exits on success.
+ */
+function flxlm_ats_serve_resume( $application_id ) {
+	$resume_id = (int) get_post_meta( (int) $application_id, '_flxlm_resume_file', true );
+	if ( $resume_id < 1 ) {
+		return new WP_Error( 'flxlm_ats_no_resume', 'No resume on file.' );
+	}
+
+	$meta = flxlm_ats_get_resume_meta( $resume_id );
+	if ( ! $meta ) {
+		return new WP_Error( 'flxlm_ats_resume_missing', 'That resume is not available.' );
+	}
+
+	$bytes = flxlm_ats_get_resume_bytes( $resume_id );
+	if ( null === $bytes || '' === $bytes ) {
+		return new WP_Error( 'flxlm_ats_resume_missing', 'That resume is not available.' );
+	}
+
+	$type     = $meta['mime_type'] ? $meta['mime_type'] : 'application/octet-stream';
+	$original = (string) get_post_meta( (int) $application_id, '_flxlm_resume_name', true );
+	$filename = $original ? $original : ( 'resume.' . $meta['extension'] );
+	$inline   = ( 'application/pdf' === $type );
+
+	nocache_headers();
+	header( 'Content-Type: ' . $type );
+	header( 'Content-Length: ' . strlen( $bytes ) );
+	header( 'X-Content-Type-Options: nosniff' );
+	header( 'X-Robots-Tag: noindex, nofollow, noarchive' );
+	header( 'Referrer-Policy: no-referrer' );
+	header(
+		'Content-Disposition: ' . ( $inline ? 'inline' : 'attachment' )
+			. '; filename="' . sanitize_file_name( $filename ) . '"'
+	);
+
+	echo $bytes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw file bytes.
+	exit;
 }

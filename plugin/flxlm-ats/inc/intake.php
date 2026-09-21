@@ -181,6 +181,11 @@ function flxlm_ats_create_application( $args ) {
 	if ( ! empty( $args['resume'] ) && is_array( $args['resume'] ) ) {
 		$meta['_flxlm_resume_file'] = $args['resume']['stored_name'];
 		$meta['_flxlm_resume_name'] = $args['resume']['original_name'];
+
+		// The resume row is written while the file is being validated, which is
+		// before this post exists, so it starts life unattached. Point it at the
+		// application now that there is one to point at.
+		flxlm_ats_link_resume( (int) $args['resume']['stored_name'], $application_id );
 	}
 
 	foreach ( $meta as $key => $value ) {

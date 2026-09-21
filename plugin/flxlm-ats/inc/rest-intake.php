@@ -180,10 +180,31 @@ function flxlm_ats_rest_receive( $request ) {
 			$params['resume_name'] ?? 'resume.pdf'
 		);
 		if ( is_wp_error( $resume ) ) {
+			/*
+			 * 422 means "understood and permanently invalid, stop retrying", and
+			 * only the applicant's own file can earn that. A failure to STORE a
+			 * perfectly good file is our problem: a missing table, a full disk,
+			 * a database hiccup. Returning 422 for those tells the sending site
+			 * to give up forever on an application that would succeed on the
+			 * next attempt, which is how a transient fault becomes a lost
+			 * candidate.
+			 */
+			$applicant_fault = in_array(
+				$resume->get_error_code(),
+				array(
+					'flxlm_ats_bad_payload',
+					'flxlm_ats_bad_type',
+					'flxlm_ats_too_big',
+					'flxlm_ats_content_mismatch',
+					'flxlm_ats_empty_resume',
+				),
+				true
+			);
+
 			return new WP_Error(
 				$resume->get_error_code(),
 				$resume->get_error_message(),
-				array( 'status' => 422 )
+				array( 'status' => $applicant_fault ? 422 : 500 )
 			);
 		}
 	}

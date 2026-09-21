@@ -21,23 +21,14 @@
  * hosting, so it is written to be self-contained: its own post type, its own
  * storage, and no dependency on the flxlocalmedia theme being active.
  *
- * WHERE RESUMES LIVE, AND WHY IT IS NOT THE UPLOADS FOLDER
+ * WHERE RESUMES LIVE
  *
- * This host runs nginx. There is no .htaccess mechanism at all, so the usual
- * WordPress trick of dropping a "deny from all" .htaccess into an uploads
- * subfolder is not weak protection here, it is a complete no-op. Verified on
- * the live site: any file under wp-content/uploads/ is served directly and
- * statically, with no auth, and Cloudflare caches it with
- * max-age=315360000 (ten years). A resume carries a person's full name, home
- * address, phone number and work history. Putting one under the docroot and
- * relying on an unguessable filename would mean the file is one leaked URL away
- * from being public and edge-cached for a decade.
- *
- * So resumes are written OUTSIDE the docroot entirely, to the directory named
- * by FLXLM_ATS_PRIVATE_DIR below, and are only ever served back through
- * inc/storage.php, which checks a capability first. There is no URL that maps
- * to a resume file. That property does not depend on webserver config, so it
- * also survives the host migration.
+ * In the database, not on disk. inc/resume-store.php explains why at length;
+ * the short version is that this host runs nginx (so nothing inside the
+ * docroot can be made private) and runs the web server as www-data, which
+ * cannot write anywhere outside the docroot. The database is the only store
+ * here that is private, needs no filesystem permissions, and survives the move
+ * off this platform unchanged.
  *
  * @package flxlm-ats
  */
@@ -50,24 +41,7 @@ define( 'FLXLM_ATS_VERSION', '1.0.0' );
 define( 'FLXLM_ATS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FLXLM_ATS_URL', plugin_dir_url( __FILE__ ) );
 
-/**
- * Where resume files are written.
- *
- * MUST be outside the web docroot. On this host the docroot is
- * /home/claude/site/public_html, so /home/claude/ats-private is one level above
- * it and is not reachable by any URL. Override in wp-config.php when the site
- * moves hosts:
- *
- *     define( 'FLXLM_ATS_PRIVATE_DIR', '/some/path/outside/the/docroot' );
- *
- * flxlm_ats_private_dir() refuses to use a path that is inside the docroot, so
- * a careless override during a migration fails loudly instead of quietly
- * publishing every resume.
- */
-if ( ! defined( 'FLXLM_ATS_PRIVATE_DIR' ) ) {
-	define( 'FLXLM_ATS_PRIVATE_DIR', dirname( ABSPATH, 2 ) . '/ats-private' );
-}
-
+require_once FLXLM_ATS_DIR . 'inc/resume-store.php';
 require_once FLXLM_ATS_DIR . 'inc/sources.php';
 require_once FLXLM_ATS_DIR . 'inc/stages.php';
 require_once FLXLM_ATS_DIR . 'inc/post-type.php';
@@ -93,7 +67,7 @@ register_activation_hook(
 		flxlm_ats_register_post_type();
 		flxlm_ats_register_stages();
 		flxlm_ats_grant_caps();
-		flxlm_ats_prepare_private_dir();
+		flxlm_ats_install_resume_table();
 		flush_rewrite_rules();
 	}
 );
@@ -144,7 +118,7 @@ add_action(
 			return;
 		}
 		flxlm_ats_grant_caps();
-		flxlm_ats_prepare_private_dir();
+		flxlm_ats_maybe_install_resume_table();
 		update_option( 'flxlm_ats_version', FLXLM_ATS_VERSION );
 	}
 );
