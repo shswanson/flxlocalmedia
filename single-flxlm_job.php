@@ -37,6 +37,22 @@ while ( have_posts() ) : the_post();
 				<?php endif; ?>
 			</p>
 		<?php endif; ?>
+
+		<?php
+		/*
+		 * Apply above the fold.
+		 *
+		 * Most people who read a job posting decide within the first screenful,
+		 * and the old page gave them nothing to act on until they had scrolled
+		 * the entire description. This anchors down to the form rather than
+		 * duplicating it, so there is still only one form on the page.
+		 */
+		if ( function_exists( 'flxlm_ats_render_form' ) ) :
+			?>
+			<p class="page-header__cta flxlm-ats-apply-cta">
+				<a class="btn btn--primary" href="#apply">Apply for this job</a>
+			</p>
+		<?php endif; ?>
 	</div>
 </div>
 
@@ -67,7 +83,22 @@ while ( have_posts() ) : the_post();
 				</div>
 			<?php endif; ?>
 
-			<?php if ( $job_email ) :
+			<?php
+			/*
+			 * How to apply.
+			 *
+			 * The ATS plugin owns this when it is active: an on-page form that
+			 * captures the application, stores the resume privately, and records
+			 * the recruitment source the FCC EEO report is built from.
+			 *
+			 * The mailto: fallback below is kept deliberately. If the plugin is
+			 * ever deactivated, mid-migration or otherwise, a job posting must
+			 * still tell a candidate how to reach us. A careers page that
+			 * silently offers no way to apply is worse than an old-fashioned one.
+			 */
+			if ( function_exists( 'flxlm_ats_render_form' ) ) :
+				echo flxlm_ats_render_form( get_the_ID() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			elseif ( $job_email ) :
 				$emails = array_values( array_filter( array_map( 'trim', explode( ',', $job_email ) ) ) );
 				$links  = array();
 				foreach ( $emails as $em ) {
