@@ -85,13 +85,34 @@ function flxlm_ats_sources() {
 }
 
 /**
+ * Sources only staff can pick, never applicants.
+ *
+ * "Not known yet" is a real answer and has to be recordable, but only on the
+ * staff-facing manual entry screen. An applicant filling in the public form is
+ * right there and can answer the question, so offering them an unknown would
+ * just make the EEO data worse for no reason. HR entering someone a colleague
+ * forwarded on is in the opposite position: the honest state is often that
+ * nobody has established the source yet, and forcing a pick there does not
+ * produce information, it produces a guess that gets filed with the FCC as
+ * fact. The EEO report lists these as outstanding rather than counting them.
+ *
+ * @return array<string,string>
+ */
+function flxlm_ats_manual_only_sources() {
+	return array(
+		'unknown' => 'Not known yet (fix before the EEO report)',
+	);
+}
+
+/**
  * Whether a key names a real source.
  *
  * @param string $key Source key.
  * @return bool
  */
 function flxlm_ats_is_source( $key ) {
-	return array_key_exists( (string) $key, flxlm_ats_sources() );
+	return array_key_exists( (string) $key, flxlm_ats_sources() )
+		|| array_key_exists( (string) $key, flxlm_ats_manual_only_sources() );
 }
 
 /**
@@ -104,7 +125,7 @@ function flxlm_ats_is_source( $key ) {
  * @return string
  */
 function flxlm_ats_source_label( $key ) {
-	$sources = flxlm_ats_sources();
+	$sources = flxlm_ats_sources() + flxlm_ats_manual_only_sources();
 	if ( isset( $sources[ $key ] ) ) {
 		return $sources[ $key ];
 	}

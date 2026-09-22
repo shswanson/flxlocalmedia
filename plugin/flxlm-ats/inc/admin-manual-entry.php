@@ -158,9 +158,13 @@ function flxlm_ats_render_manual_screen() {
 					<td>
 						<select id="m-source" name="source" required>
 							<option value="">Choose one...</option>
+							<?php foreach ( flxlm_ats_manual_only_sources() as $key => $label ) : ?>
+								<option value="<?php echo esc_attr( $key ); ?>" selected>
+									<?php echo esc_html( $label ); ?>
+								</option>
+							<?php endforeach; ?>
 							<?php foreach ( flxlm_ats_sources() as $key => $label ) : ?>
-								<option value="<?php echo esc_attr( $key ); ?>"
-									<?php selected( 'walk_in', $key ); ?>>
+								<option value="<?php echo esc_attr( $key ); ?>">
 									<?php echo esc_html( $label ); ?>
 								</option>
 							<?php endforeach; ?>

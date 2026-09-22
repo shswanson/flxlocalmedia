@@ -196,8 +196,21 @@ function flxlm_ats_build_report( $start_year ) {
 		}
 	}
 
-	// Applications with no recruitment source cannot happen through any intake
-	// path here, but a record imported or edited by hand could carry a blank.
+	// Applicants whose source nobody has established yet. Recorded honestly at
+	// intake rather than guessed, and surfaced here because the Master
+	// Recruitment Source List is wrong until they are resolved. This is a task
+	// for whoever files the report, not a defect in the data.
+	if ( isset( $sources['unknown'] ) ) {
+		$warnings[] = sprintf(
+			'%d application(s) are recorded as "Not known yet" for recruitment source. Ask whoever '
+				. 'passed them on where they came from and set it, or the Master Recruitment Source '
+				. 'List under 73.2080(c)(6)(v) will undercount whichever source actually referred them.',
+			$sources['unknown']['applicants']
+		);
+	}
+
+	// Applications with no recruitment source at all. Cannot happen through any
+	// intake path here, but a record imported or edited by hand could carry a blank.
 	if ( isset( $sources[''] ) ) {
 		$warnings[] = sprintf(
 			'%d application(s) have no recruitment source recorded. The Master Recruitment Source List '
