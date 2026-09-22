@@ -217,8 +217,35 @@ function flxlm_ats_send_html( $to, $subject, $html ) {
 		return 'text/html';
 	};
 
+	/*
+	 * The sender NAME is set here. The sender ADDRESS is deliberately not.
+	 *
+	 * Out of the box this site sends as "WordPress <noreply@yourwpsite.email>",
+	 * which is the host's placeholder and reads to a candidate like spam. The
+	 * obvious fix is to send as noreply@flxlocalmedia.com instead, and that
+	 * would be worse than the problem: flxlocalmedia.com publishes
+	 * "v=spf1 include:_spf.google.com ~all" with DMARC p=quarantine, and this
+	 * host's mail server is not in that record. Mail sent as the domain would
+	 * fail SPF, fail DMARC alignment, and be quarantined, so the applicant
+	 * would never see it at all. An ugly sender that arrives beats a tidy one
+	 * that does not.
+	 *
+	 * Changing only the display name is free: the From domain stays the one
+	 * that is actually authorized, so delivery is unaffected, and the candidate
+	 * sees the company rather than the software.
+	 *
+	 * Sending as the real domain needs either the mail host added to the SPF
+	 * record or an authorized relay, which is worth doing as part of the move
+	 * off this platform rather than pinned to it now.
+	 */
+	$from_name = function () {
+		return 'FLX Local Media';
+	};
+
 	add_filter( 'wp_mail_content_type', $as_html );
+	add_filter( 'wp_mail_from_name', $from_name );
 	$sent = wp_mail( $to, $subject, $html );
+	remove_filter( 'wp_mail_from_name', $from_name );
 	remove_filter( 'wp_mail_content_type', $as_html );
 
 	return $sent;
