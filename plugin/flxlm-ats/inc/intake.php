@@ -150,7 +150,11 @@ function flxlm_ats_create_application( $args ) {
 		array(
 			'post_type'   => 'flxlm_application',
 			'post_status' => flxlm_ats_initial_stage(),
-			'post_title'  => $title . ' — ' . $job,
+			// The applicant's name alone. The job has its own column on the list
+			// screen and its own line on the application, so repeating it in every
+			// title just pushed the name, which is the thing anyone is actually
+			// scanning for, off the edge of the column.
+			'post_title'  => $title,
 			// Content is left empty on purpose; everything lives in meta so the
 			// EEO export can select columns without parsing prose.
 			'post_content' => '',
