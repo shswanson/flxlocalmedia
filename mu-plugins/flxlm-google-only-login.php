@@ -105,11 +105,14 @@ add_filter(
 );
 
 /**
- * Hide the username and password fields, and style the Google button to spec.
+ * Hide the password form, and size the Google button the way Google specifies.
  *
- * The fields are hidden rather than removed: other plugins and core JS expect
- * them to exist in the form, and removing them outright breaks the page in ways
- * that are tedious to chase.
+ * Ported wholesale from FLDN rather than trimmed. The first port dropped the
+ * two rules that actually make the button fill the card, and it shipped narrow:
+ * Nextend wraps its button in an anchor inside .nsl-container-buttons, and that
+ * anchor is inline and carries its own max-width, so the button sizes to its
+ * label instead of the form. Forcing the WRAPPER to block/100%/max-width:none
+ * is the fix, not anything on the button itself.
  */
 add_action(
 	'login_head',
@@ -118,15 +121,37 @@ add_action(
 			return;
 		}
 		?>
-		<style>
-			#loginform > p:not(.nsl-container):not(.forgetmenot),
+		<style id="flxlm-google-only">
+			/*
+			 * Hide the password form. The username <p> WRAPPER must go, not just
+			 * its label+input: an emptied <p> still reserves vertical space and
+			 * leaves a gap above the button.
+			 */
+			#loginform > p:first-of-type,
 			#loginform .user-pass-wrap,
 			#loginform .forgetmenot,
-			#loginform #wp-submit,
-			#loginform .submit,
-			#nav { display: none !important; }
+			#loginform p.submit,
+			#nav {
+				display: none !important;
+			}
 
-			#loginform .nsl-container { margin: 0 !important; padding: 0 !important; }
+			/*
+			 * Nextend renders with data-align="left" and its own 20px top padding,
+			 * which stacks on the form's 26px and pushes the button off-centre.
+			 */
+			#loginform .nsl-container {
+				margin: 0 !important;
+				padding: 0 !important;
+			}
+			#loginform .nsl-container-buttons {
+				display: block !important;
+			}
+			#loginform .nsl-container-buttons > a {
+				display: block !important;
+				width: 100% !important;
+				max-width: none !important;
+				margin: 0 !important;
+			}
 
 			/* Google's own sign-in button spec: 40px tall, 1px #dadce0, 4px radius. */
 			#loginform .nsl-button-google {
@@ -136,24 +161,75 @@ add_action(
 				gap: 12px;
 				box-sizing: border-box;
 				width: 100% !important;
+				max-width: none !important;
 				height: 40px !important;
+				padding: 0 12px !important;
 				background-color: #fff !important;
 				border: 1px solid #dadce0 !important;
 				border-radius: 4px !important;
 				box-shadow: none !important;
+				transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
 			}
 			#loginform .nsl-button-google:hover {
 				background-color: #f8f9fa !important;
 				border-color: #d2e3fc !important;
+				box-shadow: 0 1px 2px 0 rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15);
+			}
+			#loginform .nsl-button-google .nsl-button-svg-container {
+				flex: 0 0 18px !important;
+				display: flex !important;
+				align-items: center;
+				justify-content: center;
+				width: 18px !important;
+				height: 18px !important;
+				margin: 0 !important;
+				padding: 0 !important;
+			}
+			#loginform .nsl-button-google .nsl-button-svg-container svg {
+				width: 18px !important;
+				height: 18px !important;
 			}
 			#loginform .nsl-button-google .nsl-button-label-container {
+				flex: 0 1 auto !important;
+				margin: 0 !important;
+				padding: 0 !important;
 				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 				font-size: 14px !important;
 				font-weight: 500 !important;
+				line-height: 20px !important;
+				letter-spacing: .25px;
 				color: #3c4043 !important;
+				white-space: nowrap;
 			}
-			#loginform .nsl-button-google .nsl-button-label-container b { font-weight: 500 !important; }
+			/* Nextend bolds the provider name; Google's spec uses one uniform weight. */
+			#loginform .nsl-button-google .nsl-button-label-container b {
+				font-weight: 500 !important;
+			}
+
+			/* Match the form's 26px top padding so the button sits centred in the card. */
+			#loginform {
+				padding-bottom: 26px;
+			}
 		</style>
 		<?php
+	}
+);
+
+/**
+ * Tell people what to do instead of showing them an empty form.
+ *
+ * @param string $message Existing login message markup.
+ * @return string
+ */
+add_filter(
+	'login_message',
+	function ( $message ) {
+		if ( flxlm_password_login_allowed() ) {
+			return $message;
+		}
+
+		return $message . '<p class="message" style="border-left-color:#4285f4;">'
+			. esc_html__( 'Sign in with your FLX Google account.', 'flxlm' )
+			. '</p>';
 	}
 );
