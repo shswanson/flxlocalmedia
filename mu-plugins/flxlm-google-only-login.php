@@ -95,13 +95,36 @@ add_filter(
 		 * wp-login.php calls wp_signon() with empty args even on a plain GET;
 		 * with the core password callbacks removed nothing claims the request,
 		 * so wp_authenticate() falls through to its generic "Invalid username"
-		 * error and every visitor would see a red error box on arrival.
-		 * Returning a silent WP_Error with no message suppresses that.
+		 * error and every visitor sees a red error box on arrival.
+		 *
+		 * Core's own callback returns empty_username / empty_password here, and
+		 * wp-login.php deliberately suppresses those two codes from display.
+		 * Return the same thing so the page renders clean. A custom code with an
+		 * empty message does NOT work: it is not on the suppression list, so it
+		 * renders as an empty red bar above the button.
 		 */
-		return new WP_Error( 'flxlm_no_credentials', '' );
+		$error = new WP_Error();
+		if ( empty( $username ) ) {
+			$error->add( 'empty_username', __( '<strong>Error:</strong> The username field is empty.' ) );
+		}
+		if ( empty( $password ) ) {
+			$error->add( 'empty_password', __( '<strong>Error:</strong> The password field is empty.' ) );
+		}
+
+		return $error;
 	},
 	100,
 	3
+);
+
+/**
+ * Password reset is meaningless once passwords cannot be used to sign in.
+ */
+add_filter(
+	'allow_password_reset',
+	function ( $allow ) {
+		return flxlm_password_login_allowed() ? $allow : false;
+	}
 );
 
 /**
