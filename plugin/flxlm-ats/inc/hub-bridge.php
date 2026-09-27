@@ -97,7 +97,7 @@ function flxlm_ats_hub_bridge_register_rest() {
 			'methods'             => 'GET',
 			'callback'            => 'flxlm_ats_hub_get_vacancy_applicants',
 			'permission_callback' => 'flxlm_ats_hub_permission_view',
-			'args'                => array( 'id' => array( 'validate_callback' => 'is_numeric' ) ),
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
 		)
 	);
 
@@ -108,7 +108,7 @@ function flxlm_ats_hub_bridge_register_rest() {
 			'methods'             => 'GET',
 			'callback'            => 'flxlm_ats_hub_get_applicant',
 			'permission_callback' => 'flxlm_ats_hub_permission_view',
-			'args'                => array( 'id' => array( 'validate_callback' => 'is_numeric' ) ),
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
 		)
 	);
 
@@ -119,7 +119,7 @@ function flxlm_ats_hub_bridge_register_rest() {
 			'methods'             => 'GET',
 			'callback'            => 'flxlm_ats_hub_get_resume',
 			'permission_callback' => 'flxlm_ats_hub_permission_view',
-			'args'                => array( 'id' => array( 'validate_callback' => 'is_numeric' ) ),
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
 		)
 	);
 
@@ -130,7 +130,7 @@ function flxlm_ats_hub_bridge_register_rest() {
 			'methods'             => 'POST',
 			'callback'            => 'flxlm_ats_hub_post_stage',
 			'permission_callback' => 'flxlm_ats_hub_permission_manage',
-			'args'                => array( 'id' => array( 'validate_callback' => 'is_numeric' ) ),
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
 		)
 	);
 }
