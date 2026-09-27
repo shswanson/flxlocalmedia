@@ -313,7 +313,7 @@ function flxlm_ats_hub_get_vacancies( $request ) {
 
 		$out[] = array(
 			'id'           => $job->ID,
-			'title'        => get_the_title( $job ),
+			'title'        => wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES ),
 			'permalink'    => get_permalink( $job ),
 			'location'     => (string) get_post_meta( $job->ID, 'job_location', true ),
 			'type'         => (string) get_post_meta( $job->ID, 'job_type', true ),
@@ -381,7 +381,7 @@ function flxlm_ats_hub_get_vacancy_applicants( $request ) {
 
 	return new WP_REST_Response(
 		array(
-			'vacancy'    => array( 'id' => $job_id, 'title' => get_the_title( $job ) ),
+			'vacancy'    => array( 'id' => $job_id, 'title' => wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES ) ),
 			'applicants' => $out,
 		),
 		200
@@ -448,7 +448,7 @@ function flxlm_ats_hub_get_applicant( $request ) {
 		'name'          => flxlm_ats_applicant_name( $application_id ),
 		'email'         => $application['email'],
 		'phone'         => $application['phone'],
-		'job_title'     => flxlm_ats_job_title( $application_id ),
+		'job_title'     => wp_specialchars_decode( flxlm_ats_job_title( $application_id ), ENT_QUOTES ),
 		'stage'         => $application['stage'],
 		'stage_label'   => flxlm_ats_stage_label( $application['stage'] ),
 		'interviewed'   => flxlm_ats_was_interviewed( $application_id ),
