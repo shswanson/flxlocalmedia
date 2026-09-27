@@ -312,17 +312,36 @@ function flxlm_ats_hub_get_vacancies( $request ) {
 		}
 
 		$out[] = array(
-			'id'          => $job->ID,
-			'title'       => get_the_title( $job ),
-			'permalink'   => get_permalink( $job ),
-			'total'       => $total,
-			'by_stage'    => $by_stage,
+			'id'           => $job->ID,
+			'title'        => get_the_title( $job ),
+			'permalink'    => get_permalink( $job ),
+			'location'     => (string) get_post_meta( $job->ID, 'job_location', true ),
+			'type'         => (string) get_post_meta( $job->ID, 'job_type', true ),
+			'total'        => $total,
+			'by_stage'     => $by_stage,
+			// Same counts as by_stage, shaped as {stage: count} — this is the
+			// field name and shape the hub front end's own wire contract
+			// actually reads (docs/gws-migration/worker/hiring.html).
+			'stage_counts' => $counts,
 		);
+	}
+
+	// Sent once at the top level, not per-vacancy — the labels for
+	// stage_counts's keys. Same wire contract as above.
+	$stage_labels = array();
+	foreach ( $stages as $key => $stage ) {
+		$stage_labels[ $key ] = $stage['label'];
 	}
 
 	flxlm_ats_hub_audit( $request, 'list_vacancies', 0 );
 
-	return new WP_REST_Response( array( 'vacancies' => $out ), 200 );
+	return new WP_REST_Response(
+		array(
+			'vacancies' => $out,
+			'stages'    => $stage_labels,
+		),
+		200
+	);
 }
 
 /**
@@ -380,14 +399,14 @@ function flxlm_ats_hub_get_vacancy_applicants( $request ) {
 function flxlm_ats_hub_applicant_summary( $application_id ) {
 	$stage = get_post_status( $application_id );
 	return array(
-		'id'          => $application_id,
-		'name'        => flxlm_ats_applicant_name( $application_id ),
-		'stage'       => $stage,
-		'stage_label' => flxlm_ats_stage_label( $stage ),
-		'interviewed' => flxlm_ats_was_interviewed( $application_id ),
-		'source'      => flxlm_ats_source_label( get_post_meta( $application_id, '_flxlm_source', true ) ),
-		'submitted'   => get_post_meta( $application_id, '_flxlm_submitted_at', true ),
-		'has_resume'  => (bool) get_post_meta( $application_id, '_flxlm_resume_file', true ),
+		'id'           => $application_id,
+		'name'         => flxlm_ats_applicant_name( $application_id ),
+		'stage'        => $stage,
+		'stage_label'  => flxlm_ats_stage_label( $stage ),
+		'interviewed'  => flxlm_ats_was_interviewed( $application_id ),
+		'source'       => flxlm_ats_source_label( get_post_meta( $application_id, '_flxlm_source', true ) ),
+		'submitted_at' => get_post_meta( $application_id, '_flxlm_submitted_at', true ),
+		'has_resume'   => (bool) get_post_meta( $application_id, '_flxlm_resume_file', true ),
 	);
 }
 
@@ -409,25 +428,45 @@ function flxlm_ats_hub_get_applicant( $request ) {
 		$stages[] = array( 'stage' => $key, 'label' => $stage['label'] );
 	}
 
+	// Newest first, matching the wp-admin applicant screen's own history
+	// display (inc/admin-detail.php) — same underlying meta, same convention.
+	$raw_history = is_array( $application['stage_history'] ?? null ) ? $application['stage_history'] : array();
+	$history     = array_map(
+		function ( $entry ) {
+			return array(
+				'from_label' => flxlm_ats_stage_label( $entry['from'] ?? '' ),
+				'to_label'   => flxlm_ats_stage_label( $entry['to'] ?? '' ),
+				'at'         => $entry['at'] ?? '',
+				'by'         => $entry['by'] ?? '',
+			);
+		},
+		array_reverse( $raw_history )
+	);
+
 	$out = array(
-		'id'          => $application_id,
-		'name'        => flxlm_ats_applicant_name( $application_id ),
-		'email'       => $application['email'],
-		'phone'       => $application['phone'],
-		'job_title'   => flxlm_ats_job_title( $application_id ),
-		'stage'       => $application['stage'],
-		'stage_label' => flxlm_ats_stage_label( $application['stage'] ),
-		'interviewed' => flxlm_ats_was_interviewed( $application_id ),
-		'source'      => flxlm_ats_source_label( $application['source'] ),
-		'submitted'   => $application['submitted_at'],
-		'entered_by'  => $application['entered_by'],
-		'message'     => $application['message'],
-		'links'       => $application['links'],
-		'salary'      => $application['salary_expectation'],
-		'has_resume'  => (bool) $application['resume_file'],
-		'resume_name' => $application['resume_name'],
-		'stages'      => $stages,
-		'can_manage'  => user_can( $request->get_param( '_flxlm_hub_user' ), 'flxlm_manage_applications' ),
+		'id'            => $application_id,
+		'name'          => flxlm_ats_applicant_name( $application_id ),
+		'email'         => $application['email'],
+		'phone'         => $application['phone'],
+		'job_title'     => flxlm_ats_job_title( $application_id ),
+		'stage'         => $application['stage'],
+		'stage_label'   => flxlm_ats_stage_label( $application['stage'] ),
+		'interviewed'   => flxlm_ats_was_interviewed( $application_id ),
+		'source'        => flxlm_ats_source_label( $application['source'] ),
+		// Field names below match the hub front end's own wire contract
+		// (docs/gws-migration/worker/hiring.html in shswanson/fldn) exactly —
+		// this endpoint is the one documented to conform to it, not the
+		// other way around (see this file's own "WIRE CONTRACT" note above).
+		'submitted_at'  => $application['submitted_at'],
+		'entered_by'    => $application['entered_by'],
+		'message'       => $application['message'],
+		'links'         => $application['links'],
+		'salary_expectation' => $application['salary_expectation'],
+		'has_resume'    => (bool) $application['resume_file'],
+		'resume_name'   => $application['resume_name'],
+		'stage_history' => $history,
+		'stages'        => $stages,
+		'can_manage'    => user_can( $request->get_param( '_flxlm_hub_user' ), 'flxlm_manage_applications' ),
 	);
 
 	flxlm_ats_hub_audit( $request, 'view_applicant', $application_id );
