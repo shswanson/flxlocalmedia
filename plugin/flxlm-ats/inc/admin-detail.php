@@ -119,15 +119,7 @@ function flxlm_ats_render_detail_box( $post ) {
 	}
 	echo '</tbody></table>';
 
-	if ( get_post_meta( $id, '_flxlm_resume_file', true ) ) {
-		printf(
-			'<p><a href="%s" class="button button-primary" target="_blank" rel="noopener">Open resume (%s)</a></p>',
-			esc_url( flxlm_ats_admin_resume_url( $id ) ),
-			esc_html( get_post_meta( $id, '_flxlm_resume_name', true ) )
-		);
-	} else {
-		echo '<p style="color:#666">No resume on file.</p>';
-	}
+	flxlm_ats_render_resume_box( $id );
 
 	$links = (string) get_post_meta( $id, '_flxlm_links', true );
 	if ( $links ) {
@@ -154,6 +146,64 @@ function flxlm_ats_render_detail_box( $post ) {
 		}
 		echo '</ul>';
 	}
+}
+
+/**
+ * The resume block on the application screen.
+ *
+ * A PDF renders inline in an iframe on the same screen the reviewer is
+ * already on, next to a Download button that always forces a save-as,
+ * regardless of file type. Anything that is not a PDF (doc/docx/odt/rtf/txt)
+ * is offered as a download only: flxlm_ats_serve_resume() will not render a
+ * non-PDF inline, because trusting the browser to render an arbitrary
+ * document inline is how stored XSS happens. There is no server-side
+ * doc-to-PDF conversion yet, so a Word resume stays a download until that
+ * lands.
+ *
+ * @param int $id Application ID.
+ */
+function flxlm_ats_render_resume_box( $id ) {
+	$resume_id = (int) get_post_meta( $id, '_flxlm_resume_file', true );
+
+	if ( $resume_id < 1 ) {
+		echo '<p style="color:#666">No resume on file.</p>';
+		return;
+	}
+
+	$meta         = flxlm_ats_get_resume_meta( $resume_id );
+	$is_pdf       = $meta && 'application/pdf' === $meta['mime_type'];
+	$resume_name  = (string) get_post_meta( $id, '_flxlm_resume_name', true );
+	$view_url     = flxlm_ats_admin_resume_url( $id, 'view' );
+	$download_url = flxlm_ats_admin_resume_url( $id, 'download' );
+
+	echo '<div class="flxlm-ats-resume" style="margin:1rem 0">';
+
+	if ( $is_pdf ) {
+		printf(
+			'<iframe src="%s" title="Resume" style="width:100%%;max-width:56rem;height:70vh;border:1px solid #dcdcde;border-radius:4px;background:#fff"></iframe>',
+			esc_url( $view_url )
+		);
+		echo '<p style="margin-top:.6rem">';
+		printf(
+			'<a href="%s" class="button" target="_blank" rel="noopener">Open in new tab</a> ',
+			esc_url( $view_url )
+		);
+		printf(
+			'<a href="%s" class="button button-primary">Download (%s)</a>',
+			esc_url( $download_url ),
+			esc_html( $resume_name )
+		);
+		echo '</p>';
+		echo '<p style="color:#999;font-size:.85em;margin-top:.3rem">Not loading? Some phones can\'t preview a PDF inside the page — use "Open in new tab" instead.</p>';
+	} else {
+		printf(
+			'<p><a href="%s" class="button button-primary">Download resume (%s)</a></p>',
+			esc_url( $download_url ),
+			esc_html( $resume_name )
+		);
+	}
+
+	echo '</div>';
 }
 
 /**

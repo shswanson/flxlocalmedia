@@ -162,12 +162,23 @@ function flxlm_ats_resume_url( $application_id ) {
 /**
  * The admin-side resume link, for someone already logged in.
  *
- * @param int $application_id Application ID.
+ * @param int    $application_id Application ID.
+ * @param string $mode           'view' (default, embeds/opens inline for a PDF)
+ *                                or 'download' (always forces a save-as).
  * @return string
  */
-function flxlm_ats_admin_resume_url( $application_id ) {
+function flxlm_ats_admin_resume_url( $application_id, $mode = 'view' ) {
+	$args = array(
+		'page'        => 'flxlm-ats-resume',
+		'application' => (int) $application_id,
+	);
+
+	if ( 'download' === $mode ) {
+		$args['mode'] = 'download';
+	}
+
 	return wp_nonce_url(
-		admin_url( 'admin.php?page=flxlm-ats-resume&application=' . (int) $application_id ),
+		add_query_arg( $args, admin_url( 'admin.php' ) ),
 		'flxlm_ats_resume_' . (int) $application_id
 	);
 }
