@@ -225,9 +225,26 @@ function flxlm_ats_entered_by_label( $key ) {
  * Register the hidden admin route that streams a resume.
  *
  * Registered with a null parent so it has a URL but no menu item.
+ *
+ * The page's own render callback fires too late to stream a file: admin.php
+ * requires wp-admin/admin-header.php (which prints the doctype, admin menu and
+ * a Content-Type: text/html header) BEFORE it runs the page callback, so by
+ * the time flxlm_ats_admin_resume_screen() sets its own headers and echoes
+ * bytes, the response is already committed to text/html with WordPress's own
+ * admin chrome as the body. The route never worked correctly for this reason:
+ * both a PDF view and a download came back as a corrupted HTML page with no
+ * Content-Disposition, caught while proving out the inline viewer in a real
+ * browser rather than assuming the existing "Open resume" link was sound.
+ *
+ * `load-{$hook_suffix}` fires from admin.php before admin-header.php is
+ * required, so hooking the same screen function there runs it while headers
+ * are still open. It always exits (success streams and exits; failure calls
+ * wp_die(), which also exits), so admin.php never reaches the header include.
+ * The page-callback registration is left in place only as a defensive
+ * fallback for a request that somehow skips the load- hook.
  */
 function flxlm_ats_register_hidden_screens() {
-	add_submenu_page(
+	$hook = add_submenu_page(
 		'',
 		'Resume',
 		'Resume',
@@ -235,5 +252,9 @@ function flxlm_ats_register_hidden_screens() {
 		'flxlm-ats-resume',
 		'flxlm_ats_admin_resume_screen'
 	);
+
+	if ( $hook ) {
+		add_action( 'load-' . $hook, 'flxlm_ats_admin_resume_screen' );
+	}
 }
 add_action( 'admin_menu', 'flxlm_ats_register_hidden_screens' );
