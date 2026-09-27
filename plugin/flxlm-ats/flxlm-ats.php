@@ -57,6 +57,7 @@ require_once FLXLM_ATS_DIR . 'inc/admin-manual-entry.php';
 require_once FLXLM_ATS_DIR . 'inc/confirm-page.php';
 require_once FLXLM_ATS_DIR . 'inc/retention.php';
 require_once FLXLM_ATS_DIR . 'inc/eeo-report.php';
+require_once FLXLM_ATS_DIR . 'inc/hub-bridge.php'; // hub.flxlocalmedia.com bridge, fldn#1912 — off unless FLXLM_ATS_HUB_BRIDGE_ENABLED is defined true.
 
 /**
  * Activation: register everything once, prepare private storage, grant caps.
