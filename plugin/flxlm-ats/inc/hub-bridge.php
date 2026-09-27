@@ -148,6 +148,16 @@ add_action( 'rest_api_init', 'flxlm_ats_hub_bridge_register_rest' );
  * @return WP_User|WP_Error
  */
 function flxlm_ats_hub_authenticate( $request ) {
+	// Every route on this bridge answers with applicant PII (or, on the
+	// resume route, the file itself). WordPress only injects its own
+	// nocache-header logic for is_user_logged_in() requests, which these
+	// never are (they authenticate via a signed header, not a session
+	// cookie) — so without this, the JSON routes rely entirely on the
+	// Worker's own cf:{cacheTtl:0} to stay uncached. Set it here, once, so
+	// every response this bridge ever sends is explicitly no-store regardless
+	// of what calls it.
+	nocache_headers();
+
 	if ( ! flxlm_ats_hub_bridge_enabled() ) {
 		return new WP_Error( 'flxlm_ats_hub_disabled', 'The hub bridge is not enabled on this site.', array( 'status' => 503 ) );
 	}
@@ -157,14 +167,17 @@ function flxlm_ats_hub_authenticate( $request ) {
 	$email     = (string) $request->get_header( 'x-flx-hub-email' );
 
 	if ( ! $timestamp || '' === $signature || '' === $email ) {
+		flxlm_ats_hub_audit_denied( $email, 0, 'unsigned', $request );
 		return new WP_Error( 'flxlm_ats_hub_unsigned', 'Missing signed request headers.', array( 'status' => 401 ) );
 	}
 
 	if ( abs( time() - $timestamp ) > FLXLM_ATS_HUB_BRIDGE_WINDOW ) {
+		flxlm_ats_hub_audit_denied( $email, 0, 'stale_timestamp', $request );
 		return new WP_Error( 'flxlm_ats_hub_stale', 'Signature timestamp is outside the accepted window.', array( 'status' => 401 ) );
 	}
 
 	if ( ! is_email( $email ) ) {
+		flxlm_ats_hub_audit_denied( $email, 0, 'bad_email', $request );
 		return new WP_Error( 'flxlm_ats_hub_bad_email', 'Malformed email claim.', array( 'status' => 401 ) );
 	}
 
@@ -177,14 +190,28 @@ function flxlm_ats_hub_authenticate( $request ) {
 	$expected  = hash_hmac( 'sha256', $payload, (string) FLXLM_ATS_HUB_BRIDGE_SECRET );
 
 	if ( ! hash_equals( $expected, $signature ) ) {
+		flxlm_ats_hub_audit_denied( $email, 0, 'bad_signature', $request );
 		return new WP_Error( 'flxlm_ats_hub_bad_signature', 'Signature does not match.', array( 'status' => 401 ) );
 	}
+
+	// Belt and braces beyond the 60-second window: a signature can be used
+	// exactly once. A transient is enough (not a durable table) because the
+	// only thing it needs to survive is the window itself — a captured,
+	// signed Worker->WordPress request must not be replayable a second later,
+	// not just "not tomorrow".
+	$nonce_key = 'flxlm_hub_sig_' . md5( $signature );
+	if ( false !== get_transient( $nonce_key ) ) {
+		flxlm_ats_hub_audit_denied( $email, 0, 'replayed_signature', $request );
+		return new WP_Error( 'flxlm_ats_hub_replay', 'That signed request has already been used.', array( 'status' => 401 ) );
+	}
+	set_transient( $nonce_key, 1, FLXLM_ATS_HUB_BRIDGE_WINDOW + 5 );
 
 	// (2) Independent per-person check. An email the JWT vouches for is not
 	// automatically a WordPress user, and being a WordPress user is not
 	// automatically someone with ATS rights — both must hold.
 	$user = get_user_by( 'email', $email );
 	if ( ! $user ) {
+		flxlm_ats_hub_audit_denied( $email, 0, 'unknown_user', $request );
 		return new WP_Error( 'flxlm_ats_hub_unknown_user', 'No matching WordPress account.', array( 'status' => 403 ) );
 	}
 
@@ -203,6 +230,7 @@ function flxlm_ats_hub_permission_view( $request ) {
 		return $user;
 	}
 	if ( ! user_can( $user, 'flxlm_view_applications' ) ) {
+		flxlm_ats_hub_audit_denied( $user->user_email, $user->ID, 'missing_cap:flxlm_view_applications', $request );
 		return new WP_Error( 'flxlm_ats_hub_forbidden', 'This account cannot view applications.', array( 'status' => 403 ) );
 	}
 	$request->set_param( '_flxlm_hub_user', $user );
@@ -221,6 +249,7 @@ function flxlm_ats_hub_permission_manage( $request ) {
 		return $user;
 	}
 	if ( ! user_can( $user, 'flxlm_manage_applications' ) ) {
+		flxlm_ats_hub_audit_denied( $user->user_email, $user->ID, 'missing_cap:flxlm_manage_applications', $request );
 		return new WP_Error( 'flxlm_ats_hub_forbidden', 'This account cannot move applications.', array( 'status' => 403 ) );
 	}
 	$request->set_param( '_flxlm_hub_user', $user );
@@ -425,6 +454,16 @@ function flxlm_ats_hub_get_resume( $request ) {
 	$application_id = (int) $request->get_param( 'id' );
 	$mode           = 'download' === $request->get_param( 'mode' ) ? 'download' : 'inline';
 
+	// Same post-type guard flxlm_ats_hub_get_applicant() and
+	// flxlm_ats_hub_get_vacancy_applicants() already apply before touching any
+	// meta for a caller-supplied id. This route streams raw file bytes, so
+	// skipping it here (as an earlier version of this file did) is an
+	// IDOR-shaped gap: nothing today happens to carry `_flxlm_resume_file` on
+	// any other post type, but the fix belongs on the id, not on today's data.
+	if ( ! flxlm_ats_get_application( $application_id ) ) {
+		return new WP_Error( 'flxlm_ats_hub_no_applicant', 'No such applicant.', array( 'status' => 404 ) );
+	}
+
 	$resume_id = (int) get_post_meta( $application_id, '_flxlm_resume_file', true );
 	if ( $resume_id < 1 ) {
 		return new WP_Error( 'flxlm_ats_hub_no_resume', 'No resume on file.', array( 'status' => 404 ) );
@@ -457,6 +496,14 @@ function flxlm_ats_hub_get_resume( $request ) {
 	header( 'X-Content-Type-Options: nosniff' );
 	header( 'X-Robots-Tag: noindex, nofollow, noarchive' );
 	header( 'Referrer-Policy: no-referrer' );
+	// A resume is adversary-supplied by definition (anyone can apply for a
+	// job); a well-formed PDF can still carry embedded JavaScript (a
+	// long-documented PDF-viewer attack class), and this bytes stream ends up
+	// rendered inline, same-origin, inside a reviewer's own authenticated hub
+	// session. script-src 'none' means embedded PDF actions can't execute
+	// regardless of which viewer renders it, independent of whatever the hub
+	// iframe's own sandbox attribute does.
+	header( "Content-Security-Policy: script-src 'none'" );
 	header( 'Content-Disposition: ' . $disposition . '; filename="' . sanitize_file_name( $filename ) . '"' );
 
 	echo $bytes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw file bytes.
@@ -588,6 +635,35 @@ function flxlm_ats_hub_audit( $request, $action, $application_id ) {
 			'email'          => sanitize_email( $email ),
 			'action'         => sanitize_text_field( $action ),
 			'application_id' => (int) $application_id,
+		),
+		array( '%s', '%s', '%s', '%d' )
+	);
+}
+
+/**
+ * Record a denied access attempt — a bad signature, an expired timestamp, an
+ * unknown email, or a missing capability. Before this, only successful
+ * requests were ever logged, which meant an unauthorized probe against this
+ * endpoint (ex-employee, wrong-capability account) left zero trace in the one
+ * table meant to answer "who looked at what."
+ *
+ * @param string          $email  The claimed or resolved email (may be unverified).
+ * @param int             $user_id WP user ID, or 0 if none resolved.
+ * @param string          $reason Short machine-readable reason, e.g. 'missing_cap:flxlm_view_applications'.
+ * @param WP_REST_Request $request Request, for the route.
+ */
+function flxlm_ats_hub_audit_denied( $email, $user_id, $reason, $request ) {
+	global $wpdb;
+
+	flxlm_ats_hub_maybe_install_audit_table();
+
+	$wpdb->insert(
+		flxlm_ats_hub_audit_table(),
+		array(
+			'created_at'     => gmdate( 'Y-m-d H:i:s' ),
+			'email'          => sanitize_email( (string) $email ),
+			'action'         => 'denied:' . sanitize_text_field( $reason ) . ' on ' . sanitize_text_field( $request->get_route() ),
+			'application_id' => 0,
 		),
 		array( '%s', '%s', '%s', '%d' )
 	);
