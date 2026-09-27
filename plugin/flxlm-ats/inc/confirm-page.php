@@ -226,7 +226,9 @@ function flxlm_ats_admin_resume_screen() {
 
 	check_admin_referer( 'flxlm_ats_resume_' . $application_id );
 
-	$served = flxlm_ats_serve_resume( $application_id );
+	$mode = ( isset( $_GET['mode'] ) && 'download' === $_GET['mode'] ) ? 'download' : 'inline';
+
+	$served = flxlm_ats_serve_resume( $application_id, $mode );
 	if ( is_wp_error( $served ) ) {
 		wp_die( esc_html( $served->get_error_message() ), 'Resume unavailable', array( 'response' => 404 ) );
 	}

@@ -413,16 +413,24 @@ function flxlm_ats_store_relayed_resume( $base64, $filename ) {
  * emailed link on a signed token.
  *
  * Content-Disposition is "inline" for PDFs so a hiring manager can read a
- * resume in the browser without downloading it, and "attachment" for
- * everything else, because telling a browser to render an arbitrary document
- * inline is how stored XSS happens. X-Content-Type-Options stops the browser
- * second-guessing the type either way, and X-Robots-Tag keeps the response out
- * of any crawler that somehow reaches it.
+ * resume in the browser (embedded in the applicant screen, or in its own tab)
+ * without downloading it, and "attachment" for everything else, because
+ * telling a browser to render an arbitrary document inline is how stored XSS
+ * happens. Passing $mode = 'download' forces "attachment" even for a PDF, for
+ * the explicit Download button next to the inline viewer. X-Content-Type-Options
+ * stops the browser second-guessing the type either way, and X-Robots-Tag keeps
+ * the response out of any crawler that somehow reaches it.
  *
- * @param int $application_id Application ID.
+ * Cache-Control is set explicitly rather than left to nocache_headers() alone:
+ * a resume is FCC EEO-record PII and must never be cached by an intermediary
+ * (Cloudflare or otherwise), not just by the browser. "no-store, private" is
+ * the instruction both layers understand.
+ *
+ * @param int    $application_id Application ID.
+ * @param string $mode           'inline' (default) or 'download'.
  * @return WP_Error|void Exits on success.
  */
-function flxlm_ats_serve_resume( $application_id ) {
+function flxlm_ats_serve_resume( $application_id, $mode = 'inline' ) {
 	$resume_id = (int) get_post_meta( (int) $application_id, '_flxlm_resume_file', true );
 	if ( $resume_id < 1 ) {
 		return new WP_Error( 'flxlm_ats_no_resume', 'No resume on file.' );
@@ -441,11 +449,12 @@ function flxlm_ats_serve_resume( $application_id ) {
 	$type     = $meta['mime_type'] ? $meta['mime_type'] : 'application/octet-stream';
 	$original = (string) get_post_meta( (int) $application_id, '_flxlm_resume_name', true );
 	$filename = $original ? $original : ( 'resume.' . $meta['extension'] );
-	$inline   = ( 'application/pdf' === $type );
+	$inline   = ( 'download' !== $mode && 'application/pdf' === $type );
 
 	nocache_headers();
 	header( 'Content-Type: ' . $type );
 	header( 'Content-Length: ' . strlen( $bytes ) );
+	header( 'Cache-Control: no-store, private' );
 	header( 'X-Content-Type-Options: nosniff' );
 	header( 'X-Robots-Tag: noindex, nofollow, noarchive' );
 	header( 'Referrer-Policy: no-referrer' );
