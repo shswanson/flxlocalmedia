@@ -33,6 +33,16 @@
  * same issue — push-to-main is the deploy here) and the flag is the staging
  * gate instead.
  *
+ * WIRE CONTRACT
+ *
+ * Namespace `flxlm-ats-hub/v1`; routes `/vacancies`,
+ * `/vacancies/{id}/applicants`, `/applications/{id}`,
+ * `/applications/{id}/resume`, `/applications/{id}/stage`; request headers
+ * `X-FLX-Hub-Email`, `X-FLX-Hub-Timestamp`, `X-FLX-Hub-Signature`. Chosen to
+ * match the hub-side Worker implementation already in progress on
+ * `shswanson/fldn` (fldn#1912) rather than a second, competing naming, so
+ * whichever build lands first the other can wire into it without a rename.
+ *
  * @package flxlm-ats
  */
 
@@ -68,7 +78,7 @@ function flxlm_ats_hub_bridge_register_rest() {
 		return;
 	}
 
-	$ns = 'flxlm-ats-bridge/v1';
+	$ns = 'flxlm-ats-hub/v1';
 
 	register_rest_route(
 		$ns,
@@ -93,7 +103,7 @@ function flxlm_ats_hub_bridge_register_rest() {
 
 	register_rest_route(
 		$ns,
-		'/applicants/(?P<id>\d+)',
+		'/applications/(?P<id>\d+)',
 		array(
 			'methods'             => 'GET',
 			'callback'            => 'flxlm_ats_hub_get_applicant',
@@ -104,7 +114,7 @@ function flxlm_ats_hub_bridge_register_rest() {
 
 	register_rest_route(
 		$ns,
-		'/applicants/(?P<id>\d+)/resume',
+		'/applications/(?P<id>\d+)/resume',
 		array(
 			'methods'             => 'GET',
 			'callback'            => 'flxlm_ats_hub_get_resume',
@@ -115,7 +125,7 @@ function flxlm_ats_hub_bridge_register_rest() {
 
 	register_rest_route(
 		$ns,
-		'/applicants/(?P<id>\d+)/stage',
+		'/applications/(?P<id>\d+)/stage',
 		array(
 			'methods'             => 'POST',
 			'callback'            => 'flxlm_ats_hub_post_stage',
@@ -142,9 +152,9 @@ function flxlm_ats_hub_authenticate( $request ) {
 		return new WP_Error( 'flxlm_ats_hub_disabled', 'The hub bridge is not enabled on this site.', array( 'status' => 503 ) );
 	}
 
-	$timestamp = (int) $request->get_header( 'x-flxlm-hub-timestamp' );
-	$signature = (string) $request->get_header( 'x-flxlm-hub-signature' );
-	$email     = (string) $request->get_header( 'x-flxlm-hub-email' );
+	$timestamp = (int) $request->get_header( 'x-flx-hub-timestamp' );
+	$signature = (string) $request->get_header( 'x-flx-hub-signature' );
+	$email     = (string) $request->get_header( 'x-flx-hub-email' );
 
 	if ( ! $timestamp || '' === $signature || '' === $email ) {
 		return new WP_Error( 'flxlm_ats_hub_unsigned', 'Missing signed request headers.', array( 'status' => 401 ) );
@@ -159,7 +169,7 @@ function flxlm_ats_hub_authenticate( $request ) {
 	}
 
 	$body_hash = hash( 'sha256', (string) $request->get_body() );
-	$route     = $request->get_route(); // e.g. /flxlm-ats-bridge/v1/applicants/42/resume — excludes query string, which is intentional: mode= is not signed input.
+	$route     = $request->get_route(); // e.g. /flxlm-ats-hub/v1/applications/42/resume — excludes query string, which is intentional: mode= is not signed input.
 	$payload   = implode(
 		"\n",
 		array( strtoupper( $request->get_method() ), $route, $body_hash, (string) $timestamp, strtolower( $email ) )
@@ -353,7 +363,7 @@ function flxlm_ats_hub_applicant_summary( $application_id ) {
 }
 
 /**
- * GET /applicants/{id} — full detail for the applicant screen.
+ * GET /applications/{id} — full detail for the applicant screen.
  *
  * @param WP_REST_Request $request Request.
  * @return WP_REST_Response|WP_Error
@@ -397,7 +407,7 @@ function flxlm_ats_hub_get_applicant( $request ) {
 }
 
 /**
- * GET /applicants/{id}/resume?mode=inline|download
+ * GET /applications/{id}/resume?mode=inline|download
  *
  * Reuses the exact byte source flxlm_ats_serve_resume() reads from
  * (resume-store.php), but chooses Content-Disposition from the requested
@@ -454,7 +464,7 @@ function flxlm_ats_hub_get_resume( $request ) {
 }
 
 /**
- * POST /applicants/{id}/stage — the only mutation this bridge exposes.
+ * POST /applications/{id}/stage — the only mutation this bridge exposes.
  *
  * Calls flxlm_ats_set_stage(), never reimplements it: that function owns the
  * one-way Interviewed stamp and the append-only stage_history log, and a
@@ -569,7 +579,7 @@ function flxlm_ats_hub_audit( $request, $action, $application_id ) {
 	flxlm_ats_hub_maybe_install_audit_table();
 
 	$user  = $request->get_param( '_flxlm_hub_user' );
-	$email = $user instanceof WP_User ? $user->user_email : (string) $request->get_header( 'x-flxlm-hub-email' );
+	$email = $user instanceof WP_User ? $user->user_email : (string) $request->get_header( 'x-flx-hub-email' );
 
 	$wpdb->insert(
 		flxlm_ats_hub_audit_table(),
