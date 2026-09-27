@@ -120,6 +120,21 @@ while ( have_posts() ) : the_post();
 				</div>
 			<?php endif; ?>
 
+			<?php
+			/*
+			 * Email-in alternative + referral ask.
+			 *
+			 * Lives in the template, not per-post copy, so every job posting
+			 * (present and future) carries it automatically. jobs@flxlocalmedia.com
+			 * is a Google Group Dennie/Frank already read; emailed resumes still get
+			 * hand-entered into the ATS today (fldn#1994).
+			 */
+			?>
+			<div class="job-section job-section--email-referral">
+				<p>Prefer email? Send your resume to <a href="mailto:jobs@flxlocalmedia.com">jobs@flxlocalmedia.com</a>.</p>
+				<p>Know someone who would be a great fit? Send them this posting.</p>
+			</div>
+
 			<div class="job-section job-section--eeo">
 				<p><em>FLX Local Media is an equal opportunity employer. All qualified applicants will receive consideration without regard to race, color, religion, sex, sexual orientation, gender identity, national origin, disability, veteran status, or any other protected characteristic.</em></p>
 			</div>
