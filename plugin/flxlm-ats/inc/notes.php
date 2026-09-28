@@ -162,6 +162,18 @@ function flxlm_ats_add_note( $application_id, $kind, $args = array() ) {
 
 	flxlm_ats_maybe_install_notes_table();
 
+	// 'system' notes are machine-generated log lines (contact-edit and
+	// source-change diffs, stage moves, interviewer changes) with no
+	// legitimate HTML in them. wp_kses_post() HTML-encodes a lone '>' (as in
+	// an old -> new diff arrow), which round-trips through the DB as literal
+	// '&gt;' text; wp-admin happens to hide this by rendering notes
+	// unescaped, but the hub correctly HTML-escapes note bodies before
+	// display, double-encoding the entity into visibly garbled text. Plain
+	// sanitization avoids the corruption at the source. 'comment',
+	// 'feedback' and 'decision' notes are staff-authored free text and keep
+	// the existing HTML allowlist.
+	$sanitized_body = 'system' === $kind ? sanitize_textarea_field( $body ) : wp_kses_post( $body );
+
 	$result = $wpdb->insert(
 		flxlm_ats_notes_table(),
 		array(
@@ -171,7 +183,7 @@ function flxlm_ats_add_note( $application_id, $kind, $args = array() ) {
 			'author_name'    => sanitize_text_field( $author_name ),
 			'stage'          => sanitize_key( $stage ),
 			'rating'         => $rating,
-			'body'           => wp_kses_post( $body ),
+			'body'           => $sanitized_body,
 			'created_at'     => gmdate( 'Y-m-d H:i:s' ),
 		),
 		array( '%d', '%s', '%s', '%s', '%s', $rating ? '%s' : null, '%s', '%s' )
