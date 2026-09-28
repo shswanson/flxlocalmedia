@@ -88,24 +88,47 @@ function flxlm_ats_all_interviewers( $application_id ) {
  * second "assign" click is a no-op, not a duplicate entry or an error, so a
  * manager double-clicking a slow button never produces two rows.
  *
+ * WHY $external EXISTS
+ *
+ * The domain allowlist in flxlm_ats_is_allowed_interviewer_email() exists so a
+ * typo or a malicious entry cannot hand a feedback-link credential to an
+ * outside address by accident. But a station sometimes legitimately wants a
+ * contractor or an outside consultant on the panel — a fill-in programmer, an
+ * outside sales consultant sitting in on a sales-manager interview. $external
+ * is an explicit, opt-in bypass of the domain check, never an accidental one:
+ * the email still has to be a real, well-formed address (is_email()), and
+ * every external entry is flagged on the record and in the email that goes
+ * out, so nobody downstream mistakes them for staff.
+ *
  * @param int    $application_id Application ID.
  * @param string $email          Interviewer's email.
  * @param string $name           Display name.
  * @param string $by             Who is adding them (see flxlm_ats_current_actor()).
+ * @param bool   $external       True to add someone outside the company
+ *                                 domains (a contractor or consultant),
+ *                                 skipping the domain allowlist. Still
+ *                                 requires a valid email address.
  * @return true|WP_Error
  */
-function flxlm_ats_add_interviewer( $application_id, $email, $name, $by = '' ) {
+function flxlm_ats_add_interviewer( $application_id, $email, $name, $by = '', $external = false ) {
 	$application_id = (int) $application_id;
 	$post           = get_post( $application_id );
 	if ( ! $post || 'flxlm_application' !== $post->post_type ) {
 		return new WP_Error( 'flxlm_ats_no_application', 'No such application.' );
 	}
 
-	$email = sanitize_email( strtolower( trim( (string) $email ) ) );
-	if ( ! flxlm_ats_is_allowed_interviewer_email( $email ) ) {
+	$email    = sanitize_email( strtolower( trim( (string) $email ) ) );
+	$external = (bool) $external;
+
+	if ( $external ) {
+		if ( ! is_email( $email ) ) {
+			return new WP_Error( 'flxlm_ats_bad_email', 'Enter a valid email address.' );
+		}
+	} elseif ( ! flxlm_ats_is_allowed_interviewer_email( $email ) ) {
 		return new WP_Error(
 			'flxlm_ats_bad_interviewer_domain',
-			'Interviewers must use a ' . implode( ' or ', flxlm_ats_interviewer_domains() ) . ' email address.'
+			'Interviewers must use a ' . implode( ' or ', flxlm_ats_interviewer_domains() )
+				. ' email address, or be added as someone outside FLX.'
 		);
 	}
 
@@ -128,6 +151,7 @@ function flxlm_ats_add_interviewer( $application_id, $email, $name, $by = '' ) {
 		'removed_at'   => '',
 		'removed_by'   => '',
 		'removal_note' => '',
+		'external'     => $external,
 	);
 	update_post_meta( $application_id, '_flxlm_interviewers', $list );
 
@@ -135,11 +159,17 @@ function flxlm_ats_add_interviewer( $application_id, $email, $name, $by = '' ) {
 		flxlm_ats_add_note(
 			$application_id,
 			'system',
-			array( 'body' => sprintf( 'Added %s as an interviewer.', $name ? "{$name} ({$email})" : $email ) )
+			array(
+				'body' => sprintf(
+					'Added %s as an interviewer%s.',
+					$name ? "{$name} ({$email})" : $email,
+					$external ? ' (outside FLX)' : ''
+				),
+			)
 		);
 	}
 
-	flxlm_ats_notify_interviewer_assigned( $application_id, $email, $name );
+	flxlm_ats_notify_interviewer_assigned( $application_id, $email, $name, $external );
 
 	/**
 	 * Fires after an interviewer is added.
@@ -234,12 +264,24 @@ function flxlm_ats_active_interviewers( $application_id ) {
 			}
 		}
 
+		$rating = '';
+		if ( '' !== $feedback_at && function_exists( 'flxlm_ats_get_notes' ) ) {
+			foreach ( flxlm_ats_get_notes( $application_id, array( 'feedback' ) ) as $note ) {
+				if ( strtolower( $note['author_email'] ) === strtolower( $entry['email'] )
+					&& $note['created_at'] === $feedback_at ) {
+					$rating = (string) $note['rating'];
+				}
+			}
+		}
+
 		$active[] = array(
 			'email'               => $entry['email'],
 			'name'                => $entry['name'],
 			'assigned_at'         => $entry['assigned_at'],
 			'feedback_submitted'  => ( '' !== $feedback_at ),
 			'feedback_at'         => $feedback_at,
+			'rating'              => $rating,
+			'external'            => ! empty( $entry['external'] ),
 		);
 	}
 
@@ -261,6 +303,127 @@ function flxlm_ats_is_active_interviewer( $application_id, $email ) {
 		}
 	}
 	return false;
+}
+
+// ---------------------------------------------------------------------------
+// The people picklist: GET /people on the hub bridge.
+// ---------------------------------------------------------------------------
+
+/** The option a staff directory is stored under. See flxlm_ats_staff_directory(). */
+const FLXLM_ATS_STAFF_DIRECTORY_OPTION = 'flxlm_ats_staff_directory';
+
+/**
+ * The staff directory: a hand-maintained list of {name, email}, separate from
+ * the WordPress user table.
+ *
+ * Not every person who should be pickable as an interviewer has (or should
+ * have) a WordPress login — a station manager who never touches wp-admin is
+ * exactly the person most likely to sit on an interview panel. This option is
+ * the list a manager seeds by hand for that reason. Never hardcoded in code:
+ * a roster is data, not a deploy.
+ *
+ * @return array[] {name, email}
+ */
+function flxlm_ats_staff_directory() {
+	$raw = get_option( FLXLM_ATS_STAFF_DIRECTORY_OPTION, array() );
+	if ( ! is_array( $raw ) ) {
+		return array();
+	}
+
+	$out = array();
+	foreach ( $raw as $entry ) {
+		$email = is_array( $entry ) ? ( $entry['email'] ?? '' ) : '';
+		if ( ! is_email( $email ) ) {
+			continue;
+		}
+		$out[] = array(
+			'name'  => sanitize_text_field( (string) ( $entry['name'] ?? '' ) ),
+			'email' => sanitize_email( strtolower( trim( $email ) ) ),
+		);
+	}
+	return $out;
+}
+
+/**
+ * The full interviewer picklist for the hub's "add an interviewer" picker:
+ * the staff directory option, every WordPress user who holds
+ * flxlm_view_applications, and anyone who has ever been assigned as an
+ * interviewer on ANY application (so someone real who was added once, before
+ * this list existed or before they were in the directory, does not disappear
+ * from future search results). Deduplicated by email, case-insensitive; the
+ * first name seen for an address wins, which in practice is whichever source
+ * is listed first below (directory, then WP users, then history) — the
+ * directory is the one a human curated on purpose, so it takes precedence
+ * over a possibly-stale display name left on an old interviewer row.
+ *
+ * `kind` distinguishes a WordPress account (kind: 'staff') from a
+ * directory-only or history-only entry (kind: 'contact') purely for display —
+ * both are equally valid to add as an interviewer; neither implies
+ * 'external' on flxlm_ats_add_interviewer(), which is a separate, explicit
+ * choice the caller makes.
+ *
+ * @return array[] {name, email, kind}
+ */
+function flxlm_ats_hub_people() {
+	$by_email = array();
+
+	foreach ( flxlm_ats_staff_directory() as $entry ) {
+		$key = strtolower( $entry['email'] );
+		if ( ! isset( $by_email[ $key ] ) ) {
+			$by_email[ $key ] = array( 'name' => $entry['name'], 'email' => $entry['email'], 'kind' => 'contact' );
+		}
+	}
+
+	$users = get_users(
+		array(
+			'capability__in' => array( 'flxlm_view_applications' ),
+			'fields'         => array( 'user_email', 'display_name' ),
+			'number'         => 500,
+		)
+	);
+	foreach ( $users as $user ) {
+		$key = strtolower( $user->user_email );
+		if ( ! isset( $by_email[ $key ] ) ) {
+			$by_email[ $key ] = array( 'name' => $user->display_name, 'email' => $user->user_email, 'kind' => 'staff' );
+		}
+	}
+
+	global $wpdb;
+	// Every application's interviewer list lives in one repeating meta key
+	// across every flxlm_application post; there is no dedicated table to
+	// query, so this reads the raw meta values once and unserializes them —
+	// the same data flxlm_ats_all_interviewers() reads per-application, just
+	// gathered across all of them in one pass rather than one query per post.
+	$rows = $wpdb->get_col(
+		"SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = '_flxlm_interviewers'"
+	);
+	foreach ( $rows as $row ) {
+		$list = maybe_unserialize( $row );
+		if ( ! is_array( $list ) ) {
+			continue;
+		}
+		foreach ( $list as $entry ) {
+			$email = strtolower( trim( (string) ( $entry['email'] ?? '' ) ) );
+			if ( ! is_email( $email ) || isset( $by_email[ $email ] ) ) {
+				continue;
+			}
+			$by_email[ $email ] = array(
+				'name'  => (string) ( $entry['name'] ?? '' ),
+				'email' => $email,
+				'kind'  => ! empty( $entry['external'] ) ? 'contact' : 'staff',
+			);
+		}
+	}
+
+	$out = array_values( $by_email );
+	usort(
+		$out,
+		function ( $a, $b ) {
+			return strcasecmp( $a['name'] ?: $a['email'], $b['name'] ?: $b['email'] );
+		}
+	);
+
+	return $out;
 }
 
 // ---------------------------------------------------------------------------
@@ -298,8 +461,14 @@ function flxlm_ats_feedback_url( $application_id, $email ) {
  * @param int    $application_id Application ID.
  * @param string $email          Interviewer's email.
  * @param string $name           Interviewer's display name.
+ * @param bool   $external       True when this interviewer was added as
+ *                                 someone outside FLX (a contractor or
+ *                                 consultant) — adds an explicit
+ *                                 confidentiality line, because an outside
+ *                                 address has no other reason to believe this
+ *                                 record is not theirs to pass along.
  */
-function flxlm_ats_notify_interviewer_assigned( $application_id, $email, $name ) {
+function flxlm_ats_notify_interviewer_assigned( $application_id, $email, $name, $external = false ) {
 	$candidate  = flxlm_ats_applicant_name( $application_id );
 	$job        = flxlm_ats_job_title( $application_id );
 	$stage      = flxlm_ats_stage_label( get_post_status( $application_id ) );
@@ -316,10 +485,16 @@ function flxlm_ats_notify_interviewer_assigned( $application_id, $email, $name )
 		<p>Hi <?php echo esc_html( $name ? $name : $email ); ?>,</p>
 		<p>You have been added as an interviewer for <strong><?php echo esc_html( $candidate ); ?></strong>, applying for <strong><?php echo esc_html( $job ); ?></strong> (currently <?php echo esc_html( $stage ); ?>).</p>
 
+		<?php if ( $external ) : ?>
+			<p style="background:#fdf6ea;border:1px solid #ecd9ad;border-radius:8px;padding:.75rem 1rem;color:#6b5620;font-size:.92rem">
+				This candidate's information is confidential and is shared with you only for this hiring decision. Please do not forward this email or discuss the candidate outside this hiring process.
+			</p>
+		<?php endif; ?>
+
 		<?php if ( $resume_url ) : ?>
 			<p style="margin:0 0 1.25rem">
 				<a href="<?php echo esc_url( $resume_url ); ?>"
-					style="display:inline-block;background:#512DA8;color:#fff;text-decoration:none;
+					style="display:inline-block;background:#1E3A5F;color:#fff;text-decoration:none;
 						padding:.7rem 1.3rem;border-radius:6px">Read the resume</a>
 			</p>
 		<?php endif; ?>
@@ -534,50 +709,41 @@ function flxlm_ats_prior_feedback( $application_id, $email ) {
  *                                     flxlm_ats_prior_feedback(), or null.
  */
 function flxlm_ats_render_feedback_form( $application_id, $email, $candidate, $job, $token, $error = '', $rating = '', $notes = '', $when = '', $prior = null ) {
-	$labels = array(
-		'strong_yes' => 'Strong yes',
-		'yes'        => 'Yes',
-		'no'         => 'No',
-		'strong_no'  => 'Strong no',
-	);
+	$rating_map = flxlm_ats_rating_display_map();
 
 	ob_start();
 	?>
+	<?php echo flxlm_ats_candidate_header_html( $candidate, $job ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from already-escaped values, see helper. ?>
+
 	<?php if ( $error ) : ?>
-		<p style="color:#b32d2e"><?php echo esc_html( $error ); ?></p>
+		<p class="flxlm-ats-alert flxlm-ats-alert--error"><?php echo esc_html( $error ); ?></p>
 	<?php endif; ?>
 
 	<?php if ( $prior ) : ?>
-		<p style="background:#fdf6ea;border:1px solid #ecd9ad;border-radius:6px;padding:.6rem .9rem">
-			You already submitted feedback on this candidate (<?php echo esc_html( $labels[ $prior['rating'] ] ?? $prior['rating'] ); ?>,
+		<p class="flxlm-ats-alert flxlm-ats-alert--note">
+			You already submitted feedback on this candidate
+			(<?php echo flxlm_ats_rating_badge_html( $prior['rating'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static, hardcoded markup, see helper. ?>,
 			<?php echo esc_html( mysql2date( 'F j, Y', $prior['created_at'] ) ); ?>). Submitting again below replaces it as the
 			current answer for the hiring team; the earlier one stays on the record but is no longer counted.
 		</p>
 	<?php endif; ?>
 
-	<p><strong><?php echo esc_html( $candidate ); ?></strong><br /><?php echo esc_html( $job ); ?></p>
-
-	<form method="post">
+	<form method="post" class="flxlm-ats-form">
 		<input type="hidden" name="flxlm_ats" value="feedback" />
 		<input type="hidden" name="application" value="<?php echo esc_attr( $application_id ); ?>" />
 		<input type="hidden" name="interviewer" value="<?php echo esc_attr( $email ); ?>" />
 		<input type="hidden" name="token" value="<?php echo esc_attr( $token ); ?>" />
 
-		<p style="margin-bottom:.4rem"><strong>Recommendation</strong></p>
-		<?php foreach ( $labels as $key => $label ) : ?>
-			<label style="display:block;margin-bottom:.3rem">
-				<input type="radio" name="rating" value="<?php echo esc_attr( $key ); ?>" <?php checked( $rating, $key ); ?> required />
-				<?php echo esc_html( $label ); ?>
-			</label>
-		<?php endforeach; ?>
+		<p class="flxlm-ats-fieldlabel">Recommendation</p>
+		<?php echo flxlm_ats_render_thumbs_field( 'rating', $rating ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built entirely from static markup, see helper. ?>
 
-		<p style="margin:1rem 0 .4rem"><strong>Notes</strong> <span style="color:#666;font-weight:normal">(at least a couple of sentences)</span></p>
-		<textarea name="notes" rows="5" style="width:100%;font:inherit" required><?php echo esc_textarea( $notes ); ?></textarea>
+		<p class="flxlm-ats-fieldlabel">Notes <span class="flxlm-ats-fieldlabel__hint">(at least a couple of sentences)</span></p>
+		<textarea name="notes" rows="5" class="flxlm-ats-textarea" required><?php echo esc_textarea( $notes ); ?></textarea>
 
-		<p style="margin:1rem 0 .4rem"><strong>Interview date</strong> <span style="color:#666;font-weight:normal">(optional)</span></p>
-		<input type="date" name="interview_date" value="<?php echo esc_attr( $when ); ?>" />
+		<p class="flxlm-ats-fieldlabel">Interview date <span class="flxlm-ats-fieldlabel__hint">(optional)</span></p>
+		<input type="date" name="interview_date" value="<?php echo esc_attr( $when ); ?>" class="flxlm-ats-input" />
 
-		<p style="margin-top:1.25rem"><button type="submit" class="flxlm-ats-btn">Submit feedback</button></p>
+		<p style="margin-top:1.4rem"><button type="submit" class="flxlm-ats-btn">Submit feedback</button></p>
 	</form>
 	<?php
 

@@ -193,22 +193,19 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
  */
 function flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, $job, $label, $needs_reason, $error = '' ) {
 	$already = flxlm_ats_stage_label( get_post_status( $application_id ) );
+	$chips   = flxlm_ats_chip_html( 'Currently: ' . $already, '#8a8f98' );
 
 	ob_start();
 	?>
-	<?php if ( $error ) : ?>
-		<p style="color:#b32d2e"><?php echo esc_html( $error ); ?></p>
-	<?php endif; ?>
+	<?php echo flxlm_ats_candidate_header_html( $name, $job, $chips ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from already-escaped values, see helper. ?>
 
-	<p>
-		<strong><?php echo esc_html( $name ); ?></strong><br />
-		<?php echo esc_html( $job ); ?><br />
-		<span class="flxlm-ats-current">Currently: <?php echo esc_html( $already ); ?></span>
-	</p>
+	<?php if ( $error ) : ?>
+		<p class="flxlm-ats-alert flxlm-ats-alert--error"><?php echo esc_html( $error ); ?></p>
+	<?php endif; ?>
 
 	<p>Move this applicant to <strong><?php echo esc_html( $label ); ?></strong>?</p>
 
-	<form method="post">
+	<form method="post" class="flxlm-ats-form">
 		<input type="hidden" name="flxlm_ats" value="confirm" />
 		<input type="hidden" name="application" value="<?php echo esc_attr( $application_id ); ?>" />
 		<input type="hidden" name="stage" value="<?php echo esc_attr( $stage ); ?>" />
@@ -216,8 +213,8 @@ function flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, 
 		<?php wp_nonce_field( 'flxlm_ats_confirm_' . $application_id . '_' . $stage, '_flxlm_ats_nonce', false ); ?>
 
 		<?php if ( $needs_reason ) : ?>
-			<p style="margin:1rem 0 .4rem"><strong>Reason</strong></p>
-			<select name="close_reason" required>
+			<p class="flxlm-ats-fieldlabel">Reason</p>
+			<select name="close_reason" required class="flxlm-ats-select">
 				<option value="">Choose one...</option>
 				<?php foreach ( flxlm_ats_close_reasons() as $key => $reason_label ) : ?>
 					<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $reason_label ); ?></option>
@@ -236,6 +233,73 @@ function flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, 
 	<?php
 
 	flxlm_ats_simple_page( 'Confirm', ob_get_clean(), false, false );
+}
+
+/**
+ * A candidate header: initials avatar, name as a large title, job as
+ * secondary text. The one recurring block every signed page in this plugin
+ * (the feedback page, the confirm page) opens with, so a person clicking in
+ * from email always lands on the same visual shape wp-admin and the hub
+ * both also use, per the v1.1 design direction: "one glance should answer
+ * where is this person."
+ *
+ * @param string $name  Candidate display name.
+ * @param string $job   Job title.
+ * @param string $chips Optional extra HTML (already-built, e.g. a stage
+ *                        badge) rendered under the job line. Trusted markup;
+ *                        every current caller builds it from static markup
+ *                        plus values it already escaped.
+ * @return string HTML.
+ */
+function flxlm_ats_candidate_header_html( $name, $job, $chips = '' ) {
+	$initials = flxlm_ats_initials( $name );
+	ob_start();
+	?>
+	<div class="flxlm-ats-header">
+		<div class="flxlm-ats-avatar" aria-hidden="true"><?php echo esc_html( $initials ); ?></div>
+		<div class="flxlm-ats-header__text">
+			<h1 class="flxlm-ats-title"><?php echo esc_html( $name ); ?></h1>
+			<p class="flxlm-ats-subtitle"><?php echo esc_html( $job ); ?></p>
+			<?php if ( $chips ) : ?>
+				<p class="flxlm-ats-chips"><?php echo $chips; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- see param doc. ?></p>
+			<?php endif; ?>
+		</div>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Up to two initials from a display name, for the avatar circle.
+ *
+ * @param string $name Display name.
+ * @return string 1-2 uppercase letters, or '?' for an empty name.
+ */
+function flxlm_ats_initials( $name ) {
+	$parts = preg_split( '/\s+/', trim( (string) $name ) );
+	$parts = array_filter( $parts );
+	if ( ! $parts ) {
+		return '?';
+	}
+	$first = mb_substr( reset( $parts ), 0, 1 );
+	$last  = count( $parts ) > 1 ? mb_substr( end( $parts ), 0, 1 ) : '';
+	return mb_strtoupper( $first . $last );
+}
+
+/**
+ * A small capsule badge — the same visual language as a stage or source chip
+ * anywhere on a signed page.
+ *
+ * @param string $text  Label.
+ * @param string $color Accent color (hex).
+ * @return string HTML.
+ */
+function flxlm_ats_chip_html( $text, $color = '#1E3A5F' ) {
+	return sprintf(
+		'<span class="flxlm-ats-chip" style="--flxlm-chip-color:%s">%s</span>',
+		esc_attr( $color ),
+		esc_html( $text )
+	);
 }
 
 /**
@@ -273,7 +337,12 @@ function flxlm_ats_simple_page( $title, $body, $success = false, $escape = true 
 	header( 'X-Robots-Tag: noindex, nofollow' );
 	status_header( 200 );
 
-	$accent = $success ? '#1e7e34' : '#512DA8';
+	$accent = $success ? '#1e7e34' : '#1E3A5F';
+	// The page-level title above the card is only shown when the caller has
+	// not already opened the body with its own candidate header
+	// (flxlm_ats_candidate_header_html()) — a plain h1 duplicating the avatar
+	// block's own <h1> would be two titles stacked on top of each other.
+	$show_page_title = ( false === strpos( (string) $body, 'flxlm-ats-header' ) );
 	?><!doctype html>
 <html lang="en">
 <head>
@@ -282,21 +351,60 @@ function flxlm_ats_simple_page( $title, $body, $success = false, $escape = true 
 	<meta name="robots" content="noindex, nofollow" />
 	<title><?php echo esc_html( $title ); ?>: FLX Local Media</title>
 	<style>
-		body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
-			background:#f4f4f6;margin:0;padding:2rem 1rem;color:#222;line-height:1.55}
-		.card{max-width:34rem;margin:3rem auto;background:#fff;border-radius:10px;
-			padding:2rem;box-shadow:0 2px 14px rgba(0,0,0,.08);border-top:4px solid <?php echo esc_attr( $accent ); ?>}
-		h1{margin:0 0 1rem;font-size:1.4rem}
-		.flxlm-ats-btn{display:inline-block;background:<?php echo esc_attr( $accent ); ?>;color:#fff;border:0;
-			border-radius:6px;padding:.85rem 1.5rem;font-size:1rem;cursor:pointer;margin-top:.5rem}
-		.flxlm-ats-current{color:#666;font-size:.9rem}
-		.flxlm-ats-secondary{margin-top:1.5rem;font-size:.9rem}
-		a{color:<?php echo esc_attr( $accent ); ?>}
+		:root{
+			--flxlm-navy:#1E3A5F; --flxlm-navy2:#16304e; --flxlm-accent:<?php echo esc_attr( $accent ); ?>;
+			--flxlm-ink:#22262b; --flxlm-muted:#5a5a5a; --flxlm-line:#e6e1d8; --flxlm-cream:#faf6f0;
+			--flxlm-radius:14px;
+		}
+		*{box-sizing:border-box}
+		body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+			background:var(--flxlm-cream);margin:0;padding:2rem 1rem;color:var(--flxlm-ink);line-height:1.55;
+			-webkit-font-smoothing:antialiased}
+		.card{max-width:34rem;margin:2.5rem auto;background:#fff;border-radius:var(--flxlm-radius);
+			padding:1.75rem 1.75rem 2rem;box-shadow:0 1px 2px rgba(20,20,30,.04),0 8px 24px rgba(20,20,30,.07);
+			border-top:4px solid var(--flxlm-accent)}
+		@media (max-width:460px){ .card{padding:1.25rem 1.1rem 1.6rem;margin:1.25rem auto} body{padding:1rem .75rem} }
+		h1{margin:0 0 1rem;font-size:1.3rem;letter-spacing:-.01em}
+		.flxlm-ats-btn{display:inline-block;background:var(--flxlm-accent);color:#fff;border:0;
+			border-radius:10px;padding:.85rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;margin-top:.5rem;
+			box-shadow:0 1px 2px rgba(20,20,30,.12);transition:filter .1s}
+		.flxlm-ats-btn:hover{filter:brightness(.94)}
+		.flxlm-ats-btn:active{transform:translateY(1px)}
+		.flxlm-ats-current{color:var(--flxlm-muted);font-size:.9rem}
+		.flxlm-ats-secondary{margin-top:1.5rem;font-size:.9rem;padding-top:1rem;border-top:1px solid var(--flxlm-line)}
+		a{color:var(--flxlm-accent)}
+
+		/* Candidate header: avatar + name + job, the block every signed page opens with. */
+		.flxlm-ats-header{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:1.4rem;
+			padding-bottom:1.2rem;border-bottom:1px solid var(--flxlm-line)}
+		.flxlm-ats-avatar{flex:none;width:3rem;height:3rem;border-radius:999px;background:var(--flxlm-navy);
+			color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;
+			letter-spacing:.02em}
+		.flxlm-ats-header__text{min-width:0}
+		.flxlm-ats-title{margin:0;font-size:1.3rem;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+		.flxlm-ats-subtitle{margin:.15rem 0 0;color:var(--flxlm-muted);font-size:.95rem}
+		.flxlm-ats-chips{margin:.5rem 0 0;display:flex;gap:.4rem;flex-wrap:wrap}
+		.flxlm-ats-chip{display:inline-block;background:color-mix(in srgb, var(--flxlm-chip-color,#1E3A5F) 12%, #fff);
+			color:var(--flxlm-chip-color,#1E3A5F);border:1px solid color-mix(in srgb, var(--flxlm-chip-color,#1E3A5F) 30%, #fff);
+			border-radius:999px;padding:.15rem .65rem;font-size:.78rem;font-weight:600}
+
+		/* Alerts (errors, informational notices). */
+		.flxlm-ats-alert{border-radius:10px;padding:.7rem .9rem;font-size:.92rem;margin:0 0 1rem}
+		.flxlm-ats-alert--error{background:#fdecec;border:1px solid #f3c8c6;color:#8a2c25}
+		.flxlm-ats-alert--note{background:#fdf6ea;border:1px solid #ecd9ad;color:#6b5620}
+
+		/* Form fields, shared by the confirm page and the feedback page. */
+		.flxlm-ats-fieldlabel{margin:1.1rem 0 .4rem;font-weight:600;font-size:.92rem}
+		.flxlm-ats-fieldlabel__hint{color:var(--flxlm-muted);font-weight:400}
+		.flxlm-ats-textarea,.flxlm-ats-input,.flxlm-ats-select{width:100%;font:inherit;padding:.6rem .7rem;
+			border:1.5px solid var(--flxlm-line);border-radius:10px;background:#fff;color:var(--flxlm-ink)}
+		.flxlm-ats-textarea:focus,.flxlm-ats-input:focus,.flxlm-ats-select:focus{outline:2px solid var(--flxlm-accent);
+			outline-offset:1px;border-color:var(--flxlm-accent)}
 	</style>
 </head>
 <body>
 	<div class="card">
-		<h1><?php echo esc_html( $title ); ?></h1>
+		<?php if ( $show_page_title ) : ?><h1><?php echo esc_html( $title ); ?></h1><?php endif; ?>
 		<?php echo $escape ? esc_html( $body ) : $body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- see the $escape param doc above: every $escape=false caller builds this from static markup plus values it already escaped itself. ?>
 	</div>
 </body>

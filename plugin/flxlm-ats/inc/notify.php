@@ -129,7 +129,7 @@ function flxlm_ats_notify_manager( $application_id ) {
 			<?php if ( $phone ) : ?>
 			<tr>
 				<td style="padding:.2rem 1rem .2rem 0;color:#666">Phone</td>
-				<td style="padding:.2rem 0"><?php echo esc_html( $phone ); ?></td>
+				<td style="padding:.2rem 0"><?php echo wp_kses_post( flxlm_ats_tel_html( $phone ) ); ?></td>
 			</tr>
 			<?php endif; ?>
 			<tr>
@@ -151,7 +151,7 @@ function flxlm_ats_notify_manager( $application_id ) {
 		<?php if ( $resume_url ) : ?>
 			<p style="margin:0 0 1.5rem">
 				<a href="<?php echo esc_url( $resume_url ); ?>"
-					style="display:inline-block;background:#512DA8;color:#fff;text-decoration:none;
+					style="display:inline-block;background:#1E3A5F;color:#fff;text-decoration:none;
 						padding:.75rem 1.4rem;border-radius:6px">Read the resume</a>
 			</p>
 			<p style="margin:0 0 1.5rem;color:#777;font-size:.8rem">

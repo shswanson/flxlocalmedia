@@ -208,15 +208,13 @@ function flxlm_ats_render_stage_move_form( $application_id, $current, $target, $
 function flxlm_ats_render_detail_box( $post ) {
 	$id = $post->ID;
 
+	flxlm_ats_render_contact_card( $id );
+
 	$rows = array(
-		'Name'            => flxlm_ats_applicant_name( $id ),
-		'Email'           => get_post_meta( $id, '_flxlm_email', true ),
-		'Phone'           => get_post_meta( $id, '_flxlm_phone', true ),
-		'Applied for'     => flxlm_ats_job_title( $id ),
-		'Heard about us'  => flxlm_ats_source_label( get_post_meta( $id, '_flxlm_source', true ) ),
-		'Pay they want'   => get_post_meta( $id, '_flxlm_salary_expectation', true ),
-		'Applied'         => mysql2date( 'F j, Y g:ia', get_post_meta( $id, '_flxlm_submitted_at', true ) ),
-		'Came in via'     => flxlm_ats_entered_by_label( get_post_meta( $id, '_flxlm_entered_by', true ) ),
+		'Applied for'    => flxlm_ats_job_title( $id ),
+		'Pay they want'  => get_post_meta( $id, '_flxlm_salary_expectation', true ),
+		'Applied'        => mysql2date( 'F j, Y g:ia', get_post_meta( $id, '_flxlm_submitted_at', true ) ),
+		'Came in via'    => flxlm_ats_entered_by_label( get_post_meta( $id, '_flxlm_entered_by', true ) ),
 	);
 
 	echo '<table class="form-table"><tbody>';
@@ -224,15 +222,11 @@ function flxlm_ats_render_detail_box( $post ) {
 		if ( '' === (string) $value ) {
 			continue;
 		}
-		echo '<tr><th style="width:11rem">' . esc_html( $label ) . '</th><td>';
-		if ( 'Email' === $label ) {
-			printf( '<a href="mailto:%1$s">%1$s</a>', esc_attr( $value ) );
-		} else {
-			echo esc_html( $value );
-		}
-		echo '</td></tr>';
+		echo '<tr><th style="width:11rem">' . esc_html( $label ) . '</th><td>' . esc_html( $value ) . '</td></tr>';
 	}
 	echo '</tbody></table>';
+
+	flxlm_ats_render_source_control( $id );
 
 	flxlm_ats_render_resume_box( $id );
 
@@ -272,6 +266,117 @@ function flxlm_ats_render_detail_box( $post ) {
 }
 
 /**
+ * The contact card: name, email, phone, with an Edit control. Email and
+ * phone render as clickable mailto:/tel: links (flxlm_ats_mailto_html() /
+ * flxlm_ats_tel_html(), inc/contact.php) even in read mode, so "start an
+ * email" and "start a call" never require switching into edit mode first.
+ *
+ * The edit form is a native <details>/<summary> disclosure — the same
+ * pattern flxlm_ats_render_stage_move_form() already uses for a stage move
+ * that needs extra fields — so Cancel is just closing the disclosure; no JS
+ * is needed to open, close or cancel it. Save posts to admin-post.php and
+ * reloads the screen, the same round trip every other write in this plugin's
+ * wp-admin already uses.
+ *
+ * @param int $id Application ID.
+ */
+function flxlm_ats_render_contact_card( $id ) {
+	$can    = current_user_can( 'flxlm_manage_applications' );
+	$first  = (string) get_post_meta( $id, '_flxlm_first_name', true );
+	$last   = (string) get_post_meta( $id, '_flxlm_last_name', true );
+	$email  = (string) get_post_meta( $id, '_flxlm_email', true );
+	$phone  = (string) get_post_meta( $id, '_flxlm_phone', true );
+
+	echo '<div id="flxlm_ats_contact" style="border:1px solid #dcdcde;border-radius:6px;padding:.85rem 1rem;margin-bottom:1rem;background:#fbfbfc">';
+	echo '<table class="form-table" style="margin:0"><tbody>';
+	echo '<tr><th style="width:11rem">Name</th><td>' . esc_html( trim( $first . ' ' . $last ) ) . '</td></tr>';
+	if ( $email ) {
+		echo '<tr><th>Email</th><td>' . wp_kses_post( flxlm_ats_mailto_html( $email ) ) . '</td></tr>';
+	}
+	if ( $phone ) {
+		echo '<tr><th>Phone</th><td>' . wp_kses_post( flxlm_ats_tel_html( $phone ) ) . '</td></tr>';
+	}
+	echo '</tbody></table>';
+
+	if ( $can ) {
+		?>
+		<details style="margin-top:.6rem">
+			<summary style="cursor:pointer;color:#2271b1">Edit contact information&hellip;</summary>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin-top:.75rem;max-width:26rem">
+				<input type="hidden" name="action" value="flxlm_ats_contact" />
+				<input type="hidden" name="application" value="<?php echo esc_attr( $id ); ?>" />
+				<?php wp_nonce_field( 'flxlm_ats_contact_' . $id ); ?>
+
+				<label style="display:block;font-size:.85em;margin-bottom:.2rem">First name</label>
+				<input type="text" name="first_name" value="<?php echo esc_attr( $first ); ?>" required style="width:100%;margin-bottom:.6rem" />
+
+				<label style="display:block;font-size:.85em;margin-bottom:.2rem">Last name</label>
+				<input type="text" name="last_name" value="<?php echo esc_attr( $last ); ?>" required style="width:100%;margin-bottom:.6rem" />
+
+				<label style="display:block;font-size:.85em;margin-bottom:.2rem">Email</label>
+				<input type="email" name="email" value="<?php echo esc_attr( $email ); ?>" required style="width:100%;margin-bottom:.6rem" />
+
+				<label style="display:block;font-size:.85em;margin-bottom:.2rem">Phone</label>
+				<input type="tel" name="phone" value="<?php echo esc_attr( $phone ); ?>" style="width:100%;margin-bottom:.75rem" />
+
+				<button type="submit" class="button button-primary">Save</button>
+				<a href="#" class="button flxlm-ats-cancel-details" onclick="this.closest('details').removeAttribute('open');return false;">Cancel</a>
+			</form>
+		</details>
+		<?php
+	}
+	echo '</div>';
+}
+
+/**
+ * The "Heard about us" row, with a change control next to it. wp-admin's
+ * only way to set a recruitment source before this shipped was the intake
+ * form itself, which left every manually entered or email-intake applicant
+ * (and anyone whose real source turned out different from what they
+ * originally typed) with no way to fix it — the exact gap New's own "source
+ * is known" exit test exists to catch (inc/stages.php).
+ *
+ * @param int $id Application ID.
+ */
+function flxlm_ats_render_source_control( $id ) {
+	$current = (string) get_post_meta( $id, '_flxlm_source', true );
+	$can     = current_user_can( 'flxlm_manage_applications' );
+
+	echo '<p style="margin:0 0 .3rem"><strong>Heard about us</strong><br />' . esc_html( flxlm_ats_source_label( $current ) ) . '</p>';
+
+	if ( ! $can ) {
+		return;
+	}
+
+	// The full vocabulary (including the staff-only "Not known yet") is
+	// offered here, on purpose: wp-admin is a staff screen, the same context
+	// as the manual-entry form (inc/admin-manual-entry.php), which already
+	// offers it. A picker that should never offer 'unknown' (fixing an exit
+	// test that unknown itself failed) is flxlm_ats_hub_selectable_sources(),
+	// used by the hub bridge's GET /sources instead.
+	?>
+	<details id="flxlm_ats_source" style="margin:0 0 1rem">
+		<summary style="cursor:pointer;color:#2271b1">Change source&hellip;</summary>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin-top:.6rem;max-width:22rem">
+			<input type="hidden" name="action" value="flxlm_ats_source" />
+			<input type="hidden" name="application" value="<?php echo esc_attr( $id ); ?>" />
+			<?php wp_nonce_field( 'flxlm_ats_source_' . $id ); ?>
+			<select name="source" required style="width:100%;margin-bottom:.5rem">
+				<?php foreach ( flxlm_ats_manual_only_sources() as $key => $label ) : ?>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $current, $key ); ?>><?php echo esc_html( $label ); ?></option>
+				<?php endforeach; ?>
+				<?php foreach ( flxlm_ats_sources() as $key => $label ) : ?>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $current, $key ); ?>><?php echo esc_html( $label ); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<button type="submit" class="button button-primary">Save</button>
+			<a href="#" class="button" onclick="this.closest('details').removeAttribute('open');return false;">Cancel</a>
+		</form>
+	</details>
+	<?php
+}
+
+/**
  * Interviewers, read-only: who is on the panel, whether they have submitted
  * feedback, and when they were removed if they were. Adding or removing an
  * interviewer, and writing a team comment, happen in the hub
@@ -288,13 +393,15 @@ function flxlm_ats_render_interviewers_box( $id ) {
 
 	echo '<h3>Interviewers</h3><ul style="margin:0;padding-left:1.1rem">';
 	foreach ( $all as $entry ) {
-		$removed = ! empty( $entry['removed_at'] );
-		$who     = $entry['name'] ? $entry['name'] . ' (' . $entry['email'] . ')' : $entry['email'];
+		$removed  = ! empty( $entry['removed_at'] );
+		$external = ! empty( $entry['external'] );
+		$badge    = $external ? ' <span style="display:inline-block;background:#fdf6ea;border:1px solid #ecd9ad;color:#6b5620;border-radius:999px;padding:0 .5em;font-size:.78em;font-weight:600">Outside FLX</span>' : '';
+		$who      = ( $entry['name'] ? esc_html( $entry['name'] ) . ' ' : '' ) . wp_kses_post( flxlm_ats_mailto_html( $entry['email'] ) ) . $badge;
 
 		if ( $removed ) {
 			printf(
 				'<li style="color:#999">%s, removed %s: %s</li>',
-				esc_html( $who ),
+				$who, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from esc_html()/mailto helper/static badge markup above.
 				esc_html( mysql2date( 'M j, Y', $entry['removed_at'] ) ),
 				esc_html( $entry['removal_note'] )
 			);
@@ -302,19 +409,21 @@ function flxlm_ats_render_interviewers_box( $id ) {
 		}
 
 		$feedback_at = '';
+		$rating      = '';
 		foreach ( flxlm_ats_active_interviewers( $id ) as $active ) {
 			if ( strtolower( $active['email'] ) === strtolower( $entry['email'] ) ) {
 				$feedback_at = $active['feedback_at'];
+				$rating      = $active['rating'];
 				break;
 			}
 		}
 
 		printf(
-			'<li>%s &middot; %s</li>',
-			esc_html( $who ),
+			'<li style="margin-bottom:.3rem">%s &middot; %s</li>',
+			$who, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- see above.
 			$feedback_at
-				? 'feedback submitted ' . esc_html( mysql2date( 'M j, Y', $feedback_at ) )
-				: '<span style="color:#8a6d3b">feedback not in yet</span>'
+				? flxlm_ats_rating_badge_html( $rating ) . ' <span style="color:#999;font-size:.85em">' . esc_html( mysql2date( 'M j, Y', $feedback_at ) ) . '</span>'
+				: '<span style="color:#8a6d3b">feedback not in yet</span>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static markup / helper-built badge, not user input.
 		);
 	}
 	echo '</ul>';
@@ -343,11 +452,11 @@ function flxlm_ats_render_notes_box( $id ) {
 	foreach ( array_reverse( $notes ) as $note ) {
 		$who = $note['author_name'] ? $note['author_name'] : ( $note['author_email'] ? $note['author_email'] : 'System' );
 		printf(
-			'<li style="margin-bottom:.6rem;padding-bottom:.6rem;border-bottom:1px solid #f0f0f1"><strong>%s</strong> <span style="color:#999;font-size:.85em">%s %s%s</span><br />%s</li>',
+			'<li style="margin-bottom:.6rem;padding-bottom:.6rem;border-bottom:1px solid #f0f0f1"><strong>%s</strong> <span style="color:#999;font-size:.85em">%s %s</span>%s<br />%s</li>',
 			esc_html( $kind_labels[ $note['kind'] ] ?? $note['kind'] ),
 			esc_html( $who ),
 			esc_html( mysql2date( 'M j, Y g:ia', $note['created_at'] ) ),
-			$note['rating'] ? ' &middot; ' . esc_html( ucwords( str_replace( '_', ' ', $note['rating'] ) ) ) : '',
+			$note['rating'] ? ' &nbsp;' . flxlm_ats_rating_badge_html( $note['rating'] ) : '', // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- helper-built badge from a validated rating value, not user input.
 			// $note['body'] is already wp_kses_post()'d at write time
 			// (inc/notes.php), so it is trusted, sanitized HTML by the time it
 			// gets here. Running it through esc_html() first, as this used to,
