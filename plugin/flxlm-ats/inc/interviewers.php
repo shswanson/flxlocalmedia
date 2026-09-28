@@ -481,9 +481,36 @@ function flxlm_ats_handle_feedback_route() {
 		);
 	}
 
-	flxlm_ats_render_feedback_form( $application_id, $email, $candidate, $job, $token );
+	flxlm_ats_render_feedback_form( $application_id, $email, $candidate, $job, $token, '', '', '', '', flxlm_ats_prior_feedback( $application_id, $email ) );
 }
 add_action( 'template_redirect', 'flxlm_ats_handle_feedback_route' );
+
+/**
+ * This interviewer's own most recent feedback note on this application, if
+ * any. Feedback links stay valid for FLXLM_ATS_FEEDBACK_TTL and are
+ * deliberately re-submittable ("the most recent note is what counts"), but
+ * reopening the link used to just show a blank form with no sign anything
+ * had happened before — indistinguishable from never having submitted at
+ * all (fldn review finding). Surfacing what is already on record lets the
+ * interviewer decide, rather than guess, whether a second submission is
+ * actually a correction.
+ *
+ * @param int    $application_id Application ID.
+ * @param string $email          Interviewer email.
+ * @return array|null {rating, created_at} of the latest note, or null.
+ */
+function flxlm_ats_prior_feedback( $application_id, $email ) {
+	if ( ! function_exists( 'flxlm_ats_get_notes' ) ) {
+		return null;
+	}
+	$latest = null;
+	foreach ( flxlm_ats_get_notes( $application_id, array( 'feedback' ) ) as $note ) {
+		if ( strtolower( $note['author_email'] ?? '' ) === strtolower( $email ) ) {
+			$latest = $note; // Notes are read oldest-first; keep the latest.
+		}
+	}
+	return $latest ? array( 'rating' => $latest['rating'], 'created_at' => $latest['created_at'] ) : null;
+}
 
 /**
  * Render the feedback form (GET, and re-rendered with errors on a failed POST).
@@ -498,12 +525,15 @@ add_action( 'template_redirect', 'flxlm_ats_handle_feedback_route' );
  * @param string $candidate      Candidate display name.
  * @param string $job            Job title.
  * @param string $token          Signed token, re-emitted in the form.
- * @param string $error          Optional validation error to show.
- * @param string $rating         Sticky field value.
- * @param string $notes          Sticky field value.
- * @param string $when           Sticky field value.
+ * @param string     $error          Optional validation error to show.
+ * @param string     $rating         Sticky field value.
+ * @param string     $notes          Sticky field value.
+ * @param string     $when           Sticky field value.
+ * @param array|null $prior          This interviewer's existing feedback on
+ *                                     this application, from
+ *                                     flxlm_ats_prior_feedback(), or null.
  */
-function flxlm_ats_render_feedback_form( $application_id, $email, $candidate, $job, $token, $error = '', $rating = '', $notes = '', $when = '' ) {
+function flxlm_ats_render_feedback_form( $application_id, $email, $candidate, $job, $token, $error = '', $rating = '', $notes = '', $when = '', $prior = null ) {
 	$labels = array(
 		'strong_yes' => 'Strong yes',
 		'yes'        => 'Yes',
@@ -515,6 +545,14 @@ function flxlm_ats_render_feedback_form( $application_id, $email, $candidate, $j
 	?>
 	<?php if ( $error ) : ?>
 		<p style="color:#b32d2e"><?php echo esc_html( $error ); ?></p>
+	<?php endif; ?>
+
+	<?php if ( $prior ) : ?>
+		<p style="background:#fdf6ea;border:1px solid #ecd9ad;border-radius:6px;padding:.6rem .9rem">
+			You already submitted feedback on this candidate (<?php echo esc_html( $labels[ $prior['rating'] ] ?? $prior['rating'] ); ?>,
+			<?php echo esc_html( mysql2date( 'F j, Y', $prior['created_at'] ) ); ?>). Submitting again below replaces it as the
+			current answer for the hiring team; the earlier one stays on the record but is no longer counted.
+		</p>
 	<?php endif; ?>
 
 	<p><strong><?php echo esc_html( $candidate ); ?></strong><br /><?php echo esc_html( $job ); ?></p>

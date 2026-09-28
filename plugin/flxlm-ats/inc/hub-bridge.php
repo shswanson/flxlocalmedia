@@ -622,8 +622,31 @@ function flxlm_ats_hub_applicant_payload( $application_id, $hub_user = null ) {
 	$job_id  = (int) $application['job_id'];
 	$manager = $job_id ? flxlm_ats_job_hiring_manager( $job_id ) : null;
 
+	$raw_notes = flxlm_ats_get_notes( $application_id );
+
+	// Feedback is append-only by design (inc/notes.php: "a correction is a
+	// NEW note, the old one stays") and an interviewer's link deliberately
+	// stays valid for re-submission ("the most recent note is what counts",
+	// inc/interviewers.php). But nothing told a reader WHICH one that is, so
+	// two contradictory ratings from the same interviewer sat side by side
+	// with no way to tell which was authoritative (fldn review finding).
+	// Notes come back oldest-first, so the last feedback id seen per author
+	// is the current one; everything earlier from that same author is
+	// superseded but kept, same as the record always intended.
+	$latest_feedback_id_by_author = array();
+	foreach ( $raw_notes as $note ) {
+		if ( 'feedback' === $note['kind'] ) {
+			$latest_feedback_id_by_author[ strtolower( $note['author_email'] ) ] = (int) $note['id'];
+		}
+	}
+
 	$notes = array_map(
-		function ( $note ) {
+		function ( $note ) use ( $latest_feedback_id_by_author ) {
+			$is_current = true;
+			if ( 'feedback' === $note['kind'] ) {
+				$author     = strtolower( $note['author_email'] );
+				$is_current = ( (int) $note['id'] === ( $latest_feedback_id_by_author[ $author ] ?? null ) );
+			}
 			return array(
 				'id'            => (int) $note['id'],
 				'kind'          => $note['kind'],
@@ -633,9 +656,10 @@ function flxlm_ats_hub_applicant_payload( $application_id, $hub_user = null ) {
 				'rating'        => $note['rating'],
 				'body'          => $note['body'],
 				'created_at'    => $note['created_at'],
+				'is_current'    => $is_current,
 			);
 		},
-		flxlm_ats_get_notes( $application_id )
+		$raw_notes
 	);
 
 	$flags = array();

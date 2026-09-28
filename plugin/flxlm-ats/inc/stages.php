@@ -423,6 +423,7 @@ function flxlm_ats_set_stage( $application_id, $stage, $actor = '', $args = arra
 
 	// If leaving Decision was satisfied by an inline note rather than one
 	// already on the record, save it now as the decision note.
+	$note_saved_as_decision = false;
 	if ( 'flxlm_decision' === $from && ! empty( $args['note'] ) && function_exists( 'flxlm_ats_add_note' )
 		&& ! flxlm_ats_has_decision_note_since( $application_id, $from ) ) {
 		flxlm_ats_add_note(
@@ -433,6 +434,25 @@ function flxlm_ats_set_stage( $application_id, $stage, $actor = '', $args = arra
 				'stage'        => $from,
 				'author_email' => $args['author_email'] ?? '',
 				'author_name'  => $args['author_name'] ?? '',
+			)
+		);
+		$note_saved_as_decision = true;
+	}
+
+	// Any other move: the optional note field is free text about THIS move,
+	// not the generic "Moved from X to Y." system line below, and was being
+	// silently dropped on the floor because only the Decision-exit case (just
+	// above) ever persisted it. Save it as its own comment so a hiring
+	// manager's own words survive on the timeline (fldn review finding).
+	if ( ! $note_saved_as_decision && ! empty( $args['note'] ) && function_exists( 'flxlm_ats_add_note' ) ) {
+		flxlm_ats_add_note(
+			$application_id,
+			'comment',
+			array(
+				'body'         => $args['note'],
+				'stage'        => $stage,
+				'author_email' => $args['author_email'] ?? '',
+				'author_name'  => $args['author_name'] ?? $actor,
 			)
 		);
 	}
@@ -570,7 +590,9 @@ function flxlm_ats_stage_exit_checks( $application_id ) {
 				'key'    => 'on_a_job',
 				'label'  => 'On a job',
 				'met'    => ( $job_id > 0 ),
-				'detail' => 'This application has no posting attached. Assign one with POST /applications/{id}/job.',
+				'detail' => ( $job_id > 0 )
+					? 'Attached to a job posting.'
+					: 'This application has no posting attached. Assign one with POST /applications/{id}/job.',
 			);
 			break;
 
@@ -625,6 +647,18 @@ function flxlm_ats_stage_exit_checks( $application_id ) {
 				'label'  => "Start date set (for Hired) or reason 'offer declined' set (for Not hired)",
 				'met'    => ( $has_start || 'offer_declined' === $reason ),
 				'detail' => 'Set a start date before moving to Hired, or record the reason as offer declined before moving to Not hired.',
+			);
+			// Last stage before the terminal Hired/Not hired move, so this is
+			// the last real chance to catch an unrecorded source before the
+			// hire is finalized and the EEO record closes over it (fldn
+			// review finding: New's own source_known check never resurfaces
+			// once "Move anyway" skips it there).
+			$source = (string) get_post_meta( $application_id, '_flxlm_source', true );
+			$out[] = array(
+				'key'    => 'source_known',
+				'label'  => 'Source is known',
+				'met'    => ( '' !== $source && 'unknown' !== $source ),
+				'detail' => 'How this applicant heard about us must be recorded before the EEO report, and this is the last stage before Hired.',
 			);
 			break;
 	}
