@@ -125,24 +125,37 @@ function flxlm_ats_build_report( $start_year ) {
 	$sources   = array();  // source key => figures
 	$warnings  = array();
 
-	$total_applicants   = 0;
-	$total_interviewees = 0;
-	$total_hires        = 0;
+	$total_applicants     = 0;
+	$total_interviewees   = 0;
+	$total_hires          = 0;
+	$total_phone_screened = 0;
+	$no_job_count         = 0;
 
 	foreach ( $ids as $id ) {
+		$job_id      = (int) get_post_meta( $id, '_flxlm_job_id', true );
 		$job         = flxlm_ats_job_title( $id );
 		$source      = (string) get_post_meta( $id, '_flxlm_source', true );
 		$interviewed = flxlm_ats_was_interviewed( $id );
+		$phone       = flxlm_ats_was_phone_screened( $id );
 		$hired_at    = (string) get_post_meta( $id, '_flxlm_hired_at', true );
 		$hired       = ( '' !== $hired_at && $hired_at >= $period['from'] && $hired_at <= $period['to'] );
 
 		++$total_applicants;
+
+		if ( ! $job_id ) {
+			++$no_job_count;
+		}
 
 		if ( ! isset( $vacancies[ $job ] ) ) {
 			$vacancies[ $job ] = array(
 				'title'            => $job,
 				'applicants'       => 0,
 				'interviewees'     => 0,
+				// Informational only. 47 CFR 73.2080(c)(6)(iv) asks for
+				// interviewees, not phone screens; this column exists so
+				// whoever files the report can SEE the funnel above the number
+				// that counts, never because it feeds the filing itself.
+				'phone_screened'   => 0,
 				'hires'            => 0,
 				'sources_used'     => array(),
 				'hire_source'      => '',
@@ -152,6 +165,11 @@ function flxlm_ats_build_report( $start_year ) {
 
 		++$vacancies[ $job ]['applicants'];
 		$vacancies[ $job ]['sources_used'][ $source ] = true;
+
+		if ( $phone ) {
+			++$total_phone_screened;
+			++$vacancies[ $job ]['phone_screened'];
+		}
 
 		if ( ! isset( $sources[ $source ] ) ) {
 			$sources[ $source ] = array(
@@ -219,6 +237,20 @@ function flxlm_ats_build_report( $start_year ) {
 		);
 	}
 
+	// Applications with no job at all: an email-intake arrival the intake
+	// script could not match to a posting, or one still sitting on the hub's
+	// "Unassigned" pseudo-vacancy. Every one of these is filed under "General
+	// application" in the table above rather than a real vacancy, which is
+	// correct for the report but easy to miss, so it is called out here too.
+	if ( $no_job_count > 0 ) {
+		$warnings[] = sprintf(
+			'%d application(s) in this period have no job posting attached, and are counted only under '
+				. '"General application" above. Assign them to a posting (in the hub, or from the applicant '
+				. 'screen) if they belong to a specific vacancy.',
+			$no_job_count
+		);
+	}
+
 	ksort( $vacancies );
 	uasort(
 		$sources,
@@ -228,13 +260,15 @@ function flxlm_ats_build_report( $start_year ) {
 	);
 
 	return array(
-		'period'             => $period,
-		'vacancies'          => $vacancies,
-		'sources'            => $sources,
-		'warnings'           => $warnings,
-		'total_applicants'   => $total_applicants,
-		'total_interviewees' => $total_interviewees,
-		'total_hires'        => $total_hires,
+		'period'               => $period,
+		'vacancies'            => $vacancies,
+		'sources'              => $sources,
+		'warnings'             => $warnings,
+		'total_applicants'     => $total_applicants,
+		'total_interviewees'   => $total_interviewees,
+		'total_hires'          => $total_hires,
+		'total_phone_screened' => $total_phone_screened,
+		'no_job_count'         => $no_job_count,
 	);
 }
 
@@ -292,18 +326,25 @@ function flxlm_ats_render_report_screen() {
 					<div style="color:#666"><?php echo esc_html( $label ); ?></div>
 				</div>
 			<?php endforeach; ?>
+			<div style="background:#fff;border:1px solid #dcdcde;border-radius:6px;padding:1rem 1.5rem;min-width:9rem">
+				<div style="font-size:2rem;font-weight:600;line-height:1;color:#666"><?php echo esc_html( $report['total_phone_screened'] ); ?></div>
+				<div style="color:#666">Phone screened <span style="font-size:.75em">(not counted)</span></div>
+			</div>
 		</div>
 
 		<h2>Vacancies filled, and how</h2>
 		<p class="description" style="max-width:46rem">
-			Section 73.2080(c)(6)(i)&ndash;(iv). One row per job people applied for in this period.
+			Section 73.2080(c)(6)(i) through (iv). One row per job people applied for in this period.
 			Only rows with a hire count above zero are vacancies "filled" for reporting purposes.
+			Phone screened is informational only: 73.2080 asks for interviews, not phone screens, and
+			nothing in that column feeds the filing.
 		</p>
 		<table class="wp-list-table widefat striped">
 			<thead>
 				<tr>
 					<th>Job title</th>
 					<th>Applicants</th>
+					<th>Phone screened <span style="font-weight:normal;color:#999">(not counted)</span></th>
 					<th>Interviewed</th>
 					<th>Hires</th>
 					<th>Source that referred the hire</th>
@@ -312,19 +353,20 @@ function flxlm_ats_render_report_screen() {
 			</thead>
 			<tbody>
 			<?php if ( ! $report['vacancies'] ) : ?>
-				<tr><td colspan="6">No applications in this period.</td></tr>
+				<tr><td colspan="7">No applications in this period.</td></tr>
 			<?php endif; ?>
 			<?php foreach ( $report['vacancies'] as $vacancy ) : ?>
 				<tr>
 					<td><strong><?php echo esc_html( $vacancy['title'] ); ?></strong></td>
 					<td><?php echo esc_html( $vacancy['applicants'] ); ?></td>
+					<td style="color:#999"><?php echo esc_html( $vacancy['phone_screened'] ); ?></td>
 					<td><?php echo esc_html( $vacancy['interviewees'] ); ?></td>
 					<td><?php echo esc_html( $vacancy['hires'] ); ?></td>
 					<td>
 						<?php
 						echo $vacancy['hire_source']
 							? esc_html( flxlm_ats_source_label( $vacancy['hire_source'] ) )
-							: '<span style="color:#999">—</span>';
+							: '<span style="color:#999">-</span>';
 						?>
 					</td>
 					<td>
@@ -429,17 +471,18 @@ function flxlm_ats_export_eeo_csv() {
 
 	$out = fopen( 'php://output', 'w' );
 
-	fputcsv( $out, array( 'FLX Local Media — EEO Public File Report data' ) );
+	fputcsv( $out, array( 'FLX Local Media: EEO Public File Report data' ) );
 	fputcsv( $out, array( 'Reporting period', $report['period']['label'] ) );
 	fputcsv( $out, array( 'Total applicants', $report['total_applicants'] ) );
 	fputcsv( $out, array( 'Total interviewed', $report['total_interviewees'] ) );
 	fputcsv( $out, array( 'Total hired', $report['total_hires'] ) );
+	fputcsv( $out, array( 'Total phone screened (informational, not part of the 73.2080 filing)', $report['total_phone_screened'] ) );
 	fputcsv( $out, array() );
 
-	fputcsv( $out, array( 'Vacancies — 73.2080(c)(6)(i)-(iv)' ) );
+	fputcsv( $out, array( 'Vacancies, 73.2080(c)(6)(i)-(iv)' ) );
 	fputcsv(
 		$out,
-		array( 'Job title', 'Applicants', 'Interviewed', 'Hires', 'Source referring hire', 'Sources used' )
+		array( 'Job title', 'Applicants', 'Phone screened (not counted)', 'Interviewed', 'Hires', 'Source referring hire', 'Sources used' )
 	);
 	foreach ( $report['vacancies'] as $vacancy ) {
 		$labels = array_map( 'flxlm_ats_source_label', array_keys( $vacancy['sources_used'] ) );
@@ -448,6 +491,7 @@ function flxlm_ats_export_eeo_csv() {
 			array(
 				$vacancy['title'],
 				$vacancy['applicants'],
+				$vacancy['phone_screened'],
 				$vacancy['interviewees'],
 				$vacancy['hires'],
 				$vacancy['hire_source'] ? flxlm_ats_source_label( $vacancy['hire_source'] ) : '',
@@ -457,7 +501,7 @@ function flxlm_ats_export_eeo_csv() {
 	}
 
 	fputcsv( $out, array() );
-	fputcsv( $out, array( 'Master Recruitment Source List — 73.2080(c)(6)(v)' ) );
+	fputcsv( $out, array( 'Master Recruitment Source List, 73.2080(c)(6)(v)' ) );
 	fputcsv( $out, array( 'Recruitment source', 'Applicants referred', 'Interviewees referred', 'Hires' ) );
 	foreach ( $report['sources'] as $source ) {
 		fputcsv(

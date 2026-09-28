@@ -90,13 +90,13 @@ function flxlm_ats_render_column( $column, $post_id ) {
 					esc_url( flxlm_ats_admin_resume_url( $post_id ) )
 				);
 			} else {
-				echo '<span style="color:#999">—</span>';
+				echo '<span style="color:#999">-</span>';
 			}
 			break;
 
 		case 'flxlm_submitted':
 			$at = get_post_meta( $post_id, '_flxlm_submitted_at', true );
-			echo esc_html( $at ? mysql2date( 'M j, Y', $at ) : '—' );
+			echo esc_html( $at ? mysql2date( 'M j, Y', $at ) : '-' );
 			break;
 	}
 }
@@ -144,7 +144,21 @@ function flxlm_ats_row_actions( $actions, $post ) {
 		return $actions;
 	}
 
-	$order = array_keys( flxlm_ats_stages() );
+	$new_actions = array();
+
+	// A retired stage (pre-1.2.0 data that has not been migrated yet — see
+	// inc/upgrade.php) offers only one move: onto New, same as the migration
+	// itself does. It is never offered the normal "next in the ladder" link,
+	// because it is not IN the ladder.
+	if ( flxlm_ats_is_stage( $post->post_status ) && ! flxlm_ats_is_movable_stage( $post->post_status ) ) {
+		$new_actions['flxlm_advance'] = sprintf(
+			'<a href="%s">Move to New</a>',
+			esc_url( flxlm_ats_admin_stage_url( $post->ID, flxlm_ats_initial_stage() ) )
+		);
+		return array_merge( $new_actions, $actions );
+	}
+
+	$order = array_keys( flxlm_ats_movable_stages() );
 	$index = array_search( $post->post_status, $order, true );
 	$next  = '';
 
@@ -156,20 +170,32 @@ function flxlm_ats_row_actions( $actions, $post ) {
 		}
 	}
 
-	$new_actions = array();
-
+	// A target stage with a required field (Hired needs a start date; Not
+	// hired needs a close reason — inc/stages.php) cannot be a one-click list
+	// link: there is nowhere on this row to collect the data. Send those to
+	// the edit screen's Stage box instead, which the required-field form lives
+	// on (see flxlm_ats_render_stage_box() in inc/admin-detail.php). A target
+	// with no required field stays a genuine one click, exactly like today.
 	if ( $next ) {
-		$new_actions['flxlm_advance'] = sprintf(
-			'<a href="%s">Move to %s</a>',
-			esc_url( flxlm_ats_admin_stage_url( $post->ID, $next ) ),
-			esc_html( flxlm_ats_stage_label( $next ) )
-		);
+		if ( flxlm_ats_stage_required_fields( $next ) ) {
+			$new_actions['flxlm_advance'] = sprintf(
+				'<a href="%s">Move to %s&hellip;</a>',
+				esc_url( get_edit_post_link( $post->ID ) . '#flxlm_ats_stagebox' ),
+				esc_html( flxlm_ats_stage_label( $next ) )
+			);
+		} else {
+			$new_actions['flxlm_advance'] = sprintf(
+				'<a href="%s">Move to %s</a>',
+				esc_url( flxlm_ats_admin_stage_url( $post->ID, $next ) ),
+				esc_html( flxlm_ats_stage_label( $next ) )
+			);
+		}
 	}
 
 	if ( 'flxlm_rejected' !== $post->post_status ) {
 		$new_actions['flxlm_reject'] = sprintf(
-			'<a href="%s" style="color:#b32d2e">Not selected</a>',
-			esc_url( flxlm_ats_admin_stage_url( $post->ID, 'flxlm_rejected' ) )
+			'<a href="%s" style="color:#b32d2e">Not hired&hellip;</a>',
+			esc_url( get_edit_post_link( $post->ID ) . '#flxlm_ats_stagebox' )
 		);
 	}
 
@@ -200,10 +226,18 @@ function flxlm_ats_admin_stage_url( $application_id, $stage ) {
 
 /**
  * Perform an admin-side stage move.
+ *
+ * Reads from $_REQUEST rather than $_GET so the exact same handler serves
+ * both the one-click row-action/stage-box links (a GET, nonced by
+ * flxlm_ats_admin_stage_url()) and the inline forms the stage box renders
+ * when the target needs a close reason, a start date, or a decision note
+ * (flxlm_ats_render_stage_box() in inc/admin-detail.php) — those POST to this
+ * same admin-post action with the same nonce field name. One handler, one
+ * place that ever calls flxlm_ats_set_stage() from wp-admin.
  */
 function flxlm_ats_handle_admin_stage() {
-	$application_id = isset( $_GET['application'] ) ? (int) $_GET['application'] : 0;
-	$stage          = isset( $_GET['stage'] ) ? sanitize_key( wp_unslash( $_GET['stage'] ) ) : '';
+	$application_id = isset( $_REQUEST['application'] ) ? (int) $_REQUEST['application'] : 0;
+	$stage          = isset( $_REQUEST['stage'] ) ? sanitize_key( wp_unslash( $_REQUEST['stage'] ) ) : '';
 
 	check_admin_referer( 'flxlm_ats_stage_' . $application_id . '_' . $stage );
 
@@ -211,24 +245,34 @@ function flxlm_ats_handle_admin_stage() {
 		wp_die( 'You do not have permission to move applications.', 'Not allowed', array( 'response' => 403 ) );
 	}
 
-	$result = flxlm_ats_set_stage( $application_id, $stage );
+	$args = array();
+	if ( isset( $_REQUEST['close_reason'] ) ) {
+		$args['close_reason'] = sanitize_key( wp_unslash( $_REQUEST['close_reason'] ) );
+	}
+	if ( isset( $_REQUEST['start_date'] ) ) {
+		$args['start_date'] = sanitize_text_field( wp_unslash( $_REQUEST['start_date'] ) );
+	}
+	if ( isset( $_REQUEST['note'] ) ) {
+		$args['note'] = sanitize_textarea_field( wp_unslash( $_REQUEST['note'] ) );
+	}
+
+	$result = flxlm_ats_set_stage( $application_id, $stage, '', $args );
 
 	$back = wp_get_referer();
 	$back = $back ? $back : admin_url( 'edit.php?post_type=flxlm_application' );
 
-	wp_safe_redirect(
-		add_query_arg(
-			'flxlm_ats_moved',
-			is_wp_error( $result ) ? 'error' : rawurlencode( $stage ),
-			$back
-		)
-	);
+	$notice = rawurlencode( $stage );
+	if ( is_wp_error( $result ) ) {
+		$notice = ( 'flxlm_ats_missing_fields' === $result->get_error_code() ) ? 'missing_fields' : 'error';
+	}
+
+	wp_safe_redirect( add_query_arg( 'flxlm_ats_moved', $notice, $back ) . '#flxlm_ats_stagebox' );
 	exit;
 }
 add_action( 'admin_post_flxlm_ats_stage', 'flxlm_ats_handle_admin_stage' );
 
 /**
- * Confirm a move at the top of the list.
+ * Confirm a move at the top of the list, or the edit screen.
  */
 function flxlm_ats_moved_notice() {
 	if ( empty( $_GET['flxlm_ats_moved'] ) ) {
@@ -239,6 +283,11 @@ function flxlm_ats_moved_notice() {
 
 	if ( 'error' === $moved ) {
 		echo '<div class="notice notice-error is-dismissible"><p>That application could not be moved.</p></div>';
+		return;
+	}
+
+	if ( 'missing_fields' === $moved ) {
+		echo '<div class="notice notice-error is-dismissible"><p>That move needs one more piece of information first (a reason, a start date, or a decision note). Use the form in the Stage box.</p></div>';
 		return;
 	}
 

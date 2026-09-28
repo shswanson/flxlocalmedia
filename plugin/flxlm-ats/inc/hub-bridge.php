@@ -35,13 +35,28 @@
  *
  * WIRE CONTRACT
  *
- * Namespace `flxlm-ats-hub/v1`; routes `/vacancies`,
+ * Namespace `flxlm-ats-hub/v1`; routes `/stages`, `/vacancies`,
  * `/vacancies/{id}/applicants`, `/applications/{id}`,
- * `/applications/{id}/resume`, `/applications/{id}/stage`; request headers
+ * `/applications/{id}/resume`, `/applications/{id}/stage`,
+ * `/applications/{id}/interviewers`, `/applications/{id}/comments`,
+ * `/applications/{id}/feedback`, `/applications/{id}/job`; request headers
  * `X-FLX-Hub-Email`, `X-FLX-Hub-Timestamp`, `X-FLX-Hub-Signature`. Chosen to
  * match the hub-side Worker implementation already in progress on
  * `shswanson/fldn` (fldn#1912) rather than a second, competing naming, so
  * whichever build lands first the other can wire into it without a rename.
+ *
+ * The 2026-09-28 v1 hiring-flow contract extends `/vacancies` (adds
+ * `hiring_manager` per posting and an "Unassigned" id-0 pseudo-vacancy) and
+ * `/applications/{id}` (adds `stage_info`, `exit_checks`, `interviewers`,
+ * `notes`, `close_reason`, `start_date`, `phone_screened_at`,
+ * `interviewed_at`, `hiring_manager`, `source_info`, `flags` — see
+ * flxlm_ats_hub_applicant_payload(), the one builder every mutating route
+ * below also returns). `/stages`, `/applications/{id}/interviewers`,
+ * `/applications/{id}/comments`, `/applications/{id}/feedback` and
+ * `/applications/{id}/job` are new. `POST /applications/{id}/stage` now
+ * accepts `note`/`close_reason`/`start_date` and answers 422
+ * `{error, errors:[...]}` when a required field is missing, instead of the
+ * flat `{ok, stage, stage_label}` it used to.
  *
  * @package flxlm-ats
  */
@@ -79,6 +94,16 @@ function flxlm_ats_hub_bridge_register_rest() {
 	}
 
 	$ns = 'flxlm-ats-hub/v1';
+
+	register_rest_route(
+		$ns,
+		'/stages',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'flxlm_ats_hub_get_stages',
+			'permission_callback' => 'flxlm_ats_hub_permission_view',
+		)
+	);
 
 	register_rest_route(
 		$ns,
@@ -129,6 +154,50 @@ function flxlm_ats_hub_bridge_register_rest() {
 		array(
 			'methods'             => 'POST',
 			'callback'            => 'flxlm_ats_hub_post_stage',
+			'permission_callback' => 'flxlm_ats_hub_permission_manage',
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/applications/(?P<id>\d+)/interviewers',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'flxlm_ats_hub_post_interviewers',
+			'permission_callback' => 'flxlm_ats_hub_permission_manage',
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/applications/(?P<id>\d+)/comments',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'flxlm_ats_hub_post_comment',
+			'permission_callback' => 'flxlm_ats_hub_permission_view',
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/applications/(?P<id>\d+)/feedback',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'flxlm_ats_hub_post_feedback',
+			'permission_callback' => 'flxlm_ats_hub_permission_view',
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/applications/(?P<id>\d+)/job',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'flxlm_ats_hub_post_job',
 			'permission_callback' => 'flxlm_ats_hub_permission_manage',
 			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
 		)
@@ -257,6 +326,34 @@ function flxlm_ats_hub_permission_manage( $request ) {
 }
 
 /**
+ * GET /stages — the ladder definition, so every hub screen renders the same
+ * owner and exit-test wording this plugin does (wp-admin, the confirm-page
+ * email links, the EEO report all read the same flxlm_ats_stages() this
+ * builds from — one source of truth, four renderings).
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+function flxlm_ats_hub_get_stages( $request ) {
+	$out = array();
+	foreach ( flxlm_ats_stages() as $key => $stage ) {
+		$out[] = array(
+			'key'      => $key,
+			'label'    => $stage['label'],
+			'owner'    => $stage['owner'] ?? '',
+			'exit_test' => $stage['exit_test'] ?? '',
+			'terminal' => ! empty( $stage['terminal'] ),
+			'retired'  => ! empty( $stage['retired'] ),
+			'requires' => flxlm_ats_stage_required_fields( $key ),
+		);
+	}
+
+	flxlm_ats_hub_audit( $request, 'list_stages', 0 );
+
+	return new WP_REST_Response( $out, 200 );
+}
+
+/**
  * GET /vacancies — open postings with applicant counts by stage.
  *
  * @param WP_REST_Request $request Request.
@@ -311,18 +408,65 @@ function flxlm_ats_hub_get_vacancies( $request ) {
 			);
 		}
 
+		$manager = flxlm_ats_job_hiring_manager( $job->ID );
+
 		$out[] = array(
-			'id'           => $job->ID,
-			'title'        => wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES ),
-			'permalink'    => get_permalink( $job ),
-			'location'     => (string) get_post_meta( $job->ID, 'job_location', true ),
-			'type'         => (string) get_post_meta( $job->ID, 'job_type', true ),
-			'total'        => $total,
-			'by_stage'     => $by_stage,
+			'id'             => $job->ID,
+			'title'          => wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES ),
+			'permalink'      => get_permalink( $job ),
+			'location'       => (string) get_post_meta( $job->ID, 'job_location', true ),
+			'type'           => (string) get_post_meta( $job->ID, 'job_type', true ),
+			'hiring_manager' => $manager ? array( 'id' => $manager->ID, 'name' => $manager->display_name ) : null,
+			'total'          => $total,
+			'by_stage'       => $by_stage,
 			// Same counts as by_stage, shaped as {stage: count} — this is the
 			// field name and shape the hub front end's own wire contract
 			// actually reads (docs/gws-migration/worker/hiring.html).
-			'stage_counts' => $counts,
+			'stage_counts'   => $counts,
+		);
+	}
+
+	// The "Unassigned" pseudo-vacancy (id 0): applications with no job at all,
+	// most often an email-intake arrival the intake script could not match to
+	// a posting. Only sent when at least one exists, so a site with nothing
+	// unassigned never has to render an always-empty tile.
+	$unassigned_ids = get_posts(
+		array(
+			'post_type'        => 'flxlm_application',
+			'post_status'      => array_keys( $stages ),
+			'posts_per_page'   => -1,
+			'meta_key'         => '_flxlm_job_id',
+			'meta_value'       => '0',
+			'fields'           => 'ids',
+			'no_found_rows'    => true,
+			'suppress_filters' => false,
+		)
+	);
+
+	if ( $unassigned_ids ) {
+		$counts = array_fill_keys( array_keys( $stages ), 0 );
+		foreach ( $unassigned_ids as $application_id ) {
+			$stage = get_post_status( $application_id );
+			if ( isset( $counts[ $stage ] ) ) {
+				++$counts[ $stage ];
+			}
+		}
+
+		$by_stage = array();
+		foreach ( $stages as $key => $stage ) {
+			$by_stage[] = array( 'stage' => $key, 'label' => $stage['label'], 'count' => $counts[ $key ] );
+		}
+
+		$out[] = array(
+			'id'             => 0,
+			'title'          => 'Unassigned',
+			'permalink'      => '',
+			'location'       => '',
+			'type'           => '',
+			'hiring_manager' => null,
+			'total'          => count( $unassigned_ids ),
+			'by_stage'       => $by_stage,
+			'stage_counts'   => $counts,
 		);
 	}
 
@@ -352,9 +496,17 @@ function flxlm_ats_hub_get_vacancies( $request ) {
  */
 function flxlm_ats_hub_get_vacancy_applicants( $request ) {
 	$job_id = (int) $request->get_param( 'id' );
-	$job    = get_post( $job_id );
-	if ( ! $job || 'flxlm_job' !== $job->post_type ) {
-		return new WP_Error( 'flxlm_ats_hub_no_vacancy', 'No such vacancy.', array( 'status' => 404 ) );
+
+	// id 0 is the "Unassigned" pseudo-vacancy (see flxlm_ats_hub_get_vacancies()),
+	// not a real flxlm_job post, so it skips the post lookup entirely.
+	if ( 0 === $job_id ) {
+		$job_title = 'Unassigned';
+	} else {
+		$job = get_post( $job_id );
+		if ( ! $job || 'flxlm_job' !== $job->post_type ) {
+			return new WP_Error( 'flxlm_ats_hub_no_vacancy', 'No such vacancy.', array( 'status' => 404 ) );
+		}
+		$job_title = wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES );
 	}
 
 	$ids = get_posts(
@@ -381,7 +533,7 @@ function flxlm_ats_hub_get_vacancy_applicants( $request ) {
 
 	return new WP_REST_Response(
 		array(
-			'vacancy'    => array( 'id' => $job_id, 'title' => wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES ) ),
+			'vacancy'    => array( 'id' => $job_id, 'title' => $job_title ),
 			'applicants' => $out,
 		),
 		200
@@ -418,7 +570,31 @@ function flxlm_ats_hub_applicant_summary( $application_id ) {
  */
 function flxlm_ats_hub_get_applicant( $request ) {
 	$application_id = (int) $request->get_param( 'id' );
-	$application    = flxlm_ats_get_application( $application_id );
+
+	$out = flxlm_ats_hub_applicant_payload( $application_id, $request->get_param( '_flxlm_hub_user' ) );
+	if ( is_wp_error( $out ) ) {
+		return $out;
+	}
+
+	flxlm_ats_hub_audit( $request, 'view_applicant', $application_id );
+
+	return new WP_REST_Response( $out, 200 );
+}
+
+/**
+ * The full applicant JSON, built once and reused by every route the v1
+ * contract says returns "the full applicant JSON" after a mutation
+ * (POST stage/interviewers/comments/feedback/job) as well as by the plain GET.
+ * One builder means a field added here shows up everywhere at once, rather
+ * than five hand-copied response arrays drifting apart from each other one
+ * bug fix at a time.
+ *
+ * @param int          $application_id Application ID.
+ * @param WP_User|null $hub_user       The authenticated hub user, for can_manage.
+ * @return array|WP_Error
+ */
+function flxlm_ats_hub_applicant_payload( $application_id, $hub_user = null ) {
+	$application = flxlm_ats_get_application( $application_id );
 	if ( ! $application ) {
 		return new WP_Error( 'flxlm_ats_hub_no_applicant', 'No such applicant.', array( 'status' => 404 ) );
 	}
@@ -443,16 +619,60 @@ function flxlm_ats_hub_get_applicant( $request ) {
 		array_reverse( $raw_history )
 	);
 
+	$job_id  = (int) $application['job_id'];
+	$manager = $job_id ? flxlm_ats_job_hiring_manager( $job_id ) : null;
+
+	$notes = array_map(
+		function ( $note ) {
+			return array(
+				'id'            => (int) $note['id'],
+				'kind'          => $note['kind'],
+				'author_name'   => $note['author_name'],
+				'author_email'  => $note['author_email'],
+				'stage'         => $note['stage'],
+				'rating'        => $note['rating'],
+				'body'          => $note['body'],
+				'created_at'    => $note['created_at'],
+			);
+		},
+		flxlm_ats_get_notes( $application_id )
+	);
+
+	$flags = array();
+	if ( '' === $application['source'] || 'unknown' === $application['source'] ) {
+		$flags[] = 'source_unknown';
+	}
+	if ( ! $job_id ) {
+		$flags[] = 'no_job';
+	}
+
 	$out = array(
-		'id'            => $application_id,
-		'name'          => flxlm_ats_applicant_name( $application_id ),
-		'email'         => $application['email'],
-		'phone'         => $application['phone'],
-		'job_title'     => wp_specialchars_decode( flxlm_ats_job_title( $application_id ), ENT_QUOTES ),
-		'stage'         => $application['stage'],
-		'stage_label'   => flxlm_ats_stage_label( $application['stage'] ),
-		'interviewed'   => flxlm_ats_was_interviewed( $application_id ),
-		'source'        => flxlm_ats_source_label( $application['source'] ),
+		'id'                => $application_id,
+		'name'              => flxlm_ats_applicant_name( $application_id ),
+		'email'             => $application['email'],
+		'phone'             => $application['phone'],
+		'job_title'         => wp_specialchars_decode( flxlm_ats_job_title( $application_id ), ENT_QUOTES ),
+		// 'stage'/'stage_label' stay flat strings: this is the shape the hub
+		// front end's existing wire contract (docs/gws-migration/worker/hiring.html
+		// in shswanson/fldn) already reads. 'stage_info' carries the new
+		// {key,label} object form the v1 contract also asks for, additively —
+		// see this file's "WIRE CONTRACT" note and this plugin's structured
+		// report for why this is additive rather than a breaking rename.
+		'stage'             => $application['stage'],
+		'stage_label'       => flxlm_ats_stage_label( $application['stage'] ),
+		'stage_info'        => array( 'key' => $application['stage'], 'label' => flxlm_ats_stage_label( $application['stage'] ) ),
+		'exit_checks'       => flxlm_ats_stage_exit_checks( $application_id ),
+		'interviewed'       => flxlm_ats_was_interviewed( $application_id ),
+		'interviewed_at'    => (string) get_post_meta( $application_id, '_flxlm_interviewed_at', true ),
+		'phone_screened_at' => (string) get_post_meta( $application_id, '_flxlm_phone_screened_at', true ),
+		'close_reason'      => (string) get_post_meta( $application_id, '_flxlm_close_reason', true ),
+		'start_date'        => (string) get_post_meta( $application_id, '_flxlm_start_date', true ),
+		'source'            => flxlm_ats_source_label( $application['source'] ),
+		'source_info'       => array( 'key' => $application['source'], 'label' => flxlm_ats_source_label( $application['source'] ) ),
+		'hiring_manager'    => $manager ? array( 'id' => $manager->ID, 'name' => $manager->display_name, 'email' => $manager->user_email ) : null,
+		'interviewers'      => flxlm_ats_active_interviewers( $application_id ),
+		'notes'             => $notes,
+		'flags'             => $flags,
 		// Field names below match the hub front end's own wire contract
 		// (docs/gws-migration/worker/hiring.html in shswanson/fldn) exactly —
 		// this endpoint is the one documented to conform to it, not the
@@ -466,12 +686,10 @@ function flxlm_ats_hub_get_applicant( $request ) {
 		'resume_name'   => $application['resume_name'],
 		'stage_history' => $history,
 		'stages'        => $stages,
-		'can_manage'    => user_can( $request->get_param( '_flxlm_hub_user' ), 'flxlm_manage_applications' ),
+		'can_manage'    => $hub_user instanceof WP_User ? user_can( $hub_user, 'flxlm_manage_applications' ) : false,
 	);
 
-	flxlm_ats_hub_audit( $request, 'view_applicant', $application_id );
-
-	return new WP_REST_Response( $out, 200 );
+	return $out;
 }
 
 /**
@@ -563,30 +781,212 @@ function flxlm_ats_hub_get_resume( $request ) {
 function flxlm_ats_hub_post_stage( $request ) {
 	$application_id = (int) $request->get_param( 'id' );
 	$body           = $request->get_json_params();
-	$stage          = is_array( $body ) ? sanitize_text_field( $body['stage'] ?? '' ) : '';
+	$body           = is_array( $body ) ? $body : array();
+	$stage          = sanitize_text_field( $body['stage'] ?? '' );
 
-	if ( ! flxlm_ats_is_stage( $stage ) ) {
+	if ( ! flxlm_ats_is_movable_stage( $stage ) ) {
 		return new WP_Error( 'flxlm_ats_hub_bad_stage', 'Unknown stage: ' . $stage, array( 'status' => 400 ) );
 	}
 
-	$user   = $request->get_param( '_flxlm_hub_user' );
-	$actor  = 'hub:' . ( $user instanceof WP_User ? $user->user_email : 'unknown' );
-	$result = flxlm_ats_set_stage( $application_id, $stage, $actor );
+	$user  = $request->get_param( '_flxlm_hub_user' );
+	$actor = 'hub:' . ( $user instanceof WP_User ? $user->user_email : 'unknown' );
+
+	$args = array(
+		'author_email' => $user instanceof WP_User ? $user->user_email : '',
+		'author_name'  => $user instanceof WP_User ? $user->display_name : '',
+	);
+	if ( isset( $body['note'] ) ) {
+		$args['note'] = sanitize_textarea_field( $body['note'] );
+	}
+	if ( isset( $body['close_reason'] ) ) {
+		$args['close_reason'] = sanitize_key( $body['close_reason'] );
+	}
+	if ( isset( $body['start_date'] ) ) {
+		$args['start_date'] = sanitize_text_field( $body['start_date'] );
+	}
+
+	$result = flxlm_ats_set_stage( $application_id, $stage, $actor, $args );
+
+	if ( is_wp_error( $result ) ) {
+		if ( 'flxlm_ats_missing_fields' === $result->get_error_code() ) {
+			$data = $result->get_error_data();
+			return new WP_REST_Response(
+				array(
+					'error'  => $result->get_error_message(),
+					'errors' => $data['errors'] ?? array(),
+				),
+				422
+			);
+		}
+		return new WP_Error( $result->get_error_code(), $result->get_error_message(), array( 'status' => 400 ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'stage:' . $stage, $application_id );
+
+	$payload = flxlm_ats_hub_applicant_payload( $application_id, $user );
+
+	return new WP_REST_Response( $payload, 200 );
+}
+
+/**
+ * POST /applications/{id}/interviewers — add or remove an interviewer.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_post_interviewers( $request ) {
+	$application_id = (int) $request->get_param( 'id' );
+	$body           = $request->get_json_params();
+	$body           = is_array( $body ) ? $body : array();
+	$user           = $request->get_param( '_flxlm_hub_user' );
+	$actor          = 'hub:' . ( $user instanceof WP_User ? $user->user_email : 'unknown' );
+
+	$action = sanitize_key( $body['action'] ?? '' );
+	$email  = sanitize_email( $body['email'] ?? '' );
+
+	if ( ! in_array( $action, array( 'add', 'remove' ), true ) ) {
+		return new WP_Error( 'flxlm_ats_hub_bad_action', "action must be 'add' or 'remove'.", array( 'status' => 400 ) );
+	}
+	if ( ! is_email( $email ) ) {
+		return new WP_Error( 'flxlm_ats_hub_bad_email', 'A valid email is required.', array( 'status' => 400 ) );
+	}
+
+	if ( 'add' === $action ) {
+		$result = flxlm_ats_add_interviewer( $application_id, $email, sanitize_text_field( $body['name'] ?? '' ), $actor );
+	} else {
+		$result = flxlm_ats_remove_interviewer( $application_id, $email, $actor, sanitize_textarea_field( $body['note'] ?? '' ) );
+	}
+
+	if ( is_wp_error( $result ) ) {
+		return new WP_Error( $result->get_error_code(), $result->get_error_message(), array( 'status' => 422 ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'interviewer_' . $action . ':' . $email, $application_id );
+
+	return new WP_REST_Response( flxlm_ats_hub_applicant_payload( $application_id, $user ), 200 );
+}
+
+/**
+ * POST /applications/{id}/comments — a team comment, authored by the hub user.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_post_comment( $request ) {
+	$application_id = (int) $request->get_param( 'id' );
+	$body           = $request->get_json_params();
+	$body           = is_array( $body ) ? $body : array();
+	$user           = $request->get_param( '_flxlm_hub_user' );
+
+	$text = isset( $body['body'] ) ? trim( (string) $body['body'] ) : '';
+	if ( '' === $text ) {
+		return new WP_Error( 'flxlm_ats_hub_empty_comment', 'A comment needs a body.', array( 'status' => 422 ) );
+	}
+
+	$result = flxlm_ats_add_comment(
+		$application_id,
+		$text,
+		$user instanceof WP_User ? $user->user_email : '',
+		$user instanceof WP_User ? $user->display_name : ''
+	);
 
 	if ( is_wp_error( $result ) ) {
 		return new WP_Error( $result->get_error_code(), $result->get_error_message(), array( 'status' => 400 ) );
 	}
 
-	flxlm_ats_hub_audit( $request, 'stage_change:' . $stage, $application_id );
+	flxlm_ats_hub_audit( $request, 'comment', $application_id );
 
-	return new WP_REST_Response(
+	return new WP_REST_Response( flxlm_ats_hub_applicant_payload( $application_id, $user ), 200 );
+}
+
+/**
+ * POST /applications/{id}/feedback — feedback left by a hub user directly
+ * (distinct from the emailed signed-link route in inc/interviewers.php, which
+ * requires the sender to be an active assigned interviewer; this route only
+ * requires ordinary view access, since every hub user reaching it is already
+ * staff who authenticated through Cloudflare Access).
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_post_feedback( $request ) {
+	$application_id = (int) $request->get_param( 'id' );
+	$body           = $request->get_json_params();
+	$body           = is_array( $body ) ? $body : array();
+	$user           = $request->get_param( '_flxlm_hub_user' );
+
+	$rating = sanitize_key( $body['rating'] ?? '' );
+	$text   = isset( $body['body'] ) ? trim( (string) $body['body'] ) : '';
+
+	if ( ! in_array( $rating, flxlm_ats_note_ratings(), true ) ) {
+		return new WP_Error( 'flxlm_ats_hub_bad_rating', 'rating must be one of: ' . implode( ', ', flxlm_ats_note_ratings() ), array( 'status' => 422 ) );
+	}
+	if ( '' === $text ) {
+		return new WP_Error( 'flxlm_ats_hub_empty_feedback', 'Feedback needs a body.', array( 'status' => 422 ) );
+	}
+
+	$note_id = flxlm_ats_add_note(
+		$application_id,
+		'feedback',
 		array(
-			'ok'          => true,
-			'stage'       => $stage,
-			'stage_label' => flxlm_ats_stage_label( $stage ),
-		),
-		200
+			'body'         => $text,
+			'rating'       => $rating,
+			'author_email' => $user instanceof WP_User ? $user->user_email : '',
+			'author_name'  => $user instanceof WP_User ? $user->display_name : '',
+		)
 	);
+
+	if ( is_wp_error( $note_id ) ) {
+		return new WP_Error( $note_id->get_error_code(), $note_id->get_error_message(), array( 'status' => 400 ) );
+	}
+
+	if ( $user instanceof WP_User ) {
+		flxlm_ats_notify_feedback_received( $application_id, $user->user_email );
+	}
+
+	flxlm_ats_hub_audit( $request, 'feedback', $application_id );
+
+	return new WP_REST_Response( flxlm_ats_hub_applicant_payload( $application_id, $user ), 200 );
+}
+
+/**
+ * POST /applications/{id}/job — attach a job to an application that has none,
+ * or reassign it. The primary use is an email-intake arrival the intake
+ * script could not match to a posting (job_id 0, the hub's "Unassigned"
+ * pseudo-vacancy).
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_post_job( $request ) {
+	$application_id = (int) $request->get_param( 'id' );
+	$application    = flxlm_ats_get_application( $application_id );
+	if ( ! $application ) {
+		return new WP_Error( 'flxlm_ats_hub_no_applicant', 'No such applicant.', array( 'status' => 404 ) );
+	}
+
+	$body   = $request->get_json_params();
+	$body   = is_array( $body ) ? $body : array();
+	$job_id = isset( $body['job_id'] ) ? (int) $body['job_id'] : 0;
+
+	$job = get_post( $job_id );
+	if ( ! $job || 'flxlm_job' !== $job->post_type ) {
+		return new WP_Error( 'flxlm_ats_hub_bad_job', 'No such job posting.', array( 'status' => 422 ) );
+	}
+
+	$title = wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES );
+
+	update_post_meta( $application_id, '_flxlm_job_id', $job_id );
+	update_post_meta( $application_id, '_flxlm_job_title', $title );
+
+	if ( function_exists( 'flxlm_ats_add_note' ) ) {
+		flxlm_ats_add_note( $application_id, 'system', array( 'body' => 'Assigned to job: ' . $title ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'assign_job:' . $job_id, $application_id );
+
+	$user = $request->get_param( '_flxlm_hub_user' );
+	return new WP_REST_Response( flxlm_ats_hub_applicant_payload( $application_id, $user ), 200 );
 }
 
 // ---------------------------------------------------------------------------

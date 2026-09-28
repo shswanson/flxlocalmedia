@@ -27,9 +27,24 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Who gets told about an application.
  *
- * Prefers the job posting's own application email, which is the field that
- * already routes each posting to the right manager. Falls back to the site
- * admin so an application is never received silently.
+ * Three-deep fallback, in order:
+ *
+ *   1. The job's assigned hiring manager (job_hiring_manager, a WP user ID —
+ *      see inc/hiring-manager.php). This is the routing the paused
+ *      feat/hub-postings branch (commit 5530c58) already built for the same
+ *      reason: job_email is also the PUBLIC contact address search engines
+ *      and Google Jobs show, and a field cannot simultaneously be a shared
+ *      public inbox and the one person who must personally read every
+ *      application. The manager is stored as a user, not a free-typed
+ *      address, so the person notified is always someone who can actually
+ *      open the record.
+ *   2. The posting's own job_email, for jobs that predate a manager
+ *      assignment.
+ *   3. The business manager address(es) (inc/comments.php), so an application
+ *      against a job with neither is never received silently — and so an
+ *      application with NO job at all (an email-intake arrival the sender
+ *      could not match to a posting, or the "Unassigned" pseudo-vacancy on
+ *      the hub) still reaches a real person.
  *
  * @param int $application_id Application ID.
  * @return string[] Email addresses.
@@ -39,6 +54,13 @@ function flxlm_ats_notify_recipients( $application_id ) {
 	$job_id     = (int) get_post_meta( $application_id, '_flxlm_job_id', true );
 
 	if ( $job_id ) {
+		$manager = function_exists( 'flxlm_ats_job_hiring_manager' ) ? flxlm_ats_job_hiring_manager( $job_id ) : null;
+		if ( $manager && is_email( $manager->user_email ) ) {
+			$recipients[] = $manager->user_email;
+		}
+	}
+
+	if ( $job_id && ! $recipients ) {
 		$job_email = (string) get_post_meta( $job_id, 'job_email', true );
 		foreach ( explode( ',', $job_email ) as $candidate ) {
 			$candidate = trim( $candidate );
@@ -48,11 +70,8 @@ function flxlm_ats_notify_recipients( $application_id ) {
 		}
 	}
 
-	if ( ! $recipients ) {
-		$admin = get_option( 'admin_email' );
-		if ( is_email( $admin ) ) {
-			$recipients[] = $admin;
-		}
+	if ( ! $recipients && function_exists( 'flxlm_ats_business_manager_emails' ) ) {
+		$recipients = flxlm_ats_business_manager_emails();
 	}
 
 	/**
@@ -84,13 +103,17 @@ function flxlm_ats_notify_manager( $application_id ) {
 	$source = flxlm_ats_source_label( get_post_meta( $application_id, '_flxlm_source', true ) );
 	$has_cv = (bool) get_post_meta( $application_id, '_flxlm_resume_file', true );
 
-	$resume_url  = $has_cv ? flxlm_ats_resume_url( $application_id ) : '';
-	$screen_url  = flxlm_ats_action_url( $application_id, 'flxlm_screening' );
-	$manager_url = flxlm_ats_action_url( $application_id, 'flxlm_manager' );
-	$reject_url  = flxlm_ats_action_url( $application_id, 'flxlm_rejected' );
-	$admin_url   = admin_url( 'post.php?post=' . $application_id . '&action=edit' );
+	$resume_url = $has_cv ? flxlm_ats_resume_url( $application_id ) : '';
+	// v1 contract: the signed stage buttons on this email are Phone screen and
+	// Not hired only. Everything else (Interview, Decision, Offer, Hired) needs
+	// data (an interviewer, a decision note, a start date) a one-click email
+	// link cannot collect, so those moves happen in the hub or wp-admin.
+	$phone_url  = flxlm_ats_action_url( $application_id, 'flxlm_phone' );
+	$reject_url = flxlm_ats_action_url( $application_id, 'flxlm_rejected' );
+	$admin_url  = admin_url( 'post.php?post=' . $application_id . '&action=edit' );
+	$hub_url    = 'https://hub.flxlocalmedia.com/hiring/?application=' . (int) $application_id;
 
-	$subject = 'New application: ' . $name . ' — ' . $job;
+	$subject = 'New application: ' . $name . ', ' . $job;
 
 	ob_start();
 	?>
@@ -138,15 +161,15 @@ function flxlm_ats_notify_manager( $application_id ) {
 
 		<p style="margin:0 0 .4rem;color:#666;font-size:.95rem">Move this applicant</p>
 		<p style="margin:0 0 1.25rem;font-size:.95rem">
-			<a href="<?php echo esc_url( $screen_url ); ?>">Screening</a>
+			<a href="<?php echo esc_url( $phone_url ); ?>">Phone screen</a>
 			&nbsp;·&nbsp;
-			<a href="<?php echo esc_url( $manager_url ); ?>">Manager Review</a>
+			<a href="<?php echo esc_url( $reject_url ); ?>">Not hired</a>
 			&nbsp;·&nbsp;
-			<a href="<?php echo esc_url( $reject_url ); ?>">Not Selected</a>
+			<a href="<?php echo esc_url( $hub_url ); ?>">Open in the hub</a>
 		</p>
 
 		<p style="margin:0;color:#777;font-size:.8rem">
-			Each link opens a page that asks you to confirm before anything changes.
+			Each move link opens a page that asks you to confirm before anything changes.
 			You can also <a href="<?php echo esc_url( $admin_url ); ?>">open this application in the admin</a>.
 		</p>
 	</div>
@@ -174,8 +197,15 @@ function flxlm_ats_notify_applicant( $application_id ) {
 	// A hand-entered applicant does not get an automated receipt. The staff
 	// member is sitting with them or has already spoken to them, and a machine
 	// thanking someone for a conversation that happened in person reads as a
-	// machine that was not paying attention.
-	if ( 'manual' === get_post_meta( $application_id, '_flxlm_entered_by', true ) ) {
+	// machine that was not paying attention. The same is true of an email
+	// intake arrival: they already emailed jobs@ and got a human, not a form,
+	// so a second "we got it" from the ATS is redundant at best and, for an
+	// address ATS_EMAIL_INTAKE never verified belongs to the applicant (it
+	// could be a forwarder), a receipt sent to the wrong person at worst. See
+	// the v1 contract: "Manual and email-intake entries send NO receipt email
+	// to the applicant."
+	$entered_by = get_post_meta( $application_id, '_flxlm_entered_by', true );
+	if ( in_array( $entered_by, array( 'manual', 'email-intake' ), true ) ) {
 		return;
 	}
 
@@ -197,7 +227,7 @@ function flxlm_ats_notify_applicant( $application_id ) {
 	<?php
 	$html = ob_get_clean();
 
-	flxlm_ats_send_html( array( $email ), 'We received your application — ' . $job, $html );
+	flxlm_ats_send_html( array( $email ), 'We received your application: ' . $job, $html );
 }
 
 /**

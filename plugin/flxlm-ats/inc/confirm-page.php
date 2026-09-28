@@ -98,7 +98,7 @@ function flxlm_ats_route_resume( $application_id, $token ) {
 function flxlm_ats_route_confirm( $application_id, $token ) {
 	$stage = isset( $_REQUEST['stage'] ) ? sanitize_key( wp_unslash( $_REQUEST['stage'] ) ) : '';
 
-	if ( ! flxlm_ats_is_stage( $stage ) ) {
+	if ( ! flxlm_ats_is_movable_stage( $stage ) ) {
 		flxlm_ats_simple_page( 'Link not valid', 'That link does not name a stage we recognise.' );
 	}
 
@@ -116,11 +116,26 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
 	$job   = flxlm_ats_job_title( $application_id );
 	$label = flxlm_ats_stage_label( $stage );
 
+	// Not hired is the one email button whose target requires data (a close
+	// reason — see inc/stages.php's required fields). Phone screen, the other
+	// email button, requires nothing, so this branch only ever adds the
+	// dropdown when it is actually needed.
+	$needs_reason = in_array( 'close_reason', flxlm_ats_stage_required_fields( $stage ), true );
+
 	// The POST is the only thing that changes anything.
 	if ( 'POST' === ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
-		$result = flxlm_ats_set_stage( $application_id, $stage, 'signed-link' );
+		$args = array( 'author_email' => is_user_logged_in() ? wp_get_current_user()->user_email : '' );
+		if ( $needs_reason ) {
+			$args['close_reason'] = isset( $_POST['close_reason'] ) ? sanitize_key( wp_unslash( $_POST['close_reason'] ) ) : '';
+		}
+
+		$result = flxlm_ats_set_stage( $application_id, $stage, 'signed-link', $args );
 
 		if ( is_wp_error( $result ) ) {
+			if ( 'flxlm_ats_missing_fields' === $result->get_error_code() ) {
+				flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, $job, $label, $needs_reason, 'Please choose a reason before continuing.' );
+				exit;
+			}
 			flxlm_ats_simple_page( 'Could not update', $result->get_error_message() );
 		}
 
@@ -133,10 +148,30 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
 	}
 
 	// The GET just asks.
-	$already = flxlm_ats_stage_label( $application['stage'] );
+	flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, $job, $label, $needs_reason );
+}
+
+/**
+ * Render the "are you sure" form for a signed stage-move link.
+ *
+ * @param int    $application_id Application ID.
+ * @param string $stage          Target stage.
+ * @param string $token          Signed token, re-emitted in the form.
+ * @param string $name           Applicant display name.
+ * @param string $job            Job title.
+ * @param string $label          Target stage label.
+ * @param bool   $needs_reason   Whether to show the close-reason dropdown.
+ * @param string $error          Optional validation error to show.
+ */
+function flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, $job, $label, $needs_reason, $error = '' ) {
+	$already = flxlm_ats_stage_label( get_post_status( $application_id ) );
 
 	ob_start();
 	?>
+	<?php if ( $error ) : ?>
+		<p style="color:#b32d2e"><?php echo esc_html( $error ); ?></p>
+	<?php endif; ?>
+
 	<p>
 		<strong><?php echo esc_html( $name ); ?></strong><br />
 		<?php echo esc_html( $job ); ?><br />
@@ -150,7 +185,18 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
 		<input type="hidden" name="application" value="<?php echo esc_attr( $application_id ); ?>" />
 		<input type="hidden" name="stage" value="<?php echo esc_attr( $stage ); ?>" />
 		<input type="hidden" name="token" value="<?php echo esc_attr( $token ); ?>" />
-		<button type="submit" class="flxlm-ats-btn">Yes, move to <?php echo esc_html( $label ); ?></button>
+
+		<?php if ( $needs_reason ) : ?>
+			<p style="margin:1rem 0 .4rem"><strong>Reason</strong></p>
+			<select name="close_reason" required>
+				<option value="">Choose one...</option>
+				<?php foreach ( flxlm_ats_close_reasons() as $key => $reason_label ) : ?>
+					<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $reason_label ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		<?php endif; ?>
+
+		<p style="margin-top:1.25rem"><button type="submit" class="flxlm-ats-btn">Yes, move to <?php echo esc_html( $label ); ?></button></p>
 	</form>
 
 	<?php if ( get_post_meta( $application_id, '_flxlm_resume_file', true ) ) : ?>
@@ -189,7 +235,7 @@ function flxlm_ats_simple_page( $title, $body, $success = false, $escape = true 
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="robots" content="noindex, nofollow" />
-	<title><?php echo esc_html( $title ); ?> — FLX Local Media</title>
+	<title><?php echo esc_html( $title ); ?>: FLX Local Media</title>
 	<style>
 		body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
 			background:#f4f4f6;margin:0;padding:2rem 1rem;color:#222;line-height:1.55}
