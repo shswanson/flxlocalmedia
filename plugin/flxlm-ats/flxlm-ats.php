@@ -3,7 +3,7 @@
  * Plugin Name: FLX Local Media ATS
  * Plugin URI: https://www.flxlocalmedia.com
  * Description: Lightweight applicant tracking for the FLX Local Media career center. Takes in applications from flxlocalmedia.com, fingerlakesdailynews.com and email, tracks them through a stage ladder with interviewer feedback and team comments, and produces the FCC EEO Public File Report numbers as a byproduct.
- * Version: 1.2.0
+ * Version: 1.3.0
  * Requires PHP: 7.4
  * Author: TOTIB Media
  * Author URI: https://totib.com
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FLXLM_ATS_VERSION', '1.2.0' ); // v1 hiring-flow contract, 2026-09-28: the stage ladder, notes, interviewers, hiring manager routing, email intake, the weekly digest, and the extended hub bridge. See inc/upgrade.php for what a version bump onto 1.2.0 runs against existing data.
+define( 'FLXLM_ATS_VERSION', '1.3.0' ); // v1.1, 2026-09-28: contact editing, the recruitment-source change control, clickable mailto:/tel: links, external (non-staff) interviewers, the thumbs recommendation UI, and a visual pass on every signed page. No data migration — inc/upgrade.php still only runs the 1.2.0 stage-ladder migration.
 define( 'FLXLM_ATS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FLXLM_ATS_URL', plugin_dir_url( __FILE__ ) );
 
@@ -57,6 +57,7 @@ require_once FLXLM_ATS_DIR . 'inc/hiring-manager.php'; // job_hiring_manager met
 require_once FLXLM_ATS_DIR . 'inc/comments.php'; // Business manager address(es) option + team-comment notifications.
 require_once FLXLM_ATS_DIR . 'inc/notify.php';
 require_once FLXLM_ATS_DIR . 'inc/interviewers.php';
+require_once FLXLM_ATS_DIR . 'inc/contact.php'; // Contact-detail edit and the recruitment-source change control (v1.1, 2026-09-28).
 require_once FLXLM_ATS_DIR . 'inc/digest.php'; // Weekly stuck-candidate email + `wp flxlm-ats digest`.
 require_once FLXLM_ATS_DIR . 'inc/admin-list.php';
 require_once FLXLM_ATS_DIR . 'inc/admin-detail.php';

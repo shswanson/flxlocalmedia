@@ -58,6 +58,13 @@
  * `{error, errors:[...]}` when a required field is missing, instead of the
  * flat `{ok, stage, stage_label}` it used to.
  *
+ * The 2026-09-28 v1.1 pass (contact editing, the source control, the
+ * interviewer picklist) adds four more routes: `GET /sources`, `GET /people`,
+ * `POST /applications/{id}/contact` and `POST /applications/{id}/source`.
+ * `POST /applications/{id}/interviewers` gains an `external` body field on
+ * `action: "add"`. See this plugin's structured report for the exact bodies
+ * and response shapes.
+ *
  * @package flxlm-ats
  */
 
@@ -117,6 +124,26 @@ function flxlm_ats_hub_bridge_register_rest() {
 
 	register_rest_route(
 		$ns,
+		'/sources',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'flxlm_ats_hub_get_sources',
+			'permission_callback' => 'flxlm_ats_hub_permission_view',
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/people',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'flxlm_ats_hub_get_people',
+			'permission_callback' => 'flxlm_ats_hub_permission_view',
+		)
+	);
+
+	register_rest_route(
+		$ns,
 		'/vacancies/(?P<id>\d+)/applicants',
 		array(
 			'methods'             => 'GET',
@@ -165,6 +192,28 @@ function flxlm_ats_hub_bridge_register_rest() {
 		array(
 			'methods'             => 'POST',
 			'callback'            => 'flxlm_ats_hub_post_interviewers',
+			'permission_callback' => 'flxlm_ats_hub_permission_manage',
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/applications/(?P<id>\d+)/contact',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'flxlm_ats_hub_post_contact',
+			'permission_callback' => 'flxlm_ats_hub_permission_manage',
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/applications/(?P<id>\d+)/source',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'flxlm_ats_hub_post_source',
 			'permission_callback' => 'flxlm_ats_hub_permission_manage',
 			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
 		)
@@ -486,6 +535,41 @@ function flxlm_ats_hub_get_vacancies( $request ) {
 		),
 		200
 	);
+}
+
+/**
+ * GET /sources — the recruitment-source vocabulary a picker should actually
+ * offer. Excludes 'unknown' on purpose (flxlm_ats_hub_selectable_sources(),
+ * inc/contact.php): the one place this list is used is fixing an applicant
+ * whose source the EEO report cannot trust yet, and "Not known yet" is not a
+ * fix for that.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+function flxlm_ats_hub_get_sources( $request ) {
+	$out = array();
+	foreach ( flxlm_ats_hub_selectable_sources() as $key => $label ) {
+		$out[] = array( 'key' => $key, 'label' => $label );
+	}
+
+	flxlm_ats_hub_audit( $request, 'list_sources', 0 );
+
+	return new WP_REST_Response( $out, 200 );
+}
+
+/**
+ * GET /people — the interviewer picklist: the staff directory, WordPress
+ * users who can view applications, and anyone previously assigned as an
+ * interviewer (flxlm_ats_hub_people(), inc/interviewers.php).
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+function flxlm_ats_hub_get_people( $request ) {
+	flxlm_ats_hub_audit( $request, 'list_people', 0 );
+
+	return new WP_REST_Response( flxlm_ats_hub_people(), 200 );
 }
 
 /**
@@ -876,7 +960,8 @@ function flxlm_ats_hub_post_interviewers( $request ) {
 	}
 
 	if ( 'add' === $action ) {
-		$result = flxlm_ats_add_interviewer( $application_id, $email, sanitize_text_field( $body['name'] ?? '' ), $actor );
+		$external = ! empty( $body['external'] );
+		$result   = flxlm_ats_add_interviewer( $application_id, $email, sanitize_text_field( $body['name'] ?? '' ), $actor, $external );
 	} else {
 		$result = flxlm_ats_remove_interviewer( $application_id, $email, $actor, sanitize_textarea_field( $body['note'] ?? '' ) );
 	}
@@ -886,6 +971,84 @@ function flxlm_ats_hub_post_interviewers( $request ) {
 	}
 
 	flxlm_ats_hub_audit( $request, 'interviewer_' . $action . ':' . $email, $application_id );
+
+	return new WP_REST_Response( flxlm_ats_hub_applicant_payload( $application_id, $user ), 200 );
+}
+
+/**
+ * POST /applications/{id}/contact — edit the applicant's contact details.
+ * Accepts any subset of {first_name, last_name, email, phone}.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_post_contact( $request ) {
+	$application_id = (int) $request->get_param( 'id' );
+	$body           = $request->get_json_params();
+	$body           = is_array( $body ) ? $body : array();
+	$user           = $request->get_param( '_flxlm_hub_user' );
+
+	$fields = array();
+	foreach ( array( 'first_name', 'last_name', 'email', 'phone' ) as $field ) {
+		if ( array_key_exists( $field, $body ) ) {
+			$fields[ $field ] = $body[ $field ];
+		}
+	}
+
+	$result = flxlm_ats_update_contact(
+		$application_id,
+		$fields,
+		$user instanceof WP_User ? $user->user_email : '',
+		$user instanceof WP_User ? $user->display_name : ''
+	);
+
+	if ( is_wp_error( $result ) ) {
+		$data = $result->get_error_data();
+		if ( 'flxlm_ats_invalid_contact' === $result->get_error_code() ) {
+			return new WP_REST_Response(
+				array( 'error' => $result->get_error_message(), 'errors' => $data['errors'] ?? array() ),
+				422
+			);
+		}
+		return new WP_Error( $result->get_error_code(), $result->get_error_message(), array( 'status' => 404 ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'contact_edit', $application_id );
+
+	return new WP_REST_Response( flxlm_ats_hub_applicant_payload( $application_id, $user ), 200 );
+}
+
+/**
+ * POST /applications/{id}/source — change the recruitment source.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_post_source( $request ) {
+	$application_id = (int) $request->get_param( 'id' );
+	$body           = $request->get_json_params();
+	$body           = is_array( $body ) ? $body : array();
+	$user           = $request->get_param( '_flxlm_hub_user' );
+
+	$result = flxlm_ats_update_source(
+		$application_id,
+		$body['source'] ?? '',
+		$user instanceof WP_User ? $user->user_email : '',
+		$user instanceof WP_User ? $user->display_name : ''
+	);
+
+	if ( is_wp_error( $result ) ) {
+		$data = $result->get_error_data();
+		if ( 'flxlm_ats_invalid_source' === $result->get_error_code() ) {
+			return new WP_REST_Response(
+				array( 'error' => $result->get_error_message(), 'errors' => $data['errors'] ?? array() ),
+				422
+			);
+		}
+		return new WP_Error( $result->get_error_code(), $result->get_error_message(), array( 'status' => 404 ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'source', $application_id );
 
 	return new WP_REST_Response( flxlm_ats_hub_applicant_payload( $application_id, $user ), 200 );
 }

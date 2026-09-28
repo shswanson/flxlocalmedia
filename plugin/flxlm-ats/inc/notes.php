@@ -237,3 +237,158 @@ function flxlm_ats_latest_note( $application_id, $kind ) {
 	$notes = flxlm_ats_get_notes( $application_id, array( $kind ) );
 	return $notes ? end( $notes ) : null;
 }
+
+// ---------------------------------------------------------------------------
+// The "thumbs" recommendation: one visual vocabulary for a feedback rating,
+// used on the emailed/signed feedback page, in wp-admin's discussion
+// timeline and interviewer list, and (via the same field names) by the hub.
+// Stored values are unchanged (strong_no/no/yes/strong_yes — see
+// flxlm_ats_note_ratings() above); this is display only.
+// ---------------------------------------------------------------------------
+
+/**
+ * Plain-English label, short context phrase, thumb count/direction and
+ * accent color for each rating value, red to green in the order the buttons
+ * read left to right.
+ *
+ * @return array<string,array> rating key => {label, context, thumbs, up, color}
+ */
+function flxlm_ats_rating_display_map() {
+	return array(
+		'strong_no'  => array( 'label' => 'Strong no', 'context' => 'Would not hire', 'thumbs' => 2, 'up' => false, 'color' => '#b3261e' ),
+		'no'         => array( 'label' => 'No', 'context' => 'Leaning no', 'thumbs' => 1, 'up' => false, 'color' => '#c9704a' ),
+		'yes'        => array( 'label' => 'Yes', 'context' => 'Leaning yes', 'thumbs' => 1, 'up' => true, 'color' => '#4f9d5d' ),
+		'strong_yes' => array( 'label' => 'Strong yes', 'context' => 'Hire', 'thumbs' => 2, 'up' => true, 'color' => '#1e7e34' ),
+	);
+}
+
+/**
+ * One thumb icon, inline SVG, currentColor so it inherits whatever the
+ * caller's CSS sets. A "down" thumb is the same path turned upside down
+ * (CSS transform) rather than a second drawn path — one shape, one place a
+ * fix to it ever needs making.
+ *
+ * @param bool $up   True for thumbs-up, false for thumbs-down.
+ * @param int  $size Pixel size, square.
+ * @return string SVG markup. Not escaped — static, hardcoded markup only.
+ */
+function flxlm_ats_thumb_svg( $up = true, $size = 18 ) {
+	$size  = (int) $size;
+	$style = $up ? '' : 'transform:rotate(180deg)';
+	return '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="currentColor" style="' . esc_attr( $style ) . '" aria-hidden="true">'
+		. '<path d="M2 21h3a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H2v11zM22 12.5V11a2 2 0 0 0-2-2h-5.6l.8-3.86.03-.32c0-.4-.16-.77-.43-1.04L13.7 2.5 7.6 8.6A2 2 0 0 0 7 10v9a2 2 0 0 0 2 2h7.4a2 2 0 0 0 1.83-1.2l2.62-6.02c.1-.24.15-.5.15-.78v-.5z"/></svg>';
+}
+
+/**
+ * Two thumb icons side by side ("two thumbs down") when $count is 2, one when
+ * $count is 1.
+ *
+ * @param bool $up    Direction.
+ * @param int  $count 1 or 2.
+ * @param int  $size  Pixel size per icon.
+ * @return string HTML.
+ */
+function flxlm_ats_thumbs_svg( $up, $count, $size = 18 ) {
+	$out = '<span style="display:inline-flex;gap:2px;align-items:center">';
+	for ( $i = 0; $i < max( 1, (int) $count ); $i++ ) {
+		$out .= flxlm_ats_thumb_svg( $up, $size );
+	}
+	return $out . '</span>';
+}
+
+/**
+ * A small colored capsule showing a rating visually: icon(s) + label. Used
+ * anywhere a piece of feedback is displayed after the fact (wp-admin's
+ * discussion timeline, the interviewer list) so a reader sees the same
+ * thumbs vocabulary the person who left it clicked on, not a plain text
+ * string ("Strong Yes") that reads as a database value.
+ *
+ * @param string $rating One of flxlm_ats_note_ratings(), or '' / unknown.
+ * @return string HTML, or '' if the rating is not recognised.
+ */
+function flxlm_ats_rating_badge_html( $rating ) {
+	$map = flxlm_ats_rating_display_map();
+	if ( ! isset( $map[ $rating ] ) ) {
+		return '';
+	}
+	$r = $map[ $rating ];
+	return sprintf(
+		'<span style="display:inline-flex;align-items:center;gap:.3rem;background:%1$s1a;color:%1$s;border:1px solid %1$s40;border-radius:999px;padding:.15rem .6rem;font-size:.82rem;font-weight:600;white-space:nowrap">%2$s %3$s</span>',
+		esc_attr( $r['color'] ),
+		flxlm_ats_thumbs_svg( $r['up'], $r['thumbs'], 13 ),
+		esc_html( $r['label'] )
+	);
+}
+
+/**
+ * The four large, clickable thumbs buttons that replace a plain radio list
+ * everywhere a rating is collected: the signed feedback page
+ * (inc/interviewers.php) and, via the same markup and field name (`rating`,
+ * values unchanged), wherever the hub's own feedback form reuses this
+ * function's output.
+ *
+ * Radio semantics throughout: this is four native <input type="radio">
+ * elements, one per option, so keyboard (Tab, arrow keys, Space) and screen
+ * readers work exactly as they do for any radio group. Only the visual
+ * presentation changes — each input is paired with a large clickable label
+ * styled as a button, not hidden or replaced with a div. A small inline
+ * script toggles a `.is-checked` class for the selected-state styling
+ * (border/fill), rather than relying on the CSS :has() selector alone, so
+ * the selected state renders correctly in older WebKit/Safari releases still
+ * in use on some phones.
+ *
+ * @param string $name     Field name (always 'rating' in this plugin).
+ * @param string $selected Currently selected value, if any (sticky on a
+ *                            failed submission).
+ * @return string HTML. Include the returned <style> and <script> once per page.
+ */
+function flxlm_ats_render_thumbs_field( $name, $selected = '' ) {
+	$map = flxlm_ats_rating_display_map();
+
+	ob_start();
+	?>
+	<div class="flxlm-thumbs" role="radiogroup" aria-label="Recommendation">
+		<?php foreach ( $map as $key => $r ) : ?>
+			<label class="flxlm-thumb flxlm-thumb--<?php echo esc_attr( $key ); ?><?php echo checked( $selected, $key, false ) ? ' is-checked' : ''; ?>"
+				style="--flxlm-thumb-color: <?php echo esc_attr( $r['color'] ); ?>">
+				<input type="radio" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $key ); ?>" <?php checked( $selected, $key ); ?> required />
+				<span class="flxlm-thumb-icon"><?php echo flxlm_ats_thumbs_svg( $r['up'], $r['thumbs'], 22 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG markup only. ?></span>
+				<span class="flxlm-thumb-label"><?php echo esc_html( $r['label'] ); ?></span>
+				<span class="flxlm-thumb-context"><?php echo esc_html( $r['context'] ); ?></span>
+			</label>
+		<?php endforeach; ?>
+	</div>
+	<style>
+		.flxlm-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:.5rem 0 1rem}
+		.flxlm-thumb{position:relative;display:flex;flex-direction:column;align-items:center;gap:.3rem;
+			padding:.85rem .4rem .7rem;border:1.5px solid var(--flxlm-line,#e0d8ce);border-radius:12px;
+			background:#fff;cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .06s;user-select:none}
+		.flxlm-thumb:active{transform:scale(.97)}
+		.flxlm-thumb input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+		.flxlm-thumb-icon{color:var(--flxlm-thumb-color);opacity:.55}
+		.flxlm-thumb-label{font-weight:600;font-size:.88rem;color:#22262b}
+		.flxlm-thumb-context{font-size:.72rem;color:#8a8f98;line-height:1.25}
+		.flxlm-thumb:hover{border-color:var(--flxlm-thumb-color)}
+		.flxlm-thumb:focus-within{outline:2px solid var(--flxlm-thumb-color);outline-offset:2px}
+		.flxlm-thumb.is-checked{border-color:var(--flxlm-thumb-color);background:color-mix(in srgb, var(--flxlm-thumb-color) 10%, #fff)}
+		.flxlm-thumb.is-checked .flxlm-thumb-icon{opacity:1}
+		@media (max-width:420px){
+			.flxlm-thumbs{grid-template-columns:repeat(2,1fr)}
+			.flxlm-thumb-context{display:none}
+		}
+	</style>
+	<script>
+		(function(){
+			document.querySelectorAll('.flxlm-thumbs').forEach(function(group){
+				group.addEventListener('change', function(e){
+					if (e.target && 'radio' === e.target.type) {
+						group.querySelectorAll('.flxlm-thumb').forEach(function(l){ l.classList.remove('is-checked'); });
+						e.target.closest('.flxlm-thumb').classList.add('is-checked');
+					}
+				});
+			});
+		})();
+	</script>
+	<?php
+	return ob_get_clean();
+}
