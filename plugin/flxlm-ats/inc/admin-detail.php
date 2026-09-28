@@ -348,7 +348,14 @@ function flxlm_ats_render_notes_box( $id ) {
 			esc_html( $who ),
 			esc_html( mysql2date( 'M j, Y g:ia', $note['created_at'] ) ),
 			$note['rating'] ? ' &middot; ' . esc_html( ucwords( str_replace( '_', ' ', $note['rating'] ) ) ) : '',
-			wp_kses_post( nl2br( esc_html( $note['body'] ) ) )
+			// $note['body'] is already wp_kses_post()'d at write time
+			// (inc/notes.php), so it is trusted, sanitized HTML by the time it
+			// gets here. Running it through esc_html() first, as this used to,
+			// HTML-entity-encoded that already-safe markup into literal
+			// "&lt;...&gt;" text that wp_kses_post() could then do nothing
+			// useful with. nl2br() first (turning raw newlines into <br>),
+			// then wp_kses_post() again as a defensive, idempotent re-check.
+			wp_kses_post( nl2br( $note['body'] ) )
 		);
 	}
 	echo '</ul>';

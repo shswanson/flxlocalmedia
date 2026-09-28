@@ -102,7 +102,11 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
 		flxlm_ats_simple_page( 'Link not valid', 'That link does not name a stage we recognise.' );
 	}
 
-	$verified = flxlm_ats_verify_token( $application_id, $stage, $token );
+	$verified  = flxlm_ats_verify_token( $application_id, $stage, $token );
+	$nonce_key = 'flxlm_ats_confirm_' . $application_id . '_' . $stage;
+
+	// A logged-in manager without a valid token (a stale or forwarded link) may
+	// still reach the GET "are you sure" page: rendering it changes nothing.
 	if ( is_wp_error( $verified ) && ! current_user_can( 'flxlm_manage_applications' ) ) {
 		flxlm_ats_simple_page( 'Link not valid', $verified->get_error_message() );
 	}
@@ -124,6 +128,29 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
 
 	// The POST is the only thing that changes anything.
 	if ( 'POST' === ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+		/*
+		 * A valid signed token proves this POST came from the button on our own
+		 * confirm page, reached via the email link: that is the whole trust
+		 * model for a logged-out request and it is CSRF-proof on its own,
+		 * because a forged page cannot produce a valid HMAC.
+		 *
+		 * When the token does NOT verify, the earlier check already required
+		 * flxlm_manage_applications to get this far. That capability alone is
+		 * not enough to authorise the write: any page a logged-in manager's
+		 * browser visits can silently POST here using nothing but their
+		 * ordinary session cookie. So this path additionally requires a
+		 * WordPress nonce, proving the POST originated from a form THIS SITE
+		 * rendered for THIS user in THIS session, the same way
+		 * inc/admin-list.php's flxlm_ats_handle_admin_stage() protects its
+		 * equivalent action. Never skip both checks at once.
+		 */
+		if ( is_wp_error( $verified ) ) {
+			$nonce = isset( $_POST['_flxlm_ats_nonce'] ) ? wp_unslash( $_POST['_flxlm_ats_nonce'] ) : '';
+			if ( ! current_user_can( 'flxlm_manage_applications' ) || ! wp_verify_nonce( $nonce, $nonce_key ) ) {
+				flxlm_ats_simple_page( 'Link not valid', $verified->get_error_message() );
+			}
+		}
+
 		$args = array( 'author_email' => is_user_logged_in() ? wp_get_current_user()->user_email : '' );
 		if ( $needs_reason ) {
 			$args['close_reason'] = isset( $_POST['close_reason'] ) ? sanitize_key( wp_unslash( $_POST['close_reason'] ) ) : '';
@@ -143,7 +170,8 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
 			'Done',
 			esc_html( $name ) . ' is now at <strong>' . esc_html( $label ) . '</strong> for '
 				. esc_html( $job ) . '.',
-			true
+			true,
+			false
 		);
 	}
 
@@ -185,6 +213,7 @@ function flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, 
 		<input type="hidden" name="application" value="<?php echo esc_attr( $application_id ); ?>" />
 		<input type="hidden" name="stage" value="<?php echo esc_attr( $stage ); ?>" />
 		<input type="hidden" name="token" value="<?php echo esc_attr( $token ); ?>" />
+		<?php wp_nonce_field( 'flxlm_ats_confirm_' . $application_id . '_' . $stage, '_flxlm_ats_nonce', false ); ?>
 
 		<?php if ( $needs_reason ) : ?>
 			<p style="margin:1rem 0 .4rem"><strong>Reason</strong></p>
@@ -220,6 +249,22 @@ function flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, 
  * @param string $body     HTML body.
  * @param bool   $success  Style as a success.
  * @param bool   $escape   Escape the body (false when the caller built HTML).
+ *                          $escape=false is NOT a place to run untrusted or
+ *                          user-supplied text through: every current caller
+ *                          builds this string itself, from static markup plus
+ *                          values it already ran through esc_html()/esc_attr()/
+ *                          esc_textarea() at the point each was interpolated.
+ *                          wp_kses_post() used to run over it here too, on the
+ *                          theory that a second pass was "extra safe" — but
+ *                          wp_kses_post()'s allowed-tag list is scoped to post
+ *                          CONTENT and does not include <form>, <input>,
+ *                          <select> or <option>, so it silently stripped the
+ *                          confirm-page and feedback forms down to a bare,
+ *                          unwrapped submit button with no fields: the
+ *                          click-to-decide flow this whole file exists for
+ *                          could not actually be submitted. Trust the caller
+ *                          instead of re-sanitizing markup it already built
+ *                          safely.
  * @return void Exits.
  */
 function flxlm_ats_simple_page( $title, $body, $success = false, $escape = true ) {
@@ -252,7 +297,7 @@ function flxlm_ats_simple_page( $title, $body, $success = false, $escape = true 
 <body>
 	<div class="card">
 		<h1><?php echo esc_html( $title ); ?></h1>
-		<?php echo $escape ? esc_html( $body ) : wp_kses_post( $body ); ?>
+		<?php echo $escape ? esc_html( $body ) : $body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- see the $escape param doc above: every $escape=false caller builds this from static markup plus values it already escaped itself. ?>
 	</div>
 </body>
 </html>

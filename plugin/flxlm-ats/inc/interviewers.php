@@ -476,7 +476,8 @@ function flxlm_ats_handle_feedback_route() {
 		flxlm_ats_simple_page(
 			'Thank you',
 			'Your feedback on <strong>' . esc_html( $candidate ) . '</strong> has been recorded. You can submit again later if anything changes; the most recent note is what counts.',
-			true
+			true,
+			false
 		);
 	}
 

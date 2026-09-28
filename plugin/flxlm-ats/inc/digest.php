@@ -92,12 +92,21 @@ function flxlm_ats_schedule_digest() {
 		return;
 	}
 
-	$next = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-	$next->modify( 'next monday' );
-	$next->setTime( 13, 0, 0 );
-	// DateTime::modify('next monday') from a Monday still lands on the
-	// FOLLOWING Monday, which is correct: if today is already past 13:00 on a
-	// Monday, this should not fire again immediately, it should wait a week.
+	$now = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+
+	if ( '1' === $now->format( 'N' ) && $now->format( 'H:i:s' ) < '13:00:00' ) {
+		// It is Monday, before 13:00 UTC: today's run has not happened yet, so
+		// fire later today rather than jumping a week ahead.
+		$next = clone $now;
+		$next->setTime( 13, 0, 0 );
+	} else {
+		// Any other day, or Monday after 13:00: DateTime::modify('next monday')
+		// correctly always lands on the FOLLOWING Monday, which is what we
+		// want once today's run (if today is Monday) has already passed.
+		$next = clone $now;
+		$next->modify( 'next monday' );
+		$next->setTime( 13, 0, 0 );
+	}
 
 	wp_schedule_event( $next->getTimestamp(), 'flxlm_ats_weekly', 'flxlm_ats_weekly_digest' );
 }
@@ -265,30 +274,49 @@ function flxlm_ats_build_digest() {
 /**
  * Group digest entries by recipient email.
  *
+ * A business-manager address that is ALSO the assigned hiring manager for an
+ * entry's job (a realistic overlap: the default business manager can easily
+ * also be set as a job's hiring manager) must still see that application only
+ * once. So this tracks which application IDs have already been added per
+ * recipient and skips the second add rather than appending a duplicate row,
+ * which is what the file docblock promises ("each recipient sees ONE line per
+ * application ... not one line per reason").
+ *
  * @param array[] $entries From flxlm_ats_build_digest().
  * @return array<string,array[]> email => entries.
  */
 function flxlm_ats_digest_by_recipient( $entries ) {
 	$by_recipient = array();
+	$seen         = array(); // email => [application_id => true].
 
 	$business = flxlm_ats_business_manager_emails();
 	foreach ( $business as $email ) {
 		$by_recipient[ strtolower( $email ) ] = array();
+		$seen[ strtolower( $email ) ]         = array();
 	}
+
+	$add = function ( $email, $entry ) use ( &$by_recipient, &$seen ) {
+		$key = strtolower( $email );
+		if ( ! isset( $by_recipient[ $key ] ) ) {
+			$by_recipient[ $key ] = array();
+			$seen[ $key ]         = array();
+		}
+		if ( isset( $seen[ $key ][ $entry['application_id'] ] ) ) {
+			return;
+		}
+		$seen[ $key ][ $entry['application_id'] ] = true;
+		$by_recipient[ $key ][]                   = $entry;
+	};
 
 	foreach ( $entries as $entry ) {
 		foreach ( $business as $email ) {
-			$by_recipient[ strtolower( $email ) ][] = $entry;
+			$add( $email, $entry );
 		}
 
 		if ( $entry['job_id'] ) {
 			$manager = flxlm_ats_job_hiring_manager( $entry['job_id'] );
 			if ( $manager && is_email( $manager->user_email ) ) {
-				$key = strtolower( $manager->user_email );
-				if ( ! isset( $by_recipient[ $key ] ) ) {
-					$by_recipient[ $key ] = array();
-				}
-				$by_recipient[ $key ][] = $entry;
+				$add( $manager->user_email, $entry );
 			}
 		}
 	}

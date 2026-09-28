@@ -135,7 +135,17 @@ function flxlm_ats_stages() {
 		'flxlm_offer'       => array(
 			'label'       => 'Offer',
 			'owner'       => 'business manager',
-			'exit_test'   => "Moving to Hired requires a start date. Moving to Not hired requires reason 'offer declined'.",
+			// "Requires" here means what it says everywhere else on this
+			// ladder: the exit test text, soft and advisory (see file
+			// docblock). Moving to Hired hard-requires a start date
+			// (flxlm_ats_check_required_fields() enforces it). Moving to Not
+			// hired hard-requires SOME close reason, but not specifically
+			// 'offer declined': a candidate can withdraw or simply not be
+			// selected after an offer stage too, so that one is deliberately
+			// not narrowed to a single reason at the code level, and the copy
+			// says "usually" rather than "requires" so it does not promise an
+			// enforcement that does not exist.
+			'exit_test'   => 'Moving to Hired requires a start date. Moving to Not hired usually means the reason is offer declined, but any close reason is accepted.',
 			'description' => 'An offer has been extended.',
 		),
 		'flxlm_hired'       => array(
