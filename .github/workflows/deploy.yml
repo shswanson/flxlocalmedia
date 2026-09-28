@@ -7,6 +7,14 @@ on:
       - '*.md'
   workflow_dispatch:
 
+# One deploy at a time. On 2026-09-28 a push-triggered run and a manual
+# workflow_dispatch of the same commit ran side by side; both rsync --delete
+# the theme, and the push run died with rsync exit 24 (a file the other run
+# had just removed). Queue instead of cancel so the newest commit still lands.
+concurrency:
+  group: flxlm-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
