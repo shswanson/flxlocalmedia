@@ -98,11 +98,15 @@ function flxlm_ats_route_resume( $application_id, $token ) {
 function flxlm_ats_route_confirm( $application_id, $token ) {
 	$stage = isset( $_REQUEST['stage'] ) ? sanitize_key( wp_unslash( $_REQUEST['stage'] ) ) : '';
 
-	if ( ! flxlm_ats_is_stage( $stage ) ) {
+	if ( ! flxlm_ats_is_movable_stage( $stage ) ) {
 		flxlm_ats_simple_page( 'Link not valid', 'That link does not name a stage we recognise.' );
 	}
 
-	$verified = flxlm_ats_verify_token( $application_id, $stage, $token );
+	$verified  = flxlm_ats_verify_token( $application_id, $stage, $token );
+	$nonce_key = 'flxlm_ats_confirm_' . $application_id . '_' . $stage;
+
+	// A logged-in manager without a valid token (a stale or forwarded link) may
+	// still reach the GET "are you sure" page: rendering it changes nothing.
 	if ( is_wp_error( $verified ) && ! current_user_can( 'flxlm_manage_applications' ) ) {
 		flxlm_ats_simple_page( 'Link not valid', $verified->get_error_message() );
 	}
@@ -116,11 +120,49 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
 	$job   = flxlm_ats_job_title( $application_id );
 	$label = flxlm_ats_stage_label( $stage );
 
+	// Not hired is the one email button whose target requires data (a close
+	// reason — see inc/stages.php's required fields). Phone screen, the other
+	// email button, requires nothing, so this branch only ever adds the
+	// dropdown when it is actually needed.
+	$needs_reason = in_array( 'close_reason', flxlm_ats_stage_required_fields( $stage ), true );
+
 	// The POST is the only thing that changes anything.
 	if ( 'POST' === ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
-		$result = flxlm_ats_set_stage( $application_id, $stage, 'signed-link' );
+		/*
+		 * A valid signed token proves this POST came from the button on our own
+		 * confirm page, reached via the email link: that is the whole trust
+		 * model for a logged-out request and it is CSRF-proof on its own,
+		 * because a forged page cannot produce a valid HMAC.
+		 *
+		 * When the token does NOT verify, the earlier check already required
+		 * flxlm_manage_applications to get this far. That capability alone is
+		 * not enough to authorise the write: any page a logged-in manager's
+		 * browser visits can silently POST here using nothing but their
+		 * ordinary session cookie. So this path additionally requires a
+		 * WordPress nonce, proving the POST originated from a form THIS SITE
+		 * rendered for THIS user in THIS session, the same way
+		 * inc/admin-list.php's flxlm_ats_handle_admin_stage() protects its
+		 * equivalent action. Never skip both checks at once.
+		 */
+		if ( is_wp_error( $verified ) ) {
+			$nonce = isset( $_POST['_flxlm_ats_nonce'] ) ? wp_unslash( $_POST['_flxlm_ats_nonce'] ) : '';
+			if ( ! current_user_can( 'flxlm_manage_applications' ) || ! wp_verify_nonce( $nonce, $nonce_key ) ) {
+				flxlm_ats_simple_page( 'Link not valid', $verified->get_error_message() );
+			}
+		}
+
+		$args = array( 'author_email' => is_user_logged_in() ? wp_get_current_user()->user_email : '' );
+		if ( $needs_reason ) {
+			$args['close_reason'] = isset( $_POST['close_reason'] ) ? sanitize_key( wp_unslash( $_POST['close_reason'] ) ) : '';
+		}
+
+		$result = flxlm_ats_set_stage( $application_id, $stage, 'signed-link', $args );
 
 		if ( is_wp_error( $result ) ) {
+			if ( 'flxlm_ats_missing_fields' === $result->get_error_code() ) {
+				flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, $job, $label, $needs_reason, 'Please choose a reason before continuing.' );
+				exit;
+			}
 			flxlm_ats_simple_page( 'Could not update', $result->get_error_message() );
 		}
 
@@ -128,15 +170,36 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
 			'Done',
 			esc_html( $name ) . ' is now at <strong>' . esc_html( $label ) . '</strong> for '
 				. esc_html( $job ) . '.',
-			true
+			true,
+			false
 		);
 	}
 
 	// The GET just asks.
-	$already = flxlm_ats_stage_label( $application['stage'] );
+	flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, $job, $label, $needs_reason );
+}
+
+/**
+ * Render the "are you sure" form for a signed stage-move link.
+ *
+ * @param int    $application_id Application ID.
+ * @param string $stage          Target stage.
+ * @param string $token          Signed token, re-emitted in the form.
+ * @param string $name           Applicant display name.
+ * @param string $job            Job title.
+ * @param string $label          Target stage label.
+ * @param bool   $needs_reason   Whether to show the close-reason dropdown.
+ * @param string $error          Optional validation error to show.
+ */
+function flxlm_ats_render_confirm_form( $application_id, $stage, $token, $name, $job, $label, $needs_reason, $error = '' ) {
+	$already = flxlm_ats_stage_label( get_post_status( $application_id ) );
 
 	ob_start();
 	?>
+	<?php if ( $error ) : ?>
+		<p style="color:#b32d2e"><?php echo esc_html( $error ); ?></p>
+	<?php endif; ?>
+
 	<p>
 		<strong><?php echo esc_html( $name ); ?></strong><br />
 		<?php echo esc_html( $job ); ?><br />
@@ -150,7 +213,19 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
 		<input type="hidden" name="application" value="<?php echo esc_attr( $application_id ); ?>" />
 		<input type="hidden" name="stage" value="<?php echo esc_attr( $stage ); ?>" />
 		<input type="hidden" name="token" value="<?php echo esc_attr( $token ); ?>" />
-		<button type="submit" class="flxlm-ats-btn">Yes, move to <?php echo esc_html( $label ); ?></button>
+		<?php wp_nonce_field( 'flxlm_ats_confirm_' . $application_id . '_' . $stage, '_flxlm_ats_nonce', false ); ?>
+
+		<?php if ( $needs_reason ) : ?>
+			<p style="margin:1rem 0 .4rem"><strong>Reason</strong></p>
+			<select name="close_reason" required>
+				<option value="">Choose one...</option>
+				<?php foreach ( flxlm_ats_close_reasons() as $key => $reason_label ) : ?>
+					<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $reason_label ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		<?php endif; ?>
+
+		<p style="margin-top:1.25rem"><button type="submit" class="flxlm-ats-btn">Yes, move to <?php echo esc_html( $label ); ?></button></p>
 	</form>
 
 	<?php if ( get_post_meta( $application_id, '_flxlm_resume_file', true ) ) : ?>
@@ -174,6 +249,22 @@ function flxlm_ats_route_confirm( $application_id, $token ) {
  * @param string $body     HTML body.
  * @param bool   $success  Style as a success.
  * @param bool   $escape   Escape the body (false when the caller built HTML).
+ *                          $escape=false is NOT a place to run untrusted or
+ *                          user-supplied text through: every current caller
+ *                          builds this string itself, from static markup plus
+ *                          values it already ran through esc_html()/esc_attr()/
+ *                          esc_textarea() at the point each was interpolated.
+ *                          wp_kses_post() used to run over it here too, on the
+ *                          theory that a second pass was "extra safe" — but
+ *                          wp_kses_post()'s allowed-tag list is scoped to post
+ *                          CONTENT and does not include <form>, <input>,
+ *                          <select> or <option>, so it silently stripped the
+ *                          confirm-page and feedback forms down to a bare,
+ *                          unwrapped submit button with no fields: the
+ *                          click-to-decide flow this whole file exists for
+ *                          could not actually be submitted. Trust the caller
+ *                          instead of re-sanitizing markup it already built
+ *                          safely.
  * @return void Exits.
  */
 function flxlm_ats_simple_page( $title, $body, $success = false, $escape = true ) {
@@ -189,7 +280,7 @@ function flxlm_ats_simple_page( $title, $body, $success = false, $escape = true 
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="robots" content="noindex, nofollow" />
-	<title><?php echo esc_html( $title ); ?> — FLX Local Media</title>
+	<title><?php echo esc_html( $title ); ?>: FLX Local Media</title>
 	<style>
 		body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
 			background:#f4f4f6;margin:0;padding:2rem 1rem;color:#222;line-height:1.55}
@@ -206,7 +297,7 @@ function flxlm_ats_simple_page( $title, $body, $success = false, $escape = true 
 <body>
 	<div class="card">
 		<h1><?php echo esc_html( $title ); ?></h1>
-		<?php echo $escape ? esc_html( $body ) : wp_kses_post( $body ); ?>
+		<?php echo $escape ? esc_html( $body ) : $body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- see the $escape param doc above: every $escape=false caller builds this from static markup plus values it already escaped itself. ?>
 	</div>
 </body>
 </html>

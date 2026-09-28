@@ -148,7 +148,7 @@ function flxlm_ats_render_form( $job_id = 0 ) {
 				<div class="flxlm-form__field">
 					<label for="flxlm-ats-links">Links to your work</label>
 					<textarea id="flxlm-ats-links" name="links" rows="3"
-						placeholder="An audio reel, clips you have written, a portfolio, LinkedIn — one per line."></textarea>
+						placeholder="An audio reel, clips you have written, a portfolio, LinkedIn: one per line."></textarea>
 					<p class="flxlm-form__hint">Optional, but for on-air and reporting roles this is the part we look at first.</p>
 				</div>
 			</div>
@@ -168,7 +168,7 @@ function flxlm_ats_render_form( $job_id = 0 ) {
 				<div class="flxlm-form__field">
 					<label for="flxlm-ats-salary">Pay you are looking for</label>
 					<input type="text" id="flxlm-ats-salary" name="salary_expectation"
-						placeholder="Optional — a number or a range is fine" />
+						placeholder="Optional, a number or a range is fine" />
 				</div>
 			</div>
 

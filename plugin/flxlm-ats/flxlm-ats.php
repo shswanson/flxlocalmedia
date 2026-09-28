@@ -2,8 +2,8 @@
 /**
  * Plugin Name: FLX Local Media ATS
  * Plugin URI: https://www.flxlocalmedia.com
- * Description: Lightweight applicant tracking for the FLX Local Media career center. Takes in applications from flxlocalmedia.com and fingerlakesdailynews.com, tracks them through a short stage ladder, and produces the FCC EEO Public File Report numbers as a byproduct.
- * Version: 1.0.0
+ * Description: Lightweight applicant tracking for the FLX Local Media career center. Takes in applications from flxlocalmedia.com, fingerlakesdailynews.com and email, tracks them through a stage ladder with interviewer feedback and team comments, and produces the FCC EEO Public File Report numbers as a byproduct.
+ * Version: 1.2.0
  * Requires PHP: 7.4
  * Author: TOTIB Media
  * Author URI: https://totib.com
@@ -37,20 +37,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FLXLM_ATS_VERSION', '1.0.0' );
+define( 'FLXLM_ATS_VERSION', '1.2.0' ); // v1 hiring-flow contract, 2026-09-28: the stage ladder, notes, interviewers, hiring manager routing, email intake, the weekly digest, and the extended hub bridge. See inc/upgrade.php for what a version bump onto 1.2.0 runs against existing data.
 define( 'FLXLM_ATS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FLXLM_ATS_URL', plugin_dir_url( __FILE__ ) );
 
 require_once FLXLM_ATS_DIR . 'inc/resume-store.php';
 require_once FLXLM_ATS_DIR . 'inc/sources.php';
+require_once FLXLM_ATS_DIR . 'inc/notes.php'; // The append-only notes table: comments, feedback, decisions, system events. Loaded early — stages.php, interviewers.php and email-intake.php all write to it.
 require_once FLXLM_ATS_DIR . 'inc/stages.php';
+require_once FLXLM_ATS_DIR . 'inc/upgrade.php'; // The 1.2.0 data migration off the retired flxlm_screening/flxlm_manager stages.
 require_once FLXLM_ATS_DIR . 'inc/post-type.php';
 require_once FLXLM_ATS_DIR . 'inc/storage.php';
 require_once FLXLM_ATS_DIR . 'inc/tokens.php';
 require_once FLXLM_ATS_DIR . 'inc/intake.php';
+require_once FLXLM_ATS_DIR . 'inc/email-intake.php'; // jobs@flxlocalmedia.com, via the Air's read-only intake job — off unless FLXLM_ATS_EMAIL_INTAKE_SECRET is defined.
 require_once FLXLM_ATS_DIR . 'inc/form.php';
 require_once FLXLM_ATS_DIR . 'inc/rest-intake.php';
+require_once FLXLM_ATS_DIR . 'inc/hiring-manager.php'; // job_hiring_manager meta box on flxlm_job; inc/notify.php and inc/digest.php both read it.
+require_once FLXLM_ATS_DIR . 'inc/comments.php'; // Business manager address(es) option + team-comment notifications.
 require_once FLXLM_ATS_DIR . 'inc/notify.php';
+require_once FLXLM_ATS_DIR . 'inc/interviewers.php';
+require_once FLXLM_ATS_DIR . 'inc/digest.php'; // Weekly stuck-candidate email + `wp flxlm-ats digest`.
 require_once FLXLM_ATS_DIR . 'inc/admin-list.php';
 require_once FLXLM_ATS_DIR . 'inc/admin-detail.php';
 require_once FLXLM_ATS_DIR . 'inc/admin-manual-entry.php';
@@ -69,6 +76,9 @@ register_activation_hook(
 		flxlm_ats_register_stages();
 		flxlm_ats_grant_caps();
 		flxlm_ats_install_resume_table();
+		flxlm_ats_install_notes_table();
+		flxlm_ats_run_1_2_0_migration();
+		update_option( 'flxlm_ats_migration_1_2_0_done', gmdate( 'Y-m-d H:i:s' ) );
 		flush_rewrite_rules();
 	}
 );
@@ -106,6 +116,42 @@ function flxlm_ats_grant_caps() {
 			$editor->add_cap( $cap );
 		}
 	}
+
+	flxlm_ats_ensure_hiring_team_role();
+}
+
+/**
+ * The hiring_team role, in code.
+ *
+ * Reused from the paused feat/hub-postings branch (commit 5530c58): it
+ * existed only in the live database there (created by hand), which meant a
+ * fresh install or a restore onto a new host would silently lose who can see
+ * applicants. Codified here so the code is the record, trimmed to only the
+ * v1 caps this plugin actually grants (the posting-specific
+ * flxlm_edit_postings/flxlm_publish_postings caps stay on that branch — see
+ * this plugin's structured report for why v1 does not touch them).
+ *
+ * This role exists so job_hiring_manager (inc/hiring-manager.php) and the
+ * hub bridge's per-user capability check can be assigned to a station or
+ * department manager who has no business holding the Editor role's much
+ * wider posting/publishing rights. Idempotent: creates the role if missing,
+ * otherwise only ADDS caps it lacks — it never removes a cap, so anything
+ * granted by hand on the live site stays.
+ */
+function flxlm_ats_ensure_hiring_team_role() {
+	$caps = array( 'read', 'flxlm_view_applications', 'flxlm_manage_applications' );
+
+	$role = get_role( 'hiring_team' );
+	if ( ! $role ) {
+		add_role( 'hiring_team', 'Hiring Team', array_fill_keys( $caps, true ) );
+		return;
+	}
+
+	foreach ( $caps as $cap ) {
+		if ( ! $role->has_cap( $cap ) ) {
+			$role->add_cap( $cap );
+		}
+	}
 }
 
 /**
@@ -120,6 +166,7 @@ add_action(
 		}
 		flxlm_ats_grant_caps();
 		flxlm_ats_maybe_install_resume_table();
+		flxlm_ats_maybe_install_notes_table();
 		update_option( 'flxlm_ats_version', FLXLM_ATS_VERSION );
 	}
 );

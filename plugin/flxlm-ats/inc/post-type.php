@@ -105,7 +105,10 @@ function flxlm_ats_meta_keys() {
 		'_flxlm_job_id',        // Local flxlm_job post ID, when the posting is on this site.
 		'_flxlm_job_title',     // Denormalised on purpose: see below.
 		'_flxlm_source',        // Recruitment source key. Drives the EEO report.
-		'_flxlm_source_site',   // 'flxlocalmedia' or 'fldn' — which site took it in.
+		'_flxlm_source_site',   // 'flxlocalmedia', 'fldn', or 'email' — which channel took it in.
+		'_flxlm_intake_key',    // Email intake only: 'gmail:' . message_id, for idempotency.
+		'_flxlm_job_match',     // Email intake only: 'exact' | 'fuzzy' | 'none'.
+		'_flxlm_forwarded_by',  // Email intake only: who forwarded an internal-domain email, if it was one.
 		'_flxlm_message',       // Cover note / why they want the job.
 		'_flxlm_links',         // Portfolio, audio reel, writing samples.
 		'_flxlm_salary_expectation',
@@ -113,9 +116,13 @@ function flxlm_ats_meta_keys() {
 		'_flxlm_resume_name',   // Original filename, for display.
 		'_flxlm_interviewed_at',
 		'_flxlm_hired_at',
+		'_flxlm_phone_screened_at',
+		'_flxlm_close_reason',   // One of flxlm_ats_close_reasons(). Set on entering flxlm_rejected.
+		'_flxlm_start_date',     // YYYY-MM-DD. Set on entering flxlm_hired.
 		'_flxlm_stage_history',
-		'_flxlm_entered_by',    // 'web', 'fldn-relay', or 'manual'.
+		'_flxlm_entered_by',    // 'web', 'fldn-relay', 'manual', or 'email-intake'.
 		'_flxlm_submitted_at',
+		'_flxlm_interviewers',  // See inc/interviewers.php.
 	);
 }
 
