@@ -61,7 +61,7 @@ function flxlm_ats_render_stage_box( $post ) {
 	echo '<p style="margin-top:0">Currently <strong>' . esc_html( flxlm_ats_stage_label( $current ) ) . '</strong>.</p>';
 
 	if ( flxlm_ats_is_stage( $current ) && ! flxlm_ats_is_movable_stage( $current ) ) {
-		echo '<p style="color:#8a6d3b;font-size:.9em">This is a retired stage. Run <code>wp flxlm-ats upgrade</code>, or use the button below, to move it onto New.</p>';
+		echo '<p style="color:#8a6d3b;font-size:.9em">This stage is no longer used. Use the button below to move this applicant to New.</p>';
 	}
 
 	if ( flxlm_ats_was_phone_screened( $post->ID ) ) {

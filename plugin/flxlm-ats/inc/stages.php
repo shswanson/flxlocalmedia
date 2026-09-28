@@ -108,20 +108,20 @@ function flxlm_ats_stages() {
 		'flxlm_new'         => array(
 			'label'       => 'New',
 			'owner'       => 'hiring manager',
-			'exit_test'   => "Source is known (not 'unknown') and the applicant is on a job.",
+			'exit_test'   => 'We know how they heard about the job, and they are attached to a job posting.',
 			'description' => 'Received, nobody has looked yet.',
 		),
 		'flxlm_phone'       => array(
 			'label'       => 'Phone screen',
 			'owner'       => 'hiring manager',
-			'exit_test'   => 'At least one feedback note recorded while in Phone screen.',
+			'exit_test'   => 'Whoever made the call has written up how it went.',
 			'description' => 'A quick call to confirm the basics before an interview.',
 			'stamps'      => '_flxlm_phone_screened_at',
 		),
 		'flxlm_interviewed' => array(
 			'label'                 => 'Interview',
 			'owner'                 => 'hiring manager',
-			'exit_test'             => 'At least one interviewer assigned, and every active interviewer has submitted feedback.',
+			'exit_test'             => 'At least one interviewer is assigned, and every interviewer has sent in their feedback.',
 			'description'           => 'Has been interviewed. Recorded for the FCC EEO report.',
 			'stamps'                => '_flxlm_interviewed_at',
 			'counts_as_interviewed' => true,
@@ -129,7 +129,7 @@ function flxlm_ats_stages() {
 		'flxlm_decision'    => array(
 			'label'       => 'Decision',
 			'owner'       => 'hiring manager',
-			'exit_test'   => "Leaving Decision requires a decision note (saved as a note of kind 'decision').",
+			'exit_test'   => 'The hiring manager has written down the decision and why.',
 			'description' => 'The interview panel is deciding whether to extend an offer.',
 		),
 		'flxlm_offer'       => array(
@@ -145,13 +145,13 @@ function flxlm_ats_stages() {
 			// not narrowed to a single reason at the code level, and the copy
 			// says "usually" rather than "requires" so it does not promise an
 			// enforcement that does not exist.
-			'exit_test'   => 'Moving to Hired requires a start date. Moving to Not hired usually means the reason is offer declined, but any close reason is accepted.',
+			'exit_test'   => 'They accepted (enter the start date) or turned it down.',
 			'description' => 'An offer has been extended.',
 		),
 		'flxlm_hired'       => array(
 			'label'       => 'Hired',
 			'owner'       => '',
-			'exit_test'   => 'Terminal. Entry stamps the hire date and fills the vacancy for EEO reporting.',
+			'exit_test'   => 'Final. Records the hire date for the FCC report.',
 			'description' => 'Accepted and hired. Fills the vacancy for EEO reporting.',
 			'terminal'    => true,
 			'stamps'      => '_flxlm_hired_at',
@@ -160,7 +160,7 @@ function flxlm_ats_stages() {
 		'flxlm_rejected'    => array(
 			'label'       => 'Not hired',
 			'owner'       => '',
-			'exit_test'   => 'Terminal. Reachable from any stage.',
+			'exit_test'   => 'Final. Needs a reason: not selected, withdrew, or turned down the offer.',
 			'description' => 'Not moving forward. Reachable from any stage.',
 			'terminal'    => true,
 			'requires'    => array( 'close_reason' ),
@@ -169,14 +169,14 @@ function flxlm_ats_stages() {
 		'flxlm_screening'   => array(
 			'label'       => '(retired) Screening',
 			'owner'       => '',
-			'exit_test'   => 'Retired stage. Run the 1.2.0 upgrade (wp flxlm-ats upgrade) to move this off it.',
+			'exit_test'   => 'No longer used. Move this applicant to New.',
 			'description' => 'Pre-1.2.0 stage, replaced by New / Phone screen.',
 			'retired'     => true,
 		),
 		'flxlm_manager'     => array(
 			'label'       => '(retired) Manager Review',
 			'owner'       => '',
-			'exit_test'   => 'Retired stage. Run the 1.2.0 upgrade (wp flxlm-ats upgrade) to move this off it.',
+			'exit_test'   => 'No longer used. Move this applicant to New.',
 			'description' => 'Pre-1.2.0 stage, replaced by Decision.',
 			'retired'     => true,
 		),
@@ -592,7 +592,7 @@ function flxlm_ats_stage_exit_checks( $application_id ) {
 				'met'    => ( $job_id > 0 ),
 				'detail' => ( $job_id > 0 )
 					? 'Attached to a job posting.'
-					: 'This application has no posting attached. Assign one with POST /applications/{id}/job.',
+					: 'Not attached to a job yet. Use Assign to job on this record.',
 			);
 			break;
 
@@ -602,7 +602,7 @@ function flxlm_ats_stage_exit_checks( $application_id ) {
 				'key'    => 'phone_feedback',
 				'label'  => 'Phone screen feedback recorded',
 				'met'    => $met,
-				'detail' => 'At least one feedback note while in Phone screen.',
+				'detail' => 'Whoever made the call writes up how it went, using Add my feedback.',
 			);
 			break;
 
