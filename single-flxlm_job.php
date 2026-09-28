@@ -35,6 +35,20 @@ while ( have_posts() ) : the_post();
 				<?php if ( $job_type ) : ?>
 					<span class="job-meta__item"><?php echo esc_html( $job_type ); ?></span>
 				<?php endif; ?>
+				<?php
+				/*
+				 * The pay range. New York Labor Law 194-b requires a good faith
+				 * minimum and maximum on any posting for work performed in the
+				 * state, and this site rendered no figure at all until now.
+				 */
+				$flxlm_salary = function_exists( 'flxlm_careers_salary_display' )
+					? flxlm_careers_salary_display( get_the_ID() )
+					: '';
+				if ( $flxlm_salary ) :
+					?>
+					<span class="job-meta__sep" aria-hidden="true">&middot;</span>
+					<span class="job-meta__item job-meta__item--salary"><?php echo esc_html( $flxlm_salary ); ?></span>
+				<?php endif; ?>
 			</p>
 		<?php endif; ?>
 
@@ -76,10 +90,36 @@ while ( have_posts() ) : the_post();
 				</div>
 			<?php endif; ?>
 
-			<?php if ( $job_offer ) : ?>
+			<?php
+			/*
+			 * What We Offer is composed, not typed. The posting supplies the
+			 * role specific lines; the standard employee benefits come from one
+			 * shared definition so a benefit changed once is changed everywhere.
+			 * A posting that retyped them from memory went live on 2026-08-25
+			 * promising roughly 50% more vacation than the company offers.
+			 */
+			$flxlm_standard = ( function_exists( 'flxlm_careers_standard_benefits_items' )
+				&& function_exists( 'flxlm_careers_is_benefits_eligible' )
+				&& flxlm_careers_is_benefits_eligible( get_the_ID() ) )
+					? flxlm_careers_standard_benefits_items()
+					: '';
+			if ( $job_offer || $flxlm_standard ) :
+				?>
 				<div class="job-section">
 					<h2>What We Offer</h2>
-					<?php echo wp_kses_post( $job_offer ); ?>
+					<ul>
+						<?php
+						echo wp_kses_post( flxlm_careers_offer_items( $job_offer ) );
+						echo wp_kses_post( $flxlm_standard );
+						?>
+					</ul>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( function_exists( 'flxlm_careers_about_html' ) ) : ?>
+				<div class="job-section job-section--about">
+					<h2>About FLX Local Media</h2>
+					<?php echo wp_kses_post( flxlm_careers_about_html() ); ?>
 				</div>
 			<?php endif; ?>
 
