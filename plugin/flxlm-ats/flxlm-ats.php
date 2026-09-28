@@ -3,7 +3,7 @@
  * Plugin Name: FLX Local Media ATS
  * Plugin URI: https://www.flxlocalmedia.com
  * Description: Lightweight applicant tracking for the FLX Local Media career center. Takes in applications from flxlocalmedia.com and fingerlakesdailynews.com, tracks them through a short stage ladder, and produces the FCC EEO Public File Report numbers as a byproduct.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Requires PHP: 7.4
  * Author: TOTIB Media
  * Author URI: https://totib.com
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FLXLM_ATS_VERSION', '1.0.0' );
+define( 'FLXLM_ATS_VERSION', '1.1.0' ); // Bumped for the posting caps and the hiring_team role: the admin_init grant below only reruns on a version change.
 define( 'FLXLM_ATS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FLXLM_ATS_URL', plugin_dir_url( __FILE__ ) );
 
@@ -57,6 +57,8 @@ require_once FLXLM_ATS_DIR . 'inc/admin-manual-entry.php';
 require_once FLXLM_ATS_DIR . 'inc/confirm-page.php';
 require_once FLXLM_ATS_DIR . 'inc/retention.php';
 require_once FLXLM_ATS_DIR . 'inc/eeo-report.php';
+require_once FLXLM_ATS_DIR . 'inc/postings.php';
+require_once FLXLM_ATS_DIR . 'inc/postings-lock.php'; // Off unless FLXLM_POSTINGS_LOCKED is defined true.
 require_once FLXLM_ATS_DIR . 'inc/hub-bridge.php'; // hub.flxlocalmedia.com bridge, fldn#1912 — off unless FLXLM_ATS_HUB_BRIDGE_ENABLED is defined true.
 
 /**
@@ -104,6 +106,45 @@ function flxlm_ats_grant_caps() {
 	if ( $editor ) {
 		foreach ( $caps as $cap ) {
 			$editor->add_cap( $cap );
+		}
+	}
+
+	// Postings are split in two on purpose. Drafting a posting is routine;
+	// publishing one, or changing one that is already live, puts legal copy
+	// (the New York pay range among it) in front of the public and Google
+	// Jobs, so it is its own, narrower capability.
+	if ( $admin ) {
+		$admin->add_cap( 'flxlm_edit_postings' );
+		$admin->add_cap( 'flxlm_publish_postings' );
+	}
+
+	flxlm_ats_ensure_hiring_team_role();
+}
+
+/**
+ * The hiring_team role, in code.
+ *
+ * It existed only in the live database (created by hand), which meant a fresh
+ * install or a restore onto a new host would silently lose who can see
+ * applicants. Codified here so the code is the record.
+ *
+ * Idempotent: creates the role if missing, otherwise only ADDS caps it lacks.
+ * It never removes a cap, so anything granted by hand on the live site stays.
+ * Individual grants (who may publish, who files EEO) are per-user and are not
+ * made here: user logins do not belong in code.
+ */
+function flxlm_ats_ensure_hiring_team_role() {
+	$caps = array( 'read', 'flxlm_view_applications', 'flxlm_manage_applications', 'flxlm_edit_postings' );
+
+	$role = get_role( 'hiring_team' );
+	if ( ! $role ) {
+		add_role( 'hiring_team', 'Hiring Team', array_fill_keys( $caps, true ) );
+		return;
+	}
+
+	foreach ( $caps as $cap ) {
+		if ( ! $role->has_cap( $cap ) ) {
+			$role->add_cap( $cap );
 		}
 	}
 }

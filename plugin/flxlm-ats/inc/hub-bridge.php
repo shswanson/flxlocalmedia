@@ -43,6 +43,10 @@
  * `shswanson/fldn` (fldn#1912) rather than a second, competing naming, so
  * whichever build lands first the other can wire into it without a rename.
  *
+ * Postings (hub "Postings" tab) add `/me`, `/hiring-managers`, `/postings`,
+ * `/postings/{id}` and `/postings/{id}/publish|close|sync`, on the same
+ * signature and audit. The posting logic itself lives in inc/postings.php.
+ *
  * @package flxlm-ats
  */
 
@@ -133,6 +137,79 @@ function flxlm_ats_hub_bridge_register_rest() {
 			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
 		)
 	);
+
+	// Postings (inc/postings.php). Same signature, same per-person re-check,
+	// same audit table; only the capability differs per route.
+	$id_arg = array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) );
+
+	register_rest_route(
+		$ns,
+		'/me',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'flxlm_ats_hub_get_me',
+			'permission_callback' => 'flxlm_ats_hub_permission_signed',
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/hiring-managers',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'flxlm_ats_hub_get_hiring_managers',
+			'permission_callback' => 'flxlm_ats_hub_permission_edit_postings',
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/postings',
+		array(
+			array(
+				'methods'             => 'GET',
+				'callback'            => 'flxlm_ats_hub_get_postings',
+				'permission_callback' => 'flxlm_ats_hub_permission_view',
+			),
+			array(
+				'methods'             => 'POST',
+				'callback'            => 'flxlm_ats_hub_create_posting',
+				'permission_callback' => 'flxlm_ats_hub_permission_edit_postings',
+			),
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/postings/(?P<id>\d+)',
+		array(
+			array(
+				'methods'             => 'GET',
+				'callback'            => 'flxlm_ats_hub_get_posting',
+				'permission_callback' => 'flxlm_ats_hub_permission_view',
+				'args'                => $id_arg,
+			),
+			array(
+				'methods'             => 'POST',
+				'callback'            => 'flxlm_ats_hub_save_posting',
+				'permission_callback' => 'flxlm_ats_hub_permission_save_posting',
+				'args'                => $id_arg,
+			),
+		)
+	);
+
+	foreach ( array( 'publish', 'close', 'sync' ) as $action ) {
+		register_rest_route(
+			$ns,
+			'/postings/(?P<id>\d+)/' . $action,
+			array(
+				'methods'             => 'POST',
+				'callback'            => 'flxlm_ats_hub_' . $action . '_posting',
+				'permission_callback' => 'flxlm_ats_hub_permission_publish_postings',
+				'args'                => $id_arg,
+			)
+		);
+	}
 }
 add_action( 'rest_api_init', 'flxlm_ats_hub_bridge_register_rest' );
 
@@ -257,6 +334,85 @@ function flxlm_ats_hub_permission_manage( $request ) {
 }
 
 /**
+ * Permission callback: caller must authenticate; no capability beyond being
+ * a known WordPress user. Only GET /me uses it, so the hub can ask "what may
+ * this person do" and draw its buttons from the answer.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return true|WP_Error
+ */
+function flxlm_ats_hub_permission_signed( $request ) {
+	$user = flxlm_ats_hub_authenticate( $request );
+	if ( is_wp_error( $user ) ) {
+		return $user;
+	}
+	$request->set_param( '_flxlm_hub_user', $user );
+	return true;
+}
+
+/**
+ * Shared body of the posting permission callbacks: authenticate once, then
+ * require one capability. flxlm_ats_hub_authenticate() burns the signature as
+ * a nonce, so it must run exactly once per request; every caller here goes
+ * through this.
+ *
+ * @param WP_REST_Request $request Request.
+ * @param string          $cap     Capability required.
+ * @param string          $message Plain-English refusal.
+ * @return true|WP_Error
+ */
+function flxlm_ats_hub_permission_cap( $request, $cap, $message ) {
+	$user = flxlm_ats_hub_authenticate( $request );
+	if ( is_wp_error( $user ) ) {
+		return $user;
+	}
+	if ( ! user_can( $user, $cap ) ) {
+		flxlm_ats_hub_audit_denied( $user->user_email, $user->ID, 'missing_cap:' . $cap, $request );
+		return new WP_Error( 'flxlm_ats_hub_forbidden', $message, array( 'status' => 403 ) );
+	}
+	$request->set_param( '_flxlm_hub_user', $user );
+	return true;
+}
+
+/**
+ * Permission callback: create and edit DRAFT postings.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return true|WP_Error
+ */
+function flxlm_ats_hub_permission_edit_postings( $request ) {
+	return flxlm_ats_hub_permission_cap( $request, 'flxlm_edit_postings', 'This account cannot edit job postings.' );
+}
+
+/**
+ * Permission callback: publish, close, retry sync.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return true|WP_Error
+ */
+function flxlm_ats_hub_permission_publish_postings( $request ) {
+	return flxlm_ats_hub_permission_cap( $request, 'flxlm_publish_postings', 'This account cannot publish job postings.' );
+}
+
+/**
+ * Permission callback for POST /postings/{id}: the capability depends on the
+ * posting. A draft is private working copy (edit). A published or closed
+ * posting is public legal copy, or was, so changing it needs publish.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return true|WP_Error
+ */
+function flxlm_ats_hub_permission_save_posting( $request ) {
+	$post = flxlm_ats_posting_get( (int) $request->get_param( 'id' ) );
+	if ( $post && in_array( $post->post_status, array( 'publish', 'private' ), true ) ) {
+		return flxlm_ats_hub_permission_publish_postings( $request );
+	}
+	// A missing ID still has to authenticate before it learns it is missing;
+	// the callback answers the 404.
+	return flxlm_ats_hub_permission_edit_postings( $request );
+}
+
+/**
  * GET /vacancies — open postings with applicant counts by stage.
  *
  * @param WP_REST_Request $request Request.
@@ -317,6 +473,9 @@ function flxlm_ats_hub_get_vacancies( $request ) {
 			'permalink'    => get_permalink( $job ),
 			'location'     => (string) get_post_meta( $job->ID, 'job_location', true ),
 			'type'         => (string) get_post_meta( $job->ID, 'job_type', true ),
+			// {id, name} or null. Staff-only: this route is behind Access and
+			// the view capability, unlike anything on the public posting page.
+			'hiring_manager' => flxlm_ats_posting_hiring_manager( $job->ID ),
 			'total'        => $total,
 			'by_stage'     => $by_stage,
 			// Same counts as by_stage, shaped as {stage: count} — this is the
@@ -586,6 +745,254 @@ function flxlm_ats_hub_post_stage( $request ) {
 			'stage_label' => flxlm_ats_stage_label( $stage ),
 		),
 		200
+	);
+}
+
+// ---------------------------------------------------------------------------
+// Postings: route handlers. The logic lives in inc/postings.php.
+// ---------------------------------------------------------------------------
+
+/**
+ * GET /me: who the hub is talking to and what they may do.
+ *
+ * can_manage here is the same check GET /applications/{id} already returns
+ * per applicant; that field is unchanged and the hub may keep reading it.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+function flxlm_ats_hub_get_me( $request ) {
+	$user = $request->get_param( '_flxlm_hub_user' );
+
+	return new WP_REST_Response(
+		array(
+			'email'             => $user->user_email,
+			'name'              => $user->display_name,
+			'can_view'          => user_can( $user, 'flxlm_view_applications' ),
+			'can_manage'        => user_can( $user, 'flxlm_manage_applications' ),
+			'can_edit_postings' => user_can( $user, 'flxlm_edit_postings' ),
+			'can_publish'       => user_can( $user, 'flxlm_publish_postings' ),
+			'can_view_eeo'      => user_can( $user, 'flxlm_view_eeo_report' ),
+		),
+		200
+	);
+}
+
+/**
+ * GET /hiring-managers: who can be picked as a posting's hiring manager.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+function flxlm_ats_hub_get_hiring_managers( $request ) {
+	flxlm_ats_hub_audit( $request, 'list_hiring_managers', 0 );
+	return new WP_REST_Response( array( 'managers' => flxlm_ats_posting_hiring_managers() ), 200 );
+}
+
+/**
+ * GET /postings: every draft, published and closed posting, newest first.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+function flxlm_ats_hub_get_postings( $request ) {
+	$out = array();
+	foreach ( flxlm_ats_posting_list() as $post ) {
+		$out[] = flxlm_ats_posting_summary( $post );
+	}
+
+	flxlm_ats_hub_audit( $request, 'list_postings', 0 );
+
+	return new WP_REST_Response( array( 'postings' => $out ), 200 );
+}
+
+/**
+ * GET /postings/{id}: one posting, everything the editor needs.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_get_posting( $request ) {
+	$post = flxlm_ats_posting_get( (int) $request->get_param( 'id' ) );
+	if ( ! $post ) {
+		return new WP_Error( 'flxlm_ats_hub_no_posting', 'No such posting.', array( 'status' => 404 ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'view_posting', $post->ID );
+
+	return flxlm_ats_hub_posting_response( $post->ID );
+}
+
+/**
+ * POST /postings: create a DRAFT.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_create_posting( $request ) {
+	$body = $request->get_json_params();
+	if ( ! is_array( $body ) ) {
+		return new WP_Error( 'flxlm_ats_hub_bad_body', 'Expected a JSON body.', array( 'status' => 400 ) );
+	}
+
+	$parsed = flxlm_ats_posting_parse_input( $body, null );
+	if ( '' === trim( $parsed['fields']['title'] ) ) {
+		$parsed['errors'][] = 'A new posting needs a title.';
+	}
+	if ( $parsed['errors'] ) {
+		return flxlm_ats_hub_posting_refused( 'This posting was not created.', $parsed['errors'] );
+	}
+
+	$post_id = flxlm_ats_posting_create( $parsed, $request->get_param( '_flxlm_hub_user' ) );
+	if ( is_wp_error( $post_id ) ) {
+		return new WP_Error( 'flxlm_ats_hub_create_failed', 'Could not create the posting: ' . $post_id->get_error_message(), array( 'status' => 500 ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'posting_create', $post_id );
+
+	return flxlm_ats_hub_posting_response( $post_id );
+}
+
+/**
+ * POST /postings/{id}: save fields (merge: only keys present change).
+ *
+ * A published posting is live public copy, so a save that would leave it
+ * failing validation (no pay range, a past close date, an em dash) is refused
+ * whole rather than published broken; the hub shows the same errors it shows
+ * before Publish. A successful save of a published posting re-syncs to FLDN,
+ * because the FLDN copy is the one Google Jobs reads.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_save_posting( $request ) {
+	$post = flxlm_ats_posting_get( (int) $request->get_param( 'id' ) );
+	if ( ! $post ) {
+		return new WP_Error( 'flxlm_ats_hub_no_posting', 'No such posting.', array( 'status' => 404 ) );
+	}
+
+	$body = $request->get_json_params();
+	if ( ! is_array( $body ) ) {
+		return new WP_Error( 'flxlm_ats_hub_bad_body', 'Expected a JSON body.', array( 'status' => 400 ) );
+	}
+
+	$parsed    = flxlm_ats_posting_parse_input( $body, $post );
+	$published = 'publish' === $post->post_status;
+	if ( ! $parsed['errors'] && $published ) {
+		$parsed['errors'] = flxlm_ats_posting_validate( $parsed['fields'] )['errors'];
+	}
+	if ( $parsed['errors'] ) {
+		return flxlm_ats_hub_posting_refused( 'This change was not saved.', $parsed['errors'] );
+	}
+
+	$written = flxlm_ats_posting_write( $post->ID, $parsed );
+	if ( is_wp_error( $written ) ) {
+		return new WP_Error( 'flxlm_ats_hub_save_failed', 'Could not save the posting: ' . $written->get_error_message(), array( 'status' => 500 ) );
+	}
+
+	if ( $published ) {
+		flxlm_ats_sync_posting_to_fldn( $post->ID );
+	}
+
+	flxlm_ats_hub_audit( $request, 'posting_save', $post->ID );
+
+	return flxlm_ats_hub_posting_response( $post->ID );
+}
+
+/**
+ * POST /postings/{id}/publish: validate, go live on both sites.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_publish_posting( $request ) {
+	$post = flxlm_ats_posting_get( (int) $request->get_param( 'id' ) );
+	if ( ! $post ) {
+		return new WP_Error( 'flxlm_ats_hub_no_posting', 'No such posting.', array( 'status' => 404 ) );
+	}
+
+	$result = flxlm_ats_posting_publish( $post );
+	if ( true !== $result ) {
+		return flxlm_ats_hub_posting_refused( 'This posting is not ready to publish.', $result );
+	}
+
+	flxlm_ats_hub_audit( $request, 'posting_publish', $post->ID );
+
+	return flxlm_ats_hub_posting_response( $post->ID );
+}
+
+/**
+ * POST /postings/{id}/close: take it down from both sites.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_close_posting( $request ) {
+	$post = flxlm_ats_posting_get( (int) $request->get_param( 'id' ) );
+	if ( ! $post ) {
+		return new WP_Error( 'flxlm_ats_hub_no_posting', 'No such posting.', array( 'status' => 404 ) );
+	}
+	if ( 'draft' === flxlm_ats_posting_status( $post ) ) {
+		return flxlm_ats_hub_posting_refused( 'This posting was not closed.', array( 'Only a published posting can be closed.' ) );
+	}
+
+	$result = flxlm_ats_posting_close( $post );
+	if ( is_wp_error( $result ) ) {
+		return new WP_Error( 'flxlm_ats_hub_close_failed', 'Could not close the posting: ' . $result->get_error_message(), array( 'status' => 500 ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'posting_close', $post->ID );
+
+	return flxlm_ats_hub_posting_response( $post->ID );
+}
+
+/**
+ * POST /postings/{id}/sync: retry the FLDN sync only. Changes nothing here.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_sync_posting( $request ) {
+	$post = flxlm_ats_posting_get( (int) $request->get_param( 'id' ) );
+	if ( ! $post ) {
+		return new WP_Error( 'flxlm_ats_hub_no_posting', 'No such posting.', array( 'status' => 404 ) );
+	}
+
+	$record = flxlm_ats_sync_posting_to_fldn( $post->ID );
+
+	flxlm_ats_hub_audit( $request, 'posting_sync:' . $record['state'], $post->ID );
+
+	return flxlm_ats_hub_posting_response( $post->ID );
+}
+
+/**
+ * { posting: PostingFull }, read fresh after any write.
+ *
+ * @param int $post_id Posting ID.
+ * @return WP_REST_Response
+ */
+function flxlm_ats_hub_posting_response( $post_id ) {
+	clean_post_cache( $post_id );
+	return new WP_REST_Response( array( 'posting' => flxlm_ats_posting_full( get_post( $post_id ) ) ), 200 );
+}
+
+/**
+ * The 422 the hub shows in its error box: { error, errors: [...] }.
+ *
+ * A plain response rather than a WP_Error, because WP_Error serialises as
+ * { code, message, data } and the hub reads the errors list.
+ *
+ * @param string   $error  One-line summary.
+ * @param string[] $errors Every reason.
+ * @return WP_REST_Response
+ */
+function flxlm_ats_hub_posting_refused( $error, $errors ) {
+	return new WP_REST_Response(
+		array(
+			'error'  => $error,
+			'errors' => array_values( $errors ),
+		),
+		422
 	);
 }
 

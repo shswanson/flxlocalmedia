@@ -27,9 +27,15 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Who gets told about an application.
  *
- * Prefers the job posting's own application email, which is the field that
- * already routes each posting to the right manager. Falls back to the site
- * admin so an application is never received silently.
+ * First the posting's hiring manager (job_hiring_manager, a user ID set in the
+ * hub). job_email used to do this job, but it is also the PUBLIC contact that
+ * search engines show, and a field cannot be both a shared inbox for strangers
+ * and the one person who must read every application. The manager is stored as
+ * a user rather than an address so the person notified is always someone who
+ * can actually open the application.
+ *
+ * Then job_email, for postings that predate the hub. Then the site admin, so
+ * an application is never received silently.
  *
  * @param int $application_id Application ID.
  * @return string[] Email addresses.
@@ -39,6 +45,13 @@ function flxlm_ats_notify_recipients( $application_id ) {
 	$job_id     = (int) get_post_meta( $application_id, '_flxlm_job_id', true );
 
 	if ( $job_id ) {
+		$manager = get_userdata( (int) get_post_meta( $job_id, 'job_hiring_manager', true ) );
+		if ( $manager && is_email( $manager->user_email ) ) {
+			$recipients[] = $manager->user_email;
+		}
+	}
+
+	if ( $job_id && ! $recipients ) {
 		$job_email = (string) get_post_meta( $job_id, 'job_email', true );
 		foreach ( explode( ',', $job_email ) as $candidate ) {
 			$candidate = trim( $candidate );
