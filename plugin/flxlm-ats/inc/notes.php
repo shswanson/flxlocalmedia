@@ -34,7 +34,7 @@ const FLXLM_ATS_NOTES_DB_VERSION = 1;
 
 /** The kinds a note may be. */
 function flxlm_ats_note_kinds() {
-	return array( 'comment', 'feedback', 'decision', 'system' );
+	return array( 'comment', 'feedback', 'decision', 'system', 'ai_summary' );
 }
 
 /** The ratings a 'feedback' note may carry. Null for every other kind. */
@@ -169,10 +169,12 @@ function flxlm_ats_add_note( $application_id, $kind, $args = array() ) {
 	// '&gt;' text; wp-admin happens to hide this by rendering notes
 	// unescaped, but the hub correctly HTML-escapes note bodies before
 	// display, double-encoding the entity into visibly garbled text. Plain
-	// sanitization avoids the corruption at the source. 'comment',
+	// sanitization avoids the corruption at the source. 'ai_summary' notes
+	// (inc/ai-summary.php) are machine text that the validator there has
+	// already reduced to plain text, so they take the same path. 'comment',
 	// 'feedback' and 'decision' notes are staff-authored free text and keep
 	// the existing HTML allowlist.
-	$sanitized_body = 'system' === $kind ? sanitize_textarea_field( $body ) : wp_kses_post( $body );
+	$sanitized_body = in_array( $kind, array( 'system', 'ai_summary' ), true ) ? sanitize_textarea_field( $body ) : wp_kses_post( $body );
 
 	$result = $wpdb->insert(
 		flxlm_ats_notes_table(),
