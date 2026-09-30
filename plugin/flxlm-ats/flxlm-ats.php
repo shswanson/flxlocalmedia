@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FLXLM_ATS_VERSION', '1.3.1' ); // v1.3.1, 2026-09-30: AI resume summary (inc/ai-summary.php), staff-only and advisory, off unless FLXLM_ATS_EMAIL_INTAKE_SECRET is defined. No data migration. Earlier note: // v1.1, 2026-09-28: contact editing, the recruitment-source change control, clickable mailto:/tel: links, external (non-staff) interviewers, the thumbs recommendation UI, and a visual pass on every signed page. No data migration — inc/upgrade.php still only runs the 1.2.0 stage-ladder migration.
+define( 'FLXLM_ATS_VERSION', '1.3.2' ); // v1.3.2, 2026-09-30: AI summary validator now screens every text field for excluded topics (religion, criminal history, age, pay, family, health and so on) and evaluation wording, and the card shows its time in the site time zone. v1.3.1, 2026-09-30: AI resume summary (inc/ai-summary.php), staff-only and advisory, off unless FLXLM_ATS_EMAIL_INTAKE_SECRET is defined. No data migration. Earlier note: // v1.1, 2026-09-28: contact editing, the recruitment-source change control, clickable mailto:/tel: links, external (non-staff) interviewers, the thumbs recommendation UI, and a visual pass on every signed page. No data migration — inc/upgrade.php still only runs the 1.2.0 stage-ladder migration.
 define( 'FLXLM_ATS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FLXLM_ATS_URL', plugin_dir_url( __FILE__ ) );
 

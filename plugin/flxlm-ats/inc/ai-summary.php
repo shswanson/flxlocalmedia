@@ -27,7 +27,11 @@
  * The controls are here: the validator below accepts only the exact shape of
  * the rubric, strips HTML, and refuses any text field containing a four-digit
  * year from 1940 to 2029, so a year that slips through a model's output is
- * rejected at the door rather than stored.
+ * rejected at the door rather than stored. It also screens every text field
+ * for wording from the excluded topics (religion, criminal history, age, pay,
+ * family, health, politics, national origin, race or gender, photos, employment
+ * gaps, and any evaluation of the person), because a model that drifts, or a
+ * forged signed body, must not be able to store them either.
  *
  * AUTHENTICATION
  *
@@ -429,15 +433,14 @@ function flxlm_ats_ai_summary_is_list( $value ) {
 }
 
 /**
- * Whether a string contains a four-digit year from 1940 to 2029.
+ * Fold full-width and other Unicode decimal digits to ASCII 0-9, so a year
+ * written in another digit script cannot slip past the year rule or the
+ * excluded-topic screen.
  *
- * Checks digits after folding full-width and other Unicode digits to ASCII,
- * so a year written in another digit script does not slip past.
- *
- * @param string $text Cleaned text.
- * @return bool
+ * @param string $text Text.
+ * @return string
  */
-function flxlm_ats_ai_summary_has_year( $text ) {
+function flxlm_ats_ai_summary_fold_digits( $text ) {
 	$norm = (string) $text;
 
 	if ( function_exists( 'mb_convert_kana' ) ) {
@@ -457,7 +460,101 @@ function flxlm_ats_ai_summary_has_year( $text ) {
 		}
 	}
 
-	return (bool) preg_match( '/(?<!\d)(?:19[4-9]\d|20[0-2]\d)(?!\d)/', $norm );
+	return $norm;
+}
+
+/**
+ * Whether a string contains a four-digit year from 1940 to 2029.
+ *
+ * @param string $text Cleaned text.
+ * @return bool
+ */
+function flxlm_ats_ai_summary_has_year( $text ) {
+	return (bool) preg_match( '/(?<!\d)(?:19[4-9]\d|20[0-2]\d)(?!\d)/', flxlm_ats_ai_summary_fold_digits( $text ) );
+}
+
+/**
+ * The excluded-topic screen: wording that has no place in a facts-only resume
+ * summary, by category. A prompt is a request and this is the control: the
+ * validator refuses any text field that matches, so a model that drifts (or is
+ * talked into it by text hidden in a resume), or a forged signed body, cannot
+ * store religion, criminal history, age, pay, family or marital status,
+ * health, politics, national origin, race or gender, a photo caption, a
+ * description of an employment gap, or an evaluation of the person.
+ *
+ * It is deliberately blunt: a false hit costs one applicant a summary (staff
+ * read the resume itself), a miss stores something an employer must not weigh.
+ *
+ * The same list, word for word, lives in the producer job
+ * (scripts/careers/ats_ai_summary.py in shswanson/fldn, SCREEN_RULES), so the
+ * job rejects and retries before it ever posts. Change them together; the job's
+ * tests carry a fixture of phrases both sides must agree on.
+ *
+ * @return array<string,array{label:string,pattern:string}>
+ */
+function flxlm_ats_ai_summary_screen_rules() {
+	return array(
+		'religion' => array(
+			'label'   => 'religion',
+			'pattern' => '~\b(?:church(?:es)?|parish|synagogue|mosque|chapel|pastor|priest|rabbi|imam|clergy|diocese|congregation|ministry|ministries|christian|christianity|catholic|catholicism|protestant|baptist|methodist|lutheran|evangelical|jewish|judaism|muslim|islamic|islam|hindu|hinduism|buddhism|buddhist|mormon|atheist|atheism|religion|religious|faith[- ]based|bible|scripture|worship|missionary)\b~iu',
+		),
+		'criminal' => array(
+			'label'   => 'criminal history',
+			'pattern' => '~\b(?:arrest(?:s|ed)?|convict(?:s|ed|ion|ions)?|felon(?:y|ies|s)?|misdemeanou?rs?|d\.?u\.?i\.?|d\.?w\.?i\.?|incarcerat\w*|imprison\w*|sentenced|criminal (?:record|history|charges?|background|offen[cs]es?)|charged with|pleaded|indict\w*|expunge\w*|arraign\w*|paroled)\b~iu',
+		),
+		'age' => array(
+			'label'   => 'age or birth date',
+			'pattern' => '~\b(?:\d{1,3}[- ]?(?:years?|yrs?)[- ]old|years? old|age of \d{1,3}|age:\s*\d{1,3}|born (?:in|on|around)|date of birth|birth ?date|birthday|dob|in (?:his|her|their) (?:early |mid |late )?(?:twenties|thirties|forties|fifties|sixties|seventies)|teenager|senior citizen|elderly|millennial|gen[- ]z|baby boomer)\b~iu',
+		),
+		'pay' => array(
+			'label'   => 'pay or salary',
+			'pattern' => '~(?:\$\s?\d[\d,.]*\s?(?:k|m)?\s*(?:/|per|an|a|each)\s*(?:hr|hour|hourly|yr|year|annum|month|mo|week|wk|day)\b|\b(?:earned|earning|earnings|paid|pay|salary|wage|compensation)\D{0,25}\$\s?\d|\b(?:salary|salaries|wages?|hourly (?:rate|pay|wage)|pay (?:rate|grade|scale|history)|per hour|an hour|annual (?:pay|compensation|income)|base pay|compensation (?:of|history|package)|take[- ]home|income of)\b)~iu',
+		),
+		'family' => array(
+			'label'   => 'family, marital or pregnancy status',
+			'pattern' => '~\b(?:married|marital|divorc\w+|widow\w*|spouse|husband|wife|fianc\w+|pregnan\w+|maternity|paternity|parental leave|family (?:status|leave|obligations|responsibilities)|(?:single|stay[- ]at[- ]home) (?:mom|dad|mother|father|parent)|(?:mother|father|mom|dad|parent) of|(?:his|her|their|my) (?:children|kids|sons?|daughters?|family)|homemaker|newborn)\b~iu',
+		),
+		'health' => array(
+			'label'   => 'health or disability',
+			'pattern' => '~\b(?:disab\w+|handicap\w*|wheelchair|illness|diagnos\w+|medical (?:conditions?|leave|history|issues?)|health (?:conditions?|issues?|problems?)|mental health (?:conditions?|issues?)|cancer|sobriety|addict\w*|disorder|surgery|injured|adhd|autis\w+)\b~iu',
+		),
+		'politics' => array(
+			'label'   => 'politics',
+			'pattern' => '~\b(?:(?:republican|democratic|democrat|libertarian|green|conservative|liberal) (?:party|committee|activist|volunteer|candidate|voter)|gop|political (?:party|affiliation|views|beliefs|activism)|union (?:member|steward|organizer)|activis[mt])\b~iu',
+		),
+		'origin' => array(
+			'label'   => 'national origin, race or gender',
+			'pattern' => '~\b(?:race|racial|ethnic\w*|nationality|national origin|immigrants?|citizenship|green card|visa status|work visa|hispanic|latino|latina|latinx|african[- ]american|caucasian|gender|transgender|lgbt\w*|lesbian|sexual orientation|native (?:speaker|english|spanish)|he/him|she/her|they/them)\b~iu',
+		),
+		'photo' => array(
+			'label'   => 'a photo of the applicant',
+			'pattern' => '~\b(?:headshot|head shot|profile (?:photo|picture|photograph)|photo of (?:the )?(?:applicant|candidate)|passport photo|attached photo|photo attached)\b~iu',
+		),
+		'gap' => array(
+			'label'   => 'employment gaps',
+			'pattern' => '~\b(?:employment gaps?|career gaps?|work gaps?|resume gaps?|gap (?:in|of|between) (?:employment|work|career)|gap year|unemployed|unemployment|sabbatical|career break|out of the (?:work ?force|labor force)|between jobs|time off|hiatus|returning to (?:the )?work ?force|re-?entered the work ?force)\b~iu',
+		),
+		'judgment' => array(
+			'label'   => 'an evaluation or recommendation',
+			'pattern' => '~(?:\b(?:(?:good|great|poor|bad|ideal|perfect|excellent|best|right|wrong|weak|strong|top|no|must)[- ](?:fit|match|candidate|choice|hire)|(?:fit|match) for (?:the|this)|(?:well|poorly)[- ]suited|strong|weak|impressive|excellent|exceptional|outstanding|talented|promising|overqualified|underqualified|unqualified|stellar|superb|remarkable|mediocre|ideal|recommend(?:s|ed|ation|ations)?|suggest(?:s|ed)? (?:hiring|interview\w*|that (?:we|you|they))|shortlist\w*|red flags?|worth (?:interviewing|considering|a look)|should (?:be )?(?:hired|interviewed|considered|rejected|passed)|would (?:make|be) an? (?:great|good|excellent|poor)|lacks?|lacking|weakness(?:es)?|strengths?)\b|\b(?:score|scores|scored|rating|rated|rank|ranked|ranking|grade)\b\s*(?::|of\b|is\b)|\b\d+(?:\.\d+)?\s*(?:/|out of)\s*(?:5|10|100)\b)~iu',
+		),
+	);
+}
+
+/**
+ * Screen one cleaned text value against the excluded topics.
+ *
+ * @param string $text Cleaned text.
+ * @return string|null The label of the first excluded topic found, or null.
+ */
+function flxlm_ats_ai_summary_screen( $text ) {
+	$norm = flxlm_ats_ai_summary_fold_digits( $text );
+	foreach ( flxlm_ats_ai_summary_screen_rules() as $key => $rule ) {
+		if ( preg_match( $rule['pattern'], $norm ) ) {
+			return 'judgment' === $key ? 'judgment' : $rule['label'];
+		}
+	}
+	return null;
 }
 
 /**
@@ -525,6 +622,17 @@ function flxlm_ats_ai_summary_check_text( $value, $path, $max, $allow_empty, &$e
 
 	if ( flxlm_ats_ai_summary_has_year( $clean ) ) {
 		$errors[] = array( 'field' => $path, 'message' => 'Must not contain a calendar year. The summary uses durations only.' );
+		return null;
+	}
+
+	$topic = flxlm_ats_ai_summary_screen( $clean );
+	if ( null !== $topic ) {
+		$errors[] = array(
+			'field'   => $path,
+			'message' => 'judgment' === $topic
+				? 'Must not contain an evaluation or recommendation. The summary states facts only.'
+				: 'Must not mention ' . $topic . '. The summary states facts only.',
+		);
 		return null;
 	}
 
@@ -844,6 +952,21 @@ function flxlm_ats_ai_summary_audit( $action, $application_id ) {
 }
 
 /**
+ * A stored UTC timestamp ("Y-m-d H:i:s", as created_at is written) in the
+ * site's own time zone, for display.
+ *
+ * @param string $utc UTC timestamp.
+ * @return string
+ */
+function flxlm_ats_ai_summary_local_time( $utc ) {
+	$time = strtotime( $utc . ' UTC' );
+	if ( false === $time || '' === $utc ) {
+		return '';
+	}
+	return wp_date( 'M j, Y g:ia', $time );
+}
+
+/**
  * The wp-admin card. Visually distinct from a human note: a dashed violet
  * border on a tinted panel with an "AI" tag, where human notes are plain
  * list rows. Shown when a summary record exists, or when the feature is
@@ -873,7 +996,7 @@ function flxlm_ats_render_ai_summary_card( $id ) {
 	echo '<p style="margin:0 0 .6rem;color:#50575e;font-size:.85em">Model '
 		. esc_html( (string) ( $record['model'] ?? '' ) )
 		. ' &middot; rubric ' . esc_html( (string) ( $record['version'] ?? '' ) )
-		. ' &middot; made ' . esc_html( mysql2date( 'M j, Y g:ia', (string) ( $record['created_at'] ?? '' ) ) )
+		. ' &middot; made ' . esc_html( flxlm_ats_ai_summary_local_time( (string) ( $record['created_at'] ?? '' ) ) )
 		. '</p>';
 
 	if ( 'ok' !== $record['status'] || ! is_array( $record['summary'] ?? null ) ) {
