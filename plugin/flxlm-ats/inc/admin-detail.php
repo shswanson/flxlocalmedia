@@ -228,6 +228,9 @@ function flxlm_ats_render_detail_box( $post ) {
 
 	flxlm_ats_render_source_control( $id );
 
+	// Above the resume so it is seen before the tall PDF viewer pushes the rest of the screen down.
+	flxlm_ats_render_ai_summary_card( $id );
+
 	flxlm_ats_render_resume_box( $id );
 
 	$links = (string) get_post_meta( $id, '_flxlm_links', true );
@@ -446,13 +449,19 @@ function flxlm_ats_render_notes_box( $id ) {
 		'feedback' => 'Feedback',
 		'decision' => 'Decision',
 		'system'   => 'System',
+		'ai_summary' => 'AI summary',
 	);
+	// An AI summary note reads differently from a person's words: same tinted,
+	// dashed treatment as the card at the top of the screen.
+	$ai_style = 'margin-bottom:.6rem;padding:.5rem .6rem;border:1px dashed #8b7cc8;border-radius:6px;background:#f6f4fc';
+	$li_style = 'margin-bottom:.6rem;padding-bottom:.6rem;border-bottom:1px solid #f0f0f1';
 
 	echo '<h3>Discussion</h3><ul style="margin:0;padding-left:1.1rem;list-style:none">';
 	foreach ( array_reverse( $notes ) as $note ) {
 		$who = $note['author_name'] ? $note['author_name'] : ( $note['author_email'] ? $note['author_email'] : 'System' );
 		printf(
-			'<li style="margin-bottom:.6rem;padding-bottom:.6rem;border-bottom:1px solid #f0f0f1"><strong>%s</strong> <span style="color:#999;font-size:.85em">%s %s</span>%s<br />%s</li>',
+			'<li style="%s"><strong>%s</strong> <span style="color:#999;font-size:.85em">%s %s</span>%s<br />%s</li>',
+			esc_attr( 'ai_summary' === $note['kind'] ? $ai_style : $li_style ),
 			esc_html( $kind_labels[ $note['kind'] ] ?? $note['kind'] ),
 			esc_html( $who ),
 			esc_html( mysql2date( 'M j, Y g:ia', $note['created_at'] ) ),

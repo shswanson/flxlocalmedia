@@ -780,6 +780,9 @@ function flxlm_ats_hub_applicant_payload( $application_id, $hub_user = null ) {
 		'hiring_manager'    => $manager ? array( 'id' => $manager->ID, 'name' => $manager->display_name, 'email' => $manager->user_email ) : null,
 		'interviewers'      => flxlm_ats_active_interviewers( $application_id ),
 		'notes'             => $notes,
+		// The AI resume summary record (inc/ai-summary.php), or null. Advisory and
+		// staff-only; nothing in this bridge reads it for a sort, filter or stage move.
+		'ai_summary'        => flxlm_ats_ai_summary_get( $application_id ),
 		'flags'             => $flags,
 		// Field names below match the hub front end's own wire contract
 		// (docs/gws-migration/worker/hiring.html in shswanson/fldn) exactly —
