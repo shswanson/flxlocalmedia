@@ -108,7 +108,7 @@ function flxlm_ats_stages() {
 		'flxlm_new'         => array(
 			'label'       => 'New',
 			'owner'       => 'hiring manager',
-			'exit_test'   => 'We know how they heard about the job, and they are attached to a job posting.',
+			'exit_test'   => 'We know how they heard about the job, they are attached to a job posting, and someone has checked right person, right job.',
 			'description' => 'Received, nobody has looked yet.',
 		),
 		'flxlm_phone'       => array(
@@ -593,6 +593,12 @@ function flxlm_ats_stage_exit_checks( $application_id ) {
 				'detail' => ( $job_id > 0 )
 					? 'Attached to a job posting.'
 					: 'Not attached to a job yet. Use Assign to job on this record.',
+			);
+			$out[] = array(
+				'key'    => 'fit_check',
+				'label'  => 'Right person, right job check done',
+				'met'    => function_exists( 'flxlm_ats_has_fit_check' ) && flxlm_ats_has_fit_check( $application_id ),
+				'detail' => 'Answer "Right person? Right job?" on the candidate page. Soft: it never blocks a move.',
 			);
 			break;
 

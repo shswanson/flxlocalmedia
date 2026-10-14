@@ -2,9 +2,10 @@
 /**
  * Notifications.
  *
- * Two messages go out when an application arrives: one to the hiring manager so
- * the candidate gets looked at, and one to the applicant so they know the thing
- * they just spent twenty minutes on actually arrived.
+ * Two messages go out when an application arrives: one to the hiring manager
+ * and the business manager so the candidate gets looked at, and one to the
+ * applicant so they know the thing they just spent twenty minutes on actually
+ * arrived.
  *
  * EMAIL, NOT SLACK. The open question in the original ticket was which to use.
  * Email, because the people who decide on candidates are station and department
@@ -27,24 +28,32 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Who gets told about an application.
  *
- * Three-deep fallback, in order:
+ * Changed in 1.4.0 (owner request, 2026-10-14: "there should be a notification
+ * to the hiring manager and Dennie when new applications are received"). The
+ * hiring manager used to be the ONLY recipient, and the business manager heard
+ * about an application only when its job had no manager. Now both always hear:
  *
  *   1. The job's assigned hiring manager (job_hiring_manager, a WP user ID —
- *      see inc/hiring-manager.php). This is the routing the paused
- *      feat/hub-postings branch (commit 5530c58) already built for the same
- *      reason: job_email is also the PUBLIC contact address search engines
- *      and Google Jobs show, and a field cannot simultaneously be a shared
- *      public inbox and the one person who must personally read every
+ *      see inc/hiring-manager.php), so the candidate gets looked at. This is
+ *      the routing the paused feat/hub-postings branch (commit 5530c58)
+ *      already built: job_email is also the PUBLIC contact address search
+ *      engines and Google Jobs show, and a field cannot simultaneously be a
+ *      shared public inbox and the one person who must personally read every
  *      application. The manager is stored as a user, not a free-typed
- *      address, so the person notified is always someone who can actually
- *      open the record.
- *   2. The posting's own job_email, for jobs that predate a manager
- *      assignment.
- *   3. The business manager address(es) (inc/comments.php), so an application
- *      against a job with neither is never received silently — and so an
- *      application with NO job at all (an email-intake arrival the sender
+ *      address, so the person notified is always someone who can open the
+ *      record.
+ *   2. EVERY business manager address (inc/comments.php), Dennie by default,
+ *      so the person who owns the Offer stage and the company-wide view sees
+ *      each application arrive, and so an application against a job with no
+ *      manager, or with NO job at all (an email-intake arrival the sender
  *      could not match to a posting, or the "Unassigned" pseudo-vacancy on
- *      the hub) still reaches a real person.
+ *      the hub), still reaches a real person.
+ *   3. The posting's own job_email, but ONLY when the job has no hiring
+ *      manager. It is the public inbox for jobs that predate a manager
+ *      assignment; once a manager exists it is no longer a recipient.
+ *
+ * The list is de-duplicated ignoring case, so a business manager who is also
+ * the job's hiring manager gets one email, not two.
  *
  * @param int $application_id Application ID.
  * @return string[] Email addresses.
@@ -52,15 +61,17 @@ defined( 'ABSPATH' ) || exit;
 function flxlm_ats_notify_recipients( $application_id ) {
 	$recipients = array();
 	$job_id     = (int) get_post_meta( $application_id, '_flxlm_job_id', true );
+	$has_manager = false;
 
 	if ( $job_id ) {
 		$manager = function_exists( 'flxlm_ats_job_hiring_manager' ) ? flxlm_ats_job_hiring_manager( $job_id ) : null;
 		if ( $manager && is_email( $manager->user_email ) ) {
 			$recipients[] = $manager->user_email;
+			$has_manager  = true;
 		}
 	}
 
-	if ( $job_id && ! $recipients ) {
+	if ( $job_id && ! $has_manager ) {
 		$job_email = (string) get_post_meta( $job_id, 'job_email', true );
 		foreach ( explode( ',', $job_email ) as $candidate ) {
 			$candidate = trim( $candidate );
@@ -70,9 +81,21 @@ function flxlm_ats_notify_recipients( $application_id ) {
 		}
 	}
 
-	if ( ! $recipients && function_exists( 'flxlm_ats_business_manager_emails' ) ) {
-		$recipients = flxlm_ats_business_manager_emails();
+	if ( function_exists( 'flxlm_ats_business_manager_emails' ) ) {
+		foreach ( flxlm_ats_business_manager_emails() as $business_email ) {
+			$recipients[] = $business_email;
+		}
 	}
+
+	// De-duplicate ignoring case, keeping the first spelling seen.
+	$unique = array();
+	foreach ( $recipients as $address ) {
+		$key = strtolower( trim( (string) $address ) );
+		if ( '' !== $key && ! isset( $unique[ $key ] ) ) {
+			$unique[ $key ] = $address;
+		}
+	}
+	$recipients = array_values( $unique );
 
 	/**
 	 * Filter who is notified about a new application.
@@ -80,7 +103,7 @@ function flxlm_ats_notify_recipients( $application_id ) {
 	 * @param string[] $recipients     Email addresses.
 	 * @param int      $application_id Application ID.
 	 */
-	return apply_filters( 'flxlm_ats_notify_recipients', array_unique( $recipients ), $application_id );
+	return apply_filters( 'flxlm_ats_notify_recipients', $recipients, $application_id );
 }
 
 /**
@@ -111,7 +134,22 @@ function flxlm_ats_notify_manager( $application_id ) {
 	$phone_url  = flxlm_ats_action_url( $application_id, 'flxlm_phone' );
 	$reject_url = flxlm_ats_action_url( $application_id, 'flxlm_rejected' );
 	$admin_url  = admin_url( 'post.php?post=' . $application_id . '&action=edit' );
-	$hub_url    = 'https://hub.flxlocalmedia.com/hiring/?application=' . (int) $application_id;
+	$hub_url    = flxlm_ats_hub_application_url( $application_id );
+
+	// A "considered for" copy (inc/fit-check.php) is created by a staff member
+	// who judged the person a better fit for this job; say so, and say what
+	// else they applied for, so the manager is not reading it cold.
+	$entered_by_staff = ( 'consider-for' === get_post_meta( $application_id, '_flxlm_entered_by', true ) );
+	$staff_line       = '';
+	if ( $entered_by_staff ) {
+		$others     = function_exists( 'flxlm_ats_other_applications' ) ? flxlm_ats_other_applications( $application_id ) : array();
+		$other_text = array();
+		foreach ( $others as $other ) {
+			$other_text[] = $other['job_title'];
+		}
+		$staff_line = 'Someone on the team thinks this person may be a better fit for this job than the one they applied for.'
+			. ( $other_text ? ' They applied for: ' . implode( ', ', $other_text ) . '.' : '' );
+	}
 
 	$subject = 'New application: ' . $name . ', ' . $job;
 
@@ -137,6 +175,12 @@ function flxlm_ats_notify_manager( $application_id ) {
 				<td style="padding:.2rem 0"><?php echo esc_html( $source ); ?></td>
 			</tr>
 		</table>
+
+		<?php if ( $entered_by_staff ) : ?>
+			<p style="margin:0 0 1.25rem;padding:.7rem .9rem;background:#f4f6fa;border-radius:6px;font-size:.95rem">
+				<?php echo esc_html( $staff_line ); ?>
+			</p>
+		<?php endif; ?>
 
 		<?php if ( $links ) : ?>
 			<p style="margin:0 0 .35rem;color:#666;font-size:.95rem">Their work</p>
@@ -203,9 +247,11 @@ function flxlm_ats_notify_applicant( $application_id ) {
 	// address ATS_EMAIL_INTAKE never verified belongs to the applicant (it
 	// could be a forwarder), a receipt sent to the wrong person at worst. See
 	// the v1 contract: "Manual and email-intake entries send NO receipt email
-	// to the applicant."
+	// to the applicant." A "considered for" copy (inc/fit-check.php) is the same
+	// case: staff created it, the person never asked for this job, and a
+	// receipt for a job they did not apply to would just be confusing.
 	$entered_by = get_post_meta( $application_id, '_flxlm_entered_by', true );
-	if ( in_array( $entered_by, array( 'manual', 'email-intake' ), true ) ) {
+	if ( in_array( $entered_by, array( 'manual', 'email-intake', 'consider-for' ), true ) ) {
 		return;
 	}
 

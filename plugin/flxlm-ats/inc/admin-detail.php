@@ -211,13 +211,13 @@ function flxlm_ats_render_detail_box( $post ) {
 	flxlm_ats_render_contact_card( $id );
 
 	$rows = array(
-		'Applied for'    => flxlm_ats_job_title( $id ),
 		'Pay they want'  => get_post_meta( $id, '_flxlm_salary_expectation', true ),
 		'Applied'        => mysql2date( 'F j, Y g:ia', get_post_meta( $id, '_flxlm_submitted_at', true ) ),
 		'Came in via'    => flxlm_ats_entered_by_label( get_post_meta( $id, '_flxlm_entered_by', true ) ),
 	);
 
 	echo '<table class="form-table"><tbody>';
+	echo '<tr><th style="width:11rem">Applied for</th><td>' . flxlm_ats_job_link_html( $id ) . '</td></tr>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside flxlm_ats_job_link_html().
 	foreach ( $rows as $label => $value ) {
 		if ( '' === (string) $value ) {
 			continue;
@@ -227,6 +227,9 @@ function flxlm_ats_render_detail_box( $post ) {
 	echo '</tbody></table>';
 
 	flxlm_ats_render_source_control( $id );
+
+	flxlm_ats_render_fit_box( $id );
+	flxlm_ats_render_other_applications_box( $id );
 
 	// Above the resume so it is seen before the tall PDF viewer pushes the rest of the screen down.
 	flxlm_ats_render_ai_summary_card( $id );
@@ -264,7 +267,7 @@ function flxlm_ats_render_detail_box( $post ) {
 
 	printf(
 		'<p style="margin-top:1.5rem"><a href="%s">Open in the hub</a> &middot; full history, comments and feedback in one timeline.</p>',
-		esc_url( 'https://hub.flxlocalmedia.com/hiring/?application=' . (int) $id )
+		esc_url( flxlm_ats_hub_application_url( $id ) )
 	);
 }
 
@@ -450,6 +453,7 @@ function flxlm_ats_render_notes_box( $id ) {
 		'decision' => 'Decision',
 		'system'   => 'System',
 		'ai_summary' => 'AI summary',
+		'fit'      => 'Fit check',
 	);
 	// An AI summary note reads differently from a person's words: same tinted,
 	// dashed treatment as the card at the top of the screen.
@@ -549,6 +553,7 @@ function flxlm_ats_entered_by_label( $key ) {
 		'fldn-relay'   => 'The form on Finger Lakes Daily News',
 		'manual'       => 'Entered by hand',
 		'email-intake' => 'Email to jobs@flxlocalmedia.com',
+		'consider-for' => 'Added by the team as a possible fit',
 	);
 	return $map[ $key ] ?? (string) $key;
 }

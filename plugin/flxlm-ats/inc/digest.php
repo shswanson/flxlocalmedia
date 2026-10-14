@@ -177,6 +177,50 @@ function flxlm_ats_current_stage_entered_at( $application_id ) {
 }
 
 /**
+ * The stages the stuck rule applies to. Interview is judged by feedback
+ * instead (rule 2 above), and Hired / Not hired are closed.
+ *
+ * @return string[]
+ */
+function flxlm_ats_stuck_stages() {
+	return array( 'flxlm_new', 'flxlm_phone', 'flxlm_decision', 'flxlm_offer' );
+}
+
+/**
+ * How many business days an application has sat in its current stage, when
+ * that stage is one the stuck rule watches; 0 for any other stage.
+ *
+ * This is the digest's rule (1) lifted out so the hub's "stuck" counts and
+ * "over target" pills and the weekly email can never disagree about what
+ * stuck means.
+ *
+ * @param int         $application_id Application ID.
+ * @param string|null $stage          The current stage, when the caller already has it.
+ * @return int
+ */
+function flxlm_ats_stuck_business_days( $application_id, $stage = null ) {
+	$application_id = (int) $application_id;
+	$stage          = null === $stage ? get_post_status( $application_id ) : $stage;
+
+	if ( ! in_array( $stage, flxlm_ats_stuck_stages(), true ) ) {
+		return 0;
+	}
+
+	return flxlm_ats_business_days_since( flxlm_ats_current_stage_entered_at( $application_id ) );
+}
+
+/**
+ * Whether an application is stuck by the digest's rule (1).
+ *
+ * @param int         $application_id Application ID.
+ * @param string|null $stage          The current stage, when the caller already has it.
+ * @return bool
+ */
+function flxlm_ats_is_stuck( $application_id, $stage = null ) {
+	return flxlm_ats_stuck_business_days( $application_id, $stage ) > FLXLM_ATS_DIGEST_STUCK_DAYS;
+}
+
+/**
  * Build the digest: every non-terminal application that trips at least one
  * "stuck" condition, with the reasons it tripped.
  *
@@ -220,9 +264,8 @@ function flxlm_ats_build_digest() {
 		$stage          = get_post_status( $application_id );
 
 		// (1) Sitting in New / Phone screen / Decision / Offer too long.
-		if ( in_array( $stage, array( 'flxlm_new', 'flxlm_phone', 'flxlm_decision', 'flxlm_offer' ), true ) ) {
-			$entered = flxlm_ats_current_stage_entered_at( $application_id );
-			$days    = flxlm_ats_business_days_since( $entered );
+		if ( in_array( $stage, flxlm_ats_stuck_stages(), true ) ) {
+			$days = flxlm_ats_stuck_business_days( $application_id, $stage );
 			if ( $days > FLXLM_ATS_DIGEST_STUCK_DAYS ) {
 				$get_entry( $application_id );
 				$flagged[ $application_id ]['reasons'][] = sprintf(
@@ -355,7 +398,7 @@ function flxlm_ats_send_digest( $dry_run = false ) {
 					<?php
 					$name = flxlm_ats_applicant_name( $row['application_id'] );
 					$job  = flxlm_ats_job_title( $row['application_id'] );
-					$url  = 'https://hub.flxlocalmedia.com/hiring/?application=' . (int) $row['application_id'];
+					$url  = flxlm_ats_hub_application_url( $row['application_id'] );
 					?>
 					<li style="margin-bottom:.6rem">
 						<a href="<?php echo esc_url( $url ); ?>"><strong><?php echo esc_html( $name ); ?></strong></a>

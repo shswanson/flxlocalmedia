@@ -30,11 +30,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /** Schema version, bumped when the notes table changes. */
-const FLXLM_ATS_NOTES_DB_VERSION = 1;
+const FLXLM_ATS_NOTES_DB_VERSION = 2; // v2 (1.4.0): adds the nullable `meta` column that carries a fit check's structured answers.
 
 /** The kinds a note may be. */
 function flxlm_ats_note_kinds() {
-	return array( 'comment', 'feedback', 'decision', 'system', 'ai_summary' );
+	return array( 'comment', 'feedback', 'decision', 'system', 'ai_summary', 'fit' );
 }
 
 /** The ratings a 'feedback' note may carry. Null for every other kind. */
@@ -73,6 +73,7 @@ function flxlm_ats_install_notes_table() {
 		stage varchar(40) NOT NULL DEFAULT '',
 		rating varchar(20) DEFAULT NULL,
 		body longtext NOT NULL,
+		meta longtext DEFAULT NULL,
 		created_at datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),
 		KEY application_id (application_id),
@@ -114,6 +115,8 @@ add_action( 'cli_init', 'flxlm_ats_maybe_install_notes_table' );
  *     @type string $stage        Optional. Stage at time of writing; defaults to the
  *                                 application's current stage.
  *     @type string $rating       Optional, 'feedback' only. One of flxlm_ats_note_ratings().
+ *     @type array  $meta         Optional, 'fit' only. Structured values stored as JSON beside
+ *                                 the readable body (see flxlm_ats_add_fit_check()).
  * }
  * @return int|WP_Error New row id.
  */
@@ -174,22 +177,33 @@ function flxlm_ats_add_note( $application_id, $kind, $args = array() ) {
 	// already reduced to plain text, so they take the same path. 'comment',
 	// 'feedback' and 'decision' notes are staff-authored free text and keep
 	// the existing HTML allowlist.
-	$sanitized_body = in_array( $kind, array( 'system', 'ai_summary' ), true ) ? sanitize_textarea_field( $body ) : wp_kses_post( $body );
+	// 'fit' notes (a "right person, right job" check) are staff-typed but are
+	// rendered as plain text next to structured values, so they take the same
+	// plain-text path as system notes.
+	$sanitized_body = in_array( $kind, array( 'system', 'ai_summary', 'fit' ), true ) ? sanitize_textarea_field( $body ) : wp_kses_post( $body );
 
-	$result = $wpdb->insert(
-		flxlm_ats_notes_table(),
-		array(
-			'application_id' => $application_id,
-			'kind'           => $kind,
-			'author_email'   => sanitize_email( $author_email ),
-			'author_name'    => sanitize_text_field( $author_name ),
-			'stage'          => sanitize_key( $stage ),
-			'rating'         => $rating,
-			'body'           => $sanitized_body,
-			'created_at'     => gmdate( 'Y-m-d H:i:s' ),
-		),
-		array( '%d', '%s', '%s', '%s', '%s', $rating ? '%s' : null, '%s', '%s' )
+	$meta_json = null;
+	if ( 'fit' === $kind && isset( $args['meta'] ) && is_array( $args['meta'] ) ) {
+		$meta_json = wp_json_encode( $args['meta'] );
+	}
+
+	$row     = array(
+		'application_id' => $application_id,
+		'kind'           => $kind,
+		'author_email'   => sanitize_email( $author_email ),
+		'author_name'    => sanitize_text_field( $author_name ),
+		'stage'          => sanitize_key( $stage ),
+		'rating'         => $rating,
+		'body'           => $sanitized_body,
+		'created_at'     => gmdate( 'Y-m-d H:i:s' ),
 	);
+	$formats = array( '%d', '%s', '%s', '%s', '%s', $rating ? '%s' : null, '%s', '%s' );
+	if ( null !== $meta_json ) {
+		$row['meta'] = $meta_json;
+		$formats[]   = '%s';
+	}
+
+	$result = $wpdb->insert( flxlm_ats_notes_table(), $row, $formats );
 
 	if ( false === $result ) {
 		return new WP_Error( 'flxlm_ats_note_insert_failed', 'The note could not be saved: ' . $wpdb->last_error );
@@ -215,7 +229,8 @@ function flxlm_ats_add_note( $application_id, $kind, $args = array() ) {
  *
  * @param int        $application_id Application ID.
  * @param array|null $kinds          Restrict to these kinds, or null for all.
- * @return array List of {id, kind, author_email, author_name, stage, rating, body, created_at}.
+ * @return array List of {id, kind, author_email, author_name, stage, rating, body, meta, created_at}.
+ *                'meta' is the decoded array for a fit note and null for every other kind.
  */
 function flxlm_ats_get_notes( $application_id, $kinds = null ) {
 	global $wpdb;
@@ -233,11 +248,60 @@ function flxlm_ats_get_notes( $application_id, $kinds = null ) {
 	}
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name is not user input; $where's placeholders are all bound below.
-	$sql = "SELECT id, application_id, kind, author_email, author_name, stage, rating, body, created_at FROM {$table} WHERE {$where} ORDER BY id ASC";
+	$sql = "SELECT id, application_id, kind, author_email, author_name, stage, rating, body, meta, created_at FROM {$table} WHERE {$where} ORDER BY id ASC";
 
 	$rows = $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_A );
 
-	return $rows ? $rows : array();
+	return $rows ? array_map( 'flxlm_ats_decode_note_row', $rows ) : array();
+}
+
+/**
+ * Decode a note row's JSON `meta` column in place.
+ *
+ * @param array $row A notes-table row.
+ * @return array The same row with 'meta' as an array or null.
+ */
+function flxlm_ats_decode_note_row( $row ) {
+	$decoded = ( isset( $row['meta'] ) && '' !== (string) $row['meta'] ) ? json_decode( (string) $row['meta'], true ) : null;
+
+	$row['meta'] = is_array( $decoded ) ? $decoded : null;
+	return $row;
+}
+
+/**
+ * Notes for many applications in one query, grouped by application id.
+ *
+ * The list screens of the hub need each applicant's feedback and fit checks;
+ * reading them one application at a time would be one query per row.
+ *
+ * @param int[]    $application_ids Application ids.
+ * @param string[] $kinds           Note kinds to read.
+ * @return array<int,array[]> application id => notes, oldest first.
+ */
+function flxlm_ats_get_notes_for_applications( $application_ids, $kinds ) {
+	global $wpdb;
+
+	$out = array();
+	$ids = array_values( array_unique( array_filter( array_map( 'intval', (array) $application_ids ) ) ) );
+	if ( ! $ids || ! $kinds ) {
+		return $out;
+	}
+
+	flxlm_ats_maybe_install_notes_table();
+
+	$table         = flxlm_ats_notes_table();
+	$id_holders    = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+	$kind_holders  = implode( ',', array_fill( 0, count( $kinds ), '%s' ) );
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name is not user input; every placeholder is bound below.
+	$sql           = "SELECT id, application_id, kind, author_email, author_name, stage, rating, body, meta, created_at FROM {$table} WHERE application_id IN ({$id_holders}) AND kind IN ({$kind_holders}) ORDER BY id ASC";
+	$rows          = $wpdb->get_results( $wpdb->prepare( $sql, array_merge( $ids, array_values( $kinds ) ) ), ARRAY_A );
+
+	foreach ( (array) $rows as $row ) {
+		$row                                 = flxlm_ats_decode_note_row( $row );
+		$out[ (int) $row['application_id'] ][] = $row;
+	}
+
+	return $out;
 }
 
 /**

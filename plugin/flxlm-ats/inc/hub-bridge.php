@@ -65,6 +65,15 @@
  * `action: "add"`. See this plugin's structured report for the exact bodies
  * and response shapes.
  *
+ * The 2026-10-14 hub usability pass (plugin 1.4.0) adds `GET /me`,
+ * `POST /applications/{id}/fit` and `POST /applications/{id}/consider-for`, and
+ * extends `/vacancies`, `/vacancies/{id}/applicants` and `/applications/{id}`
+ * with the data the hub's organised job list, coloured stages and "right
+ * person? right job?" card need. Every change is ADDITIVE: no existing field
+ * was renamed or removed, so the previous hub keeps working until the new one
+ * deploys. Object forms of existing flat fields arrive as `stage_info` and
+ * `source_info`, the same convention the 2026-09-28 pass set.
+ *
  * @package flxlm-ats
  */
 
@@ -108,6 +117,16 @@ function flxlm_ats_hub_bridge_register_rest() {
 		array(
 			'methods'             => 'GET',
 			'callback'            => 'flxlm_ats_hub_get_stages',
+			'permission_callback' => 'flxlm_ats_hub_permission_view',
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/me',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'flxlm_ats_hub_get_me',
 			'permission_callback' => 'flxlm_ats_hub_permission_view',
 		)
 	);
@@ -237,6 +256,28 @@ function flxlm_ats_hub_bridge_register_rest() {
 			'methods'             => 'POST',
 			'callback'            => 'flxlm_ats_hub_post_feedback',
 			'permission_callback' => 'flxlm_ats_hub_permission_view',
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/applications/(?P<id>\d+)/fit',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'flxlm_ats_hub_post_fit',
+			'permission_callback' => 'flxlm_ats_hub_permission_view',
+			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
+		)
+	);
+
+	register_rest_route(
+		$ns,
+		'/applications/(?P<id>\d+)/consider-for',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'flxlm_ats_hub_post_consider_for',
+			'permission_callback' => 'flxlm_ats_hub_permission_manage',
 			'args'                => array( 'id' => array( 'validate_callback' => function ( $value ) { return is_numeric( $value ); } ) ),
 		)
 	);
@@ -403,13 +444,193 @@ function flxlm_ats_hub_get_stages( $request ) {
 }
 
 /**
- * GET /vacancies — open postings with applicant counts by stage.
+ * GET /me — who the signed-in hub user is, as far as hiring goes.
+ *
+ * The hub opens on "My jobs" when this user manages at least one posting, and
+ * hides the move controls from someone who can only view.
+ *
+ * `manages_job_ids` is every job the person is the hiring manager of that the
+ * job list would show: open postings, plus closed or draft postings that still
+ * have active candidates. A manager of only a long-closed posting does not get
+ * an empty "My jobs" view by default.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+function flxlm_ats_hub_get_me( $request ) {
+	$user = $request->get_param( '_flxlm_hub_user' );
+
+	$manages = array();
+	if ( $user instanceof WP_User ) {
+		$jobs = get_posts(
+			array(
+				'post_type'        => 'flxlm_job',
+				'post_status'      => array( 'publish', 'draft', 'pending', 'private', 'future', 'trash' ),
+				'posts_per_page'   => -1,
+				'meta_key'         => 'job_hiring_manager',
+				'meta_value'       => (string) $user->ID,
+				'fields'           => 'ids',
+				'no_found_rows'    => true,
+				'suppress_filters' => false,
+			)
+		);
+		foreach ( $jobs as $job_id ) {
+			if ( 'publish' === get_post_status( $job_id ) || flxlm_ats_hub_job_has_active_applicants( $job_id ) ) {
+				$manages[] = (int) $job_id;
+			}
+		}
+		sort( $manages );
+	}
+
+	$is_business_manager = false;
+	if ( $user instanceof WP_User ) {
+		$business            = array_map( 'strtolower', flxlm_ats_business_manager_emails() );
+		$is_business_manager = in_array( strtolower( $user->user_email ), $business, true );
+	}
+
+	flxlm_ats_hub_audit( $request, 'me', 0 );
+
+	return new WP_REST_Response(
+		array(
+			'email'               => $user instanceof WP_User ? $user->user_email : '',
+			'name'                => $user instanceof WP_User ? $user->display_name : '',
+			'user_id'             => $user instanceof WP_User ? (int) $user->ID : 0,
+			'can_manage'          => $user instanceof WP_User ? user_can( $user, 'flxlm_manage_applications' ) : false,
+			'is_business_manager' => $is_business_manager,
+			'manages_job_ids'     => $manages,
+		),
+		200
+	);
+}
+
+/**
+ * Whether a job has any candidate who is not Hired or Not hired.
+ *
+ * @param int $job_id Job posting ID.
+ * @return bool
+ */
+function flxlm_ats_hub_job_has_active_applicants( $job_id ) {
+	$active = array();
+	foreach ( flxlm_ats_stages() as $key => $stage ) {
+		if ( empty( $stage['terminal'] ) ) {
+			$active[] = $key;
+		}
+	}
+
+	$found = get_posts(
+		array(
+			'post_type'        => 'flxlm_application',
+			'post_status'      => $active,
+			'posts_per_page'   => 1,
+			'meta_key'         => '_flxlm_job_id',
+			'meta_value'       => (string) (int) $job_id,
+			'fields'           => 'ids',
+			'no_found_rows'    => true,
+			'suppress_filters' => false,
+		)
+	);
+	return (bool) $found;
+}
+
+/**
+ * One row of GET /vacancies: a job (or the id-0 "Unassigned" pseudo-vacancy)
+ * with its counts and what needs attention.
+ *
+ * @param array|null $job         Job fields from flxlm_ats_job_summary(), or null for Unassigned.
+ * @param int[]      $app_ids     Every application on it, any stage.
+ * @param array      $ctx         From flxlm_ats_hub_context().
+ * @param array      $stages      flxlm_ats_stages().
+ * @return array
+ */
+function flxlm_ats_hub_vacancy_row( $job, $app_ids, $ctx, $stages ) {
+	$counts    = array_fill_keys( array_keys( $stages ), 0 );
+	$new_count = 0;
+	$active    = 0;
+	$last      = '';
+	$attention = array( 'stuck' => 0, 'source_unknown' => 0, 'feedback_missing' => 0, 'unreviewed_fit' => 0 );
+
+	foreach ( $app_ids as $application_id ) {
+		$stage = (string) get_post_status( $application_id );
+		if ( isset( $counts[ $stage ] ) ) {
+			++$counts[ $stage ];
+		}
+		if ( 'flxlm_new' === $stage ) {
+			++$new_count;
+		}
+
+		$applied = (string) get_post_meta( $application_id, '_flxlm_submitted_at', true );
+		if ( $applied > $last ) {
+			$last = $applied;
+		}
+
+		if ( flxlm_ats_is_terminal_stage( $stage ) ) {
+			continue;
+		}
+		++$active;
+
+		$signals = flxlm_ats_hub_signals( $application_id, $ctx );
+		foreach ( $signals['attention'] as $reason ) {
+			if ( isset( $attention[ $reason ] ) ) {
+				++$attention[ $reason ];
+			}
+		}
+	}
+
+	$by_stage = array();
+	foreach ( $stages as $key => $stage ) {
+		$by_stage[] = array( 'stage' => $key, 'label' => $stage['label'], 'count' => $counts[ $key ] );
+	}
+
+	$job_id = $job ? (int) $job['id'] : 0;
+
+	return array(
+		'id'             => $job_id,
+		'title'          => $job ? $job['title'] : 'Unassigned',
+		'permalink'      => $job ? $job['permalink'] : '',
+		'location'       => $job_id ? (string) get_post_meta( $job_id, 'job_location', true ) : '',
+		'type'           => $job_id ? (string) get_post_meta( $job_id, 'job_type', true ) : '',
+		'job_type'       => $job_id ? (string) get_post_meta( $job_id, 'job_type', true ) : '',
+		'status'         => $job ? $job['status'] : 'open',
+		'hiring_manager' => flxlm_ats_hiring_manager_summary( $job_id ),
+		'total'          => count( $app_ids ),
+		'by_stage'       => $by_stage,
+		// Same counts as by_stage, shaped as {stage: count} — this is the
+		// field name and shape the hub front end's own wire contract
+		// actually reads (docs/gws-migration/worker/hiring.html).
+		'stage_counts'   => $counts,
+		'new_count'      => $new_count,
+		'active_count'   => $active,
+		'last_applied_at' => flxlm_ats_iso( $last ),
+		'attention'      => $attention,
+	);
+}
+
+/**
+ * GET /vacancies — open postings, plus closed or draft postings that still
+ * have candidates in play, each with counts by stage and attention counts.
+ *
+ * Attention counts are of ACTIVE candidates (not Hired, not Not hired):
+ *   stuck             in New, Phone screen, Decision or Offer for more than 5
+ *                     business days (flxlm_ats_is_stuck(), the weekly digest's rule)
+ *   source_unknown    recruitment source missing or "not known yet"
+ *   feedback_missing  an active interviewer with no feedback 2+ business days
+ *                     after being assigned
+ *   unreviewed_fit    in New with no "right person? right job?" check yet
  *
  * @param WP_REST_Request $request Request.
  * @return WP_REST_Response
  */
 function flxlm_ats_hub_get_vacancies( $request ) {
-	$jobs = get_posts(
+	$stages = flxlm_ats_stages();
+	$all    = flxlm_ats_all_application_ids();
+	$ctx    = flxlm_ats_hub_context( $all );
+
+	$by_job = array(); // job id => application ids.
+	foreach ( $all as $application_id ) {
+		$by_job[ (int) get_post_meta( $application_id, '_flxlm_job_id', true ) ][] = $application_id;
+	}
+
+	$published = get_posts(
 		array(
 			'post_type'      => 'flxlm_job',
 			'post_status'    => 'publish',
@@ -419,104 +640,50 @@ function flxlm_ats_hub_get_vacancies( $request ) {
 			'no_found_rows'  => true,
 		)
 	);
+	$jobs = $published;
 
-	$stages = flxlm_ats_stages();
-	$out    = array();
-
-	foreach ( $jobs as $job ) {
-		$counts = array_fill_keys( array_keys( $stages ), 0 );
-		$total  = 0;
-
-		$applications = get_posts(
-			array(
-				'post_type'        => 'flxlm_application',
-				'post_status'      => array_keys( $stages ),
-				'posts_per_page'   => -1,
-				'meta_key'         => '_flxlm_job_id',
-				'meta_value'       => (string) $job->ID,
-				'fields'           => 'ids',
-				'no_found_rows'    => true,
-				'suppress_filters' => false,
+	// Closed, draft or trashed postings stay in the list while anyone is still in play on them.
+	$published_ids = wp_list_pluck( $published, 'ID' );
+	$extra_ids     = array();
+	foreach ( $by_job as $job_id => $ids ) {
+		if ( ! $job_id || in_array( $job_id, $published_ids, true ) ) {
+			continue;
+		}
+		foreach ( $ids as $application_id ) {
+			if ( ! flxlm_ats_is_terminal_stage( (string) get_post_status( $application_id ) ) ) {
+				$extra_ids[] = $job_id;
+				break;
+			}
+		}
+	}
+	if ( $extra_ids ) {
+		$jobs = array_merge(
+			$jobs,
+			get_posts(
+				array(
+					'post_type'      => 'flxlm_job',
+					'post__in'       => $extra_ids,
+					'post_status'    => array( 'publish', 'draft', 'pending', 'private', 'future', 'trash' ),
+					'posts_per_page' => -1,
+					'orderby'        => 'title',
+					'order'          => 'ASC',
+					'no_found_rows'  => true,
+				)
 			)
 		);
+	}
 
-		foreach ( $applications as $application_id ) {
-			$stage = get_post_status( $application_id );
-			if ( isset( $counts[ $stage ] ) ) {
-				++$counts[ $stage ];
-			}
-			++$total;
-		}
-
-		$by_stage = array();
-		foreach ( $stages as $key => $stage ) {
-			$by_stage[] = array(
-				'stage' => $key,
-				'label' => $stage['label'],
-				'count' => $counts[ $key ],
-			);
-		}
-
-		$manager = flxlm_ats_job_hiring_manager( $job->ID );
-
-		$out[] = array(
-			'id'             => $job->ID,
-			'title'          => wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES ),
-			'permalink'      => get_permalink( $job ),
-			'location'       => (string) get_post_meta( $job->ID, 'job_location', true ),
-			'type'           => (string) get_post_meta( $job->ID, 'job_type', true ),
-			'hiring_manager' => $manager ? array( 'id' => $manager->ID, 'name' => $manager->display_name ) : null,
-			'total'          => $total,
-			'by_stage'       => $by_stage,
-			// Same counts as by_stage, shaped as {stage: count} — this is the
-			// field name and shape the hub front end's own wire contract
-			// actually reads (docs/gws-migration/worker/hiring.html).
-			'stage_counts'   => $counts,
-		);
+	$out = array();
+	foreach ( $jobs as $job ) {
+		$out[] = flxlm_ats_hub_vacancy_row( flxlm_ats_job_summary( $job->ID ), $by_job[ $job->ID ] ?? array(), $ctx, $stages );
 	}
 
 	// The "Unassigned" pseudo-vacancy (id 0): applications with no job at all,
 	// most often an email-intake arrival the intake script could not match to
 	// a posting. Only sent when at least one exists, so a site with nothing
 	// unassigned never has to render an always-empty tile.
-	$unassigned_ids = get_posts(
-		array(
-			'post_type'        => 'flxlm_application',
-			'post_status'      => array_keys( $stages ),
-			'posts_per_page'   => -1,
-			'meta_key'         => '_flxlm_job_id',
-			'meta_value'       => '0',
-			'fields'           => 'ids',
-			'no_found_rows'    => true,
-			'suppress_filters' => false,
-		)
-	);
-
-	if ( $unassigned_ids ) {
-		$counts = array_fill_keys( array_keys( $stages ), 0 );
-		foreach ( $unassigned_ids as $application_id ) {
-			$stage = get_post_status( $application_id );
-			if ( isset( $counts[ $stage ] ) ) {
-				++$counts[ $stage ];
-			}
-		}
-
-		$by_stage = array();
-		foreach ( $stages as $key => $stage ) {
-			$by_stage[] = array( 'stage' => $key, 'label' => $stage['label'], 'count' => $counts[ $key ] );
-		}
-
-		$out[] = array(
-			'id'             => 0,
-			'title'          => 'Unassigned',
-			'permalink'      => '',
-			'location'       => '',
-			'type'           => '',
-			'hiring_manager' => null,
-			'total'          => count( $unassigned_ids ),
-			'by_stage'       => $by_stage,
-			'stage_counts'   => $counts,
-		);
+	if ( ! empty( $by_job[0] ) ) {
+		$out[] = flxlm_ats_hub_vacancy_row( null, $by_job[0], $ctx, $stages );
 	}
 
 	// Sent once at the top level, not per-vacancy — the labels for
@@ -575,6 +742,9 @@ function flxlm_ats_hub_get_people( $request ) {
 /**
  * GET /vacancies/{id}/applicants — every applicant against one vacancy.
  *
+ * The `vacancy` header carries what the page needs to introduce the job:
+ * {id, title, status, permalink, hiring_manager}.
+ *
  * @param WP_REST_Request $request Request.
  * @return WP_REST_Response|WP_Error
  */
@@ -584,40 +754,57 @@ function flxlm_ats_hub_get_vacancy_applicants( $request ) {
 	// id 0 is the "Unassigned" pseudo-vacancy (see flxlm_ats_hub_get_vacancies()),
 	// not a real flxlm_job post, so it skips the post lookup entirely.
 	if ( 0 === $job_id ) {
-		$job_title = 'Unassigned';
+		$header = array(
+			'id'             => 0,
+			'title'          => 'Unassigned',
+			'status'         => 'open',
+			'permalink'      => '',
+			'hiring_manager' => null,
+		);
 	} else {
 		$job = get_post( $job_id );
 		if ( ! $job || 'flxlm_job' !== $job->post_type ) {
 			return new WP_Error( 'flxlm_ats_hub_no_vacancy', 'No such vacancy.', array( 'status' => 404 ) );
 		}
-		$job_title = wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES );
+		$summary = flxlm_ats_job_summary( $job_id );
+		$header  = array(
+			'id'             => $job_id,
+			'title'          => $summary['title'],
+			'status'         => $summary['status'],
+			'permalink'      => $summary['permalink'],
+			'hiring_manager' => flxlm_ats_hiring_manager_summary( $job_id ),
+		);
 	}
 
-	$ids = get_posts(
-		array(
-			'post_type'        => 'flxlm_application',
-			'post_status'      => array_keys( flxlm_ats_stages() ),
-			'posts_per_page'   => -1,
-			'meta_key'         => '_flxlm_job_id',
-			'meta_value'       => (string) $job_id,
-			'orderby'          => 'date',
-			'order'            => 'DESC',
-			'fields'           => 'ids',
-			'no_found_rows'    => true,
-			'suppress_filters' => false,
+	$ids = array_map(
+		'intval',
+		get_posts(
+			array(
+				'post_type'        => 'flxlm_application',
+				'post_status'      => array_keys( flxlm_ats_stages() ),
+				'posts_per_page'   => -1,
+				'meta_key'         => '_flxlm_job_id',
+				'meta_value'       => (string) $job_id,
+				'orderby'          => 'date',
+				'order'            => 'DESC',
+				'fields'           => 'ids',
+				'no_found_rows'    => true,
+				'suppress_filters' => false,
+			)
 		)
 	);
 
+	$ctx = flxlm_ats_hub_context( $ids );
 	$out = array();
 	foreach ( $ids as $application_id ) {
-		$out[] = flxlm_ats_hub_applicant_summary( $application_id );
+		$out[] = flxlm_ats_hub_applicant_summary( $application_id, $ctx );
 	}
 
 	flxlm_ats_hub_audit( $request, 'list_applicants', $job_id );
 
 	return new WP_REST_Response(
 		array(
-			'vacancy'    => array( 'id' => $job_id, 'title' => $job_title ),
+			'vacancy'    => $header,
 			'applicants' => $out,
 		),
 		200
@@ -629,20 +816,48 @@ function flxlm_ats_hub_get_vacancy_applicants( $request ) {
  * list screen does not need them and every field returned is one more field
  * that travelled over the wire.
  *
- * @param int $application_id Application ID.
+ * `stage` and `source` stay the flat strings the previous hub reads;
+ * `stage_info` and `source_info` are the {key,label} objects.
+ *
+ * @param int        $application_id Application ID.
+ * @param array|null $ctx            From flxlm_ats_hub_context(); built for this one when null.
  * @return array
  */
-function flxlm_ats_hub_applicant_summary( $application_id ) {
-	$stage = get_post_status( $application_id );
+function flxlm_ats_hub_applicant_summary( $application_id, $ctx = null ) {
+	$application_id = (int) $application_id;
+	$signals        = flxlm_ats_hub_signals( $application_id, $ctx );
+	$stage          = $signals['stage'];
+	$submitted      = (string) get_post_meta( $application_id, '_flxlm_submitted_at', true );
+	if ( '' === $submitted ) {
+		$post      = get_post( $application_id );
+		$submitted = $post ? get_gmt_from_date( $post->post_date ) : '';
+	}
+
 	return array(
-		'id'           => $application_id,
-		'name'         => flxlm_ats_applicant_name( $application_id ),
-		'stage'        => $stage,
-		'stage_label'  => flxlm_ats_stage_label( $stage ),
-		'interviewed'  => flxlm_ats_was_interviewed( $application_id ),
-		'source'       => flxlm_ats_source_label( get_post_meta( $application_id, '_flxlm_source', true ) ),
-		'submitted_at' => get_post_meta( $application_id, '_flxlm_submitted_at', true ),
-		'has_resume'   => (bool) get_post_meta( $application_id, '_flxlm_resume_file', true ),
+		'id'                       => $application_id,
+		'name'                     => flxlm_ats_applicant_name( $application_id ),
+		'stage'                    => $stage,
+		'stage_label'              => flxlm_ats_stage_label( $stage ),
+		'stage_info'               => flxlm_ats_stage_info( $stage ),
+		'stage_entered_at'         => $signals['stage_entered_at'],
+		'days_in_stage'            => $signals['days_in_stage'],
+		'business_days_in_stage'   => $signals['business_days_in_stage'],
+		'target_days'              => $signals['target_days'],
+		'over_target'              => $signals['over_target'],
+		'interviewed'              => flxlm_ats_was_interviewed( $application_id ),
+		'source'                   => flxlm_ats_source_label( $signals['source_key'] ),
+		'source_info'              => array( 'key' => $signals['source_key'], 'label' => flxlm_ats_source_label( $signals['source_key'] ) ),
+		'source_unknown'           => $signals['source_unknown'],
+		'submitted_at'             => get_post_meta( $application_id, '_flxlm_submitted_at', true ),
+		'applied_at'               => flxlm_ats_iso( $submitted ),
+		'has_resume'               => $signals['has_resume'],
+		'resume_type'              => $signals['resume_type'],
+		'interviewers_total'       => $signals['interviewers_total'],
+		'feedback_submitted'       => $signals['feedback_submitted'],
+		'feedback_ratings'         => $signals['feedback_ratings'],
+		'fit'                      => $signals['fit'],
+		'other_applications_count' => $signals['other_applications_count'],
+		'attention'                => $signals['attention'],
 	);
 }
 
@@ -741,6 +956,9 @@ function flxlm_ats_hub_applicant_payload( $application_id, $hub_user = null ) {
 				'body'          => $note['body'],
 				'created_at'    => $note['created_at'],
 				'is_current'    => $is_current,
+				// A fit check's structured answers ({person, job, other_job_id,
+				// other_job_title, note}); null for every other kind.
+				'fit'           => 'fit' === $note['kind'] ? $note['meta'] : null,
 			);
 		},
 		$raw_notes
@@ -754,12 +972,19 @@ function flxlm_ats_hub_applicant_payload( $application_id, $hub_user = null ) {
 		$flags[] = 'no_job';
 	}
 
+	$fit         = flxlm_ats_fit_state( $raw_notes );
+	$resume_id   = (int) $application['resume_file'];
+	$resume_meta = $resume_id > 0 ? flxlm_ats_get_resume_meta( $resume_id ) : null;
+
 	$out = array(
 		'id'                => $application_id,
 		'name'              => flxlm_ats_applicant_name( $application_id ),
 		'email'             => $application['email'],
 		'phone'             => $application['phone'],
 		'job_title'         => wp_specialchars_decode( flxlm_ats_job_title( $application_id ), ENT_QUOTES ),
+		// {id, title, status: open|closed, permalink}, or null when attached to no job.
+		// The candidate page links back to /hiring/job/{job.id} from this.
+		'job'               => flxlm_ats_job_summary( $job_id, $application['job_title'] ),
 		// 'stage'/'stage_label' stay flat strings: this is the shape the hub
 		// front end's existing wire contract (docs/gws-migration/worker/hiring.html
 		// in shswanson/fldn) already reads. 'stage_info' carries the new
@@ -795,6 +1020,15 @@ function flxlm_ats_hub_applicant_payload( $application_id, $hub_user = null ) {
 		'salary_expectation' => $application['salary_expectation'],
 		'has_resume'    => (bool) $application['resume_file'],
 		'resume_name'   => $application['resume_name'],
+		'resume_type'   => $resume_meta ? (string) $resume_meta['mime_type'] : '',
+		// The same person's other applications (matched on lowercased email),
+		// never this record. Newest first.
+		'other_applications' => flxlm_ats_other_applications( $application_id ),
+		// "Right person? Right job?": the latest check from each person, newest
+		// first, and how many of them answered yes / maybe / no. Human judgments
+		// only; the AI summary never fills or suggests these.
+		'fit_checks'    => $fit['checks'],
+		'fit_summary'   => $fit['summary'],
 		'stage_history' => $history,
 		'stages'        => $stages,
 		'can_manage'    => $hub_user instanceof WP_User ? user_can( $hub_user, 'flxlm_manage_applications' ) : false,
@@ -1137,6 +1371,101 @@ function flxlm_ats_hub_post_feedback( $request ) {
 	flxlm_ats_hub_audit( $request, 'feedback', $application_id );
 
 	return new WP_REST_Response( flxlm_ats_hub_applicant_payload( $application_id, $user ), 200 );
+}
+
+/**
+ * POST /applications/{id}/fit — record a "right person? right job?" check,
+ * authored by the hub user. Append-only: a changed mind is a new check.
+ *
+ * Body: {person: 'yes'|'maybe'|'no', job: 'this_job'|'other_job'|'no_job',
+ * other_job_id (required with other_job: an open posting other than this
+ * application's own), note (optional, up to 1000 characters)}.
+ *
+ * Answers 422 {error, errors:[{field,message}]} for a bad answer, and the full
+ * applicant JSON on success.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_post_fit( $request ) {
+	$application_id = (int) $request->get_param( 'id' );
+	$body           = $request->get_json_params();
+	$body           = is_array( $body ) ? $body : array();
+	$user           = $request->get_param( '_flxlm_hub_user' );
+
+	$result = flxlm_ats_add_fit_check(
+		$application_id,
+		$body,
+		$user instanceof WP_User ? $user->user_email : '',
+		$user instanceof WP_User ? $user->display_name : ''
+	);
+
+	if ( is_wp_error( $result ) ) {
+		if ( 'flxlm_ats_invalid_fit' === $result->get_error_code() ) {
+			$data = $result->get_error_data();
+			return new WP_REST_Response(
+				array( 'error' => $result->get_error_message(), 'errors' => $data['errors'] ?? array() ),
+				422
+			);
+		}
+		$status = 'flxlm_ats_no_application' === $result->get_error_code() ? 404 : 400;
+		return new WP_Error( $result->get_error_code(), $result->get_error_message(), array( 'status' => $status ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'fit', $application_id );
+
+	return new WP_REST_Response( flxlm_ats_hub_applicant_payload( $application_id, $user ), 200 );
+}
+
+/**
+ * POST /applications/{id}/consider-for — create a new application on another
+ * open job for the same person (copying their details, sharing the stored
+ * resume), so that job's hiring manager and the business manager are told.
+ * No receipt goes to the applicant.
+ *
+ * Body: {job_id}. Answers 422 {error, errors:[{field,message}]} when the job
+ * is not an open posting or the person already has an application on it, and
+ * {application_id, job_id, job_title} on success.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function flxlm_ats_hub_post_consider_for( $request ) {
+	$application_id = (int) $request->get_param( 'id' );
+	$body           = $request->get_json_params();
+	$body           = is_array( $body ) ? $body : array();
+	$user           = $request->get_param( '_flxlm_hub_user' );
+	$job_id         = isset( $body['job_id'] ) && is_numeric( $body['job_id'] ) ? (int) $body['job_id'] : 0;
+
+	$result = flxlm_ats_consider_for(
+		$application_id,
+		$job_id,
+		$user instanceof WP_User ? $user->user_email : '',
+		$user instanceof WP_User ? $user->display_name : ''
+	);
+
+	if ( is_wp_error( $result ) ) {
+		if ( 'flxlm_ats_invalid_consider' === $result->get_error_code() ) {
+			$data = $result->get_error_data();
+			return new WP_REST_Response(
+				array( 'error' => $result->get_error_message(), 'errors' => $data['errors'] ?? array() ),
+				422
+			);
+		}
+		$status = 'flxlm_ats_no_application' === $result->get_error_code() ? 404 : 400;
+		return new WP_Error( $result->get_error_code(), $result->get_error_message(), array( 'status' => $status ) );
+	}
+
+	flxlm_ats_hub_audit( $request, 'consider_for:' . $job_id, $application_id );
+
+	return new WP_REST_Response(
+		array(
+			'application_id' => (int) $result,
+			'job_id'         => $job_id,
+			'job_title'      => wp_specialchars_decode( flxlm_ats_job_title( $result ), ENT_QUOTES ),
+		),
+		200
+	);
 }
 
 /**

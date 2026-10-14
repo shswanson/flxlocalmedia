@@ -116,7 +116,7 @@ function flxlm_ats_notify_comment( $application_id, $body, $author_email, $autho
 	$candidate = flxlm_ats_applicant_name( $application_id );
 	$job       = flxlm_ats_job_title( $application_id );
 	$subject   = 'New comment on ' . $candidate . ' (' . $job . ')';
-	$hub_url   = 'https://hub.flxlocalmedia.com/hiring/?application=' . $application_id;
+	$hub_url   = flxlm_ats_hub_application_url( $application_id );
 	$who       = $author_name ? $author_name : $author_email;
 
 	ob_start();

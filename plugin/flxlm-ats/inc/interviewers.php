@@ -242,35 +242,40 @@ function flxlm_ats_remove_interviewer( $application_id, $email, $by, $note ) {
  * PRIOR stint as interviewer (they were removed and later re-added) does not
  * silently count as satisfying the current assignment.
  *
- * @param int $application_id Application ID.
- * @return array[] {email, name, assigned_at, feedback_submitted, feedback_at}
+ * @param int        $application_id  Application ID.
+ * @param array|null $feedback_notes  Optional. This application's 'feedback' notes,
+ *                                     oldest first, when the caller has already read
+ *                                     them for many applications at once (the hub's
+ *                                     list screens). Null reads them here.
+ * @return array[] {email, name, assigned_at, feedback_submitted, feedback_at, rating, external}
  */
-function flxlm_ats_active_interviewers( $application_id ) {
+function flxlm_ats_active_interviewers( $application_id, $feedback_notes = null ) {
 	$application_id = (int) $application_id;
 	$active         = array();
 
+	$entries = array();
 	foreach ( flxlm_ats_all_interviewers( $application_id ) as $entry ) {
-		if ( ! empty( $entry['removed_at'] ) ) {
-			continue;
+		if ( empty( $entry['removed_at'] ) ) {
+			$entries[] = $entry;
 		}
+	}
+	if ( ! $entries ) {
+		return $active;
+	}
 
+	if ( null === $feedback_notes ) {
+		$feedback_notes = function_exists( 'flxlm_ats_get_notes' ) ? flxlm_ats_get_notes( $application_id, array( 'feedback' ) ) : array();
+	}
+
+	foreach ( $entries as $entry ) {
 		$feedback_at = '';
-		if ( function_exists( 'flxlm_ats_get_notes' ) ) {
-			foreach ( flxlm_ats_get_notes( $application_id, array( 'feedback' ) ) as $note ) {
-				if ( strtolower( $note['author_email'] ) === strtolower( $entry['email'] )
-					&& $note['created_at'] >= $entry['assigned_at'] ) {
-					$feedback_at = $note['created_at']; // Notes are read oldest-first; keep the latest.
-				}
-			}
-		}
-
-		$rating = '';
-		if ( '' !== $feedback_at && function_exists( 'flxlm_ats_get_notes' ) ) {
-			foreach ( flxlm_ats_get_notes( $application_id, array( 'feedback' ) ) as $note ) {
-				if ( strtolower( $note['author_email'] ) === strtolower( $entry['email'] )
-					&& $note['created_at'] === $feedback_at ) {
-					$rating = (string) $note['rating'];
-				}
+		$rating      = '';
+		foreach ( $feedback_notes as $note ) {
+			// Notes are read oldest-first; keep the latest.
+			if ( strtolower( $note['author_email'] ) === strtolower( $entry['email'] )
+				&& $note['created_at'] >= $entry['assigned_at'] ) {
+				$feedback_at = $note['created_at'];
+				$rating      = (string) $note['rating'];
 			}
 		}
 
