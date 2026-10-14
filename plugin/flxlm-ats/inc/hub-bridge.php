@@ -1492,6 +1492,11 @@ function flxlm_ats_hub_post_job( $request ) {
 	if ( ! $job || 'flxlm_job' !== $job->post_type ) {
 		return new WP_Error( 'flxlm_ats_hub_bad_job', 'No such job posting.', array( 'status' => 422 ) );
 	}
+	// A closed or draft posting is not somewhere a new candidate should land
+	// (the hub's job list still shows those, but only while old candidates remain).
+	if ( 'publish' !== $job->post_status ) {
+		return new WP_Error( 'flxlm_ats_hub_closed_job', 'That posting is closed. Choose an open job.', array( 'status' => 422 ) );
+	}
 
 	$title = wp_specialchars_decode( get_the_title( $job ), ENT_QUOTES );
 
