@@ -75,7 +75,7 @@ function flxlm_ats_render_hiring_manager_box( $post ) {
 	$current = (int) get_post_meta( $post->ID, 'job_hiring_manager', true );
 	$users   = flxlm_ats_hiring_manager_candidates();
 
-	echo '<p class="description">New applications for this job email this person first. If nobody is set, we fall back to the posting\'s Application Email, then the business manager.</p>';
+	echo '<p class="description">New applications for this job email this person and the business manager. If nobody is set, the posting\'s Application Email is used in their place.</p>';
 
 	echo '<select name="job_hiring_manager" style="width:100%">';
 	echo '<option value="0">' . esc_html__( 'No one assigned yet', 'flxlm-ats' ) . '</option>';

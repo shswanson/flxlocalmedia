@@ -130,6 +130,7 @@ function flxlm_ats_build_report( $start_year ) {
 	$total_hires          = 0;
 	$total_phone_screened = 0;
 	$no_job_count         = 0;
+	$consider_for_count   = 0;
 
 	foreach ( $ids as $id ) {
 		$job_id      = (int) get_post_meta( $id, '_flxlm_job_id', true );
@@ -141,6 +142,10 @@ function flxlm_ats_build_report( $start_year ) {
 		$hired       = ( '' !== $hired_at && $hired_at >= $period['from'] && $hired_at <= $period['to'] );
 
 		++$total_applicants;
+
+		if ( 'consider-for' === get_post_meta( $id, '_flxlm_entered_by', true ) ) {
+			++$consider_for_count;
+		}
 
 		if ( ! $job_id ) {
 			++$no_job_count;
@@ -248,6 +253,20 @@ function flxlm_ats_build_report( $start_year ) {
 				. '"General application" above. Assign them to a posting (in the hub, or from the applicant '
 				. 'screen) if they belong to a specific vacancy.',
 			$no_job_count
+		);
+	}
+
+	// Staff can add a person they screened for one job to a second, better-fit
+	// job ("Also consider for"). That creates a second application record for
+	// the same person. It is counted here as an application to that job, like
+	// any other record, because the person was considered for it. Whoever files
+	// the report decides whether that matches the station's practice, so say so.
+	if ( $consider_for_count > 0 ) {
+		$warnings[] = sprintf(
+			'%d application(s) in this period were added by staff using "Also consider for" (the person applied '
+				. 'for a different job and was then considered for this one). They are counted as applications to '
+				. 'the job they were added to. On the applicant screen they say "Added by the team as a possible fit".',
+			$consider_for_count
 		);
 	}
 

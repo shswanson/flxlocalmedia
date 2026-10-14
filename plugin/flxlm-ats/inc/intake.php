@@ -119,7 +119,7 @@ function flxlm_ats_validate_fields( $raw ) {
  *     @type int    $job_id       Local flxlm_job ID, 0 when not on this site.
  *     @type string $job_title    Job title as it was when they applied.
  *     @type array  $resume       Result of a storage function, or null.
- *     @type string $entered_by   'web' | 'fldn-relay' | 'manual'.
+ *     @type string $entered_by   'web' | 'fldn-relay' | 'manual' | 'email-intake' | 'consider-for'.
  *     @type string $source_site  'flxlocalmedia' | 'fldn'.
  *     @type string $submitted_at UTC timestamp; defaults to now.
  * }
@@ -188,8 +188,13 @@ function flxlm_ats_create_application( $args ) {
 
 		// The resume row is written while the file is being validated, which is
 		// before this post exists, so it starts life unattached. Point it at the
-		// application now that there is one to point at.
-		flxlm_ats_link_resume( (int) $args['resume']['stored_name'], $application_id );
+		// application now that there is one to point at. A 'shared' resume is one
+		// already stored for another application of the same person (see
+		// flxlm_ats_consider_for()): it keeps pointing at the record it was
+		// uploaded with, and this record just references the same bytes.
+		if ( empty( $args['resume']['shared'] ) ) {
+			flxlm_ats_link_resume( (int) $args['resume']['stored_name'], $application_id );
+		}
 	}
 
 	foreach ( $meta as $key => $value ) {

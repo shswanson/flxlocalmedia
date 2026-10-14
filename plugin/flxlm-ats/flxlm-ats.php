@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FLXLM_ATS_VERSION', '1.3.2' ); // v1.3.2, 2026-09-30: AI summary validator now screens every text field for excluded topics (religion, criminal history, age, pay, family, health and so on) and evaluation wording, and the card shows its time in the site time zone. v1.3.1, 2026-09-30: AI resume summary (inc/ai-summary.php), staff-only and advisory, off unless FLXLM_ATS_EMAIL_INTAKE_SECRET is defined. No data migration. Earlier note: // v1.1, 2026-09-28: contact editing, the recruitment-source change control, clickable mailto:/tel: links, external (non-staff) interviewers, the thumbs recommendation UI, and a visual pass on every signed page. No data migration — inc/upgrade.php still only runs the 1.2.0 stage-ladder migration.
+define( 'FLXLM_ATS_VERSION', '1.4.0' ); // v1.4.0, 2026-10-14: hub usability pass. New-application email now goes to the hiring manager AND every business manager; hub links are /hiring/app/{id}; hub bridge gains GET /me, per-job and per-applicant attention data, other applications by email, the "right person, right job" fit check and "also consider for". Notes table v2 (nullable meta column, applied automatically). v1.3.2, 2026-09-30: AI summary validator now screens every text field for excluded topics (religion, criminal history, age, pay, family, health and so on) and evaluation wording, and the card shows its time in the site time zone. v1.3.1, 2026-09-30: AI resume summary (inc/ai-summary.php), staff-only and advisory, off unless FLXLM_ATS_EMAIL_INTAKE_SECRET is defined. No data migration. Earlier note: // v1.1, 2026-09-28: contact editing, the recruitment-source change control, clickable mailto:/tel: links, external (non-staff) interviewers, the thumbs recommendation UI, and a visual pass on every signed page. No data migration — inc/upgrade.php still only runs the 1.2.0 stage-ladder migration.
 define( 'FLXLM_ATS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FLXLM_ATS_URL', plugin_dir_url( __FILE__ ) );
 
@@ -56,6 +56,8 @@ require_once FLXLM_ATS_DIR . 'inc/form.php';
 require_once FLXLM_ATS_DIR . 'inc/rest-intake.php';
 require_once FLXLM_ATS_DIR . 'inc/hiring-manager.php'; // job_hiring_manager meta box on flxlm_job; inc/notify.php and inc/digest.php both read it.
 require_once FLXLM_ATS_DIR . 'inc/comments.php'; // Business manager address(es) option + team-comment notifications.
+require_once FLXLM_ATS_DIR . 'inc/hiring-overview.php'; // Hub list-screen signals (stuck, feedback overdue, fit, same-person counts) and the hub URL helper every email uses.
+require_once FLXLM_ATS_DIR . 'inc/fit-check.php'; // "Right person? Right job?", other applications by email, "also consider for".
 require_once FLXLM_ATS_DIR . 'inc/notify.php';
 require_once FLXLM_ATS_DIR . 'inc/interviewers.php';
 require_once FLXLM_ATS_DIR . 'inc/contact.php'; // Contact-detail edit and the recruitment-source change control (v1.1, 2026-09-28).

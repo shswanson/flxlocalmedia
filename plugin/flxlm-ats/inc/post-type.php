@@ -120,7 +120,7 @@ function flxlm_ats_meta_keys() {
 		'_flxlm_close_reason',   // One of flxlm_ats_close_reasons(). Set on entering flxlm_rejected.
 		'_flxlm_start_date',     // YYYY-MM-DD. Set on entering flxlm_hired.
 		'_flxlm_stage_history',
-		'_flxlm_entered_by',    // 'web', 'fldn-relay', 'manual', or 'email-intake'.
+		'_flxlm_entered_by',    // 'web', 'fldn-relay', 'manual', 'email-intake', or 'consider-for'.
 		'_flxlm_submitted_at',
 		'_flxlm_interviewers',  // See inc/interviewers.php.
 	);
