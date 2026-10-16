@@ -107,14 +107,14 @@ function flxlm_handle_contact_submit() {
 	}
 
 	$data = array(
-		'first_name'    => sanitize_text_field( $_POST['first_name'] ?? '' ),
-		'last_name'     => sanitize_text_field( $_POST['last_name'] ?? '' ),
+		'first_name'    => sanitize_text_field( wp_unslash( $_POST['first_name'] ?? '' ) ),
+		'last_name'     => sanitize_text_field( wp_unslash( $_POST['last_name'] ?? '' ) ),
 		'email'         => sanitize_email( $_POST['email'] ?? '' ),
-		'phone'         => sanitize_text_field( $_POST['phone'] ?? '' ),
-		'business_name' => sanitize_text_field( $_POST['business_name'] ?? '' ),
-		'interest'      => sanitize_text_field( $_POST['interest'] ?? '' ),
-		'message'       => sanitize_textarea_field( $_POST['message'] ?? '' ),
-		'source_page'   => sanitize_text_field( $_POST['source_page'] ?? '' ),
+		'phone'         => sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) ),
+		'business_name' => sanitize_text_field( wp_unslash( $_POST['business_name'] ?? '' ) ),
+		'interest'      => sanitize_text_field( wp_unslash( $_POST['interest'] ?? '' ) ),
+		'message'       => sanitize_textarea_field( wp_unslash( $_POST['message'] ?? '' ) ),
+		'source_page'   => sanitize_text_field( wp_unslash( $_POST['source_page'] ?? '' ) ),
 	);
 
 	// Send notification email.
