@@ -25,7 +25,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 			<?php if ( has_custom_logo() ) : ?>
 				<?php the_custom_logo(); ?>
 			<?php else : ?>
-				<span class="site-header__wordmark"><?php bloginfo( 'name' ); ?></span>
+				<img
+					src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/brand/FLX-Logo-Medium-Color.svg' ); ?>"
+					alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
+					width="266"
+					height="181"
+				/>
 			<?php endif; ?>
 		</a>
 

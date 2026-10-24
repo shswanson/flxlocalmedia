@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FLXLM_VERSION', '2.2.0' );
+define( 'FLXLM_VERSION', '2.3.0' );
 
 /**
  * Theme setup.
@@ -34,11 +34,30 @@ function flxlm_enqueue_assets() {
 	$css_ver = filemtime( get_template_directory() . '/assets/css/style.css' );
 	$js_ver  = filemtime( get_template_directory() . '/assets/js/main.js' );
 
-	wp_enqueue_style( 'flxlm-fonts', 'https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap', array(), null );
+	wp_enqueue_style( 'flxlm-fonts', 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap', array(), null );
 	wp_enqueue_style( 'flxlm-style', get_template_directory_uri() . '/assets/css/style.css', array( 'flxlm-fonts' ), $css_ver );
 	wp_enqueue_script( 'flxlm-main', get_template_directory_uri() . '/assets/js/main.js', array(), $js_ver, true );
 }
 add_action( 'wp_enqueue_scripts', 'flxlm_enqueue_assets' );
+
+/**
+ * Favicon, from the final FLX mark (white line art on a navy rounded tile).
+ * Only printed when no Site Icon is set in the Customizer, so a Site Icon
+ * still wins if someone sets one later. Files live in assets/images/brand/.
+ */
+function flxlm_favicon_links() {
+	if ( has_site_icon() ) {
+		return;
+	}
+
+	$base = get_template_directory_uri() . '/assets/images/brand/';
+	$ver  = rawurlencode( FLXLM_VERSION );
+
+	echo '<link rel="icon" type="image/svg+xml" href="' . esc_url( $base . 'favicon.svg?ver=' . $ver ) . '" />' . "\n";
+	echo '<link rel="icon" type="image/png" sizes="32x32" href="' . esc_url( $base . 'favicon-32.png?ver=' . $ver ) . '" />' . "\n";
+	echo '<link rel="apple-touch-icon" sizes="180x180" href="' . esc_url( $base . 'apple-touch-icon.png?ver=' . $ver ) . '" />' . "\n";
+}
+add_action( 'wp_head', 'flxlm_favicon_links' );
 
 /**
  * Enqueue Leaflet and station map assets on station pages only.

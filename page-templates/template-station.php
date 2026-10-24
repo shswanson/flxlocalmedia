@@ -236,7 +236,7 @@ get_header();
 	<div class="container">
 		<div class="post-content" style="max-width: 720px; margin: 0 auto; text-align: center;">
 			<p style="font-size: 1.1rem; color: var(--color-text-muted);">Radio reaches <strong>93% of American adults</strong> every month and delivers the <strong>second-highest ROI</strong> of any advertising channel. In the Finger Lakes, <?php echo esc_html( $station_data['drive_alone_pct'] ); ?>% of workers drive alone to work — a captive audience with nothing between them and your message.</p>
-			<p><a href="<?php echo esc_url( home_url( '/solutions/radio/why-radio/' ) ); ?>" style="color: var(--color-lake); font-weight: 600;">Learn why radio works &rarr;</a></p>
+			<p><a href="<?php echo esc_url( home_url( '/solutions/radio/why-radio/' ) ); ?>" style="color: var(--color-teal-ink, #077a89); font-weight: 600;">Learn why radio works &rarr;</a></p>
 		</div>
 	</div>
 </section>

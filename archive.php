@@ -48,7 +48,7 @@ get_header();
 				?>
 			</div>
 		<?php else : ?>
-			<p class="text-center" style="color: var(--color-gray-500);">No posts found.</p>
+			<p class="text-center" style="color: var(--color-text-muted);">No posts found.</p>
 		<?php endif; ?>
 	</div>
 </section>
