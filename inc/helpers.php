@@ -71,7 +71,8 @@ function flxlm_get_video_url( $post_id ) {
  * Render video facade markup.
  *
  * @param int   $post_id Post ID of testimonial.
- * @param array $args    Optional. 'class' for wrapper, 'size' for poster dimensions.
+ * @param array $args    Optional. 'class' for wrapper, 'size' for poster dimensions,
+ *                       'eager' to load the poster at once (above-the-fold use, where it is the LCP image).
  */
 function flxlm_video_facade( $post_id, $args = array() ) {
 	$video_url  = flxlm_get_video_url( $post_id );
@@ -96,7 +97,7 @@ function flxlm_video_facade( $post_id, $args = array() ) {
 	?>
 	<div class="video-facade<?php echo $class; ?>" <?php echo $data_attrs; ?>>
 		<?php if ( $poster ) : ?>
-			<img src="<?php echo esc_url( $poster ); ?>" alt="<?php echo $alt; ?>" width="960" height="540" loading="lazy" />
+			<img src="<?php echo esc_url( $poster ); ?>" alt="<?php echo $alt; ?>" width="960" height="540" <?php echo ! empty( $args['eager'] ) ? 'fetchpriority="high"' : 'loading="lazy"'; ?> />
 		<?php else : ?>
 			<div class="video-facade__placeholder"></div>
 		<?php endif; ?>
