@@ -26,7 +26,7 @@ $featured = flxlm_get_testimonials( array(
 		<div class="hero__media">
 			<?php if ( $featured->have_posts() ) : ?>
 				<?php while ( $featured->have_posts() ) : $featured->the_post(); ?>
-					<?php flxlm_video_facade( get_the_ID() ); ?>
+					<?php flxlm_video_facade( get_the_ID(), array( 'eager' => true ) ); ?>
 				<?php endwhile; wp_reset_postdata(); ?>
 			<?php else : ?>
 				<img
