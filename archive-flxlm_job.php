@@ -11,7 +11,7 @@ get_header();
 <div class="page-header">
 	<div class="container">
 		<h1 class="page-header__title">Careers</h1>
-		<p class="page-header__subtitle">Join our team at FLX Local Media — locally owned multimedia connecting the Finger Lakes through seven radio stations and Finger Lakes Daily News.</p>
+		<p class="page-header__subtitle">Join our team at FLX Local Media, locally owned multimedia connecting the Finger Lakes through seven radio stations and Finger Lakes Daily News.</p>
 	</div>
 </div>
 

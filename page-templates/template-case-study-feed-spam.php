@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Case Study — Feed Spam Attack
+ * Template Name: Case Study: Feed Spam Attack
  *
  * Standalone case study page covering the April 2026 feed-spam mitigation.
  * Content lives in case-study-feed-spam-content.html in the theme root.

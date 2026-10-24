@@ -15,8 +15,7 @@ $quote    = get_post_meta( get_the_ID(), 'quote_short', true );
 <blockquote class="testimonial-quote">
 	<p class="testimonial-quote__text"><?php echo esc_html( $quote ); ?></p>
 	<footer class="testimonial-quote__cite">
-		<span class="testimonial-quote__name"><?php echo esc_html( $person ); ?></span>
-		&mdash;
+		<span class="testimonial-quote__name"><?php echo esc_html( $person ); ?></span><?php echo $business ? ',' : ''; ?>
 		<span class="testimonial-quote__business"><?php echo esc_html( $business ); ?></span>
 	</footer>
 </blockquote>

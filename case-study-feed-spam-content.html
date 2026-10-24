@@ -482,9 +482,9 @@ a:hover { text-decoration: underline; }
 <!-- Hero -->
 <section class="hero">
 <div class="wrap">
-    <p class="hero__eyebrow">Case Study &mdash; Finger Lakes Daily News</p>
+    <p class="hero__eyebrow">Case Study: Finger Lakes Daily News</p>
     <h1 class="hero__title">When Pharma Spammers Try to Poison a Local News Site</h1>
-    <p class="hero__sub">How we caught and killed an SEO attack that was weaponizing WordPress's own RSS feeds&mdash;in a single afternoon.</p>
+    <p class="hero__sub">How we caught and killed an SEO attack that was weaponizing WordPress's own RSS feeds, in a single afternoon.</p>
 </div>
 </section>
 
@@ -519,18 +519,18 @@ a:hover { text-decoration: underline; }
 <div class="wrap">
     <p class="sect__eyebrow">The Signal</p>
     <h2 class="sect__title">Something Was Telling Google to Come Back for More</h2>
-    <p class="sect__lead">Google Search Console's feed-crawler report showed a strange pattern: every two weeks, crawl requests against Finger Lakes Daily News jumped from ~200/day to <strong>2,000&ndash;4,000/day</strong>, then returned to baseline. Like clockwork&mdash;Jan 27, Feb 10, Feb 24, Mar 10, Mar 24, Apr 7. Exactly 14 days apart.</p>
+    <p class="sect__lead">Google Search Console's feed-crawler report showed a strange pattern: every two weeks, crawl requests against Finger Lakes Daily News jumped from ~200/day to <strong>2,000 to 4,000/day</strong>, then returned to baseline. Like clockwork: Jan 27, Feb 10, Feb 24, Mar 10, Mar 24, Apr 7. Exactly 14 days apart.</p>
     <p class="sect__lead">Normal crawl behavior doesn't spike on a calendar. Something was pulling Googlebot back on a schedule.</p>
 
     <div class="card mt-md">
-        <div class="card__head">Feed-Crawler Requests &mdash; Google Search Console (Jan 20 &ndash; Apr 18, 2026)</div>
+        <div class="card__head">Feed-Crawler Requests: Google Search Console (Jan 20 to Apr 18, 2026)</div>
         <div class="card__body">
             <img src="/wp-content/themes/flxlocalmedia/assets/images/case-study-feed-spam-crawl-spikes.png" alt="GSC feed-crawler requests chart showing six biweekly spikes between 2,000 and 4,000 requests between late January and early April, with a ~200/day baseline." style="width:100%;height:auto;display:block;">
         </div>
     </div>
 
     <div class="callout">
-        <strong>Why it matters:</strong> Crawl-budget anomalies are usually the first visible symptom of an SEO attack&mdash;long before polluted results appear in SERPs. Most sites never look. We only saw it because our overnight review pipeline reads the GSC feed-crawler report into BigQuery every morning.
+        <strong>Why it matters:</strong> Crawl-budget anomalies are usually the first visible symptom of an SEO attack, long before polluted results appear in SERPs. Most sites never look. We only saw it because our overnight review pipeline reads the GSC feed-crawler report into BigQuery every morning.
     </div>
 </div>
 </section>
@@ -539,27 +539,27 @@ a:hover { text-decoration: underline; }
 <section class="sect sect--alt">
 <div class="wrap">
     <p class="sect__eyebrow">The Investigation</p>
-    <h2 class="sect__title">Three Problems in the URL List &mdash; One of Them an Active Attack</h2>
-    <p class="sect__lead">We pulled the list of URLs Google's feed crawler was hitting. The pattern was immediately obvious&mdash;and it wasn't just one thing going wrong.</p>
+    <h2 class="sect__title">Three Problems in the URL List: One of Them an Active Attack</h2>
+    <p class="sect__lead">We pulled the list of URLs Google's feed crawler was hitting. The pattern was immediately obvious, and it wasn't just one thing going wrong.</p>
 
     <div class="impl-grid mt-md">
         <div class="impl-card">
             <div class="impl-card__icon impl-card__icon--ochre">&#9888;</div>
             <div class="impl-card__title">1. Pharma Spam Injection</div>
             <div class="impl-card__desc">Dozens of crafted URLs hitting <code>/search/&lt;pharma-query&gt;/feed/rss2/</code>. WordPress turns <em>any</em> search query into an indexable RSS feed. Attackers link to those URLs from compromised sites, Google crawls them, and pharmacy spam ends up indexed under our domain.</div>
-            <div class="impl-card__stat">Active, ongoing &mdash; P0</div>
+            <div class="impl-card__stat">Active, ongoing: P0</div>
         </div>
         <div class="impl-card">
             <div class="impl-card__icon impl-card__icon--teal">&#128203;</div>
             <div class="impl-card__title">2. Low-Value Feed Surface</div>
-            <div class="impl-card__desc">Thousands of crawls against <code>/tag/*/feed</code>, <code>/author/&hellip;/page/850/feed</code>, <code>/category/local/page/559/feed</code>, and <code>/ad_block/&hellip;/feed/</code>&mdash;archive pages with no unique content, burning crawl budget that should be going to actual journalism.</div>
-            <div class="impl-card__stat">High &mdash; crawl waste</div>
+            <div class="impl-card__desc">Thousands of crawls against <code>/tag/*/feed</code>, <code>/author/&hellip;/page/850/feed</code>, <code>/category/local/page/559/feed</code>, and <code>/ad_block/&hellip;/feed/</code>: archive pages with no unique content, burning crawl budget that should be going to actual journalism.</div>
+            <div class="impl-card__stat">High: crawl waste</div>
         </div>
         <div class="impl-card">
             <div class="impl-card__icon impl-card__icon--teal">&#128736;</div>
             <div class="impl-card__title">3. Slugification Bug</div>
-            <div class="impl-card__desc">Thousands of tag slugs starting with <code>8216</code> &mdash; the HTML entity number for a left-single-quote (<code>&amp;#8216;</code>). The RSS-import pipeline was slugifying article titles without decoding HTML entities first, generating a trail of broken tag pages Googlebot kept revisiting.</div>
-            <div class="impl-card__stat">Medium &mdash; data hygiene</div>
+            <div class="impl-card__desc">Thousands of tag slugs starting with <code>8216</code>: the HTML entity number for a left-single-quote (<code>&amp;#8216;</code>). The RSS-import pipeline was slugifying article titles without decoding HTML entities first, generating a trail of broken tag pages Googlebot kept revisiting.</div>
+            <div class="impl-card__stat">Medium: data hygiene</div>
         </div>
     </div>
 </div>
@@ -570,7 +570,7 @@ a:hover { text-decoration: underline; }
 <div class="wrap">
     <p class="sect__eyebrow">The Fix</p>
     <h2 class="sect__title">410 Gone, at the Origin, Before Anything Else Runs</h2>
-    <p class="sect__lead">Two commits to the theme's SEO module&mdash;roughly 70 lines of PHP. The fix had to neutralize the active attack without breaking the feeds that actual readers and syndication partners depend on.</p>
+    <p class="sect__lead">Two commits to the theme's SEO module: roughly 70 lines of PHP. The fix had to neutralize the active attack without breaking the feeds that actual readers and syndication partners depend on.</p>
 
     <div class="two-col mt-md">
         <div>
@@ -584,7 +584,7 @@ a:hover { text-decoration: underline; }
     </div>
 
     <div class="callout">
-        <strong>Careful carve-outs.</strong> The legitimate feeds real readers use&mdash;the main site feed, single-post comment feeds, top-level category feeds, the Google News sitemap&mdash;are all untouched. Verified URL-by-URL on production after the deploy.
+        <strong>Careful carve-outs.</strong> The legitimate feeds real readers use (the main site feed, single-post comment feeds, top-level category feeds, the Google News sitemap) are all untouched. Verified URL-by-URL on production after the deploy.
     </div>
 
     <div class="code-block">
@@ -633,7 +633,7 @@ a:hover { text-decoration: underline; }
 
     <div class="early-banner mt-md">
         <div class="early-banner__icon">&#128337;</div>
-        <div class="early-banner__text"><strong>Next check: April 22.</strong> Based on the 14-day attack pattern (last spike Apr 7&ndash;8), that's the next expected hit. The fix deployed hours before the window opened&mdash;best possible test, because attackers haven't had time to change tactics. If it works, Apr 22 looks like every other day. Follow-up: GSC URL Removal sweep for already-polluted <code>/search/*</code> entries to accelerate the cleanup Google will eventually do on its own.</div>
+        <div class="early-banner__text"><strong>Next check: April 22.</strong> Based on the 14-day attack pattern (last spike Apr 7 to 8), that's the next expected hit. The fix deployed hours before the window opened: best possible test, because attackers haven't had time to change tactics. If it works, Apr 22 looks like every other day. Follow-up: GSC URL Removal sweep for already-polluted <code>/search/*</code> entries to accelerate the cleanup Google will eventually do on its own.</div>
     </div>
 </div>
 </section>
@@ -643,7 +643,7 @@ a:hover { text-decoration: underline; }
 <div class="wrap">
     <p class="sect__eyebrow">Why It Matters</p>
     <h2 class="sect__title">This Is Running Against Thousands of Sites Right Now</h2>
-    <p class="sect__lead">This kind of attack isn't rare. It's quietly running against thousands of WordPress sites this week. Cheap for attackers&mdash;just links from compromised sites, nothing installed, nothing exploited. Expensive for the targets&mdash;index pollution, crawl-budget waste, potential manual spam penalties. And invisible unless someone is actually reading their crawl-stats reports.</p>
+    <p class="sect__lead">This kind of attack isn't rare. It's quietly running against thousands of WordPress sites this week. Cheap for attackers: just links from compromised sites, nothing installed, nothing exploited. Expensive for the targets: index pollution, crawl-budget waste, potential manual spam penalties. And invisible unless someone is actually reading their crawl-stats reports.</p>
     <p class="sect__lead">Local newsrooms don't have a dedicated SEO engineer watching GSC every week. What caught this was the monitoring infrastructure we built out earlier this year: daily crawl-stats ingested into BigQuery, anomaly detection running on the droplet, and an AI assistant reading the report so humans don't have to.</p>
     <p class="sect__lead">The attackers have 14 days to notice they're being rejected. We have 14 days of clean data coming.</p>
 </div>

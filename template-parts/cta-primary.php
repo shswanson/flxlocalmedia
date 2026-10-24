@@ -2,18 +2,18 @@
 /**
  * Template Part: Primary CTA Banner
  *
- * "Ready to grow?" CTA → contact page.
+ * Free local marketing review CTA, links to the contact page review form.
  *
  * @package flxlm
  */
 ?>
 <section class="cta-banner">
 	<div class="container">
-		<span class="section__eyebrow" style="color: var(--color-cyan, #52cfd8);">Ready to grow?</span>
-		<h2 class="cta-banner__title">Let's build a plan <span>that actually works for your business.</span></h2>
-		<p class="cta-banner__subtitle">No pressure, no jargon. Just a conversation about your business and what might move the needle. We'll bring the ideas — you bring the goals.</p>
+		<span class="section__eyebrow" style="color: var(--color-cyan, #52cfd8);">Free local marketing review</span>
+		<h2 class="cta-banner__title">Tell us the one thing <span>holding your business back.</span></h2>
+		<p class="cta-banner__subtitle">A short conversation with someone who knows the Finger Lakes market. We'll come back with a plan, not a pitch.</p>
 		<div class="cta-banner__actions">
-			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--white btn--lg">Get in Touch</a>
+			<a href="<?php echo esc_url( home_url( '/contact/#review' ) ); ?>" class="btn btn--white btn--lg">Get Your Free Review</a>
 		</div>
 	</div>
 </section>

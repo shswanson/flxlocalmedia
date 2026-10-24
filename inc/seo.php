@@ -119,7 +119,7 @@ function flxlm_seo_get_meta() {
 		$canonical = get_post_meta( $pid, 'job_canonical_url', true );
 
 		$title_parts = array_filter( array( get_the_title(), $location ) );
-		$title       = implode( ' — ', $title_parts ) . ' | Careers at ' . $site_name;
+		$title       = implode( ': ', $title_parts ) . ' | Careers at ' . $site_name;
 
 		$excerpt = get_the_excerpt();
 		if ( ! $excerpt ) {
@@ -143,7 +143,7 @@ function flxlm_seo_get_meta() {
 		$business = get_post_meta( get_the_ID(), 'business_name', true );
 		$quote    = get_post_meta( get_the_ID(), 'quote_short', true );
 
-		$title = sprintf( '%s — %s | %s', $person, $business, $site_name );
+		$title = sprintf( '%s, %s | %s', $person, $business, $site_name );
 		$desc  = $quote ? $quote : sprintf( 'See how %s grew their business with FLX Local Media.', $business );
 
 		$poster = get_post_meta( get_the_ID(), 'poster_jpg', true );
@@ -192,7 +192,7 @@ function flxlm_seo_get_meta() {
 	if ( is_post_type_archive( 'flxlm_job' ) ) {
 		return array_merge( $defaults, array(
 			'title'       => 'Careers | ' . $site_name,
-			'description' => 'Open positions at FLX Local Media — seven radio stations plus Finger Lakes Daily News, based in Geneva, NY.',
+			'description' => 'Open positions at FLX Local Media: seven radio stations plus Finger Lakes Daily News, based in Geneva, NY.',
 			'url'         => get_post_type_archive_link( 'flxlm_job' ),
 			'image'       => $default_image,
 		) );
@@ -228,7 +228,7 @@ function flxlm_seo_page_descriptions() {
 		'radio'             => 'Advertise on seven Finger Lakes radio stations reaching 160,000+ listeners. WGVA, WAUB, WFLR, WCGR, WFLK, WLLW, and WNYR.',
 		'digital'           => 'Full-service digital marketing for Finger Lakes businesses. Web design, SEO, Google Ads, social media, video production, and geo-targeting.',
 		'events'            => 'Event marketing and sponsorship opportunities across the Finger Lakes. Concerts, festivals, community events, and custom brand activations.',
-		'content-marketing' => 'Content marketing on Finger Lakes Daily News. Sponsored content, display advertising, and native articles reaching 700,000+ monthly pageviews.',
+		'content-marketing' => 'Content marketing on Finger Lakes Daily News. Sponsored content, display advertising, and native articles reaching 730K+ monthly pageviews.',
 		'about'             => 'FLX Local Media owns seven radio stations and Finger Lakes Daily News. Offices in Geneva, Auburn, and Penn Yan serving the Finger Lakes region.',
 		'contact'           => 'Contact FLX Local Media for advertising, marketing, and media solutions in the Finger Lakes. Offices in Geneva, Auburn, and Penn Yan.',
 		'geneva'            => 'Contact FLX Local Media\'s Geneva office for radio, digital, events, and content marketing solutions in the Finger Lakes.',
@@ -282,6 +282,37 @@ function flxlm_seo_contact_canonical( $canonical, $post ) {
 	return $canonical;
 }
 
+/*--------------------------------------------------------------
+ * 1c. Methodology: /methodology-2/ -> /methodology/
+ *--------------------------------------------------------------*/
+
+add_action( 'template_redirect', 'flxlm_seo_methodology_redirect' );
+
+/**
+ * 301 the duplicate methodology page (ID 49) to /methodology/ (ID 48).
+ *
+ * Only fires once page 48 is using the methodology template, so nothing
+ * breaks while /methodology/ is still empty.
+ */
+function flxlm_seo_methodology_redirect() {
+	if ( ! is_page( 49 ) ) {
+		return;
+	}
+
+	$target = get_post( 48 );
+	if ( ! $target || 'publish' !== $target->post_status ) {
+		return;
+	}
+
+	$slug = (string) get_page_template_slug( 48 );
+	if ( 'template-methodology.php' !== basename( $slug ) ) {
+		return;
+	}
+
+	wp_safe_redirect( get_permalink( 48 ), 301 );
+	exit;
+}
+
 add_filter( 'get_canonical_url', 'flxlm_seo_job_canonical', 10, 2 );
 
 /**
@@ -309,6 +340,11 @@ function flxlm_seo_job_canonical( $canonical, $post ) {
 
 add_filter( 'pre_get_document_title', 'flxlm_seo_document_title', 10 );
 
+// Browser-tab titles use a pipe, never a dash, between the page and the site name.
+add_filter( 'document_title_separator', function () {
+	return '|';
+} );
+
 /**
  * Override WordPress document title with our SEO titles.
  *
@@ -332,7 +368,7 @@ function flxlm_seo_document_title( $title ) {
 	if ( is_singular( 'flxlm_job' ) ) {
 		$location    = get_post_meta( get_the_ID(), 'job_location', true );
 		$title_parts = array_filter( array( get_the_title(), $location ) );
-		return implode( ' — ', $title_parts ) . ' | Careers at FLX Local Media';
+		return implode( ': ', $title_parts ) . ' | Careers at FLX Local Media';
 	}
 
 	if ( is_post_type_archive( 'flxlm_job' ) ) {

@@ -36,7 +36,7 @@ get_header();
 	<div class="container">
 		<h1 class="page-header__title"><?php echo esc_html( $station_data['name'] ); ?></h1>
 		<p class="page-header__subtitle">
-			<?php echo esc_html( $station_data['call_sign'] ); ?> &mdash; <?php echo esc_html( $station_data['frequency'] ); ?>
+			<?php echo esc_html( $station_data['call_sign'] ); ?> &middot; <?php echo esc_html( $station_data['frequency'] ); ?>
 			<br><?php echo esc_html( $station_data['format'] ); ?> &middot; <?php echo esc_html( $station_data['demo'] ); ?>
 		</p>
 	</div>
@@ -235,8 +235,8 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="post-content" style="max-width: 720px; margin: 0 auto; text-align: center;">
-			<p style="font-size: 1.1rem; color: var(--color-text-muted);">Radio reaches <strong>93% of American adults</strong> every month and delivers the <strong>second-highest ROI</strong> of any advertising channel. In the Finger Lakes, <?php echo esc_html( $station_data['drive_alone_pct'] ); ?>% of workers drive alone to work — a captive audience with nothing between them and your message.</p>
-			<p><a href="<?php echo esc_url( home_url( '/solutions/radio/why-radio/' ) ); ?>" style="color: var(--color-teal-ink, #077a89); font-weight: 600;">Learn why radio works &rarr;</a></p>
+			<p style="font-size: 1.1rem; color: var(--color-text-muted);">Radio delivers the <strong>second-highest ROI</strong> of any advertising channel. In the Finger Lakes, <?php echo esc_html( $station_data['drive_alone_pct'] ); ?>% of workers drive alone to work: a captive audience with nothing between them and your message.</p>
+			<p><a href="<?php echo esc_url( home_url( '/solutions/why-radio/' ) ); ?>" style="color: var(--color-teal-ink, #077a89); font-weight: 600;">Learn why radio works &rarr;</a></p>
 		</div>
 	</div>
 </section>

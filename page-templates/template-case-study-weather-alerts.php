@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Case Study — Weather Alerts
+ * Template Name: Case Study: Weather Alerts
  *
  * Standalone case study page covering the automated NWS weather-alert desk
  * built from scratch for Finger Lakes Daily News in 2026.

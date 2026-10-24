@@ -38,7 +38,7 @@ get_header();
 			<div class="methodology-source">
 				<h3>US Census Bureau</h3>
 				<p class="methodology-source__detail">American Community Survey, 5-Year Estimates (2022)</p>
-				<p>County-level population, household income, homeownership rates, education, commute patterns. This is the gold standard for demographic data — used by every government agency, bank, and research institution in the country.</p>
+				<p>County-level population, household income, homeownership rates, education, commute patterns. This is the gold standard for demographic data, used by every government agency, bank, and research institution in the country.</p>
 			</div>
 			<div class="methodology-source">
 				<h3>Nielsen Audio Today</h3>
@@ -58,7 +58,7 @@ get_header();
 			<div class="methodology-source">
 				<h3>Google Analytics 4</h3>
 				<p class="methodology-source__detail">First-party measurement, live</p>
-				<p>Direct measurement of Finger Lakes Daily News website traffic — sessions, pageviews, geographic distribution, engagement. Not estimated. Not sampled. Measured.</p>
+				<p>Direct measurement of Finger Lakes Daily News website traffic: sessions, pageviews, geographic distribution, engagement. Not estimated. Not sampled. Measured.</p>
 			</div>
 			<div class="methodology-source">
 				<h3>Mailchimp Analytics</h3>
@@ -79,7 +79,8 @@ get_header();
 
 		<div class="post-content" style="max-width: 720px; margin: 0 auto;">
 			<h3>Step 1: Define the Market</h3>
-			<p>We use FCC-licensed coverage contours to determine which New York counties each station's signal reaches. Then we pull the Census population for those counties. This gives us the total addressable market — the number of people who <em>can</em> hear the station.</p>
+			<p>The local market on this site is ten New York counties: Ontario, Cayuga, Seneca, Wayne, Yates, Schuyler, Steuben, Chemung, Livingston and Tompkins. Together they hold 697,705 people (American Community Survey, 5-Year Estimates, 2022). The commuter and homeownership figures on our Why Radio page come from the same table for the same ten counties.</p>
+			<p>For each station, we use FCC-licensed coverage contours to determine which of those counties its signal reaches. Then we pull the Census population for those counties. This gives us the total addressable market: the number of people who <em>can</em> hear the station.</p>
 
 			<h3>Step 2: Apply Radio Penetration</h3>
 			<p>Nielsen reports that 93% of American adults listen to radio every month. We apply this rate to the adult population (18+) in each station's coverage area. This gives us the total number of radio listeners in the market.</p>
@@ -88,7 +89,7 @@ get_header();
 			<p>Nielsen publishes national audience share by format: Country holds 13.8% of all listening, News/Talk holds 12.3%, Adult Contemporary 7.5%, Classic Rock 8.1%. We apply these shares to each station based on its format, with adjustments for small-market dynamics (fewer stations means each one captures a larger share).</p>
 
 			<h3>Step 4: Validate with Streaming Data</h3>
-			<p>We measure streaming listeners directly — exact counts, every hour, every day. Industry research shows streaming represents 2-5% of total radio listening. We use our measured streaming data as a floor check: if the streaming-implied audience is higher than our format share estimate, we know we may be underestimating.</p>
+			<p>We measure streaming listeners directly, with exact counts, every hour, every day. Industry research shows streaming represents 2-5% of total radio listening. We use our measured streaming data as a floor check: if the streaming-implied audience is higher than our format share estimate, we know we may be underestimating.</p>
 
 			<h3>Step 5: Cross-Validate</h3>
 			<p>The final estimate for each station is the highest defensible value across all layers. No station exceeds 30% of adults in its coverage area. Every number traces back to a credible source.</p>
@@ -105,7 +106,7 @@ get_header();
 
 		<div class="post-content" style="max-width: 720px; margin: 0 auto;">
 			<p>Our website and newsletter numbers are not estimates. They are direct measurements.</p>
-			<p><strong>Finger Lakes Daily News</strong> traffic is measured by Google Analytics 4 using first-party data. Monthly users, pageviews, geographic distribution, and engagement — all directly observed, not modeled.</p>
+			<p><strong>Finger Lakes Daily News</strong> traffic is measured by Google Analytics 4 using first-party data. Monthly users, pageviews, geographic distribution, and engagement, all directly observed, not modeled.</p>
 			<p><strong>Newsletter</strong> performance is tracked by Mailchimp at the individual email level. When we say our open rate is 49%, that is the actual percentage of delivered emails that were opened, measured across every send.</p>
 		</div>
 	</div>

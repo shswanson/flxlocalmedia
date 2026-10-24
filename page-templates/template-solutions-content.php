@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Solutions — Content Marketing
+ * Template Name: Solutions: Content Marketing
  *
  * @package flxlm
  */
@@ -11,7 +11,7 @@ get_header();
 <div class="page-header">
 	<div class="container">
 		<h1 class="page-header__title">Content Marketing</h1>
-		<p class="page-header__subtitle">Reach 700K+ monthly readers on Finger Lakes Daily News.</p>
+		<p class="page-header__subtitle">Reach 210K+ monthly users and 730K+ monthly pageviews on Finger Lakes Daily News.</p>
 	</div>
 </div>
 
@@ -22,7 +22,7 @@ get_header();
 			<p>Your story, told through professionally written articles on Finger Lakes Daily News. Sponsored content gets your brand in front of an engaged local audience who trusts the platform.</p>
 
 			<h2>Native Advertising</h2>
-			<p>In-feed placements that match the look and feel of editorial content. Native ads outperform traditional display by 5-10x because readers engage with them like regular content.</p>
+			<p>In-feed placements that match the look and feel of editorial content. They read like the rest of the site, so readers meet your message the way they meet the news.</p>
 
 			<h2>Content Placement</h2>
 			<p>Strategic placement of your content alongside related editorial coverage. A restaurant ad next to a dining guide. A home services ad next to a real estate section. Context drives clicks.</p>
@@ -30,6 +30,7 @@ get_header();
 			<h2>Video Content</h2>
 			<p>Video testimonials, product showcases, and brand stories distributed across our digital properties and social media channels.</p>
 		</div>
+		<p class="methodology-link">Audience figures: Finger Lakes Daily News traffic measured with Google Analytics 4, September 2026.</p>
 	</div>
 </section>
 

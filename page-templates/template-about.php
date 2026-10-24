@@ -11,7 +11,7 @@ get_header();
 <div class="page-header">
 	<div class="container">
 		<h1 class="page-header__title">About FLX Local Media</h1>
-		<p class="page-header__subtitle">Local roots. Total market reach.</p>
+		<p class="page-header__subtitle">Local roots. Local results.</p>
 	</div>
 </div>
 
@@ -21,8 +21,8 @@ get_header();
 		<div class="post-content" style="max-width: 720px; margin: 0 auto;">
 			<h2>Our Story</h2>
 			<p>FLX Local Media is a full-service marketing company rooted in the Finger Lakes region. We combine the trusted reach of 7 radio stations with a full-service digital marketing team and Finger Lakes Daily News to help local businesses grow.</p>
-			<p>Our digital division — formerly FLX Digital — brings over a decade of experience in web design, SEO, video production, social media, and targeted advertising. That expertise now works hand-in-hand with our radio stations and events team to give businesses a truly integrated marketing partner.</p>
-			<p>We know this market because we live in it. Our team is in Geneva, Auburn, and Penn Yan — attending the same events, shopping at the same stores, and supporting the same communities as your customers.</p>
+			<p>Our digital division (formerly FLX Digital) brings over a decade of experience in web design, SEO, video production, social media, and targeted advertising. That expertise now works hand-in-hand with our radio stations and events team to give businesses a truly integrated marketing partner.</p>
+			<p>We know this market because we live in it. Our team is in Geneva, Auburn, and Penn Yan. We attend the same events, shop at the same stores, and support the same communities as your customers.</p>
 			<p>That local knowledge, combined with professional marketing expertise, is what sets us apart from agencies that "cover" the Finger Lakes from an office in Rochester or Syracuse.</p>
 		</div>
 	</div>
@@ -33,7 +33,7 @@ get_header();
 	<div class="container">
 		<div class="section__header">
 			<h2 class="section__title">Market Coverage</h2>
-			<p class="section__subtitle">7 stations across the Finger Lakes region, serving Ontario, Cayuga, Yates, Seneca, Wayne, and Schuyler counties.</p>
+			<p class="section__subtitle">7 stations across the Finger Lakes, with our core audience in Ontario, Cayuga, Seneca, Wayne, Yates, and Schuyler counties.</p>
 		</div>
 
 		<?php get_template_part( 'template-parts/stats-row' ); ?>
@@ -57,7 +57,7 @@ get_header();
 			<p class="section__subtitle">Marketing professionals who know the Finger Lakes market.</p>
 		</div>
 		<div class="post-content" style="max-width: 720px; margin: 0 auto;">
-			<p>Our team of marketing professionals brings together decades of experience in radio, digital, events, and content marketing — all focused on the Finger Lakes region.</p>
+			<p>Our team of marketing professionals brings together decades of experience in radio, digital, events, and content marketing, all focused on the Finger Lakes region.</p>
 			<!-- Team member cards will be added when content is provided -->
 		</div>
 	</div>

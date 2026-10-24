@@ -21,7 +21,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="site-header" id="site-header">
 	<div class="container site-header__inner">
-		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-header__logo" aria-label="<?php bloginfo( 'name' ); ?> — Home">
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-header__logo" aria-label="<?php bloginfo( 'name' ); ?>: Home">
 			<?php if ( has_custom_logo() ) : ?>
 				<?php the_custom_logo(); ?>
 			<?php else : ?>
@@ -48,7 +48,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				'depth'          => 2,
 			) );
 			?>
-			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary site-nav__cta">Request Pricing</a>
+			<a href="<?php echo esc_url( home_url( '/contact/#review' ) ); ?>" class="btn btn--primary site-nav__cta">Free Marketing Review</a>
 		</nav>
 	</div>
 </header>
