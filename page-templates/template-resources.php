@@ -68,7 +68,7 @@ get_header();
 				<?php endwhile; wp_reset_postdata(); ?>
 			</div>
 		<?php else : ?>
-			<p class="text-center" style="color: var(--color-gray-500);">Blog posts coming soon.</p>
+			<p class="text-center" style="color: var(--color-text-muted, #64748b);">Blog posts coming soon.</p>
 		<?php endif; ?>
 	</div>
 </section>

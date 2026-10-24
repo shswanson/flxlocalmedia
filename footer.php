@@ -13,7 +13,13 @@
 	<div class="container site-footer__inner">
 		<div class="site-footer__brand">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-footer__logo" aria-label="<?php bloginfo( 'name' ); ?> — Home">
-				<?php bloginfo( 'name' ); ?>
+				<img
+					src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/brand/FLX-Logo-Medium-White.svg' ); ?>"
+					alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
+					width="266"
+					height="181"
+					loading="lazy"
+				/>
 			</a>
 			<p class="site-footer__tagline">Radio. Digital. Events. Content. One team, total market reach.</p>
 		</div>

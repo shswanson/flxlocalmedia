@@ -12,11 +12,11 @@ get_header();
 ?>
 
 <style>
-/* Override the site's cream background for case study sections */
-.cs-wrap { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; color: #1d2327; line-height: 1.6; }
+/* Override the site's white background for case study sections */
+.cs-wrap { font-family: var(--font-body, 'Poppins'), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; color: #2b3a45; line-height: 1.6; }
 .cs-wrap *, .cs-wrap *::before, .cs-wrap *::after { box-sizing: border-box; }
 .cs-wrap img { max-width: 100%; height: auto; }
-.cs-wrap a { color: #1E5B70; }
+.cs-wrap a { color: var(--color-teal-ink, #077a89); }
 .cs-wrap ul { list-style: disc; }
 /* Fix hero h1 — site heading styles override to blue; force white in the dark hero */
 .cs-wrap .hero h1,

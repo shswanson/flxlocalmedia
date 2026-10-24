@@ -53,7 +53,7 @@ get_header();
 				<?php endwhile; ?>
 			</div>
 		<?php else : ?>
-			<p class="text-center" style="color: var(--color-gray-500);">No open positions at this time. Check back soon!</p>
+			<p class="text-center" style="color: var(--color-text-muted, #64748b);">No open positions at this time. Check back soon!</p>
 		<?php endif; ?>
 	</div>
 </section>

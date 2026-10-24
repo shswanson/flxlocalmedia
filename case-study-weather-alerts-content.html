@@ -1,29 +1,29 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-    --color-primary: #1E5B70;
-    --color-primary-dark: #164350;
-    --color-ochre: #946E16;
+    --color-primary: #003b5b;
+    --color-primary-dark: #0a4a6e;
+    --color-ochre: #077a89;
     --color-purple: #6B2FA0;
-    --color-blue: #2B7AB8;
-    --color-text: #1d2327;
-    --color-text-light: #726b62;
-    --color-text-muted: #95918b;
-    --color-border: #e9e6e1;
-    --color-bg: #f9f8f6;
+    --color-blue: #1f6889;
+    --color-text: #2b3a45;
+    --color-text-light: #556673;
+    --color-text-muted: #5d6d82;
+    --color-border: #dbe7ec;
+    --color-bg: #ffffff;
     --color-white: #ffffff;
-    --color-success: #00a32a;
-    --color-error: #d63638;
+    --color-success: #0a7a2e;
+    --color-error: #c62828;
     --color-warn: #dba617;
-    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
-    --radius: 8px;
+    --radius: 12px;
     --color-card: #ffffff;
-    --color-alt: #ffffff;
-    --shadow: 0 1px 3px rgba(42,36,28,0.05), 0 1px 2px rgba(42,36,28,0.03);
+    --color-alt: #eff8fa;
+    --shadow: 0 1px 3px rgba(0,59,91,0.05), 0 1px 2px rgba(0,59,91,0.08);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; line-height: 1.6; }
@@ -36,7 +36,7 @@ a:hover { text-decoration: underline; }
 
 /* Hero */
 .hero {
-    background: linear-gradient(135deg, #1E5B70 0%, #164350 40%, #0d2f3a 100%);
+    background: linear-gradient(135deg, #0a4a6e 0%, #003b5b 60%);
     color: #fff;
     padding: 56px 0 80px;
     position: relative;
@@ -47,20 +47,21 @@ a:hover { text-decoration: underline; }
     position: absolute;
     top: -100px; right: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(148,110,22,0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(82,207,216,0.10) 0%, transparent 70%);
     border-radius: 50%;
 }
+.hero::after { display: none !important; }
 .hero__eyebrow {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
+    color: #52cfd8;
     margin-bottom: 12px;
 }
 .hero__title {
     font-size: clamp(28px, 4.5vw, 42px);
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.5px;
     max-width: 760px;
@@ -94,7 +95,7 @@ a:hover { text-decoration: underline; }
 }
 .kpi__value {
     font-size: 32px;
-    font-weight: 800;
+    font-weight: 600;
     color: var(--color-primary);
     line-height: 1;
     letter-spacing: -1px;
@@ -124,7 +125,7 @@ a:hover { text-decoration: underline; }
     border-bottom: 1px solid var(--color-border);
 }
 .sect--dark {
-    background: linear-gradient(135deg, #1E5B70 0%, #0d2f3a 100%);
+    background: linear-gradient(135deg, #0a4a6e 0%, #003b5b 100%);
     color: #fff;
     border: none;
 }
@@ -136,10 +137,10 @@ a:hover { text-decoration: underline; }
     color: var(--color-ochre);
     margin-bottom: 6px;
 }
-.sect--dark .sect__eyebrow { color: rgba(255,255,255,0.4); }
+.sect--dark .sect__eyebrow { color: #52cfd8; }
 .sect__title {
     font-size: clamp(22px, 3.5vw, 32px);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.5px;
     color: var(--color-text);
     margin-bottom: 8px;
@@ -193,8 +194,8 @@ a:hover { text-decoration: underline; }
     font-size: 18px;
     margin-bottom: 10px;
 }
-.impl-card__icon--teal { background: rgba(30,91,112,0.1); }
-.impl-card__icon--ochre { background: rgba(148,110,22,0.1); }
+.impl-card__icon--teal { background: rgba(0,59,91,0.1); }
+.impl-card__icon--ochre { background: rgba(7,122,137,0.1); }
 .impl-card__title {
     font-size: 14px;
     font-weight: 700;
@@ -268,7 +269,7 @@ a:hover { text-decoration: underline; }
 
 /* Callout */
 .callout {
-    background: rgba(30,91,112,0.06);
+    background: rgba(11,156,175,0.08);
     border-radius: var(--radius);
     border-left: 3px solid var(--color-primary);
     padding: 16px 20px;
@@ -319,7 +320,7 @@ a:hover { text-decoration: underline; }
     font-size: 11px;
     color: var(--color-text-muted);
     padding: 10px 2px 0;
-    font-style: italic;
+    font-style: normal;
     text-align: center;
 }
 .wide-img {
@@ -340,7 +341,7 @@ a:hover { text-decoration: underline; }
 }
 @media (max-width: 600px) { .storm-row { grid-template-columns: 1fr; } }
 .storm-num { text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 22px 14px; }
-.storm-num__val { font-size: clamp(28px, 5vw, 40px); font-weight: 800; line-height: 1; color: #fff; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.storm-num__val { font-size: clamp(28px, 5vw, 40px); font-weight: 600; line-height: 1; color: #fff; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
 .storm-num__label { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.4; }
 
 /* Early results banner */
@@ -360,10 +361,10 @@ a:hover { text-decoration: underline; }
 
 /* Footer */
 .cs-footer { background: var(--color-primary); color: #fff; text-align: center; padding: 48px 0; }
-.cs-footer__title { font-size: clamp(20px, 3vw, 28px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 12px; }
+.cs-footer__title { color: #fff; font-size: clamp(20px, 3vw, 28px); font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
 .cs-footer__sub { font-size: 14px; color: rgba(255,255,255,0.7); max-width: 520px; margin: 0 auto 24px; line-height: 1.6; }
 .cs-footer .btn { display: inline-block; background: #fff; color: var(--color-primary); font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: var(--radius); transition: background 0.2s; }
-.cs-footer .btn:hover { background: #f0f0f0; text-decoration: none; }
+.cs-footer .btn:hover { background: #fff; text-decoration: none; }
 
 /* Utility */
 .mb-md { margin-bottom: 24px; }
@@ -422,7 +423,7 @@ a:hover { text-decoration: underline; }
 
     <p class="sect__lead mt-md">No one wrote it. No one was on shift. A background service caught the National Weather Service alert off the wire, wrote a branded, plain-English story, drew the map, and pushed it live&mdash;in the seconds it took to cross the room. When the storm changes, the same story updates itself. When it&rsquo;s over, it marks itself lifted.</p>
 
-    <div class="callout" style="border-left-color:var(--color-ochre);background:rgba(148,110,22,0.06);">
+    <div class="callout" style="border-left-color:var(--color-ochre);background:rgba(7,122,137,0.06);">
         <strong>And none of it existed a few months ago.</strong> When FLX Local Media took over Finger Lakes Daily News in January 2026, the site had <em>no weather section at all</em>&mdash;not a forecast, not an alert, nothing. Every piece of this&mdash;the alert desk, the self-updating live-blogs, the town forecast pages, the search dominance&mdash;was built from a standing start this spring.
     </div>
 </div>
@@ -633,7 +634,7 @@ a:hover { text-decoration: underline; }
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     var impressions = [3568, 4773, 9195, 148064, 175856, 457933];
     var clicks = [6, 14, 25, 3321, 524, 2162];
-    var teal = '#1E5B70', ochre = '#946E16', grid = 'rgba(30,91,112,0.08)', ink = '#726b62';
+    var teal = '#003b5b', ochre = '#0b9caf', grid = 'rgba(0,59,91,0.08)', ink = '#556673';
     var base = {
       responsive: true,
       maintainAspectRatio: false,
@@ -650,7 +651,7 @@ a:hover { text-decoration: underline; }
       new Chart(imprEl, {
         type: 'line',
         data: { labels: months, datasets: [{ data: impressions, borderColor: teal,
-          backgroundColor: 'rgba(30,91,112,0.10)', borderWidth: 2, tension: 0.3, fill: true,
+          backgroundColor: 'rgba(0,59,91,0.10)', borderWidth: 2, tension: 0.3, fill: true,
           pointBackgroundColor: teal, pointRadius: 3, pointHoverRadius: 5 }] },
         options: Object.assign({}, base, { plugins: { legend: { display: false },
           tooltip: { backgroundColor: '#1d2327', padding: 10, displayColors: false,

@@ -1,29 +1,29 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-    --color-primary: #1E5B70;
-    --color-primary-dark: #164350;
-    --color-ochre: #946E16;
+    --color-primary: #003b5b;
+    --color-primary-dark: #0a4a6e;
+    --color-ochre: #077a89;
     --color-purple: #6B2FA0;
-    --color-blue: #2B7AB8;
-    --color-text: #1d2327;
-    --color-text-light: #726b62;
-    --color-text-muted: #95918b;
-    --color-border: #e9e6e1;
-    --color-bg: #f9f8f6;
+    --color-blue: #1f6889;
+    --color-text: #2b3a45;
+    --color-text-light: #556673;
+    --color-text-muted: #5d6d82;
+    --color-border: #dbe7ec;
+    --color-bg: #ffffff;
     --color-white: #ffffff;
-    --color-success: #00a32a;
-    --color-error: #d63638;
+    --color-success: #0a7a2e;
+    --color-error: #c62828;
     --color-warn: #dba617;
-    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
-    --radius: 8px;
+    --radius: 12px;
     --color-card: #ffffff;
-    --color-alt: #ffffff;
-    --shadow: 0 1px 3px rgba(42,36,28,0.05), 0 1px 2px rgba(42,36,28,0.03);
+    --color-alt: #eff8fa;
+    --shadow: 0 1px 3px rgba(0,59,91,0.05), 0 1px 2px rgba(0,59,91,0.08);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; line-height: 1.6; }
@@ -36,7 +36,7 @@ a:hover { text-decoration: underline; }
 
 /* Hero */
 .hero {
-    background: linear-gradient(135deg, #1E5B70 0%, #164350 40%, #0d2f3a 100%);
+    background: linear-gradient(135deg, #0a4a6e 0%, #003b5b 60%);
     color: #fff;
     padding: 56px 0 80px;
     position: relative;
@@ -47,20 +47,21 @@ a:hover { text-decoration: underline; }
     position: absolute;
     top: -100px; right: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(148,110,22,0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(82,207,216,0.10) 0%, transparent 70%);
     border-radius: 50%;
 }
+.hero::after { display: none !important; }
 .hero__eyebrow {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
+    color: #52cfd8;
     margin-bottom: 12px;
 }
 .hero__title {
     font-size: clamp(28px, 4.5vw, 42px);
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.5px;
     max-width: 720px;
@@ -94,7 +95,7 @@ a:hover { text-decoration: underline; }
 }
 .kpi__value {
     font-size: 32px;
-    font-weight: 800;
+    font-weight: 600;
     color: var(--color-primary);
     line-height: 1;
     letter-spacing: -1px;
@@ -126,7 +127,7 @@ a:hover { text-decoration: underline; }
     border-bottom: 1px solid var(--color-border);
 }
 .sect--dark {
-    background: linear-gradient(135deg, #1E5B70 0%, #0d2f3a 100%);
+    background: linear-gradient(135deg, #0a4a6e 0%, #003b5b 100%);
     color: #fff;
     border: none;
 }
@@ -138,10 +139,10 @@ a:hover { text-decoration: underline; }
     color: var(--color-ochre);
     margin-bottom: 6px;
 }
-.sect--dark .sect__eyebrow { color: rgba(255,255,255,0.4); }
+.sect--dark .sect__eyebrow { color: #52cfd8; }
 .sect__title {
     font-size: clamp(22px, 3.5vw, 32px);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.5px;
     color: var(--color-text);
     margin-bottom: 8px;
@@ -202,7 +203,7 @@ a:hover { text-decoration: underline; }
 }
 .ba-score {
     font-size: 56px;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1;
     letter-spacing: -2px;
 }
@@ -234,8 +235,8 @@ a:hover { text-decoration: underline; }
     font-size: 18px;
     margin-bottom: 10px;
 }
-.impl-card__icon--teal { background: rgba(30,91,112,0.1); }
-.impl-card__icon--ochre { background: rgba(148,110,22,0.1); }
+.impl-card__icon--teal { background: rgba(0,59,91,0.1); }
+.impl-card__icon--ochre { background: rgba(7,122,137,0.1); }
 .impl-card__title {
     font-size: 14px;
     font-weight: 700;
@@ -277,11 +278,11 @@ a:hover { text-decoration: underline; }
     border-bottom: 1px solid var(--color-border);
     vertical-align: top;
 }
-.schema-tbl tbody tr:hover { background: #faf8f5; }
+.schema-tbl tbody tr:hover { background: #eff8fa; }
 .schema-tbl code {
     font-family: var(--mono);
     font-size: 11px;
-    background: #f3ede6;
+    background: #dceef2;
     padding: 2px 5px;
     border-radius: 3px;
     color: var(--color-primary);
@@ -328,7 +329,7 @@ a:hover { text-decoration: underline; }
 
 /* Callout */
 .callout {
-    background: rgba(30,91,112,0.06);
+    background: rgba(11,156,175,0.08);
     border-radius: var(--radius);
     border-left: 3px solid var(--color-primary);
     padding: 16px 20px;
@@ -357,7 +358,7 @@ a:hover { text-decoration: underline; }
 }
 .storm-num__val {
     font-size: clamp(36px, 7vw, 56px);
-    font-weight: 800;
+    font-weight: 600;
     line-height: 1;
     color: #fff;
     letter-spacing: -1px;
@@ -391,8 +392,9 @@ a:hover { text-decoration: underline; }
     padding: 48px 0;
 }
 .cs-footer__title {
+    color: #fff;
     font-size: clamp(20px, 3vw, 28px);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.5px;
     margin-bottom: 12px;
 }
@@ -405,7 +407,7 @@ a:hover { text-decoration: underline; }
 }
 .cs-footer .btn {
     display: inline-block;
-    background: #fff;
+    background: #52cfd8;
     color: var(--color-primary);
     font-weight: 700;
     font-size: 14px;
@@ -413,7 +415,7 @@ a:hover { text-decoration: underline; }
     border-radius: var(--radius);
     transition: background 0.2s;
 }
-.cs-footer .btn:hover { background: #f0f0f0; text-decoration: none; }
+.cs-footer .btn:hover { background: #fff; text-decoration: none; }
 
 /* Storm photo */
 .storm-photo {
@@ -430,7 +432,7 @@ a:hover { text-decoration: underline; }
     font-size: 11px;
     color: var(--color-text-muted);
     padding: 8px 0 0;
-    font-style: italic;
+    font-style: normal;
 }
 
 /* JSON-LD code block */
@@ -640,7 +642,7 @@ a:hover { text-decoration: underline; }
         <div class="card__body"><canvas id="chartLighthouse"></canvas></div>
     </div>
 
-    <h3 style="font-size:18px; font-weight:800; margin: 32px 0 16px; letter-spacing:-0.3px;">What We Changed</h3>
+    <h3 style="font-size:18px; font-weight:700; margin: 32px 0 16px; letter-spacing:-0.3px;">What We Changed</h3>
 
     <div class="impl-grid">
         <div class="impl-card">
@@ -850,7 +852,7 @@ a:hover { text-decoration: underline; }
         <div class="early-banner__text"><strong>Early indicators, not final results.</strong> We're 100 days into a long-term project. Google typically takes 3&ndash;6 months to fully reflect structural changes in rankings. The data below shows strong directional improvement, but we'll revisit with mature results in Q3 2026 when the full impact of structured data, indexing changes, and domain authority consolidation has had time to compound.</div>
     </div>
 
-    <h3 style="font-size:18px; font-weight:800; margin: 32px 0 16px; letter-spacing:-0.3px;">Share of Voice</h3>
+    <h3 style="font-size:18px; font-weight:700; margin: 32px 0 16px; letter-spacing:-0.3px;">Share of Voice</h3>
     <p class="text-sm text-muted mb-md" style="line-height:1.7;">Share of voice measures what percentage of Google search results for a topic feature FLDN content. In a competitive local news market, SOV is the clearest indicator of topical authority&mdash;and it moved fast after the structured data and indexing changes took effect.</p>
 
     <div class="kpi-row" style="margin-top:0; grid-template-columns:repeat(3,1fr);">
@@ -921,7 +923,7 @@ a:hover { text-decoration: underline; }
 
     <div class="two-col mt-lg" style="align-items:center;">
         <div>
-            <h3 style="font-size:18px; font-weight:800; margin-bottom:8px; letter-spacing:-0.3px;">AI Search Is Already Here</h3>
+            <h3 style="font-size:18px; font-weight:700; margin-bottom:8px; letter-spacing:-0.3px;">AI Search Is Already Here</h3>
             <p style="font-size:13px; line-height:1.7; color:var(--color-text-light);">One of the less obvious benefits of comprehensive structured data: it makes your content legible to AI systems, not just traditional search crawlers. Since the structured data rollout, referral traffic from ChatGPT has grown from ~3 sessions/week to over 60&mdash;a 20x increase. AI engines like ChatGPT, Perplexity, and Copilot are citing FLDN articles directly in their responses.</p>
             <p style="font-size:13px; line-height:1.7; color:var(--color-text-light); margin-top:12px;">This is the emerging discipline of <strong>Generative Engine Optimization (GEO)</strong>&mdash;ensuring your content surfaces in AI-generated answers, not just traditional SERPs. The structured data architecture is already paying dividends in this new channel, and we expect it to accelerate as AI search adoption grows.</p>
         </div>
@@ -969,8 +971,8 @@ a:hover { text-decoration: underline; }
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 (function(){
-var teal='#1E5B70', ochre='#946E16', sage='#5A9E6F', blue='#2B7AB8', muted='#8c8f94';
-Chart.defaults.font.family="'Inter',-apple-system,BlinkMacSystemFont,sans-serif";
+var teal='#003b5b', ochre='#0b9caf', sage='#5A9E6F', blue='#2B7AB8', muted='#8c8f94';
+Chart.defaults.font.family="'Poppins',-apple-system,BlinkMacSystemFont,sans-serif";
 Chart.defaults.font.size=11;
 Chart.defaults.color='#646970';
 var gridColor='rgba(0,0,0,0.04)';
@@ -1028,7 +1030,7 @@ new Chart(document.getElementById('chartClicks'),{type:'line',data:{
 var ctrD=[5.85,5.74,5.30,5.08,4.49,4.90,5.32,4.32,4.91,4.59,7.36,6.21,4.39,4.61];
 new Chart(document.getElementById('chartCTR'),{type:'bar',data:{
     labels:['Jan W1','Jan W2','Jan W3','Jan W4','Feb W1','Feb W2','Feb W3','Feb W4','Mar W1','Mar W2','Mar W3','Mar W4','Mar W5','Apr W1'],
-    datasets:[{data:ctrD,backgroundColor:ctrD.map(function(v){return v>=6.5?teal:'rgba(30,91,112,0.3)';}),borderRadius:4,barPercentage:0.7}]
+    datasets:[{data:ctrD,backgroundColor:ctrD.map(function(v){return v>=6.5?teal:'rgba(0,59,91,0.3)';}),borderRadius:4,barPercentage:0.7}]
 },options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:10,grid:{color:gridColor},ticks:{callback:function(v){return v+'%';}}},x:{grid:{display:false}}}}});
 
 // Storm
@@ -1043,7 +1045,7 @@ new Chart(document.getElementById('chartSessions'),{type:'line',data:{
     labels:['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12','W13','W14'],
     datasets:[
         {label:'2025',data:[30547,68725,52248,62073,54483,71638,83969,66593,61387,51937,51993,75331,49556,69458],borderColor:sage,borderDash:[5,3],tension:0.3,pointRadius:0,borderWidth:2,backgroundColor:'transparent'},
-        {label:'2026',data:[32543,67310,65316,67261,73666,76096,55885,68045,72303,59649,57389,66895,67808,71842],borderColor:teal,backgroundColor:'rgba(30,91,112,0.06)',fill:true,tension:0.3,pointRadius:0,borderWidth:2}
+        {label:'2026',data:[32543,67310,65316,67261,73666,76096,55885,68045,72303,59649,57389,66895,67808,71842],borderColor:teal,backgroundColor:'rgba(11,156,175,0.08)',fill:true,tension:0.3,pointRadius:0,borderWidth:2}
     ]
 },options:{responsive:true,plugins:{legend:{position:'top',labels:{usePointStyle:true,pointStyle:'line',font:{size:10}}}},scales:{y:{beginAtZero:false,grid:{color:gridColor},ticks:{callback:function(v){return Math.round(v/1000)+'K';}}},x:{grid:{display:false}}}}});
 
@@ -1054,8 +1056,8 @@ var lhMobile=[56,67,62,59,60,61,56,62,64,69,67,68,69,69,68,70,70,87,87,86,88,89,
 new Chart(document.getElementById('chartLighthouse'),{type:'line',data:{
     labels:lhDates,
     datasets:[
-        {label:'Desktop',data:lhDesktop,borderColor:teal,backgroundColor:'rgba(30,91,112,0.06)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:teal,borderWidth:2},
-        {label:'Mobile',data:lhMobile,borderColor:ochre,backgroundColor:'rgba(148,110,22,0.04)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:ochre,borderWidth:2}
+        {label:'Desktop',data:lhDesktop,borderColor:teal,backgroundColor:'rgba(11,156,175,0.08)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:teal,borderWidth:2},
+        {label:'Mobile',data:lhMobile,borderColor:ochre,backgroundColor:'rgba(7,122,137,0.04)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:ochre,borderWidth:2}
     ]
 },options:{responsive:true,plugins:{legend:{position:'top',labels:{usePointStyle:true,pointStyle:'circle',font:{size:10}}},annotation:{annotations:{launch:{type:'line',xMin:17,xMax:17,borderColor:'rgba(0,163,42,0.6)',borderWidth:2,borderDash:[4,4],label:{display:true,content:'Theme Launch',position:'start',font:{size:9},color:'rgba(0,163,42,0.8)'}}}}},scales:{y:{min:40,max:108,grid:{color:gridColor},ticks:{callback:function(v){return v;},stepSize:20},title:{display:true,text:'Performance Score',font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
 
@@ -1068,7 +1070,7 @@ new Chart(document.getElementById('chartCache'),{type:'line',data:{
 // GEO - ChatGPT referral traffic
 new Chart(document.getElementById('chartGEO'),{type:'bar',data:{
     labels:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'],
-    datasets:[{data:[10,7,7,6,5,6,14,20,22,29],backgroundColor:function(ctx){return ctx.dataIndex>=6?teal:'rgba(30,91,112,0.25)';},borderRadius:4,barPercentage:0.7}]
-},options:{responsive:true,plugins:{legend:{display:false},annotation:{annotations:{line1:{type:'line',xMin:5.5,xMax:5.5,borderColor:'rgba(148,110,22,0.4)',borderWidth:1,borderDash:[4,4],label:{display:true,content:'Acquisition',position:'start',font:{size:9},color:ochre}}}}},scales:{y:{beginAtZero:true,grid:{color:gridColor},title:{display:true,text:'Avg weekly sessions',font:{size:10}}},x:{grid:{display:false}}}}});
+    datasets:[{data:[10,7,7,6,5,6,14,20,22,29],backgroundColor:function(ctx){return ctx.dataIndex>=6?teal:'rgba(0,59,91,0.25)';},borderRadius:4,barPercentage:0.7}]
+},options:{responsive:true,plugins:{legend:{display:false},annotation:{annotations:{line1:{type:'line',xMin:5.5,xMax:5.5,borderColor:'rgba(7,122,137,0.4)',borderWidth:1,borderDash:[4,4],label:{display:true,content:'Acquisition',position:'start',font:{size:9},color:ochre}}}}},scales:{y:{beginAtZero:true,grid:{color:gridColor},title:{display:true,text:'Avg weekly sessions',font:{size:10}}},x:{grid:{display:false}}}}});
 })();
 </script>
