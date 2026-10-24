@@ -430,9 +430,17 @@ function flxlm_seo_jsonld_organization() {
 			),
 			'geoRadius' => '80000',
 		),
+		// Profiles of this same business elsewhere. Our own news brand is a brand, not the same entity.
 		'sameAs'      => array(
-			'https://www.facebook.com/flxlocalmedia',
-			'https://www.fingerlakesdailynews.com',
+			'https://www.google.com/maps/place/?q=place_id:ChIJM5WA39Xa0IkRrnC4mkSru98',
+			'https://www.discoverflx.com/directory/flx-local-media/',
+			'https://members.flxchamber.com/list/member/flx-local-media-526',
+			'https://www.discoverseneca.com/seneca-chamber/directory/flx-local-media',
+		),
+		'brand'       => array(
+			'@type' => 'Brand',
+			'name'  => 'Finger Lakes Daily News',
+			'url'   => 'https://www.fingerlakesdailynews.com',
 		),
 	);
 }
