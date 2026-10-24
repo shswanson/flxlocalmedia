@@ -393,6 +393,7 @@ function flxlm_seo_jsonld_organization() {
 		'@type'       => 'LocalBusiness',
 		'@id'         => home_url( '/#organization' ),
 		'name'        => 'FLX Local Media',
+		'legalName'   => 'TOTIB Media, Inc.', // FLX Local Media is its d/b/a; Apple Business verifies the legal entity against the site.
 		'url'         => home_url( '/' ),
 		'description' => 'FLX Local Media owns seven radio stations and Finger Lakes Daily News, providing radio, digital, events, and content marketing solutions across the Finger Lakes region.',
 		'telephone'   => '+1-315-781-7000',

@@ -57,6 +57,7 @@
 	<div class="site-footer__bottom">
 		<div class="container">
 			<p>&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. All rights reserved. <a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>">Privacy Policy</a> &middot; <a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>">Terms of Service</a></p>
+			<p class="site-footer__legal">FLX Local Media is a d/b/a of TOTIB Media, Inc., 3568 Lenox Road, Geneva, NY 14456.</p>
 		</div>
 	</div>
 </footer>
