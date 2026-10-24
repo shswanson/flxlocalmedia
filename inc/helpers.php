@@ -68,6 +68,70 @@ function flxlm_get_video_url( $post_id ) {
 }
 
 /**
+ * Get the captions URL for a testimonial, served through flxlm_serve_captions().
+ *
+ * The host sends .vtt uploads as application/octet-stream, which Firefox and
+ * Safari can refuse for a <track>, so captions go through the theme instead.
+ *
+ * @param int $post_id Post ID of testimonial.
+ * @return string Captions URL or empty string.
+ */
+function flxlm_captions_url( $post_id ) {
+	if ( ! get_post_meta( $post_id, 'captions_vtt', true ) ) {
+		return '';
+	}
+	return add_query_arg( 'flxlm_vtt', $post_id, home_url( '/' ) );
+}
+
+add_action( 'init', 'flxlm_serve_captions', 1 );
+
+/**
+ * Serve a testimonial's captions file as text/vtt for ?flxlm_vtt=<post id>.
+ *
+ * Only files inside uploads/testimonials/videos/ ending in .vtt are sent;
+ * anything else is a 404.
+ */
+function flxlm_serve_captions() {
+	if ( ! isset( $_GET['flxlm_vtt'] ) ) {
+		return;
+	}
+
+	$post_id = absint( $_GET['flxlm_vtt'] );
+	$post    = $post_id ? get_post( $post_id ) : null;
+	$file    = '';
+
+	if ( $post && 'flxlm_testimonial' === $post->post_type && 'publish' === $post->post_status ) {
+		$url     = (string) get_post_meta( $post_id, 'captions_vtt', true );
+		$uploads = wp_upload_dir();
+		// Compare without the scheme so http and https URLs both map.
+		$url_rel  = preg_replace( '#^https?:#i', '', $url );
+		$base_rel = preg_replace( '#^https?:#i', '', $uploads['baseurl'] );
+
+		if ( $url_rel && 0 === strpos( $url_rel, $base_rel . '/' ) ) {
+			$path    = realpath( $uploads['basedir'] . substr( $url_rel, strlen( $base_rel ) ) );
+			$allowed = realpath( $uploads['basedir'] . '/testimonials/videos' );
+
+			if ( $path && $allowed && 0 === strpos( $path, $allowed . DIRECTORY_SEPARATOR ) && '.vtt' === strtolower( substr( $path, -4 ) ) && is_file( $path ) ) {
+				$file = $path;
+			}
+		}
+	}
+
+	if ( ! $file ) {
+		status_header( 404 );
+		nocache_headers();
+		exit;
+	}
+
+	status_header( 200 );
+	header( 'Content-Type: text/vtt; charset=utf-8' );
+	header( 'Cache-Control: public, max-age=86400' );
+	header( 'Content-Length: ' . filesize( $file ) );
+	readfile( $file );
+	exit;
+}
+
+/**
  * Render video facade markup.
  *
  * @param int   $post_id Post ID of testimonial.
@@ -78,7 +142,7 @@ function flxlm_video_facade( $post_id, $args = array() ) {
 	$video_url  = flxlm_get_video_url( $post_id );
 	$poster_webp = get_post_meta( $post_id, 'poster_webp', true );
 	$poster_jpg  = get_post_meta( $post_id, 'poster_jpg', true );
-	$captions    = get_post_meta( $post_id, 'captions_vtt', true );
+	$captions    = flxlm_captions_url( $post_id );
 	$person      = get_post_meta( $post_id, 'person_name', true );
 	$business    = get_post_meta( $post_id, 'business_name', true );
 	$class       = ! empty( $args['class'] ) ? ' ' . esc_attr( $args['class'] ) : '';
@@ -122,7 +186,7 @@ function flxlm_station_card( $station ) {
 	?>
 	<a href="<?php echo esc_url( $link ); ?>" class="station-card" style="text-decoration: none; color: inherit; display: block;">
 		<h3 class="station-card__name"><?php echo esc_html( $station['name'] ); ?></h3>
-		<p class="station-card__call"><?php echo esc_html( $station['call_sign'] ); ?> — <?php echo esc_html( $station['frequency'] ); ?></p>
+		<p class="station-card__call"><?php echo esc_html( $station['call_sign'] ); ?> &middot; <?php echo esc_html( $station['frequency'] ); ?></p>
 		<p class="station-card__format"><?php echo esc_html( $station['format'] ); ?></p>
 		<?php if ( ! empty( $station['demo'] ) ) : ?>
 			<p class="station-card__demo"><?php echo esc_html( $station['demo'] ); ?></p>
@@ -197,9 +261,9 @@ function flxlm_get_station_data( $slug = '' ) {
 			'median_hhi'          => 81353,
 			'homeownership_pct'   => 69.9,
 			'drive_alone_pct'     => 86.9,
-			'description'         => '<p>Mix 98.5 is the Finger Lakes at-work station. From offices in Geneva to shops in Canandaigua, Mix 98.5 is the soundtrack of the workday for women across Ontario, Cayuga, Seneca, Wayne, and Yates counties. The station plays the music people know and love — a mix of current hits and familiar favorites that keeps the energy up without overwhelming the room.</p>
+			'description'         => '<p>Mix 98.5 is the Finger Lakes at-work station. From offices in Geneva to shops in Canandaigua, Mix 98.5 is the soundtrack of the workday for women across Ontario, Cayuga, Seneca, Wayne, and Yates counties. The station plays the music people know and love: a mix of current hits and familiar favorites that keeps the energy up without overwhelming the room.</p>
 <p>Mornings start with Jim Schreck and Sorah Devlin, who have become the way tens of thousands of Finger Lakes residents begin their day. Jim stays on through mid-morning, Lisa Cruz takes over afternoons, and John Tesh brings his nationally syndicated Intelligence for Your Life show to the evening hours. It is a lineup that keeps listeners engaged from the first alarm to dinnertime.</p>
-<p>With the largest estimated weekly audience of any station in the group, Mix 98.5 is the top choice for advertisers who want to reach women with real purchasing power — the household decision-makers who drive consumer spending in the Finger Lakes.</p>',
+<p>With the largest estimated weekly audience of any station in the group, Mix 98.5 is the top choice for advertisers who want to reach women with real purchasing power, the household decision-makers who drive consumer spending in the Finger Lakes.</p>',
 			'personalities'       => array(
 				array(
 					'name' => 'Jim Schreck & Sorah Devlin',
@@ -249,7 +313,7 @@ function flxlm_get_station_data( $slug = '' ) {
 			'median_hhi'          => 83993,
 			'homeownership_pct'   => 78.2,
 			'drive_alone_pct'     => 87.3,
-			'description'         => '<p>Classic Hits 99.3 plays the greatest hits of the \'70s, \'80s, and \'90s — the songs that everyone knows, from Fleetwood Mac to Tom Petty to Whitney Houston. It is the station where people sing along on the drive to work and nod their heads while running errands. The format appeals to adults 35-64 with balanced gender reach, making it one of the most versatile advertising platforms in the market.</p>
+			'description'         => '<p>Classic Hits 99.3 plays the greatest hits of the \'70s, \'80s, and \'90s, the songs that everyone knows, from Fleetwood Mac to Tom Petty to Whitney Houston. It is the station where people sing along on the drive to work and nod their heads while running errands. The format appeals to adults 35-64 with balanced gender reach, making it one of the most versatile advertising platforms in the market.</p>
 <p>Lisa Cruz starts the day with mornings, bringing familiar energy and local connection to the Finger Lakes audience. Ken Paradise takes over for afternoons, rounding out a lineup that keeps listeners tuned in through the full workday.</p>
 <p>With strong coverage across Ontario, Cayuga, Seneca, and Wayne counties, Classic Hits 99.3 delivers a broad audience that includes both men and women in their peak earning and spending years.</p>',
 			'personalities'       => array(
@@ -289,8 +353,8 @@ function flxlm_get_station_data( $slug = '' ) {
 			'median_hhi'          => 88143,
 			'homeownership_pct'   => 79.0,
 			'drive_alone_pct'     => 87.2,
-			'description'         => '<p>101.7 The Wall is the Finger Lakes\' home for classic rock — Led Zeppelin, AC/DC, Pink Floyd, the Stones, and everything that defined rock and roll. The format skews male and attracts a loyal audience of men 35-64 — the generation that grew up on this music and still turns it up on the way to work.</p>
-<p>Mornings belong to Ken Paradise and Rockin\' Rob, weekdays 6 to 9, and Drew carries the afternoon drive with The Afternoon Grind, weekdays noon to 5. Weekends bring the syndicated rock franchises listeners plan their night around — Sammy Hagar\'s Top Rock Countdown and Dee Snider\'s House of Hair on Saturday, Classic Rock Live and Floydian Slip on Sunday. It is the kind of station where listeners do not just tune in — they turn it up.</p>
+			'description'         => '<p>101.7 The Wall is the Finger Lakes\' home for classic rock: Led Zeppelin, AC/DC, Pink Floyd, the Stones, and everything that defined rock and roll. The format skews male and attracts a loyal audience of men 35-64, the generation that grew up on this music and still turns it up on the way to work.</p>
+<p>Mornings belong to Ken Paradise and Rockin\' Rob, weekdays 6 to 9, and Drew carries the afternoon drive with The Afternoon Grind, weekdays noon to 5. Weekends bring the syndicated rock franchises listeners plan their night around: Sammy Hagar\'s Top Rock Countdown and Dee Snider\'s House of Hair on Saturday, Classic Rock Live and Floydian Slip on Sunday. It is the kind of station where listeners do not just tune in. They turn it up.</p>
 <p>The Wall\'s audience has the highest concentration of construction and trades workers of any station in the group, making it a natural fit for building materials, auto services, equipment suppliers, and any business that serves the working men of the Finger Lakes.</p>',
 			'personalities'       => array(
 				array(
@@ -333,9 +397,9 @@ function flxlm_get_station_data( $slug = '' ) {
 			'median_hhi'          => 89727,
 			'homeownership_pct'   => 72.6,
 			'drive_alone_pct'     => 84.8,
-			'description'         => '<p>Finger Lakes Country is the region\'s only country music station, broadcasting across five frequencies to cover the widest geographic area of any station in the group. From Penn Yan to Dundee, Watkins Glen to Corning, Geneva to Elmira — if you are in the southern Finger Lakes, WFLR is the station people know.</p>
-<p>Mornings start with Larry Timko, a Marconi Award-winning host who has been a fixture of the Finger Lakes for decades. Larry does not just play music — he is a trusted voice in the community, the kind of host whose live read carries the weight of a personal recommendation. Lucas Day handles local news throughout the day, keeping the community connected.</p>
-<p>Country is the number one radio format in America with a 13.8% national audience share. In a region like the Finger Lakes — rural, agricultural, community-oriented — that share is even higher. WFLR also carries NASCAR and high school sports, deepening its connection with listeners who care about the things that matter here.</p>',
+			'description'         => '<p>Finger Lakes Country is the region\'s only country music station, broadcasting across five frequencies to cover the widest geographic area of any station in the group. From Penn Yan to Dundee, Watkins Glen to Corning, Geneva to Elmira, if you are in the southern Finger Lakes, WFLR is the station people know.</p>
+<p>Mornings start with Larry Timko, a Marconi Award-winning host who has been a fixture of the Finger Lakes for decades. Larry does not just play music. He is a trusted voice in the community, the kind of host whose live read carries the weight of a personal recommendation. Lucas Day handles local news throughout the day, keeping the community connected.</p>
+<p>Country is the number one radio format in America with a 13.8% national audience share. In a region like the Finger Lakes, which is rural, agricultural, and community-oriented, that share is even higher. WFLR also carries NASCAR and high school sports, deepening its connection with listeners who care about the things that matter here.</p>',
 			'personalities'       => array(
 				array(
 					'name' => 'Larry Timko',
@@ -349,7 +413,7 @@ function flxlm_get_station_data( $slug = '' ) {
 				),
 			),
 			'coverage_counties'    => array( 'Ontario', 'Yates', 'Schuyler', 'Steuben', 'Chemung', 'Seneca' ),
-			'coverage_description' => 'With five frequencies, Finger Lakes Country reaches Penn Yan, Dundee, Watkins Glen, Corning, Elmira, Geneva, Waterloo, and Seneca Falls. The signal covers Ontario, Yates, Schuyler, Steuben, Chemung, and Seneca counties — the broadest coverage footprint of any station in the group.',
+			'coverage_description' => 'With five frequencies, Finger Lakes Country reaches Penn Yan, Dundee, Watkins Glen, Corning, Elmira, Geneva, Waterloo, and Seneca Falls. The signal covers Ontario, Yates, Schuyler, Steuben, Chemung, and Seneca counties, the broadest coverage footprint of any station in the group.',
 		),
 		'wgva' => array(
 			'name'                => 'WGVA News Radio',
@@ -362,9 +426,9 @@ function flxlm_get_station_data( $slug = '' ) {
 			'median_hhi'          => 96513,
 			'homeownership_pct'   => 77.1,
 			'drive_alone_pct'     => 85.7,
-			'description'         => '<p>WGVA is the Finger Lakes\' flagship news and talk station, serving Geneva, Canandaigua, Seneca Falls, Victor, and the broader Ontario County area. For listeners who want to know what is happening — locally, nationally, and in the world — WGVA is where they turn.</p>
-<p>Paul Szmal anchors FLX Mornings with local news, community conversation, and the kind of coverage that only a station rooted in the community can deliver. The rest of the day features Gordon Deal, Brian Kilmeade, Jimmy Failla, Markley Van Camp and Robbins, and Mark Levin — a lineup that keeps news and talk listeners engaged from early morning through the evening.</p>
-<p>WGVA\'s audience has the highest median household income and the highest rate of college education of any station in the group. These are informed, engaged decision-makers — business owners, professionals, and community leaders who pay attention and take action.</p>',
+			'description'         => '<p>WGVA is the Finger Lakes\' flagship news and talk station, serving Geneva, Canandaigua, Seneca Falls, Victor, and the broader Ontario County area. For listeners who want to know what is happening locally, nationally, and in the world, WGVA is where they turn.</p>
+<p>Paul Szmal anchors FLX Mornings with local news, community conversation, and the kind of coverage that only a station rooted in the community can deliver. The rest of the day features Gordon Deal, Brian Kilmeade, Jimmy Failla, Markley Van Camp and Robbins, and Mark Levin, a lineup that keeps news and talk listeners engaged from early morning through the evening.</p>
+<p>WGVA\'s audience has the highest median household income and the highest rate of college education of any station in the group. These are informed, engaged decision-makers: business owners, professionals, and community leaders who pay attention and take action.</p>',
 			'personalities'       => array(
 				array(
 					'name' => 'Paul Szmal',
@@ -402,7 +466,7 @@ function flxlm_get_station_data( $slug = '' ) {
 			'homeownership_pct'   => 75.4,
 			'drive_alone_pct'     => 87.6,
 			'description'         => '<p>WAUB is Auburn and Cayuga County\'s news and talk station, delivering the same strong programming lineup as its sister station WGVA but focused on the Auburn market. For the communities of Auburn, Weedsport, Skaneateles, and surrounding Cayuga County, WAUB is the station that keeps people informed.</p>
-<p>Paul Szmal\'s FLX Mornings provides the local connection, with Gordon Deal, Brian Kilmeade, Jimmy Failla, and Mark Levin rounding out a full day of news and talk. WAUB also carries Buffalo Bills and Syracuse University sports, along with Auburn and Cayuga County high school sports — a deep commitment to the local sports community that builds listener loyalty.</p>
+<p>Paul Szmal\'s FLX Mornings provides the local connection, with Gordon Deal, Brian Kilmeade, Jimmy Failla, and Mark Levin rounding out a full day of news and talk. WAUB also carries Buffalo Bills and Syracuse University sports, along with Auburn and Cayuga County high school sports, a deep commitment to the local sports community that builds listener loyalty.</p>
 <p>WAUB\'s audience is deeply rooted in Auburn and Cayuga County. These are homeowners, families, and local business people who support their community and respond to advertising from businesses they know and trust.</p>',
 			'personalities'       => array(
 				array(
@@ -440,8 +504,8 @@ function flxlm_get_station_data( $slug = '' ) {
 			'median_hhi'          => 83154,
 			'homeownership_pct'   => 69.9,
 			'drive_alone_pct'     => 82.4,
-			'description'         => '<p>The Lake is a premium easy rock station with a strict six-minute-per-hour commercial limit — the lowest commercial load of any station in the group. That means when your ad runs on The Lake, it is not buried in a long commercial break. It stands out. Listeners stay tuned because they know the music is never far away.</p>
-<p>The format features the easy rock classics — Eagles, Springsteen, Jackson Browne, James Taylor, and the artists that define relaxed, feel-good listening. The Lake broadcasts on two frequencies, 100.1 and 104.5 FM, covering the largest potential audience of any station in the group by reaching deep into the Rochester market.</p>
+			'description'         => '<p>The Lake is a premium easy rock station with a strict six-minute-per-hour commercial limit, the lowest commercial load of any station in the group. That means when your ad runs on The Lake, it is not buried in a long commercial break. It stands out. Listeners stay tuned because they know the music is never far away.</p>
+<p>The format features the easy rock classics: Eagles, Springsteen, Jackson Browne, James Taylor, and the artists that define relaxed, feel-good listening. The Lake broadcasts on two frequencies, 100.1 and 104.5 FM, covering the largest potential audience of any station in the group by reaching deep into the Rochester market.</p>
 <p>The Lake\'s audience skews female, 35-64, and includes the Rochester suburbs of Canandaigua, Pittsford, Geneseo, and Honeoye as well as communities like Naples, Le Roy, and Dansville. For advertisers who want to reach women with purchasing power across the western Finger Lakes and greater Rochester, The Lake delivers a unique combination of premium positioning and broad reach.</p>',
 			'personalities'       => array(),
 			'coverage_counties'    => array( 'Ontario', 'Livingston', 'Monroe' ),
@@ -496,7 +560,7 @@ function flxlm_get_stations() {
 			'slug'          => 'finger-lakes-country',
 			'call_sign'     => 'WFLR',
 			'frequency'     => '95.9 / 96.1 / 96.9 / 101.9 FM / 1570 AM',
-			'format'        => 'Country — #1 format nationally',
+			'format'        => 'Country: #1 format nationally',
 			'demo'          => 'Adults 25-64',
 		),
 		array(
@@ -520,7 +584,7 @@ function flxlm_get_stations() {
 			'slug'          => 'the-lake',
 			'call_sign'     => 'WCGR',
 			'frequency'     => '100.1 / 104.5 FM',
-			'format'        => 'Easy rock — 6 min/hr commercial limit',
+			'format'        => 'Easy rock: 6 min/hr commercial limit',
 			'demo'          => 'Women 35-64',
 			'personalities' => 'Premium low-clutter format',
 			'reach'         => '756K market (Rochester) · $71K median HHI',

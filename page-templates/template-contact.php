@@ -10,13 +10,13 @@ get_header();
 
 <div class="page-header">
 	<div class="container">
-		<h1 class="page-header__title">Contact Us</h1>
-		<p class="page-header__subtitle">Let's talk about growing your business in the Finger Lakes.</p>
+		<h1 class="page-header__title">Get a free local marketing review</h1>
+		<p class="page-header__subtitle">Tell us what is holding your business back, and we'll come back with a plan, not a pitch.</p>
 	</div>
 </div>
 
 <!-- Contact Form Section -->
-<section class="section">
+<section class="section" id="review">
 	<div class="container">
 
 		<!-- Testimonial quote above form -->
@@ -34,11 +34,17 @@ get_header();
 		?>
 
 		<div class="contact-form-wrap">
-			<h2>Send Us a Message</h2>
+			<h2>Request your free review</h2>
 
 			<?php if ( isset( $_GET['contact'] ) && 'success' === $_GET['contact'] ) : ?>
 				<div class="flxlm-form-success">
-					Thanks for reaching out! We'll be in touch within one business day.
+					Thanks for reaching out! We'll be in touch soon to set up your free review.
+				</div>
+			<?php endif; ?>
+
+			<?php if ( isset( $_GET['contact'] ) && 'missing' === $_GET['contact'] ) : ?>
+				<div class="flxlm-form-error" role="alert">
+					Please fill in your name, email and the one thing holding your business back, then send it again.
 				</div>
 			<?php endif; ?>
 
@@ -53,7 +59,7 @@ get_header();
 		<div class="section__header section__header--center">
 			<span class="section__eyebrow">Visit us</span>
 			<h2 class="section__title">Our Studios</h2>
-			<p class="section__subtitle">Three studios across the Finger Lakes, broadcasting seven stations to the region.</p>
+			<p class="section__subtitle">Three studios across the Finger Lakes, broadcasting seven stations across the region.</p>
 		</div>
 
 		<div class="studio-grid">

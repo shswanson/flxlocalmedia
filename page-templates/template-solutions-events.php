@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Solutions — Events
+ * Template Name: Solutions: Events
  *
  * @package flxlm
  */
@@ -11,7 +11,7 @@ get_header();
 <div class="page-header">
 	<div class="container">
 		<h1 class="page-header__title">Event Marketing</h1>
-		<p class="page-header__subtitle">Put your brand in front of thousands with live events and sponsorships.</p>
+		<p class="page-header__subtitle">Put your brand in front of local customers with live events and sponsorships.</p>
 	</div>
 </div>
 
@@ -25,7 +25,7 @@ get_header();
 			<p>The Finger Lakes region has dozens of festivals, fairs, and community events every year. We help you find the right sponsorship opportunities that align your brand with the community.</p>
 
 			<h2>Custom Events</h2>
-			<p>Grand openings, anniversary celebrations, customer appreciation days — we help you plan and promote events that drive business results.</p>
+			<p>Grand openings, anniversary celebrations, customer appreciation days: we help you plan and promote events that drive business results.</p>
 
 			<h2>The Multi-Channel Advantage</h2>
 			<p>Events work best when amplified across radio, digital, and content channels. A live remote with on-air promotion, social media coverage, and a recap article on Finger Lakes Daily News creates a marketing moment that lasts well beyond the event itself.</p>

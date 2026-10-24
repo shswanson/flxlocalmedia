@@ -20,27 +20,27 @@ get_template_part( 'template-parts/stats-row' );
 		<div class="section__header section__header--center">
 			<span class="section__eyebrow">Sound familiar?</span>
 			<h2 class="section__title">The Challenges Local Businesses Tell Us About</h2>
-			<p class="section__subtitle">If you've said any of these out loud, you're not alone — and we can help.</p>
+			<p class="section__subtitle">If you've said any of these out loud, you're not alone, and we can help.</p>
 		</div>
 
 		<div class="problems-grid">
 			<a href="<?php echo esc_url( home_url( '/solutions/radio/' ) ); ?>" class="problem-card">
 				<h3 class="problem-card__question">"They're listening to the radio every day. But they're not hearing about me."</h3>
-				<p class="problem-card__answer">7 stations, every format. Country fans in the morning, rock listeners at lunch, talk radio on the drive home. Your ad reaches all of them in one buy.</p>
+				<p class="problem-card__answer">7 stations across the Finger Lakes. Country fans in the morning, rock listeners at lunch, news and talk on the drive home. We build your schedule across the stations that reach your customers.</p>
 				<span class="problem-card__channel">Radio Advertising</span>
 				<span class="problem-card__link">How radio works &#8594;</span>
 			</a>
 
 			<a href="<?php echo esc_url( home_url( '/solutions/digital/' ) ); ?>" class="problem-card">
 				<h3 class="problem-card__question">"People search for what I sell, but they find my competitor first."</h3>
-				<p class="problem-card__answer">SEO, Google Ads, social media, reputation management — we handle all of it so you show up when and where it matters.</p>
+				<p class="problem-card__answer">SEO, Google Ads, social media, and a review link and QR card that make it easy for customers to review you. We handle the work so you show up when and where it matters.</p>
 				<span class="problem-card__channel">Digital Marketing</span>
 				<span class="problem-card__link">How digital works &#8594;</span>
 			</a>
 
 			<a href="<?php echo esc_url( home_url( '/solutions/events/' ) ); ?>" class="problem-card">
 				<h3 class="problem-card__question">"I sponsor things but never feel like it moves the needle."</h3>
-				<p class="problem-card__answer">Live remotes, community events, and sponsorships that put your brand in front of thousands — with real follow-through, not just a logo on a banner.</p>
+				<p class="problem-card__answer">Live remotes, community events, and sponsorships that put your brand in front of your local customers, with real follow-through, not just a logo on a banner.</p>
 				<span class="problem-card__channel">Event Marketing</span>
 				<span class="problem-card__link">How events work &#8594;</span>
 			</a>
@@ -65,7 +65,7 @@ if ( $testimonials->have_posts() ) :
 		<div class="section__header section__header--center">
 			<span class="section__eyebrow">Local businesses, real results</span>
 			<h2 class="section__title">Your Neighbors Trust Us With Their Marketing</h2>
-			<p class="section__subtitle">Auto dealers, restaurants, insurance agents, flooring companies — hundreds of businesses across the Finger Lakes.</p>
+			<p class="section__subtitle">Auto dealers, restaurants, insurance agents, flooring companies: local businesses across the Finger Lakes.</p>
 		</div>
 		<div class="testimonial-grid">
 			<?php while ( $testimonials->have_posts() ) : $testimonials->the_post(); ?>

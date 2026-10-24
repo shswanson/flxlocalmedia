@@ -20,6 +20,7 @@ while ( have_posts() ) : the_post();
 	$quote      = get_post_meta( get_the_ID(), 'quote_full', true );
 	$transcript = get_post_meta( get_the_ID(), 'transcript_full', true );
 	$video_url  = flxlm_get_video_url( get_the_ID() );
+	$captions_vtt = flxlm_captions_url( get_the_ID() );
 	$poster_jpg = get_post_meta( get_the_ID(), 'poster_jpg', true );
 	$poster_webp = get_post_meta( get_the_ID(), 'poster_webp', true );
 	$poster     = $poster_webp ? $poster_webp : $poster_jpg;
@@ -131,6 +132,9 @@ if ( ! empty( $meta_items ) ) : ?>
 		<button class="video-lightbox__close" aria-label="Close video">&times;</button>
 		<video id="lightbox-video" controls preload="none" <?php if ( $poster ) : ?>poster="<?php echo esc_url( $poster ); ?>"<?php endif; ?>>
 			<source src="<?php echo esc_url( $video_url ); ?>" type="video/mp4" />
+			<?php if ( $captions_vtt ) : ?>
+				<track kind="captions" src="<?php echo esc_url( $captions_vtt ); ?>" srclang="en" label="English" default />
+			<?php endif; ?>
 		</video>
 	</div>
 </div>

@@ -3773,3 +3773,26 @@ p + p {
 .post-content .flxapps .show .tag {
 	font-weight: 600;
 }
+
+/* ---------- Phase 1: free marketing review form + case-study index ---------- */
+.flxlm-form-error {
+	margin-bottom: var(--space-lg);
+	padding: var(--space-md) var(--space-lg);
+	border-radius: var(--radius-lg);
+	border: 1px solid #c0392b;
+	background: #fdecea;
+	color: #7a1f14;
+	font-size: var(--fs-sm);
+}
+
+#review {
+	scroll-margin-top: 96px;
+}
+
+.case-study-index .archive-card__image {
+	display: block;
+}
+
+.case-study-index .archive-card__title {
+	line-height: 1.3;
+}

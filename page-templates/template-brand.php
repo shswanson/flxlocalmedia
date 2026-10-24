@@ -15,7 +15,7 @@ get_header();
 <div class="page-header">
 	<div class="container">
 		<h1 class="page-header__title">One region.<br>One newsroom.<br>Many voices.</h1>
-		<p class="page-header__subtitle">A reference document for advertisers, partners, journalism organizations, and internal teams &mdash; explaining how FLX Local Media is organized.</p>
+		<p class="page-header__subtitle">A reference document for advertisers, partners, journalism organizations, and internal teams, explaining how FLX Local Media is organized.</p>
 	</div>
 </div>
 
@@ -61,7 +61,7 @@ get_header();
 			<article class="brand-card">
 				<span class="brand-card__tag">Programming</span>
 				<h3 class="brand-card__name">WCGR</h3>
-				<p class="brand-card__meta">&mdash;</p>
+				<p class="brand-card__meta">The Lake &middot; Geneva</p>
 			</article>
 
 			<article class="brand-card">
@@ -103,7 +103,7 @@ get_header();
 		<div class="section__header section__header--center">
 			<span class="section__eyebrow section__eyebrow--terracotta">The Full Suite</span>
 			<h2 class="section__title">One operator. Four product lines.</h2>
-			<p class="section__subtitle">Most local-media operators sell one or two of these. We sell across all four &mdash; bundled by data, billed by line.</p>
+			<p class="section__subtitle">Most local-media operators sell one or two of these. We sell across all four, bundled by data and billed by line.</p>
 		</div>
 
 		<div class="suite-grid">
@@ -164,7 +164,7 @@ get_header();
 		<aside class="data-network">
 			<span class="data-network__eyebrow">The Connective Tissue</span>
 			<h3 class="data-network__title">FLX Data Network</h3>
-			<p class="data-network__lede">First-party data flows across all four lines &mdash; the same audience graph powers every product.</p>
+			<p class="data-network__lede">First-party data flows across all four lines. The same audience graph powers every product.</p>
 			<div class="data-network__flow">
 				<div class="data-network__inputs">
 					<span class="data-network__node">Newsletter subscribers</span>
@@ -220,8 +220,8 @@ get_header();
 						<th scope="row">Music &amp; Entertainment</th>
 						<td class="content-matrix__cell--filled">7 Stations</td>
 						<td class="content-matrix__cell--filled">flx.fm</td>
-						<td class="content-matrix__cell--empty">&mdash;</td>
-						<td class="content-matrix__cell--empty">&mdash;</td>
+						<td class="content-matrix__cell--empty">n/a</td>
+						<td class="content-matrix__cell--empty">n/a</td>
 						<td class="content-matrix__cell--filled">Stations</td>
 					</tr>
 					<tr>
@@ -229,7 +229,7 @@ get_header();
 						<td class="content-matrix__cell--filled">News Radio</td>
 						<td class="content-matrix__cell--filled">flx.fm</td>
 						<td class="content-matrix__cell--filled">FLDN Sports</td>
-						<td class="content-matrix__cell--empty">&mdash;</td>
+						<td class="content-matrix__cell--empty">n/a</td>
 						<td class="content-matrix__cell--filled">Stations</td>
 					</tr>
 					<tr>
@@ -289,10 +289,10 @@ get_header();
 				<h3 class="view-card__title">B2B Sales Taxonomy</h3>
 				<p class="view-card__lede">The product lines on rate cards and proposals:</p>
 				<ul class="view-card__list">
-					<li><strong>Broadcast</strong> &mdash; 7 stations + streaming</li>
-					<li><strong>Digital O&amp;O</strong> &mdash; FLDN, newsletter, DiscoverFLX</li>
-					<li><strong>Services &mdash; Paid Media</strong> &mdash; SEM, social, geofencing</li>
-					<li><strong>Services &mdash; Professional</strong> &mdash; SEO, web, hosting</li>
+					<li><strong>Broadcast</strong>: 7 stations + streaming</li>
+					<li><strong>Digital O&amp;O</strong>: FLDN, newsletter, DiscoverFLX</li>
+					<li><strong>Services, Paid Media</strong>: SEM, social, geofencing</li>
+					<li><strong>Services, Professional</strong>: SEO, web, hosting</li>
 				</ul>
 			</article>
 
@@ -302,11 +302,11 @@ get_header();
 				<h3 class="view-card__title">Functional Teams</h3>
 				<p class="view-card__lede">Who actually does the work:</p>
 				<ul class="view-card__list">
-					<li><strong>Newsroom</strong> &mdash; editorial production</li>
-					<li><strong>Programming</strong> &mdash; broadcast formats &amp; on-air talent</li>
-					<li><strong>Sales</strong> &mdash; East &amp; West region account teams</li>
-					<li><strong>Services</strong> &mdash; managed digital products</li>
-					<li><strong>Operations</strong> &mdash; finance, HR, traffic, scheduling</li>
+					<li><strong>Newsroom</strong>: editorial production</li>
+					<li><strong>Programming</strong>: broadcast formats &amp; on-air talent</li>
+					<li><strong>Sales</strong>: East &amp; West region account teams</li>
+					<li><strong>Services</strong>: managed digital products</li>
+					<li><strong>Operations</strong>: finance, HR, traffic, scheduling</li>
 				</ul>
 			</article>
 		</div>
@@ -319,7 +319,7 @@ get_header();
 		<div class="section__header section__header--center">
 			<span class="section__eyebrow section__eyebrow--terracotta">Brand Hierarchy &amp; Lockups</span>
 			<h2 class="section__title">Three tiers. One umbrella.</h2>
-			<p class="section__subtitle">How the portfolio is grouped by who it&rsquo;s for &mdash; and how lockups attach to FLX Local Media as the master brand.</p>
+			<p class="section__subtitle">How the portfolio is grouped by who it&rsquo;s for, and how lockups attach to FLX Local Media as the master brand.</p>
 		</div>
 
 		<div class="views-grid">
@@ -328,24 +328,22 @@ get_header();
 				<h3 class="view-card__title">Advertisers, partners, operators</h3>
 				<p class="view-card__lede">Sold under the umbrella. Divisions lock up as <strong>FLX Local Media | Division</strong>.</p>
 				<ul class="view-card__list">
-					<li><strong>FLX Local Media | Newsroom</strong> &mdash; editorial production across all formats</li>
-					<li><strong>FLX Local Media | Broadcast</strong> &mdash; 7 stations + streaming</li>
-					<li><strong>FLX Local Media | Digital</strong> &mdash; FLDN, newsletter, digital O&amp;O</li>
+					<li><strong>FLX Local Media | Newsroom</strong>: editorial production across all formats</li>
+					<li><strong>FLX Local Media | Broadcast</strong>: 7 stations + streaming</li>
+					<li><strong>FLX Local Media | Digital</strong>: FLDN, newsletter, digital O&amp;O</li>
 				</ul>
-				<p class="view-card__note"><strong>Open:</strong> Divisions split awkwardly between content (Newsroom) and distribution channel (Broadcast, Digital). The lockup works for each individually, but the grouping isn&rsquo;t perfectly orthogonal.</p>
 			</article>
 
 			<article class="view-card">
 				<span class="view-card__audience">Consumer Brands</span>
-				<h3 class="view-card__title">Audiences &mdash; standalone identities</h3>
+				<h3 class="view-card__title">Audiences: standalone identities</h3>
 				<p class="view-card__lede">Consumer brands stand alone. No FLX Local Media co-lockup in front of an audience.</p>
 				<ul class="view-card__list">
-					<li><strong>flx.fm</strong> &mdash; the complete streaming experience. Primary mobile app for all stations + news, weather, sports.</li>
+					<li><strong>flx.fm</strong>: the complete streaming experience. Primary mobile app for all stations + news, weather, sports.</li>
 					<li><strong>DiscoverFLX</strong> (DiscoverFLX.com)</li>
-					<li><strong>FLX Finest</strong> (FLXFinest.com) &mdash; sub-brand under DiscoverFLX</li>
+					<li><strong>FLX Finest</strong> (FLXFinest.com), a sub-brand under DiscoverFLX</li>
 					<li><strong>FingerLakesDailyNews.com</strong></li>
 				</ul>
-				<p class="view-card__note"><strong>Open:</strong> Where does Finger Lakes News Radio sit &mdash; pure consumer (its own mark) or B2B lockup (<em>FLX Local Media | Newsroom</em>)?</p>
 			</article>
 
 			<article class="view-card">
@@ -353,16 +351,11 @@ get_header();
 				<h3 class="view-card__title">Operates in both worlds</h3>
 				<p class="view-card__lede">Carries the FLX endorsement without being consumer-marketed in the traditional sense.</p>
 				<ul class="view-card__list">
-					<li><strong>inFLX.org</strong> &mdash; systematized charitable giving (small sponsorships, uniforms, etc.). Lives at <a href="https://www.fingerlakesdailynews.com/inflx-giving/">fingerlakesdailynews.com/inflx-giving</a>.</li>
+					<li><strong>inFLX.org</strong>: systematized charitable giving (small sponsorships, uniforms, etc.). Lives at <a href="https://www.fingerlakesdailynews.com/inflx-giving/">fingerlakesdailynews.com/inflx-giving</a>.</li>
 				</ul>
 			</article>
 		</div>
 
-		<aside class="story-callout">
-			<span class="story-callout__label">Open Consideration</span>
-			<h3 class="story-callout__title">Should consumer logos flex for moments?</h3>
-			<p class="story-callout__lede">Holidays, civic milestones (America 250), and seasonal moments (Veterans Day, Memorial Day) are an open question. Treatments could apply to the &ldquo;FLX&rdquo; portion of a consumer mark only, to the whole logo, or only to the umbrella FLX Local Media mark &mdash; each option has different implications for recognition and consistency.</p>
-		</aside>
 	</div>
 </section>
 
@@ -434,7 +427,7 @@ get_header();
 					<span class="mockup__script-cue">7:00 AM &middot; SWEEPER</span>
 					<p class="mockup__script-line">&ldquo;An FLX Local Media report.&rdquo;</p>
 					<p class="mockup__script-line">&ldquo;Heard on Finger Lakes News Radio.&rdquo;</p>
-					<span class="mockup__script-end">&mdash;END&mdash;</span>
+					<span class="mockup__script-end">END</span>
 				</div>
 			</figure>
 

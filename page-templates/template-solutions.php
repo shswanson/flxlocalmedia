@@ -11,7 +11,7 @@ get_header();
 <div class="page-header">
 	<div class="container">
 		<h1 class="page-header__title">Marketing Solutions</h1>
-		<p class="page-header__subtitle">Four integrated channels to reach every customer in the Finger Lakes region.</p>
+		<p class="page-header__subtitle">Four ways to reach your customers in the Finger Lakes.</p>
 	</div>
 </div>
 
@@ -21,14 +21,14 @@ get_header();
 			<a href="<?php echo esc_url( home_url( '/solutions/radio/' ) ); ?>" class="solution-card">
 				<div class="solution-card__icon">📻</div>
 				<h3 class="solution-card__title">Radio Advertising</h3>
-				<p class="solution-card__desc">7 stations reaching every corner of the Finger Lakes. Country, rock, talk, AC — your audience is listening. Multi-station packages for maximum reach.</p>
+				<p class="solution-card__desc">7 stations across the Finger Lakes: country, rock, talk, and adult contemporary. We build your schedule across the stations that reach your customers.</p>
 				<span class="solution-card__link">Explore radio →</span>
 			</a>
 
 			<a href="<?php echo esc_url( home_url( '/solutions/digital/' ) ); ?>" class="solution-card">
 				<div class="solution-card__icon">💻</div>
 				<h3 class="solution-card__title">Digital Marketing</h3>
-				<p class="solution-card__desc">Full-service digital marketing: SEO, Google Ads, social media, video production, reputation management, SMS marketing, and more.</p>
+				<p class="solution-card__desc">Websites, SEO, Google Ads, social media, and video production, plus a review link and QR card that make it easy for customers to review you.</p>
 				<span class="solution-card__link">Explore digital →</span>
 			</a>
 
@@ -42,7 +42,7 @@ get_header();
 			<a href="<?php echo esc_url( home_url( '/solutions/content-marketing/' ) ); ?>" class="solution-card">
 				<div class="solution-card__icon">📝</div>
 				<h3 class="solution-card__title">Content Marketing</h3>
-				<p class="solution-card__desc">Sponsored articles, native advertising, and content placement on Finger Lakes Daily News — 700K+ monthly pageviews.</p>
+				<p class="solution-card__desc">Sponsored articles, native advertising, and content placement on Finger Lakes Daily News: 730K+ monthly pageviews.</p>
 				<span class="solution-card__link">Explore content →</span>
 			</a>
 		</div>

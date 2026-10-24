@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Case Study — SEO
+ * Template Name: Case Study: SEO
  *
  * Standalone case study page using the Helm dashboard design system.
  * The site header/footer provide navigation; content area is self-styled.
