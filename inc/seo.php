@@ -635,6 +635,14 @@ function flxlm_seo_jsonld_review() {
  * 4. Sitemap Exclusions
  *--------------------------------------------------------------*/
 
+/*
+ * Drop the XSL stylesheet line from the core sitemaps. Chrome is removing
+ * XSLT and warns on every page that uses it. Search engines never read the
+ * stylesheet; without it, browsers show their own plain XML view instead.
+ */
+add_filter( 'wp_sitemaps_stylesheet_url', '__return_false' );
+add_filter( 'wp_sitemaps_stylesheet_index_url', '__return_false' );
+
 add_filter( 'wp_sitemaps_posts_query_args', 'flxlm_seo_sitemap_exclude', 10, 2 );
 
 /**
