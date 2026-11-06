@@ -1,9 +1,10 @@
 <?php
 /**
- * SEO — Meta descriptions, Open Graph, Twitter Cards, JSON-LD.
+ * SEO — Meta descriptions, Open Graph, Twitter Cards, JSON-LD, IndexNow.
  *
  * Single file handles all structured data output for flxlocalmedia.com.
- * Hooks into wp_head at priority 1 (meta tags) and priority 5 (JSON-LD).
+ * Hooks into wp_head at priority 1 (meta tags) and priority 5 (JSON-LD),
+ * and pings IndexNow on publish (section 5).
  *
  * @package flxlm
  */
@@ -663,7 +664,109 @@ function flxlm_seo_sitemap_exclude( $args, $post_type ) {
 }
 
 /*--------------------------------------------------------------
- * 5. Utility
+ * 5. IndexNow — Instant search engine notification
+ *
+ * Pings the IndexNow API when posts are published or updated,
+ * notifying Bing, Yandex, Seznam, and other participating engines
+ * within minutes instead of waiting for natural crawl discovery.
+ * Same mechanism as fldn-theme inc/seo.php section 10.
+ *
+ * Key file is served at /{key}.txt (required by the protocol).
+ *--------------------------------------------------------------*/
+
+/**
+ * Get or generate the IndexNow API key.
+ *
+ * Generates a 32-character lowercase hex key on first call, stored as
+ * a non-autoloaded option. Validates format on retrieval and regenerates
+ * if corrupted.
+ *
+ * @return string 32-character hex key.
+ */
+function flxlm_seo_indexnow_key() {
+	$key = get_option( 'flxlm_indexnow_key', '' );
+	if ( ! $key || ! preg_match( '/^[a-f0-9]{8,128}$/', $key ) ) {
+		$key = bin2hex( random_bytes( 16 ) );
+		update_option( 'flxlm_indexnow_key', $key, false );
+	}
+	return $key;
+}
+
+/**
+ * Serve the IndexNow key verification file at /{key}.txt.
+ *
+ * WordPress has already decided the request is a 404 by the time
+ * template_redirect fires, so the status must be reset to 200 or
+ * the engines reject the key (fldn#386).
+ */
+add_action( 'template_redirect', function () {
+	$path = trim( parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
+	if ( ! preg_match( '/^[a-f0-9]{8,128}\.txt$/', $path ) ) {
+		return;
+	}
+
+	$key = flxlm_seo_indexnow_key();
+	if ( $key . '.txt' !== $path ) {
+		return;
+	}
+
+	status_header( 200 );
+	header( 'Content-Type: text/plain; charset=UTF-8' );
+	header( 'Cache-Control: public, max-age=86400' );
+	echo $key;
+	exit;
+}, 0 );
+
+add_action( 'transition_post_status', 'flxlm_seo_indexnow_ping', 10, 3 );
+
+/**
+ * Ping IndexNow when a post transitions to 'publish'.
+ *
+ * Fires a non-blocking GET to api.indexnow.org which distributes
+ * the URL to all participating search engines. Only pings on
+ * production, only for public post types, and only when the post's
+ * canonical URL lives on this site (jobs mirrored to FLDN point
+ * their canonical there, and FLDN pings for them).
+ *
+ * @param string  $new_status New post status.
+ * @param string  $old_status Previous post status.
+ * @param WP_Post $post       Post object.
+ */
+function flxlm_seo_indexnow_ping( $new_status, $old_status, $post ) {
+	if ( 'publish' !== $new_status ) {
+		return;
+	}
+
+	$pt = get_post_type_object( $post->post_type );
+	if ( ! $pt || ! $pt->public ) {
+		return;
+	}
+
+	// Non-production: don't ping search engines.
+	if ( false === strpos( home_url(), 'flxlocalmedia.com' ) ) {
+		return;
+	}
+
+	$url = wp_get_canonical_url( $post );
+	if ( ! $url || wp_parse_url( $url, PHP_URL_HOST ) !== wp_parse_url( home_url(), PHP_URL_HOST ) ) {
+		return;
+	}
+
+	$key      = flxlm_seo_indexnow_key();
+	$endpoint = add_query_arg( array(
+		'url'         => rawurlencode( $url ),
+		'key'         => $key,
+		'keyLocation' => rawurlencode( home_url( '/' . $key . '.txt' ) ),
+	), 'https://api.indexnow.org/indexnow' );
+
+	wp_remote_get( $endpoint, array(
+		'timeout'  => 5,
+		'blocking' => false,
+	) );
+}
+
+/*--------------------------------------------------------------
+ * 6. Utility
  *--------------------------------------------------------------*/
 
 /**
