@@ -92,7 +92,7 @@ function flxlm_enqueue_station_assets() {
 			'callSign'            => $call,
 			'color'               => isset( $station_colors[ $call ] ) ? $station_colors[ $call ] : '#512DA8',
 			'contoursUrl'         => get_template_directory_uri() . '/assets/data/contours.geojson',
-			'contoursExtendedUrl' => get_template_directory_uri() . '/assets/data/contours-extended.geojson',
+			'contoursExtendedUrl' => get_template_directory_uri() . '/assets/data/contours-coverage.geojson?v=' . filemtime( get_template_directory() . '/assets/data/contours-coverage.geojson' ),
 		) );
 	}
 }

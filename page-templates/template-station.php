@@ -113,6 +113,7 @@ get_header();
 			<p class="section__subtitle">FCC-licensed broadcast coverage</p>
 		</div>
 		<div id="station-map" class="station-map" data-station-call="<?php echo esc_attr( $station_data['call_sign'] ); ?>"></div>
+		<p class="station-map__note" style="font-size: 0.85rem; color: #5a6470; margin-top: var(--space-sm);">Shaded area: where <?php echo esc_html( $station_data['name'] ); ?> can typically be heard on all of its signals combined. FM areas are modelled on real terrain to the 54 dBu level (60 dBu for some translators); AM areas use the FCC's daytime 0.5 mV/m contour. Reception varies with terrain, buildings and the radio.</p>
 		<div class="post-content" style="margin-top: var(--space-lg);">
 			<p><?php echo esc_html( $station_data['coverage_description'] ); ?></p>
 			<p><strong>Counties served:</strong> <?php echo esc_html( implode( ', ', $station_data['coverage_counties'] ) ); ?>.</p>
