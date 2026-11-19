@@ -34,7 +34,10 @@
     { name: 'Elmira',       lat: 42.0898, lng: -76.8077 },
     { name: 'Rochester',    lat: 43.1566, lng: -77.6088 },
     { name: 'Victor',       lat: 42.9826, lng: -77.4089 },
-    { name: 'Dundee',       lat: 42.5237, lng: -76.9767 }
+    { name: 'Dundee',       lat: 42.5237, lng: -76.9767 },
+    { name: 'Ithaca',       lat: 42.4440, lng: -76.5019 },
+    { name: 'Newark',       lat: 43.0467, lng: -77.0952 },
+    { name: 'Syracuse',     lat: 43.0481, lng: -76.1474 }
   ];
 
   /* ------------------------------------------------------------------ */
