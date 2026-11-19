@@ -30,7 +30,6 @@
     { name: 'Seneca Falls', lat: 42.9109, lng: -76.7966 },
     { name: 'Watkins Glen', lat: 42.3809, lng: -76.8724 },
     { name: 'Bath',         lat: 42.3370, lng: -77.3178 },
-    { name: 'Corning',      lat: 42.1428, lng: -77.0547 },
     { name: 'Elmira',       lat: 42.0898, lng: -76.8077 },
     { name: 'Rochester',    lat: 43.1566, lng: -77.6088 },
     { name: 'Victor',       lat: 42.9826, lng: -77.4089 },
