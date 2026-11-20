@@ -300,3 +300,29 @@ add_filter( 'the_content', function ( $content ) {
 	}
 	return preg_replace( array( '#<h1(\s[^>]*)?>#i', '#</h1>#i' ), array( '<h2$1>', '</h2>' ), $content );
 }, 9 );
+
+/**
+ * Restyle the /apps/ body at render time: the stored content is a purple inline-styled link button.
+ * Rebuild it as a centered card with the App Store badge and the FLX.fm icon. The App Store link and the
+ * Android line are read from the stored content; if the stored block does not match, it is left alone.
+ */
+add_filter( 'the_content', function ( $content ) {
+	if ( ! is_page( 'apps' ) || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+	if ( false === strpos( $content, 'class="flxapps"' )
+		|| ! preg_match( '#<a class="cta" href="([^"]+)"#', $content, $href )
+		|| ! preg_match( '#<h2[^>]*>(.*?)</h2>#is', $content, $head )
+		|| ! preg_match( '#<p class="sub">(.*?)</p>#is', $content, $sub )
+		|| ! preg_match( '#<p class="note">(.*?)</p>#is', $content, $note ) ) {
+		return $content;
+	}
+	$uri = get_template_directory_uri();
+	return '<div class="fa-card">'
+		. '<img class="fa-card__icon" src="' . esc_url( $uri . '/assets/images/products/flx-fm/mark.webp' ) . '" alt="FLX.fm app icon" width="96" height="96">'
+		. '<h2>' . $head[1] . '</h2>'
+		. '<p class="fa-card__sub">' . $sub[1] . '</p>'
+		. '<a class="fa-badge" href="' . esc_url( $href[1] ) . '"><img src="' . esc_url( $uri . '/assets/images/badge-app-store.svg' ) . '" alt="Download FLX.fm on the App Store, free for iPhone and iPad" width="180" height="60"></a>'
+		. '<p class="fa-card__note">' . $note[1] . '</p>'
+		. '</div>';
+}, 10 );

@@ -324,18 +324,31 @@
 .flxlm-pg .post-content a {
 	color: var(--pg-link);
 	font-weight: 600;
+	text-decoration: none;
+}
+
+.flxlm-pg .post-content a:hover,
+.flxlm-pg .post-content a:focus-visible {
+	color: var(--pg-deep);
 	text-decoration: underline;
 	text-decoration-color: var(--pg-mark);
 	text-decoration-thickness: 2px;
 	text-underline-offset: 3px;
 }
 
-.flxlm-pg .post-content a:hover {
-	color: var(--pg-deep);
-	text-decoration-color: var(--pg-deep);
+.flxlm-pg .section--dark .post-content a {
+	color: var(--pg-gold);
 }
 
-.flxlm-pg .post-content a.btn {
+.flxlm-pg .section--dark .post-content a:hover,
+.flxlm-pg .section--dark .post-content a:focus-visible {
+	color: var(--pg-gold-hover);
+	text-decoration-color: var(--pg-gold-hover);
+}
+
+.flxlm-pg .post-content a.btn,
+.flxlm-pg .post-content a.pg-cta,
+.flxlm-pg .post-content a.fa-badge {
 	text-decoration: none;
 }
 
@@ -1671,4 +1684,53 @@ body.flxlm-pg-band .cta-banner {
 		transition: none;
 		transform: none;
 	}
+}
+
+/* ---------- /apps/ page: centered card (markup built in inc/site-pages.php) ---------- */
+.flxlm-pg .fa-card {
+	max-width: 640px;
+	margin: 0 auto;
+	padding: 2.5rem 1.5rem;
+	text-align: center;
+	background: #fff;
+	border: 1px solid var(--pg-line);
+	border-radius: 16px;
+	box-shadow: 0 10px 30px rgba(0, 39, 62, 0.08);
+}
+
+.flxlm-pg .fa-card__icon {
+	display: block;
+	width: 96px;
+	height: 96px;
+	margin: 0 auto 1.25rem;
+	border-radius: 22px;
+	box-shadow: 0 4px 14px rgba(0, 39, 62, 0.18);
+}
+
+.flxlm-pg .fa-card h2 {
+	margin: 0 0 0.5rem;
+}
+
+.flxlm-pg .fa-card__sub {
+	margin: 0 0 1.5rem;
+	color: var(--color-text-light);
+}
+
+.flxlm-pg .post-content a.fa-badge {
+	display: inline-block;
+	line-height: 0;
+	border-radius: 8px;
+}
+
+.flxlm-pg .fa-badge img {
+	display: block;
+	width: 180px;
+	height: auto;
+	margin: 0;
+}
+
+.flxlm-pg .fa-card__note {
+	margin: 1.5rem 0 0;
+	font-size: var(--fs-sm, 0.9rem);
+	color: var(--color-text-light);
 }
