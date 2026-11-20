@@ -1,0 +1,1054 @@
+/* ==========================================================================
+   FLX Local Media - Station page ("option D")
+   Loaded only on page-templates/template-station.php, after style.css.
+   Everything is scoped under .flxlm-station so nothing else on the site moves.
+   Station colours arrive as custom properties on the wrapper (set inline from
+   the station's page.colors by flxlm_station_page_data()):
+     --st-primary  --st-deep  --st-accent  --st-accent-rgb
+     --st-ink      dark text colour derived from the deep colour
+     --st-link     station colour that reads on white (>= 4.5:1)
+     --st-tint     pale wash of the primary
+     --st-on-primary / --st-on-accent   white or ink, whichever reads
+   ========================================================================== */
+
+.flxlm-station {
+	--st-primary: #003b5b;
+	--st-deep: #002a42;
+	--st-accent: #52cfd8;
+	--st-accent-rgb: 82, 207, 216;
+	--st-ink: #00131f;
+	--st-link: #003b5b;
+	--st-tint: #eef1f4;
+	--st-on-primary: #ffffff;
+	--st-on-accent: #00131f;
+	--st-hot: #00a8c0;
+	background: var(--color-mist);
+	color: var(--color-text);
+	font-family: var(--font-body);
+}
+
+.flxlm-station *,
+.flxlm-station *::before,
+.flxlm-station *::after {
+	box-sizing: border-box;
+}
+
+.flxlm-station h1,
+.flxlm-station h2,
+.flxlm-station h3,
+.flxlm-station p,
+.flxlm-station blockquote {
+	margin: 0;
+}
+
+.flxlm-station h1,
+.flxlm-station h2,
+.flxlm-station h3 {
+	color: var(--color-navy);
+	line-height: 1.15;
+	font-weight: 700;
+	letter-spacing: normal;
+}
+
+.flxlm-station .st-wrap {
+	max-width: var(--container-max);
+	margin: 0 auto;
+	padding: 0 24px;
+}
+
+/* ---------- 1. Hero ---------- */
+.flxlm-station .st-hero {
+	position: relative;
+	overflow: hidden;
+	padding: 64px 0 96px;
+	color: var(--st-on-primary);
+	background-color: var(--st-primary);
+	background-image:
+		radial-gradient(circle at 85% 20%, rgba(var(--st-accent-rgb), 0.35), transparent 45%),
+		linear-gradient(160deg, var(--st-primary) 0%, var(--st-deep) 100%);
+}
+
+.flxlm-station .st-hero::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -1px;
+	height: 60px;
+	background: var(--color-mist);
+	clip-path: polygon(0 100%, 100% 100%, 100% 0);
+}
+
+.flxlm-station .st-hero__grid {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+	gap: 48px;
+	align-items: center;
+}
+
+.flxlm-station .st-hero__grid--solo {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.flxlm-station .st-hero__grid > * {
+	min-width: 0;
+}
+
+.flxlm-station .st-hero__logo {
+	width: 100%;
+	max-width: 520px;
+	height: auto;
+	filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.28));
+}
+
+.flxlm-station .st-eyebrow {
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--st-accent);
+}
+
+.flxlm-station .st-fm {
+	margin: 6px 0 4px;
+	font-size: clamp(3.4rem, 9vw, 6.4rem);
+	font-weight: 900;
+	line-height: 0.95;
+	letter-spacing: -0.02em;
+	color: var(--st-on-primary);
+}
+
+.flxlm-station .st-fm--long {
+	font-size: clamp(1.9rem, 4.6vw, 3.1rem);
+	line-height: 1.1;
+}
+
+.flxlm-station .st-fm span:not(.sr-only) {
+	color: var(--st-accent);
+}
+
+.flxlm-station .st-also {
+	margin-top: 6px;
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--st-accent);
+	letter-spacing: .02em;
+}
+.flxlm-station .st-format {
+	font-size: 1.5rem;
+	font-weight: 600;
+}
+
+/* Tilted white sticker, text in the station colour */
+.flxlm-station .st-tag {
+	display: inline-block;
+	margin-top: 18px;
+	padding: 6px 16px;
+	background: #fff;
+	color: var(--st-link);
+	border-radius: 4px;
+	font-size: 1.3rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	transform: rotate(-1.5deg);
+	box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.flxlm-station .st-lead {
+	margin-top: 22px;
+	max-width: 30ch;
+	font-size: 1.15rem;
+	color: var(--st-on-primary);
+	opacity: 0.92;
+}
+
+.flxlm-station .st-hero-cta {
+	margin-top: 24px;
+}
+
+.flxlm-station .st-cta-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 14px;
+	border: 0;
+	cursor: pointer;
+	padding: 12px 26px 12px 12px;
+	background: var(--st-accent);
+	color: var(--st-on-accent);
+	font: inherit;
+	text-align: left;
+	border-radius: 999px;
+	box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
+	transition: transform 0.15s;
+}
+
+.flxlm-station .st-cta-btn:hover {
+	transform: translateY(-1px);
+}
+
+.flxlm-station .st-cta-btn .ic {
+	flex: none;
+	display: grid;
+	place-items: center;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: var(--st-on-accent);
+	color: var(--st-accent);
+	font-size: 1.2rem;
+}
+
+.flxlm-station .st-cta-btn .tx b {
+	display: block;
+	font-size: 1.15rem;
+	font-weight: 800;
+	line-height: 1.25;
+}
+
+.flxlm-station .st-cta-btn .tx small {
+	display: block;
+	font-size: 0.85rem;
+	font-weight: 600;
+	opacity: 0.8;
+}
+
+/* ---------- Sheet: content plus the floating table of contents ---------- */
+.flxlm-station .st-sheet {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 300px;
+	gap: 32px;
+	align-items: start;
+	max-width: 1240px;
+	margin: 0 auto;
+	padding: 0 24px 80px;
+}
+
+.flxlm-station .st-main {
+	min-width: 0;
+}
+
+/* The first block pulls up over the hero edge; the table of contents lines up with it. */
+.flxlm-station .st-main > :first-child {
+	position: relative;
+	z-index: 2;
+	margin-top: -20px;
+}
+
+.flxlm-station .st-main > * + .st-panel {
+	margin-top: 20px;
+}
+
+/* ---------- 2. Spec bar ---------- */
+.flxlm-station .st-specs {
+	overflow: hidden;
+	background: var(--st-hot);
+	border-radius: var(--radius-lg);
+	box-shadow: 0 14px 32px rgba(0, 59, 91, 0.18);
+}
+
+.flxlm-station .st-specs__row {
+	display: grid;
+	grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+}
+
+.flxlm-station .st-specs__row + .st-specs__row {
+	border-top: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.flxlm-station .st-specs__row > div {
+	padding: 18px 24px;
+	border-right: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.flxlm-station .st-specs__row > div:last-child {
+	border-right: 0;
+}
+
+.flxlm-station .st-specs b {
+	display: block;
+	font-size: 1.7rem;
+	font-weight: 800;
+	line-height: 1.1;
+	color: #fff;
+	white-space: nowrap;
+}
+
+.flxlm-station .st-specs b.names {
+	font-size: 1.05rem;
+	line-height: 1.35;
+	white-space: normal;
+}
+
+.flxlm-station .st-specs span {
+	display: block;
+	margin-top: 4px;
+	font-size: 0.78rem;
+	font-weight: 600;
+	line-height: 1.35;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--color-navy);
+}
+
+.flxlm-station .st-specs-note {
+	margin: 8px 4px 0;
+	font-size: 0.8rem;
+	color: #5a6470;
+}
+
+.flxlm-station .st-specs-note a {
+	color: #077a89;
+	font-weight: 600;
+}
+
+/* ---------- Panels ---------- */
+.flxlm-station .st-panel {
+	overflow: hidden;
+	background: #fff;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	scroll-margin-top: calc(var(--header-height) + 16px);
+}
+
+.flxlm-station .st-panel > h2 {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 24px;
+	background: var(--color-navy);
+	color: #fff;
+	font-size: 0.85rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+.flxlm-station .st-panel > h2 span {
+	color: var(--color-cyan);
+	font-style: normal;
+	font-weight: inherit;
+}
+
+.flxlm-station .st-pad {
+	padding: 26px 24px;
+}
+
+/* ---------- 3. Meet your listener ---------- */
+.flxlm-station .st-listener {
+	display: grid;
+	grid-template-columns: 260px minmax(0, 1fr);
+	gap: 30px;
+	align-items: start;
+}
+
+.flxlm-station .st-listener--solo {
+	grid-template-columns: minmax(0, 260px);
+}
+
+.flxlm-station .st-portrait {
+	padding: 26px 20px;
+	text-align: center;
+	background: var(--st-accent);
+	color: var(--st-on-accent);
+	border-radius: var(--radius-lg);
+}
+
+.flxlm-station .st-avatar {
+	display: block;
+	width: 140px;
+	height: 140px;
+	margin: 0 auto 14px;
+	object-fit: cover;
+	border: 7px solid #fff;
+	border-radius: 50%;
+	background: var(--st-primary);
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.flxlm-station .st-avatar--initial {
+	display: grid;
+	place-items: center;
+	color: var(--st-on-primary);
+	font-size: 4.4rem;
+	font-weight: 800;
+}
+
+.flxlm-station .st-portrait h3 {
+	color: var(--st-on-accent);
+	font-size: 1.7rem;
+}
+
+.flxlm-station .st-portrait p {
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: var(--st-on-accent);
+	opacity: 0.85;
+}
+
+.flxlm-station .st-label {
+	display: inline-block;
+	margin-top: 12px;
+	padding: 5px 12px;
+	background: #fff;
+	color: var(--st-link);
+	border-radius: 999px;
+	font-size: 0.74rem;
+	font-weight: 700;
+}
+
+.flxlm-station .st-story p + p {
+	margin-top: 14px;
+}
+
+.flxlm-station .st-facts {
+	display: grid;
+	grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+	gap: 12px;
+	margin-top: 22px;
+}
+
+.flxlm-station .st-story > p + .st-facts,
+.flxlm-station .st-story > .st-facts:first-child {
+	margin-top: 22px;
+}
+
+.flxlm-station .st-story > .st-facts:first-child {
+	margin-top: 0;
+}
+
+.flxlm-station .st-fact {
+	padding: 14px;
+	background: var(--color-mist);
+	border-left: 6px solid var(--color-teal);
+	border-radius: var(--radius);
+}
+
+.flxlm-station .st-fact b {
+	display: block;
+	font-size: 1.5rem;
+	font-weight: 800;
+	color: var(--color-navy);
+}
+
+.flxlm-station .st-fact span {
+	display: block;
+	font-size: 0.8rem;
+	line-height: 1.35;
+	color: var(--color-text-light);
+}
+
+/* ---------- 4. Meet the voices ---------- */
+.flxlm-station .st-onair-row {
+	padding: 18px 24px 0;
+}
+
+.flxlm-station .st-onair {
+	display: flex;
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 12px;
+	width: 100%;
+	padding: 12px 14px 12px 18px;
+	background: var(--st-primary);
+	color: var(--st-on-primary);
+	border-radius: 14px;
+	font-size: 0.95rem;
+}
+
+.flxlm-station .st-onair .np {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: row;
+	align-items: baseline;
+	gap: 12px;
+	min-width: 0;
+	line-height: 1.25;
+}
+
+.flxlm-station .st-onair .np span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.flxlm-station .st-onair .tag-now {
+	flex: none;
+	font-size: 0.72rem;
+	font-weight: 800;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--st-accent);
+}
+
+.flxlm-station .st-onair .song {
+	flex: 0 1 auto;
+	font-weight: 600;
+}
+
+.flxlm-station .st-onair .artist {
+	flex: 1 1 auto;
+	font-size: 0.9rem;
+	opacity: 0.85;
+}
+
+.flxlm-station .st-onair .artist:not(:empty)::before {
+	content: "\2014  ";
+	opacity: 0.6;
+}
+
+.flxlm-station .st-onair .dot {
+	flex: none;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: var(--st-accent);
+	box-shadow: 0 0 0 0 rgba(var(--st-accent-rgb), 0.7);
+	animation: st-pulse 1.6s infinite;
+}
+
+@keyframes st-pulse {
+	70% { box-shadow: 0 0 0 12px rgba(var(--st-accent-rgb), 0); }
+	100% { box-shadow: 0 0 0 0 rgba(var(--st-accent-rgb), 0); }
+}
+
+.flxlm-station .st-onair .listen {
+	flex: none;
+	border: 0;
+	cursor: pointer;
+	padding: 5px 14px;
+	background: var(--st-accent);
+	color: var(--st-on-accent);
+	font: inherit;
+	font-size: 0.85rem;
+	font-weight: 800;
+	border-radius: 999px;
+}
+
+.flxlm-station .st-onair .listen[aria-pressed="true"] {
+	background: #fff;
+	color: var(--st-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.flxlm-station .st-onair .dot { animation: none; }
+	.flxlm-station .st-cta-btn { transition: none; }
+}
+
+.flxlm-station .st-voices {
+	display: grid;
+	grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+	gap: 14px;
+	padding: 22px;
+}
+
+.flxlm-station .st-voice {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	background: #fff;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius);
+}
+
+.flxlm-station .st-voice .ph {
+	position: relative;
+	flex: none;
+	height: 170px;
+	overflow: hidden;
+	background: var(--color-navy);
+}
+
+.flxlm-station .st-voice .ph img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.flxlm-station .st-voice .ph__initials {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	color: #fff;
+	font-size: 2.6rem;
+	font-weight: 800;
+}
+
+.flxlm-station .st-voice .tx {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 4px;
+	padding: 14px 16px 18px;
+}
+
+.flxlm-station .st-voice h3 {
+	font-size: 1.05rem;
+}
+
+.flxlm-station .st-voice .when {
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--st-link);
+}
+
+.flxlm-station .st-voice--syn .when {
+	color: var(--color-teal-ink);
+}
+
+.flxlm-station .st-voice p {
+	margin-top: 6px;
+	font-size: 0.88rem;
+	line-height: 1.5;
+}
+
+/* ---------- 5. The market ---------- */
+.flxlm-station .st-market {
+	background: var(--color-navy);
+	border-color: var(--color-navy);
+	color: #dcecf2;
+}
+
+.flxlm-station .st-market > h2 {
+	background: #002a42;
+}
+
+.flxlm-station .st-market__grid {
+	display: grid;
+	grid-template-columns: 200px minmax(0, 1fr);
+	gap: 24px;
+	align-items: start;
+}
+
+.flxlm-station .st-market__grid--solo {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.flxlm-station .st-market .pop {
+	font-size: 3.2rem;
+	font-weight: 900;
+	line-height: 1;
+	color: var(--st-accent);
+}
+
+.flxlm-station .st-market .pop-label {
+	margin-top: 6px;
+}
+
+.flxlm-station .st-market h3 {
+	margin: 22px 0 10px;
+	color: #fff;
+	font-size: 0.78rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.flxlm-station .st-market__grid > div:first-child > h3:first-child {
+	margin-top: 0;
+}
+
+.flxlm-station .st-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.flxlm-station .st-chips li {
+	padding: 7px 16px;
+	background: rgba(255, 255, 255, 0.14);
+	color: #fff;
+	border-radius: 999px;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.flxlm-station .st-map-box {
+	position: relative;
+	min-width: 0;
+}
+
+.flxlm-station .st-map-box .station-map {
+	position: relative;
+	z-index: 0; /* keep Leaflet's panes below the sticky site header */
+	height: 400px;
+	background: #e8eef0;
+}
+
+.flxlm-station .st-footnote {
+	margin-top: 12px;
+	font-size: 0.82rem;
+	line-height: 1.5;
+	color: #a9c6d2;
+}
+
+/* ---------- 6. Ways to advertise ---------- */
+.flxlm-station .st-cards {
+	display: grid;
+	grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
+	gap: 12px;
+	padding: 20px;
+}
+
+.flxlm-station .st-way {
+	min-height: 230px;
+	padding: 20px 16px;
+	color: #fff;
+	border-radius: var(--radius);
+}
+
+.flxlm-station .st-way svg {
+	display: block;
+	width: 38px;
+	height: 38px;
+	margin-bottom: 12px;
+}
+
+.flxlm-station .st-way h3 {
+	margin-bottom: 6px;
+	color: inherit;
+	font-size: 1.05rem;
+}
+
+.flxlm-station .st-way p {
+	font-size: 0.86rem;
+	line-height: 1.5;
+}
+
+.flxlm-station .st-way:nth-child(5n + 1) { background: var(--st-primary); color: var(--st-on-primary); }
+.flxlm-station .st-way:nth-child(5n + 2) { background: var(--color-navy); }
+.flxlm-station .st-way:nth-child(5n + 3) { background: var(--st-hot); }
+.flxlm-station .st-way:nth-child(5n + 4) { background: var(--st-deep); }
+.flxlm-station .st-way:nth-child(5n + 5) { background: var(--st-accent); color: var(--st-on-accent); }
+
+/* ---------- 7. From an advertiser ---------- */
+.flxlm-station .st-pq {
+	display: grid;
+	grid-template-columns: 1.1fr 1fr;
+	gap: 26px;
+	align-items: center;
+}
+
+.flxlm-station .st-pq--solo {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.flxlm-station .st-pq-video {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	border-radius: 14px;
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.flxlm-station .st-pq-video img {
+	display: block;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+}
+
+.flxlm-station .st-pq-play {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	display: grid;
+	place-items: center;
+	width: 66px;
+	height: 66px;
+	transform: translate(-50%, -50%);
+	background: var(--st-primary);
+	color: var(--st-on-primary);
+	border-radius: 50%;
+	font-size: 1.5rem;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.flxlm-station .st-pq-len {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	padding: 3px 8px;
+	background: rgba(0, 0, 0, 0.7);
+	color: #fff;
+	border-radius: 6px;
+	font-size: 0.8rem;
+	font-weight: 700;
+}
+
+.flxlm-station .st-pq-quote {
+	font-size: 1.3rem;
+	font-weight: 600;
+	line-height: 1.5;
+	color: var(--color-navy);
+}
+
+.flxlm-station .st-pq-who {
+	margin-top: 12px;
+	font-size: 0.95rem;
+	color: var(--color-text-light);
+}
+
+.flxlm-station .st-pq-who b {
+	color: var(--color-navy);
+}
+
+.flxlm-station .st-proof-link {
+	display: inline-block;
+	margin-top: 12px;
+	font-weight: 700;
+	color: var(--st-link);
+	text-decoration: none;
+}
+
+.flxlm-station .st-proof-link:hover {
+	color: var(--st-link);
+	text-decoration: underline;
+}
+
+/* ---------- 8. Floating table of contents and the one call to action ---------- */
+.flxlm-station .st-aside {
+	position: sticky;
+	top: calc(var(--header-height) + 20px);
+	z-index: 2;
+	margin-top: -20px;
+}
+
+.flxlm-station .st-aside-card {
+	padding: 24px;
+	background: var(--color-navy);
+	color: #fff;
+	border-radius: var(--radius-lg);
+}
+
+.flxlm-station .st-aside-card h2 {
+	margin-bottom: 4px;
+	color: #fff;
+	font-size: 1.2rem;
+}
+
+.flxlm-station .st-aside-card .sub {
+	margin-bottom: 18px;
+	font-size: 0.88rem;
+	color: #b9d6e0;
+}
+
+.flxlm-station .st-aside-card h2 + .st-btn {
+	margin-top: 18px;
+}
+
+.flxlm-station .st-aside-card nav {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 20px;
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.flxlm-station .st-aside-card nav a {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 0;
+	color: #fff;
+	font-size: 0.92rem;
+	font-weight: 500;
+	text-decoration: none;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+	transition: background 0.2s, padding 0.2s, box-shadow 0.2s;
+}
+
+.flxlm-station .st-aside-card nav a:hover {
+	color: #fff;
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.flxlm-station .st-aside-card nav a::after {
+	content: "\2192";
+	color: var(--color-cyan);
+}
+
+.flxlm-station .st-aside-card nav a.active {
+	padding-left: 12px;
+	padding-right: 8px;
+	background: rgba(255, 255, 255, 0.08);
+	box-shadow: inset 3px 0 0 var(--st-accent);
+	font-weight: 700;
+}
+
+.flxlm-station .st-aside-card nav a.active::after {
+	color: var(--st-accent);
+}
+
+.flxlm-station .st-btn {
+	display: block;
+	padding: 16px 18px;
+	background: var(--st-accent);
+	color: var(--st-on-accent);
+	text-align: center;
+	font-size: 1rem;
+	font-weight: 800;
+	text-decoration: none;
+	border-radius: 12px;
+	box-shadow: 0 8px 20px rgba(var(--st-accent-rgb), 0.35);
+}
+
+.flxlm-station .st-btn:hover {
+	color: var(--st-on-accent);
+	filter: brightness(1.05);
+}
+
+.flxlm-station .st-aside-card .small {
+	margin-top: 12px;
+	font-size: 0.78rem;
+	text-align: center;
+	color: #9fc3d0;
+}
+
+/* ---------- Tablet and phone ---------- */
+@media (max-width: 980px) {
+	.flxlm-station .st-sheet {
+		grid-template-columns: minmax(0, 1fr);
+		padding: 0 16px 120px;
+	}
+
+	.flxlm-station .st-aside {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: auto;
+		z-index: 900;
+		margin-top: 0;
+		transition: transform 0.25s;
+	}
+
+	.flxlm-station .st-aside.is-hidden {
+		transform: translateY(110%);
+	}
+
+	.flxlm-station .st-aside-card {
+		padding: 12px 16px;
+		border-radius: 16px 16px 0 0;
+		box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.25);
+	}
+
+	.flxlm-station .st-aside-card h2,
+	.flxlm-station .st-aside-card .sub,
+	.flxlm-station .st-aside-card nav,
+	.flxlm-station .st-aside-card .small {
+		display: none;
+	}
+
+	.flxlm-station .st-aside-card h2 + .st-btn,
+	.flxlm-station .st-aside-card .st-btn {
+		margin-top: 0;
+	}
+
+	.flxlm-station .st-hero__grid,
+	.flxlm-station .st-listener,
+	.flxlm-station .st-market__grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.flxlm-station .st-cards {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.flxlm-station .st-cards .st-way:last-child:nth-child(odd) {
+		grid-column: 1 / -1;
+	}
+
+	.flxlm-station .st-voices {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.flxlm-station .st-voices .st-voice:last-child:nth-child(odd) {
+		grid-column: 1 / -1;
+	}
+
+	.flxlm-station .st-listener--solo {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+@media (max-width: 760px) {
+	.flxlm-station .st-wrap {
+		padding: 0 16px;
+	}
+
+	.flxlm-station .st-hero {
+		padding: 36px 0 80px;
+	}
+
+	.flxlm-station .st-hero__logo {
+		max-width: 300px;
+	}
+
+	.flxlm-station .st-specs__nums {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.flxlm-station .st-specs__meta {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.flxlm-station .st-specs__row + .st-specs__row {
+		border-top: 0;
+	}
+
+	.flxlm-station .st-specs__row > div {
+		border-right: 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+	}
+
+	.flxlm-station .st-specs__nums > div:nth-child(odd) {
+		border-right: 1px solid rgba(255, 255, 255, 0.35);
+	}
+
+	.flxlm-station .st-specs__row:last-child > div:last-child {
+		border-bottom: 0;
+	}
+
+	.flxlm-station .st-facts {
+		grid-template-columns: 1fr;
+	}
+
+	.flxlm-station .st-cards,
+	.flxlm-station .st-voices {
+		grid-template-columns: 1fr;
+	}
+
+	.flxlm-station .st-voice .ph {
+		height: 220px;
+	}
+
+	.flxlm-station .st-way {
+		min-height: 0;
+	}
+
+	.flxlm-station .st-map-box .station-map {
+		height: 320px;
+	}
+
+	.flxlm-station .st-pq {
+		grid-template-columns: 1fr;
+	}
+
+	.flxlm-station .st-onair .np {
+		flex-direction: column;
+		gap: 0;
+	}
+
+	.flxlm-station .st-onair .artist:not(:empty)::before {
+		content: none;
+	}
+}

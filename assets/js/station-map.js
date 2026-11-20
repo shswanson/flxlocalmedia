@@ -30,11 +30,13 @@
     { name: 'Seneca Falls', lat: 42.9109, lng: -76.7966 },
     { name: 'Watkins Glen', lat: 42.3809, lng: -76.8724 },
     { name: 'Bath',         lat: 42.3370, lng: -77.3178 },
-    { name: 'Corning',      lat: 42.1428, lng: -77.0547 },
     { name: 'Elmira',       lat: 42.0898, lng: -76.8077 },
     { name: 'Rochester',    lat: 43.1566, lng: -77.6088 },
     { name: 'Victor',       lat: 42.9826, lng: -77.4089 },
-    { name: 'Dundee',       lat: 42.5237, lng: -76.9767 }
+    { name: 'Dundee',       lat: 42.5237, lng: -76.9767 },
+    { name: 'Ithaca',       lat: 42.4440, lng: -76.5019 },
+    { name: 'Newark',       lat: 43.0467, lng: -77.0952 },
+    { name: 'Syracuse',     lat: 43.0481, lng: -76.1474 }
   ];
 
   /* ------------------------------------------------------------------ */
@@ -68,68 +70,29 @@
   /*  Load contour data                                                  */
   /* ------------------------------------------------------------------ */
 
-  var contoursPromise = fetch(config.contoursUrl).then(function (r) { return r.json(); });
-  var extendedPromise = fetch(config.contoursExtendedUrl).then(function (r) { return r.json(); });
-
-  Promise.all([contoursPromise, extendedPromise]).then(function (results) {
-    var contours = results[0];
-    var extended = results[1];
-
-    renderExtendedContours(extended);
-    renderPrimaryContours(contours);
+  /* One contour per station: the larger "extended" coverage area (54 dBu),
+     which is where the station can typically be heard. The smaller primary
+     contour and other stations' outlines are no longer drawn. */
+  fetch(config.contoursExtendedUrl).then(function (r) { return r.json(); }).then(function (extended) {
+    renderCoverage(extended);
     addCityMarkers();
   });
 
   /* ------------------------------------------------------------------ */
-  /*  Extended contours — faded dashed outer ring for this station       */
+  /*  Coverage area: this station's extended contour, solid              */
   /* ------------------------------------------------------------------ */
 
-  function renderExtendedContours(data) {
-    if (!data || !data.features) return;
-
-    L.geoJSON(data, {
-      style: function (feature) {
-        var parent = (feature.properties.parent_station || '').toUpperCase();
-        if (parent !== callSign) {
-          return { opacity: 0, fillOpacity: 0, weight: 0 };
-        }
-        return {
-          color: stationColor,
-          weight: 1,
-          opacity: 0.3,
-          fillColor: stationColor,
-          fillOpacity: 0.05,
-          dashArray: '4 4'
-        };
-      },
-      interactive: false
-    }).addTo(map);
-  }
-
-  /* ------------------------------------------------------------------ */
-  /*  Primary contours — solid for this station, faint gray for others   */
-  /* ------------------------------------------------------------------ */
-
-  function renderPrimaryContours(data) {
+  function renderCoverage(data) {
     if (!data || !data.features) return;
 
     var bounds = L.latLngBounds();
     var hasFeatures = false;
 
     L.geoJSON(data, {
-      style: function (feature) {
-        var parent = (feature.properties.parent_station || '').toUpperCase();
-        var isThis = parent === callSign;
-
-        if (!isThis) {
-          return {
-            color: '#ccc',
-            weight: 1,
-            opacity: 0.3,
-            fillColor: '#eee',
-            fillOpacity: 0.05
-          };
-        }
+      filter: function (feature) {
+        return (feature.properties.parent_station || '').toUpperCase() === callSign;
+      },
+      style: function () {
         return {
           color: stationColor,
           weight: 2.5,
@@ -142,9 +105,10 @@
         var parent = (feature.properties.parent_station || '').toUpperCase();
         if (parent === callSign) {
           var p = feature.properties;
-          var label = '<strong>' + (p.call_sign || '') + '</strong>';
-          if (p.frequency) label += ' ' + p.frequency + ' MHz';
-          if (p.erp_kw) label += '<br>' + p.erp_kw + ' kW';
+          var label = '<strong>' + (p.brand || p.parent_station || '') + '</strong>';
+          (p.signals || []).forEach(function (s) {
+            label += '<br>' + s.call_sign + (s.frequency ? ' ' + s.frequency + ' MHz' : '');
+          });
           layer.bindPopup(label);
           bounds.extend(layer.getBounds());
           hasFeatures = true;
