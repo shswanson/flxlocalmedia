@@ -18,3 +18,5 @@ Weedsport                 weedsport.org page renders its logo with scripts; no d
 Penn Yan Academy Mustangs pycsd.org: no logo file found (only a favicon)
 Buffalo Bills Radio Network affiliate mark   no clean file found
 Syracuse Orange radio network / ISP mark     no clean file found
+pennyan.png	https://www.youtube.com/c/PennYanAthletics (Penn Yan Athletics channel avatar, 900px), circle-cropped
+auburn.png, je.png	recolored white art to navy #003b5b for white tiles (2026-11-19)
