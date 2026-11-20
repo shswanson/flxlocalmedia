@@ -64,7 +64,7 @@ if ( ! $flxlm_badge && is_readable( get_template_directory() . '/assets/images/b
 				$is_stations = isset( $group['type'] ) && 'stations' === $group['type'];
 				?>
 				<div class="site-footer__col site-footer__col--<?php echo esc_attr( $gkey ); ?>">
-					<h4 class="site-footer__heading"><span class="fx-dot" aria-hidden="true"></span><?php echo esc_html( $glabel ); ?></h4>
+					<h4 class="site-footer__heading"><?php echo esc_html( $glabel ); ?></h4>
 					<ul>
 						<?php if ( $is_stations ) : ?>
 							<?php foreach ( $flxlm_stations as $st ) : ?>
