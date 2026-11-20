@@ -86,6 +86,7 @@ function flxlm_pg_config( $set = null ) {
  *     @type bool   $band     Print the closing "Get a free plan" band.
  *     @type string $after    white or mist: colour of the first section, for the hero edge.
  *     @type string $hero_extra Extra markup inside the hero, already escaped.
+ *     @type bool   $hero_link Add the secondary "How we build a plan" link under the hero button.
  *     @type bool   $dark_hero Page prints its own dark hero (hero is false): still add the dark hero body class.
  *     @type bool   $no_footer_band Hide the footer's old band without printing one (the page is the call to action).
  * }
@@ -106,6 +107,7 @@ function flxlm_pg_begin( $args = array() ) {
 			'after'      => 'white',
 			'hero'       => true,
 			'hero_extra' => '',
+			'hero_link'  => false,
 			'no_footer_band' => false,
 			'dark_hero'  => false,
 		)
@@ -258,6 +260,9 @@ function flxlm_pg_open() {
 			<?php endif; ?>
 			<?php if ( ! empty( $c['cta'] ) ) : ?>
 				<div class="pg-hero__cta"><?php flxlm_pg_cta_button(); ?></div>
+				<?php if ( ! empty( $c['hero_link'] ) ) : ?>
+					<a class="pg-hero__link" href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we build a plan <span aria-hidden="true">&rarr;</span></a>
+				<?php endif; ?>
 			<?php endif; ?>
 		</div>
 	</section>
@@ -282,7 +287,12 @@ function flxlm_pg_close() {
 				<h2 class="pg-band__title" id="pg-band-title">Tell us the one thing holding your business back.</h2>
 				<p class="pg-band__sub">A short conversation with someone who knows the Finger Lakes market. We&rsquo;ll come back with a plan, not a pitch.</p>
 			</div>
-			<div class="pg-band__btn"><?php flxlm_pg_cta_button(); ?></div>
+			<div class="pg-band__btn">
+				<?php flxlm_pg_cta_button(); ?>
+				<?php if ( ! is_page( 'how-we-work' ) ) : ?>
+					<a class="pg-band__link" href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we build a plan <span aria-hidden="true">&rarr;</span></a>
+				<?php endif; ?>
+			</div>
 		</div>
 	</section>
 		<?php

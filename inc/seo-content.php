@@ -351,6 +351,15 @@ function flxlm_seo_static_pages() {
 			'color' => 'navy',
 			'og'    => array( 'kicker' => 'Contact', 'headline' => 'Get a free plan', 'promise' => 'Tell us what is holding your business back. We come back with a plan, not a pitch.' ),
 		),
+		'how-we-work'            => array(
+			'key'   => 'how-we-work',
+			'kind'  => 'company',
+			'crumb' => 'How We Work',
+			'lead'  => array( 'How We Build Your Marketing Plan' ),
+			'desc'  => 'We start with your business, not a rate card. Five steps from the first conversation to regular reviews, and every radio, digital and event option we can put in your plan.',
+			'color' => 'navy',
+			'og'    => array( 'kicker' => 'How we work', 'headline' => 'We build a plan', 'promise' => 'No rate card. A plan built around your business, your customers and your goal.' ),
+		),
 		'apps'                   => array(
 			'key'   => 'apps',
 			'kind'  => 'product',

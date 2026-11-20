@@ -90,6 +90,7 @@ if ( ! $flxlm_badge && is_readable( get_template_directory() . '/assets/images/b
 				<h4 class="site-footer__heading">Company</h4>
 				<ul>
 					<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>">About</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we work</a></li>
 					<li><a href="<?php echo esc_url( home_url( '/careers/' ) ); ?>">Careers</a></li>
 					<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact</a></li>
 				</ul>

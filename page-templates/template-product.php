@@ -280,6 +280,7 @@ get_header();
 				<?php endif; ?>
 				<a class="st-btn" href="<?php echo esc_url( $p['cta_url'] ); ?>"><?php echo esc_html( $p['cta_label'] ); ?></a>
 				<p class="small">A plan, not a pitch.</p>
+				<a class="st-aside-link" href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we build a plan</a>
 			</div>
 		</aside>
 	</div><!-- .st-sheet -->

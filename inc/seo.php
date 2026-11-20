@@ -237,6 +237,28 @@ function flxlm_seo_methodology_redirect() {
 	exit;
 }
 
+add_action( 'template_redirect', 'flxlm_seo_pricing_redirect' );
+
+/**
+ * 301 the old unlisted pricing page to /how-we-work/. The page stays out of
+ * the sitemap and stays noindex (its entry in inc/seo-content.php) in case it
+ * is ever reached without the redirect. Matched by slug: page IDs differ
+ * between the live site and staging.
+ */
+function flxlm_seo_pricing_redirect() {
+	if ( ! is_page( '240e1cc9-pricing-2026' ) ) {
+		return;
+	}
+
+	$target = get_page_by_path( 'how-we-work' );
+	if ( ! $target || 'publish' !== $target->post_status ) {
+		return;
+	}
+
+	wp_safe_redirect( get_permalink( $target ), 301 );
+	exit;
+}
+
 add_filter( 'get_canonical_url', 'flxlm_seo_job_canonical', 10, 2 );
 
 /**
@@ -542,7 +564,7 @@ function flxlm_seo_llms_line( array $e ) {
  */
 function flxlm_seo_llms_rank( array $e ) {
 	$order = array(
-		'home', 'solutions', 'about', 'contact',
+		'home', 'solutions', 'how-we-work', 'about', 'contact',
 		'radio',
 		'fldn', 'newsletter', 'discover-flx', 'flx-finest', 'flx-fm', 'apps',
 		'sports', 'shop-local', 'contests', 'seasonal', 'events',

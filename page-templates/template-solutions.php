@@ -148,6 +148,7 @@ flxlm_pg_begin( array(
 	'eyebrow' => 'Advertising',
 	'title'   => 'Marketing Solutions',
 	'lead'    => 'Everything we sell, in four groups: our stations, our media, advertising packages and digital services.',
+	'hero_link' => true,
 ) );
 get_header();
 flxlm_pg_open();

@@ -1095,6 +1095,44 @@ body.fx-nav-open {
 	font-weight: var(--fw-btn);
 }
 
+/* The secondary "How we build a plan" link under the side card's button (hidden with the card's other small print on phones). */
+.flxlm-product .st-aside-card .st-aside-link {
+	display: block;
+	margin-top: 8px;
+	text-align: center;
+	color: #fff;
+	font-size: var(--fs-small);
+	font-weight: var(--fw-btn);
+	text-decoration: none;
+}
+
+.flxlm-product .st-aside-card .st-aside-link:hover,
+.flxlm-product .st-aside-card .st-aside-link:focus-visible {
+	color: var(--gold-400);
+}
+
+@media (max-width: 980px) {
+	.flxlm-product .st-aside-card .st-aside-link {
+		display: none;
+	}
+}
+
+/* The same secondary link under the footer band's button. */
+.cta-banner__link {
+	display: block;
+	width: 100%;
+	margin-top: 4px;
+	text-align: center;
+	color: #fff;
+	font-weight: var(--fw-btn);
+	text-decoration: none;
+}
+
+.cta-banner__link:hover,
+.cta-banner__link:focus-visible {
+	color: var(--gold-400);
+}
+
 /* Closing call-to-action band in the footer: same scale as the pages above it.
    Not applied on the seven station pages, which keep their own type. */
 body:not(.page-template-template-station) .cta-banner__title {
