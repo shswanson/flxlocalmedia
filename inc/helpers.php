@@ -304,17 +304,10 @@ function flxlm_get_station_data( $slug = '' ) {
 			// Option D page content. Paths are relative: images to assets/images/stations/<slug>/,
 			// audio to assets/audio/. Schema documented in flxlm_station_page_data() (functions.php).
 			'page'                 => array(
-				'colors'            => array( 'primary' => '#e4141c', 'deep' => '#a80d14', 'accent' => '#ffc20e' ),
 				'logo_white'        => 'logo-white.svg',
 				'eyebrow'           => 'WNYR · Radio advertising',
-				'frequency_display' => '98.5 FM',
-				'format_label'      => 'Adult Contemporary',
-				'tagline'           => 'Real Music Variety',
 				'lead'              => 'Reach the women who run Finger Lakes households, all workday.',
-				'profile_audio'     => 'mix-985-profile.mp3',
 				'profile_seconds'   => 28,
-				'nowplaying_slug'   => 'mix985',
-				'stream_url'        => 'https://ice3.securenetsystems.net/WNYR?dist=flxlocalmedia',
 				'stats'             => array(
 					'weekly'           => 44622,
 					'daily'            => 32496,
@@ -322,8 +315,6 @@ function flxlm_get_station_data( $slug = '' ) {
 					'streaming_hours'  => 4842,
 					'streaming_window' => 'last 28 days',
 				),
-				'counties'          => array( 'Ontario', 'Cayuga', 'Seneca', 'Wayne', 'Yates' ),
-				'target'            => 'Women 25-54',
 				'persona'           => array(
 					'name'  => 'Jen',
 					'age'   => 42,
@@ -406,21 +397,11 @@ function flxlm_get_station_data( $slug = '' ) {
 		'classic-hits-993' => array(
 			'name'                => 'Classic Hits 99.3',
 			'page' => array(
-				'colors' => array( 'primary' => '#2b6cb0', 'deep' => '#1c4a7e', 'accent' => '#ffc10c' ),
 				'logo_white' => 'logo-white.svg',
 				'eyebrow' => 'WFLK · Radio advertising',
-				'frequency_display' => '99.3 FM',
-				'frequency_also' => 'Also on 98.1 FM',
-				'format_label' => 'Classic Hits',
-				'tagline' => '80\'s Hits & More',
 				'lead' => 'Reach the Finger Lakes adults who keep this one station on, from the morning show to the afternoon drive.',
-				'profile_audio' => 'classic-hits-993-profile.mp3',
 				'profile_seconds' => 25,
-				'nowplaying_slug' => 'classichits993',
-				'stream_url' => 'https://ice3.securenetsystems.net/WFLK?dist=flxlocalmedia',
 				'stats' => array( 'weekly' => 38423, 'daily' => 27981, 'in_car' => 10984, 'streaming_hours' => 5864, 'streaming_window' => 'last 28 days' ),
-				'counties' => array( 'Ontario', 'Cayuga', 'Seneca', 'Wayne' ),
-				'target' => 'Adults 35-54',
 				'persona' => array(
 					'name' => 'Dave', 'age' => 51, 'line1' => 'Service manager, Auburn', 'line2' => 'Lives in Owasco', 'photo' => 'persona.jpg',
 					'story' => array(
@@ -494,21 +475,11 @@ function flxlm_get_station_data( $slug = '' ) {
 		'the-wall' => array(
 			'name'                => '101.7 The Wall',
 			'page' => array(
-				'colors' => array( 'primary' => '#8b4226', 'deep' => '#5e2c18', 'accent' => '#f2b48f' ),
-				'logo_white' => 'logo-white.svg',
+				'logo_white' => 'logo-brick.webp',
 				'eyebrow' => 'WLLW · Radio advertising',
-				'frequency_display' => '101.7 FM',
-				'frequency_also' => '',
-				'format_label' => 'Rock',
-				'tagline' => 'Shut Up and Rock',
 				'lead' => 'Reach the working men of the Finger Lakes on the job, in the truck and on the weekend.',
-				'profile_audio' => 'the-wall-profile.mp3',
 				'profile_seconds' => 30,
-				'nowplaying_slug' => '1017thewall',
-				'stream_url' => 'https://ice3.securenetsystems.net/WLLW?dist=flxlocalmedia',
 				'stats' => array( 'weekly' => 19610, 'daily' => 14281, 'in_car' => 7778, 'streaming_hours' => 6445, 'streaming_window' => 'last 28 days' ),
-				'counties' => array( 'Ontario', 'Seneca', 'Wayne' ),
-				'target' => 'Men 35-54',
 				'persona' => array(
 					'name' => 'Mike', 'age' => 46, 'line1' => 'Construction foreman, Geneva', 'line2' => 'Lives in Newark', 'photo' => 'persona.jpg',
 					'story' => array(
@@ -588,21 +559,11 @@ function flxlm_get_station_data( $slug = '' ) {
 		'finger-lakes-country' => array(
 			'name'                => 'Finger Lakes Country',
 			'page' => array(
-				'colors' => array( 'primary' => '#c41230', 'deep' => '#8f1024', 'accent' => '#dcc37e' ),
 				'logo_white' => 'logo-white.svg',
 				'eyebrow' => 'WFLR · Radio advertising',
-				'frequency_display' => '95.9 FM',
-				'frequency_also' => 'Also on 96.1 · 96.9 · 101.9 FM',
-				'format_label' => 'Country',
-				'tagline' => 'Finger Lakes Country',
 				'lead' => 'Reach the working adults who start every day with local news, weather and country music.',
-				'profile_audio' => 'finger-lakes-country-profile.mp3',
 				'profile_seconds' => 32,
-				'nowplaying_slug' => 'wflr',
-				'stream_url' => 'https://ice3.securenetsystems.net/WFLR?dist=flxlocalmedia',
 				'stats' => array( 'streaming_hours' => 4777, 'streaming_window' => 'last 28 days' ),
-				'counties' => array( 'Yates', 'Schuyler', 'Steuben', 'Chemung', 'Seneca', 'Ontario' ),
-				'target' => 'Adults 35-54',
 				'persona' => array(
 					'name' => 'Tammy', 'age' => 38, 'line1' => 'Vineyard crew lead, Dundee', 'line2' => 'Lives in Penn Yan', 'photo' => 'persona.jpg',
 					'story' => array(
@@ -668,21 +629,11 @@ function flxlm_get_station_data( $slug = '' ) {
 		'wgva' => array(
 			'name'                => 'WGVA News Radio',
 			'page' => array(
-				'colors' => array( 'primary' => '#283890', 'deep' => '#13215b', 'accent' => '#ffc20e' ),
 				'logo_white' => 'logo-white.svg',
 				'eyebrow' => 'WGVA · Radio advertising',
-				'frequency_display' => '106.3 FM',
-				'frequency_also' => '',
-				'format_label' => 'News, Talk, and Community',
-				'tagline' => 'Finger Lakes News Radio',
 				'lead' => 'Reach the Finger Lakes homeowners and investors who follow the local news all day.',
-				'profile_audio' => 'wgva-profile.mp3',
 				'profile_seconds' => 39,
-				'nowplaying_slug' => 'wgva',
-				'stream_url' => 'https://ice3.securenetsystems.net/WGVA?dist=flxlocalmedia',
 				'stats' => array( 'streaming_hours' => 4976, 'streaming_window' => 'last 28 days' ),
-				'counties' => array( 'Ontario' ),
-				'target' => 'Adults 45+',
 				'persona' => array(
 					'name' => 'Bob', 'age' => 62, 'line1' => 'Accountant, Geneva', 'line2' => 'Village planning board member', 'photo' => 'persona.jpg',
 					'story' => array(
@@ -757,21 +708,11 @@ function flxlm_get_station_data( $slug = '' ) {
 		'waub' => array(
 			'name'                => 'WAUB News Radio',
 			'page' => array(
-				'colors' => array( 'primary' => '#283890', 'deep' => '#13215b', 'accent' => '#ffc20e' ),
 				'logo_white' => 'logo-white.svg',
 				'eyebrow' => 'WAUB · Radio advertising',
-				'frequency_display' => '96.3 FM',
-				'frequency_also' => '',
-				'format_label' => 'News, Talk and Local Sports',
-				'tagline' => 'Finger Lakes News Radio',
 				'lead' => 'Reach Cayuga County adults with higher incomes while they follow the local news and sports.',
-				'profile_audio' => 'waub-profile.mp3',
 				'profile_seconds' => 39,
-				'nowplaying_slug' => 'waub',
-				'stream_url' => 'https://ice3.securenetsystems.net/WAUB?dist=flxlocalmedia',
 				'stats' => array( 'streaming_hours' => 3571, 'streaming_window' => 'last 28 days' ),
-				'counties' => array( 'Cayuga' ),
-				'target' => 'Adults 45+',
 				'persona' => array(
 					'name' => 'Carol', 'age' => 66, 'line1' => 'Retired school district employee', 'line2' => 'Lives in Auburn', 'photo' => 'persona.jpg',
 					'story' => array(
@@ -846,21 +787,11 @@ function flxlm_get_station_data( $slug = '' ) {
 		'the-lake' => array(
 			'name'                => 'The Lake',
 			'page' => array(
-				'colors' => array( 'primary' => '#1976d2', 'deep' => '#0f4c81', 'accent' => '#00c7e8' ),
 				'logo_white' => 'logo-white.svg',
 				'eyebrow' => 'WCGR · Radio advertising',
-				'frequency_display' => '100.1 FM',
-				'frequency_also' => 'Also on 104.5 FM',
-				'format_label' => 'Easy Rock',
-				'tagline' => '',
 				'lead' => 'Reach Rochester-area women on the station with the fewest commercials.',
-				'profile_audio' => '',
 				'profile_seconds' => 0,
-				'nowplaying_slug' => 'thelake',
-				'stream_url' => 'https://ice3.securenetsystems.net/WCGR?dist=flxlocalmedia',
 				'stats' => array( 'streaming_hours' => 14653, 'streaming_window' => 'last 28 days' ),
-				'counties' => array( 'Ontario', 'Livingston', 'Monroe' ),
-				'target' => 'Women 35-64',
 				'persona' => array(
 					'name' => 'Meg', 'age' => 51, 'line1' => 'Marketing manager, Pittsford', 'line2' => 'Lives in Brighton', 'photo' => 'persona.jpg',
 					'story' => array(

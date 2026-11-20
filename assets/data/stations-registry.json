@@ -1,0 +1,162 @@
+{
+  "_generated_from": "shswanson/fldn stations/registry.json via scripts/stations/export.py. Do not edit by hand.",
+  "updated": "2026-11-19",
+  "stations": {
+    "mix-985": {
+      "brand": "Mix 98.5",
+      "call": "WNYR",
+      "format": "Adult Contemporary",
+      "tagline": "Real Music Variety",
+      "target": "Women 25-54",
+      "frequency_display": "98.5 FM",
+      "frequency_also": "",
+      "counties": [
+        "Ontario",
+        "Cayuga",
+        "Seneca",
+        "Wayne",
+        "Yates"
+      ],
+      "colors": {
+        "primary": "#e4141c",
+        "deep": "#a80d14",
+        "accent": "#ffc20e"
+      },
+      "nowplaying_slug": "mix985",
+      "stream_url": "https://ice3.securenetsystems.net/WNYR?dist=flxlocalmedia",
+      "profile_audio": "mix-985-profile.mp3"
+    },
+    "classic-hits-993": {
+      "brand": "Classic Hits 99.3",
+      "call": "WFLK",
+      "format": "Classic Hits",
+      "tagline": "80's Hits & More",
+      "target": "Adults 35-54",
+      "frequency_display": "99.3 FM",
+      "frequency_also": "Also on 98.1 FM",
+      "counties": [
+        "Ontario",
+        "Cayuga",
+        "Seneca",
+        "Wayne"
+      ],
+      "colors": {
+        "primary": "#2b6cb0",
+        "deep": "#1c4a7e",
+        "accent": "#ffc10c"
+      },
+      "nowplaying_slug": "classichits993",
+      "stream_url": "https://ice3.securenetsystems.net/WFLK?dist=flxlocalmedia",
+      "profile_audio": "classic-hits-993-profile.mp3"
+    },
+    "the-wall": {
+      "brand": "101.7 The Wall",
+      "call": "WLLW",
+      "format": "Rock",
+      "tagline": "Shut Up and Rock",
+      "target": "Men 35-54",
+      "frequency_display": "101.7 FM",
+      "frequency_also": "",
+      "counties": [
+        "Ontario",
+        "Seneca",
+        "Wayne"
+      ],
+      "colors": {
+        "primary": "#8b4226",
+        "deep": "#5e2c18",
+        "accent": "#f2b48f"
+      },
+      "nowplaying_slug": "1017thewall",
+      "stream_url": "https://ice3.securenetsystems.net/WLLW?dist=flxlocalmedia",
+      "profile_audio": "the-wall-profile.mp3"
+    },
+    "finger-lakes-country": {
+      "brand": "Finger Lakes Country",
+      "call": "WFLR",
+      "format": "Country",
+      "tagline": "Finger Lakes Country",
+      "target": "Adults 35-54",
+      "frequency_display": "96.1 FM",
+      "frequency_also": "Also on 95.9 · 96.9 · 101.9 FM",
+      "counties": [
+        "Yates",
+        "Schuyler",
+        "Steuben",
+        "Chemung",
+        "Seneca",
+        "Ontario"
+      ],
+      "colors": {
+        "primary": "#c41230",
+        "deep": "#8f1024",
+        "accent": "#dcc37e"
+      },
+      "nowplaying_slug": "wflr",
+      "stream_url": "https://ice3.securenetsystems.net/WFLR?dist=flxlocalmedia",
+      "profile_audio": "finger-lakes-country-profile.mp3"
+    },
+    "wgva": {
+      "brand": "WGVA",
+      "call": "WGVA",
+      "format": "News, Talk, and Community",
+      "tagline": "Finger Lakes News Radio",
+      "target": "Adults 45+",
+      "frequency_display": "106.3 FM",
+      "frequency_also": "",
+      "counties": [
+        "Ontario"
+      ],
+      "colors": {
+        "primary": "#283890",
+        "deep": "#13215b",
+        "accent": "#ffc20e"
+      },
+      "nowplaying_slug": "wgva",
+      "stream_url": "https://ice3.securenetsystems.net/WGVA?dist=flxlocalmedia",
+      "profile_audio": "wgva-profile.mp3"
+    },
+    "waub": {
+      "brand": "WAUB",
+      "call": "WAUB",
+      "format": "News, Talk and Local Sports",
+      "tagline": "Finger Lakes News Radio",
+      "target": "Adults 45+",
+      "frequency_display": "96.3 FM",
+      "frequency_also": "",
+      "counties": [
+        "Cayuga"
+      ],
+      "colors": {
+        "primary": "#283890",
+        "deep": "#13215b",
+        "accent": "#ffc20e"
+      },
+      "nowplaying_slug": "waub",
+      "stream_url": "https://ice3.securenetsystems.net/WAUB?dist=flxlocalmedia",
+      "profile_audio": "waub-profile.mp3"
+    },
+    "the-lake": {
+      "brand": "The Lake",
+      "call": "WCGR",
+      "format": "Easy Rock",
+      "tagline": "",
+      "target": "Women 35-64",
+      "frequency_display": "100.1 FM",
+      "frequency_also": "Also on 104.5 FM",
+      "counties": [
+        "Ontario",
+        "Livingston",
+        "Monroe"
+      ],
+      "colors": {
+        "primary": "#1976d2",
+        "deep": "#0f4c81",
+        "accent": "#00c7e8"
+      },
+      "nowplaying_slug": "thelake",
+      "stream_url": "https://ice3.securenetsystems.net/WCGR?dist=flxlocalmedia",
+      "profile_audio": ""
+    }
+  }
+}

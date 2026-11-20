@@ -211,6 +211,19 @@ function flxlm_station_asset( $slug, $rel, $type = 'image' ) {
  * @param string $slug Station slug.
  * @return array|null
  */
+/**
+ * One station's facts from the exported station registry, or null.
+ */
+function flxlm_station_registry( $slug ) {
+	static $all = null;
+	if ( null === $all ) {
+		$file = get_template_directory() . '/assets/data/stations-registry.json';
+		$json = is_readable( $file ) ? json_decode( (string) file_get_contents( $file ), true ) : null;
+		$all  = is_array( $json ) && isset( $json['stations'] ) && is_array( $json['stations'] ) ? $json['stations'] : array();
+	}
+	return isset( $all[ $slug ] ) && is_array( $all[ $slug ] ) ? $all[ $slug ] : null;
+}
+
 function flxlm_station_page_data( $slug ) {
 	$st = flxlm_get_station_data( $slug );
 	if ( ! $st || ! is_array( $st ) ) {
@@ -218,6 +231,21 @@ function flxlm_station_page_data( $slug ) {
 	}
 	$pg    = isset( $st['page'] ) && is_array( $st['page'] ) ? $st['page'] : array();
 	$reach = isset( $st['estimated_reach'] ) && is_array( $st['estimated_reach'] ) ? $st['estimated_reach'] : array();
+
+	// Station facts come from the registry (shswanson/fldn stations/registry.json, exported to
+	// assets/data/stations-registry.json). It wins over anything in helpers.php: one source per fact.
+	$reg = flxlm_station_registry( $slug );
+	if ( $reg ) {
+		$map = array( 'frequency_display', 'frequency_also', 'tagline', 'target', 'counties', 'colors', 'nowplaying_slug', 'stream_url', 'profile_audio' );
+		foreach ( $map as $k ) {
+			if ( array_key_exists( $k, $reg ) ) {
+				$pg[ $k ] = $reg[ $k ];
+			}
+		}
+		if ( isset( $reg['format'] ) ) {
+			$pg['format_label'] = $reg['format'];
+		}
+	}
 
 	$str = function ( $arr, $key, $default = '' ) {
 		return isset( $arr[ $key ] ) && is_scalar( $arr[ $key ] ) ? trim( (string) $arr[ $key ] ) : $default;
