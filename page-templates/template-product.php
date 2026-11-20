@@ -107,24 +107,30 @@ get_header();
 	<?php if ( ! empty( $p['hero_logos'] ) ) : ?>
 		<!-- 1b. Logo band: who we are on the air with. -->
 		<section class="pr-band" aria-label="On the air with">
-			<div class="st-wrap">
-				<div class="pr-band__eyebrow">On the air with</div>
-				<?php foreach ( array( false, true ) as $small_row ) : ?>
-					<?php
-					$row = array_filter(
-						$p['hero_logos'],
-						function ( $lg ) use ( $small_row ) {
-							return $small_row === $lg['small'];
-						}
-					);
-					?>
-					<?php if ( $row ) : ?>
-						<div class="pr-band__row<?php echo $small_row ? ' pr-band__row--small' : ''; ?>">
-							<?php foreach ( $row as $lg ) : ?>
-								<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/products/logos/' . $lg['file'] ) ); ?>" alt="<?php echo esc_attr( $lg['alt'] ); ?>" loading="lazy" decoding="async">
+			<?php
+			$band_groups = array();
+			foreach ( $p['hero_logos'] as $lg ) {
+				$band_groups[ $lg['group'] ][] = $lg;
+			}
+			?>
+			<div class="st-wrap pr-band__groups">
+				<?php foreach ( $band_groups as $group_name => $group_logos ) : ?>
+					<?php $is_badges = $group_logos[0]['w'] <= 0; ?>
+					<div class="pr-band__group">
+						<?php if ( '' !== $group_name ) : ?>
+							<p class="pr-band__cap"><?php echo esc_html( $group_name ); ?></p>
+						<?php endif; ?>
+						<div class="pr-band__row<?php echo $is_badges ? ' pr-band__row--badges' : ''; ?>">
+							<?php foreach ( $group_logos as $lg ) : ?>
+								<?php $src = esc_url( get_theme_file_uri( 'assets/images/products/logos/' . $lg['file'] ) ); ?>
+								<?php if ( $is_badges ) : ?>
+									<span class="pr-band__badge"><img<?php echo '' !== $lg['fit'] ? ' class="' . esc_attr( $lg['fit'] ) . '"' : ''; ?> src="<?php echo $src; ?>" alt="<?php echo esc_attr( $lg['alt'] ); ?>" loading="lazy" decoding="async"></span>
+								<?php else : ?>
+									<img class="pr-band__mark" src="<?php echo $src; ?>" alt="<?php echo esc_attr( $lg['alt'] ); ?>" style="--w:<?php echo esc_attr( $lg['w'] ); ?>;--h:<?php echo esc_attr( $lg['h'] ); ?>" loading="lazy" decoding="async">
+								<?php endif; ?>
 							<?php endforeach; ?>
 						</div>
-					<?php endif; ?>
+					</div>
 				<?php endforeach; ?>
 			</div>
 		</section>

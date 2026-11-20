@@ -190,7 +190,7 @@ function flxlm_product_icon( $name ) {
  *   logo         => string   file under assets/images/products/<slug>/ or https URL (white or light art on the colour)
  *   hero_mark   => string   optional real brand mark for the hero (file under assets/images/products/<slug>/), shown instead of logo on the page; logo stays the white art used for share images
  *   hero_mark_style => string   'panel' (dark art on a white rounded panel) or 'app' (square app icon with rounded corners)
- *   hero_logos   => [ [ file, alt, small? ], ... ]   optional band of logos right under the hero, shown under "On the air with". Same file/alt format as offer logos; small => true puts it in a second, slightly smaller row
+ *   hero_logos   => [ [ file, alt, group, w?, h?, fit? ], ... ]   optional band of logos right under the hero. Groups render in order of first appearance, each with a small caption. Entries with w/h (pixel box for optical sizing) are plain marks; entries without are identical round badges, fit => 'disc' | 'wide' | '' tunes how the art sits in the ring
  *   stats        => [ [ value, label, source ], ... ]   bar of numbers; source is the plain-English origin of the number
  *   stats_note   => string   one line under the bar, e.g. how the numbers are made
  *   who          => [ heading, paragraphs => string[] ]   "Who you reach"
@@ -273,19 +273,19 @@ function flxlm_get_products() {
 			'colors' => array( 'primary' => '#003b5b', 'deep' => '#00273e', 'accent' => '#e3a72f' ),
 			'logo' => '',
 			'hero_logos' => array(
-				array( 'file' => 'bills.svg', 'alt' => 'Buffalo Bills' ),
-				array( 'file' => 'syracuse.svg', 'alt' => 'Syracuse Orange' ),
-				array( 'file' => 'nascar.svg', 'alt' => 'NASCAR' ),
-				array( 'file' => 'mrn.svg', 'alt' => 'Motor Racing Network' ),
-				array( 'file' => 'prn.png', 'alt' => 'Performance Racing Network' ),
-				array( 'file' => 'auburn.png', 'alt' => 'Auburn Maroons', 'small' => true ),
-				array( 'file' => 'weedsport.png', 'alt' => 'Weedsport Wolverines', 'small' => true ),
-				array( 'file' => 'je.png', 'alt' => 'Jordan-Elbridge', 'small' => true ),
-				array( 'file' => 'geneva.png', 'alt' => 'Geneva Panthers', 'small' => true ),
-				array( 'file' => 'mynderse.png', 'alt' => 'Seneca Falls Mynderse', 'small' => true ),
-				array( 'file' => 'waterloo.png', 'alt' => 'Waterloo Tigers', 'small' => true ),
-				array( 'file' => 'pennyan.png', 'alt' => 'Penn Yan Mustangs', 'small' => true ),
-				array( 'file' => 'dundee.png', 'alt' => 'Dundee', 'small' => true ),
+				array( 'file' => 'band-bills.png', 'alt' => 'Buffalo Bills', 'group' => 'Pro & college', 'w' => 64.2, 'h' => 42.9 ),
+				array( 'file' => 'band-syracuse.png', 'alt' => 'Syracuse Orange', 'group' => 'Pro & college', 'w' => 41.4, 'h' => 56.1 ),
+				array( 'file' => 'band-nascar.png', 'alt' => 'NASCAR', 'group' => 'Racing', 'w' => 151.6, 'h' => 25.3 ),
+				array( 'file' => 'band-mrn.png', 'alt' => 'Motor Racing Network', 'group' => 'Racing', 'w' => 109.1, 'h' => 31.0 ),
+				array( 'file' => 'band-prn.png', 'alt' => 'Performance Racing Network', 'group' => 'Racing', 'w' => 93.8, 'h' => 34.0 ),
+				array( 'file' => 'band-auburn.png', 'alt' => 'Auburn Maroons', 'group' => 'High school', 'fit' => '' ),
+				array( 'file' => 'band-dundee.png', 'alt' => 'Dundee', 'group' => 'High school', 'fit' => 'wide' ),
+				array( 'file' => 'band-geneva.png', 'alt' => 'Geneva Panthers', 'group' => 'High school', 'fit' => 'disc' ),
+				array( 'file' => 'band-je.png', 'alt' => 'Jordan-Elbridge', 'group' => 'High school', 'fit' => '' ),
+				array( 'file' => 'band-mynderse.png', 'alt' => 'Seneca Falls Mynderse', 'group' => 'High school', 'fit' => 'disc' ),
+				array( 'file' => 'band-pennyan.png', 'alt' => 'Penn Yan Mustangs', 'group' => 'High school', 'fit' => 'disc' ),
+				array( 'file' => 'band-waterloo.png', 'alt' => 'Waterloo Tigers', 'group' => 'High school', 'fit' => '' ),
+				array( 'file' => 'band-weedsport.png', 'alt' => 'Weedsport Wolverines', 'group' => 'High school', 'fit' => 'disc' ),
 			),
 			'stats' => array(
 				array( 'value' => '239', 'label' => 'live sports broadcasts scheduled on our stations and Finger Lakes Daily News, September 2025 through August 2026', 'source' => 'FLX sports broadcast calendar (BigQuery fldn_analytics.streaming_sports_events), cancelled events and talk shows removed, counted November 19, 2026' ),
@@ -790,7 +790,10 @@ function flxlm_get_product( $slug ) {
 				$hero_logos[] = array(
 					'file'  => basename( $str( $lg, 'file' ) ),
 					'alt'   => $str( $lg, 'alt' ),
-					'small' => ! empty( $lg['small'] ),
+					'group' => $str( $lg, 'group' ),
+					'w'     => isset( $lg['w'] ) ? (float) $lg['w'] : 0.0,
+					'h'     => isset( $lg['h'] ) ? (float) $lg['h'] : 0.0,
+					'fit'   => $str( $lg, 'fit' ),
 				);
 			}
 		}

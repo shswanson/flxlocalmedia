@@ -22,7 +22,7 @@ $html_path = get_template_directory() . '/case-study-fldn-seo-content.html';
 if ( file_exists( $html_path ) ) {
 	echo '<div class="cs-wrap">';
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted static HTML file
-	echo file_get_contents( $html_path );
+	echo str_replace( '{{THEME_URI}}', esc_url( get_template_directory_uri() ), file_get_contents( $html_path ) );
 	echo '</div>';
 } else {
 	echo '<div class="container" style="padding:4rem 0;text-align:center;">';

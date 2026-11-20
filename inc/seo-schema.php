@@ -373,8 +373,8 @@ function flxlm_seo_nodes_for_entry( array $entry ) {
 			$nodes[] = array(
 				'@type'       => 'Service',
 				'@id'         => flxlm_seo_id( $url, 'service' ),
-				'name'        => $d['name'],
-				'serviceType' => $d['group'] ? $d['group'] : 'Marketing',
+				'name'        => ! empty( $d['name'] ) ? $d['name'] : ( ! empty( $entry['crumb'] ) ? $entry['crumb'] : $entry['title'] ),
+				'serviceType' => ! empty( $d['group'] ) ? $d['group'] : 'Marketing',
 				'description' => $entry['description'],
 				'url'         => $url,
 				'image'       => flxlm_seo_og_url( $entry['key'] ),
