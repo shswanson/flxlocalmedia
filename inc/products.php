@@ -1027,7 +1027,7 @@ function flxlm_nav_item_icon( $slug ) {
  */
 function flxlm_nav_station_logo( $slug ) {
 	$slug = preg_replace( '/[^a-z0-9_-]/i', '', (string) $slug );
-	foreach ( array( 'logo-color.svg', 'logo-brick.webp' ) as $file ) {
+	foreach ( array( 'logo-on-light.png', 'logo-color.svg', 'logo-brick.webp' ) as $file ) {
 		$rel  = 'assets/images/stations/' . $slug . '/' . $file;
 		$path = get_template_directory() . '/' . $rel;
 		if ( is_readable( $path ) ) {
