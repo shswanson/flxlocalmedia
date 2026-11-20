@@ -27,7 +27,7 @@ get_header();
 	<!-- 1. Hero -->
 	<section class="hb-hero" aria-labelledby="hb-title">
 		<div class="hb-wrap hb-hero__inner">
-			<p class="hb-eyebrow">Radio advertising</p>
+			<p class="flx-eyebrow">Radio advertising</p>
 			<h1 class="hb-title" id="hb-title">Seven stations. <span>One call.</span></h1>
 			<p class="hb-lead">Each station has its own format and its own listeners. Pick one, or let us build a schedule across several of them.</p>
 			<div class="hb-actions">

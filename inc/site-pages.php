@@ -231,7 +231,7 @@ function flxlm_pg_open() {
 	<section class="pg-hero pg-hero--after-<?php echo esc_attr( $c['after'] ); ?>" aria-labelledby="pg-title">
 		<div class="pg-wrap pg-hero__inner">
 			<?php if ( '' !== $c['eyebrow'] ) : ?>
-				<div class="pg-eyebrow">
+				<div class="flx-eyebrow">
 					<?php if ( '' !== $c['eyebrow_url'] ) : ?>
 						<a href="<?php echo esc_url( $c['eyebrow_url'] ); ?>"><?php echo esc_html( $c['eyebrow'] ); ?></a>
 					<?php else : ?>
@@ -278,7 +278,7 @@ function flxlm_pg_close() {
 	<section class="pg-band" aria-labelledby="pg-band-title">
 		<div class="pg-wrap pg-band__inner">
 			<div class="pg-band__text">
-				<div class="pg-eyebrow">Free local marketing plan</div>
+				<div class="flx-eyebrow">Free local marketing plan</div>
 				<h2 class="pg-band__title" id="pg-band-title">Tell us the one thing holding your business back.</h2>
 				<p class="pg-band__sub">A short conversation with someone who knows the Finger Lakes market. We&rsquo;ll come back with a plan, not a pitch.</p>
 			</div>

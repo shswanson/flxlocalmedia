@@ -163,7 +163,7 @@ $sections = array(
 <section class="section sol-sec" aria-labelledby="sol-stations">
 	<div class="sol-wrap">
 		<div class="sol-head">
-			<span class="section__eyebrow">On the air</span>
+			<span class="flx-eyebrow">On the air</span>
 			<h2 class="section__title" id="sol-stations"><?php echo esc_html( isset( $groups['stations']['label'] ) ? $groups['stations']['label'] : 'Stations' ); ?></h2>
 			<p class="sol-head__text">Seven stations across the Finger Lakes. Pick one, or let us build a schedule across several.</p>
 		</div>
@@ -194,7 +194,7 @@ foreach ( $sections as $key => $sec ) :
 <section class="section sol-sec <?php echo esc_attr( $sec['class'] ); ?>" aria-labelledby="sol-<?php echo esc_attr( $key ); ?>">
 	<div class="sol-wrap">
 		<div class="sol-head">
-			<span class="section__eyebrow"><?php echo esc_html( $sec['eyebrow'] ); ?></span>
+			<span class="flx-eyebrow"><?php echo esc_html( $sec['eyebrow'] ); ?></span>
 			<h2 class="section__title" id="sol-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $groups[ $key ]['label'] ); ?></h2>
 			<p class="sol-head__text"><?php echo esc_html( $sec['text'] ); ?></p>
 		</div>

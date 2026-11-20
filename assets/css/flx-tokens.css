@@ -217,3 +217,34 @@ html:root {
 		--fs-eyebrow-script: 1.4rem;
 	}
 }
+
+/* ---------- The one eyebrow ----------
+   The script kicker above a heading, on every page except the station pages (they keep
+   their own eyebrow). Navy on light backgrounds, gold on navy ones; nothing else sets it. */
+body:not(.page-template-template-station) .flx-eyebrow {
+	display: inline-block;
+	margin: 0 0 10px;
+	font-family: var(--ff-eyebrow-script);
+	font-size: var(--fs-eyebrow-script);
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0;
+	text-transform: none;
+	color: #003b5b;
+	transform: var(--rot-eyebrow-script);
+	transform-origin: left bottom;
+}
+
+body:not(.page-template-template-station) .flx-eyebrow a {
+	color: inherit;
+	text-decoration: none;
+}
+
+body:not(.page-template-template-station) .flx-eyebrow a:hover,
+body:not(.page-template-template-station) .flx-eyebrow a:focus-visible {
+	color: #fff;
+}
+
+body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header) .flx-eyebrow {
+	color: #e3a72f;
+}

@@ -31,7 +31,7 @@ get_header();
 <section class="section section--wash">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow">Our Services</span>
+			<span class="flx-eyebrow">Our Services</span>
 			<h2 class="section__title">Everything You Need to Compete Online</h2>
 		</div>
 

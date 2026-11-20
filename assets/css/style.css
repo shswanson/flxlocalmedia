@@ -913,6 +913,10 @@ p + p {
 	overflow: hidden;
 }
 
+.testimonial-card__image--wide {
+	aspect-ratio: 1200 / 630;
+}
+
 .testimonial-card__image::after {
 	content: '';
 	position: absolute;
@@ -2900,12 +2904,6 @@ p + p {
      - Corporate:        primary navy
    ============================================================ */
 
-/* Section eyebrow color modifiers (per-section identity) */
-.section__eyebrow--terracotta { color: var(--color-accent); }
-.section__eyebrow--lake { color: var(--color-blue); }
-.section__eyebrow--sage { color: var(--color-teal-ink-hover); }
-.section__eyebrow--navy { color: var(--color-primary); }
-
 /* Shared card vocabulary — used across brand-card, view-card, mockup, etc. */
 .brand-card,
 .view-card,
@@ -3070,16 +3068,6 @@ p + p {
 
 @media (min-width: 768px) {
 	.data-network { padding: var(--space-xl); }
-}
-
-.data-network__eyebrow {
-	display: block;
-	font-size: var(--fs-xs);
-	font-weight: var(--fw-bold);
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-	color: var(--color-cyan);
-	margin-bottom: var(--space-sm);
 }
 
 .data-network__title {
@@ -3650,26 +3638,6 @@ p + p {
 }
 
 /* ---------- Careers (flxlm_job CPT) ---------- */
-.page-header__eyebrow {
-	font-size: var(--fs-xs);
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	color: var(--color-cyan);
-	margin-bottom: var(--space-sm);
-	position: relative;
-	z-index: 1;
-	font-weight: var(--fw-semibold);
-}
-
-.page-header__eyebrow a {
-	color: inherit;
-	text-decoration: none;
-}
-
-.page-header__eyebrow a:hover {
-	color: var(--color-white);
-}
-
 .job-meta {
 	font-size: var(--fs-sm);
 	color: var(--color-text-light);
@@ -3782,14 +3750,6 @@ p + p {
 
 #review {
 	scroll-margin-top: 96px;
-}
-
-.case-study-index .archive-card__image {
-	display: block;
-}
-
-.case-study-index .archive-card__title {
-	line-height: 1.3;
 }
 
 /* Collapsed "Sources" disclosure under a bar of numbers (home, product and station pages). */

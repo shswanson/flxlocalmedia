@@ -26,7 +26,7 @@ flxlm_pg_open();
 <section class="section">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">Your Market</span>
+			<span class="flx-eyebrow">Your Market</span>
 			<h2 class="section__title">The Medium Your Customers Already Use</h2>
 		</div>
 		<div class="post-content">
@@ -65,7 +65,7 @@ flxlm_pg_open();
 <section class="section section--gray">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">The National Picture</span>
+			<span class="flx-eyebrow">The National Picture</span>
 			<h2 class="section__title">Across the Country, the Numbers Back It Up</h2>
 		</div>
 
@@ -85,7 +85,7 @@ flxlm_pg_open();
 <section class="section">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">ROI</span>
+			<span class="flx-eyebrow">ROI</span>
 			<h2 class="section__title">The ROI Nobody Talks About</h2>
 		</div>
 		<div class="post-content">
@@ -129,7 +129,7 @@ flxlm_pg_open();
 <section class="section section--gray">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">In-Car Listening</span>
+			<span class="flx-eyebrow">In-Car Listening</span>
 			<h2 class="section__title">Radio Dominates the Car</h2>
 		</div>
 		<div class="post-content">
@@ -166,7 +166,7 @@ flxlm_pg_open();
 <section class="section">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">Trust</span>
+			<span class="flx-eyebrow">Trust</span>
 			<h2 class="section__title">More Than Background Noise</h2>
 		</div>
 		<div class="post-content">
@@ -180,7 +180,7 @@ flxlm_pg_open();
 <section class="section section--gray">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">Our Advantage</span>
+			<span class="flx-eyebrow">Our Advantage</span>
 			<h2 class="section__title">The Finger Lakes Media Landscape</h2>
 		</div>
 		<div class="post-content">

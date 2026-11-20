@@ -92,29 +92,6 @@
 	z-index: 1;
 }
 
-.flxlm-pg .pg-eyebrow {
-	display: inline-block;
-	font-family: var(--ff-eyebrow-script);
-	font-size: var(--fs-eyebrow-script);
-	font-weight: 400;
-	line-height: 1.2;
-	letter-spacing: 0;
-	text-transform: none;
-	transform: var(--rot-eyebrow-script);
-	transform-origin: left bottom;
-	margin-bottom: 10px;
-	color: #e3a72f;
-}
-
-.flxlm-pg .pg-eyebrow a {
-	color: inherit;
-	text-decoration: none;
-}
-
-.flxlm-pg .pg-eyebrow a:hover {
-	color: #fff;
-}
-
 .flxlm-pg .pg-title {
 	margin: 8px 0 0;
 	max-width: 22ch;
@@ -260,28 +237,6 @@
 	background: #fff;
 }
 
-.flxlm-pg .section__eyebrow,
-.flxlm-pg .section__eyebrow--terracotta,
-.flxlm-pg .section__eyebrow--lake,
-.flxlm-pg .section__eyebrow--sage,
-.flxlm-pg .section__eyebrow--navy {
-	display: inline-block;
-	font-family: var(--ff-eyebrow-script);
-	font-size: var(--fs-eyebrow-script);
-	font-weight: 400;
-	line-height: 1.2;
-	letter-spacing: 0;
-	text-transform: none;
-	transform: var(--rot-eyebrow-script);
-	transform-origin: left bottom;
-	margin-bottom: 10px;
-	color: #003b5b;
-}
-
-.flxlm-pg .section--dark .section__eyebrow {
-	color: #e3a72f;
-}
-
 .flxlm-pg .section__title {
 	color: var(--color-navy);
 	font-size: var(--fs-h2);
@@ -321,14 +276,17 @@
 	line-height: var(--lh-h3);
 }
 
-.flxlm-pg .post-content a {
+.flxlm-pg .post-content a,
+.flxlm-pg .methodology-link a {
 	color: var(--pg-link);
 	font-weight: 600;
 	text-decoration: none;
 }
 
 .flxlm-pg .post-content a:hover,
-.flxlm-pg .post-content a:focus-visible {
+.flxlm-pg .post-content a:focus-visible,
+.flxlm-pg .methodology-link a:hover,
+.flxlm-pg .methodology-link a:focus-visible {
 	color: var(--pg-deep);
 	text-decoration: underline;
 	text-decoration-color: var(--pg-mark);
@@ -411,12 +369,6 @@
 	font-size: var(--fs-small);
 	font-weight: var(--fw-small);
 	line-height: var(--lh-body);
-}
-
-.flxlm-pg .methodology-link a {
-	color: var(--pg-link);
-	text-decoration: underline;
-	text-underline-offset: 2px;
 }
 
 /* ---------- Cards (16px corners, soft line, accent top edge on number cards) ---------- */
@@ -613,6 +565,7 @@
 }
 
 /* Archive and resource cards */
+.flxlm-pg .archive-card__title,
 .flxlm-pg .archive-card__title a,
 .flxlm-pg .resource-card__title {
 	color: var(--color-navy);
@@ -922,10 +875,6 @@
 	}
 }
 
-.flxlm-pg .pg-band .pg-eyebrow {
-	color: var(--pg-gold);
-}
-
 .flxlm-pg .pg-band__title {
 	margin: 8px 0 12px;
 	max-width: 24ch;
@@ -987,20 +936,6 @@ body.flxlm-pg-band .cta-banner {
 
 .flxlm-pg .cs-wrap .hero::before {
 	display: none;
-}
-
-.flxlm-pg .cs-wrap .hero__eyebrow {
-	display: inline-block;
-	font-family: var(--ff-eyebrow-script);
-	font-size: var(--fs-eyebrow-script);
-	font-weight: 400;
-	line-height: 1.2;
-	letter-spacing: 0;
-	text-transform: none;
-	transform: var(--rot-eyebrow-script);
-	transform-origin: left bottom;
-	margin-bottom: 10px;
-	color: #e3a72f;
 }
 
 .flxlm-pg .cs-wrap .hero h1,
@@ -1282,12 +1217,6 @@ body.flxlm-pg-band .cta-banner {
 
 
 /* ---------- Case study content files: shared type scale ---------- */
-.flxlm-pg .cs-wrap .sect__eyebrow {
-	font-size: var(--fs-eyebrow);
-	font-weight: var(--fw-eyebrow);
-	letter-spacing: var(--ls-eyebrow);
-}
-
 .flxlm-pg .cs-wrap .sect__lead,
 .flxlm-pg .cs-wrap .cs-footer__sub {
 	font-size: var(--fs-lead);

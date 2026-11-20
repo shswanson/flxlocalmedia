@@ -82,7 +82,7 @@ get_header();
 			<?php endif; ?>
 			<div class="st-hero__text">
 				<?php if ( '' !== $p['eyebrow'] ) : ?>
-					<div class="st-eyebrow"><?php echo esc_html( $p['eyebrow'] ); ?></div>
+					<div class="flx-eyebrow"><?php echo esc_html( $p['eyebrow'] ); ?></div>
 				<?php endif; ?>
 				<h1 class="st-title" id="st-title"><?php echo esc_html( $p['title'] ); ?></h1>
 				<?php if ( '' !== $p['tagline'] ) : ?>

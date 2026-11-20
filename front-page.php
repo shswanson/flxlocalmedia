@@ -32,7 +32,7 @@ get_header();
 	<!-- 1. Hero -->
 	<section class="hb-hero hb-hero--home" aria-labelledby="hb-title">
 		<div class="hb-wrap hb-hero__inner">
-			<p class="hb-eyebrow">Local Solutions for Local Businesses</p>
+			<p class="flx-eyebrow">Local Solutions for Local Businesses</p>
 			<h1 class="hb-title" id="hb-title">Your customers are on the road across the Finger&nbsp;Lakes every day. <span>What are they hearing about&nbsp;you?</span></h1>
 			<p class="hb-lead">Most local businesses advertise in one place and hope for the best. We put you where your customers already are: on 7 radio stations, across digital, at community events, and in the local news.</p>
 			<div class="hb-actions">
@@ -81,7 +81,7 @@ get_header();
 						<?php endif; ?>
 					</div>
 					<div class="hb-feature__text">
-						<p class="hb-eyebrow hb-eyebrow--dark">In their own words</p>
+						<p class="flx-eyebrow">In their own words</p>
 						<?php if ( '' !== $n_quote ) : ?>
 							<blockquote class="hb-feature__quote">&ldquo;<?php echo esc_html( $n_quote ); ?>&rdquo;</blockquote>
 						<?php endif; ?>
@@ -103,7 +103,7 @@ get_header();
 	<section class="hb-section" aria-labelledby="hb-problems-title">
 		<div class="hb-wrap">
 			<div class="hb-head">
-				<p class="hb-eyebrow hb-eyebrow--dark">Sound familiar?</p>
+				<p class="flx-eyebrow">Sound familiar?</p>
 				<h2 id="hb-problems-title">The Challenges Local Businesses Tell Us About</h2>
 				<p>If you've said any of these out loud, you're not alone, and we can help.</p>
 			</div>
@@ -145,7 +145,7 @@ get_header();
 		<section class="hb-section hb-section--tint" aria-labelledby="hb-more-title">
 			<div class="hb-wrap">
 				<div class="hb-head">
-					<p class="hb-eyebrow hb-eyebrow--dark">Local businesses, real results</p>
+					<p class="flx-eyebrow">Local businesses, real results</p>
 					<h2 id="hb-more-title">Your Neighbors Trust Us With Their Marketing</h2>
 					<p>Auto dealers, restaurants, insurance agents, flooring companies: local businesses across the Finger Lakes.</p>
 				</div>

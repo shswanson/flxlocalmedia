@@ -23,7 +23,7 @@ get_header();
 	<!-- 1. Hero -->
 	<section class="hb-hero" aria-labelledby="hb-title">
 		<div class="hb-wrap hb-hero__inner">
-			<p class="hb-eyebrow">Proof</p>
+			<p class="flx-eyebrow">Proof</p>
 			<h1 class="hb-title" id="hb-title">Radio works.</h1>
 			<p class="hb-lead">Hear it from Finger Lakes businesses that advertise with FLX Local Media. These are their words, in their own videos.</p>
 			<div class="hb-actions">

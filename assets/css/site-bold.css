@@ -996,20 +996,6 @@ body.fx-nav-open {
 /* Product page type scale (tokens in flx-tokens.css). Scoped to .flxlm-product so
    the seven station pages, which share station.css, keep their own type. Sizes and
    weights only; layout is untouched. */
-.flxlm-product .st-eyebrow {
-	display: inline-block;
-	font-family: var(--ff-eyebrow-script);
-	font-size: var(--fs-eyebrow-script);
-	font-weight: 400;
-	line-height: 1.2;
-	letter-spacing: 0;
-	text-transform: none;
-	transform: var(--rot-eyebrow-script);
-	transform-origin: left bottom;
-	margin-bottom: 10px;
-	color: #e3a72f;
-}
-
 .flxlm-product .st-tag {
 	font-size: var(--fs-h3);
 	font-weight: var(--fw-h3);
@@ -1116,20 +1102,6 @@ body:not(.page-template-template-station) .cta-banner__title {
 	font-weight: var(--fw-h2);
 	line-height: var(--lh-h2);
 	letter-spacing: var(--ls-h2);
-}
-
-body:not(.page-template-template-station) .cta-banner .section__eyebrow {
-	display: inline-block;
-	font-family: var(--ff-eyebrow-script);
-	font-size: var(--fs-eyebrow-script);
-	font-weight: 400;
-	line-height: 1.2;
-	letter-spacing: 0;
-	text-transform: none;
-	transform: var(--rot-eyebrow-script);
-	transform-origin: left bottom;
-	margin-bottom: 10px;
-	color: #e3a72f;
 }
 
 body:not(.page-template-template-station) .cta-banner__subtitle {

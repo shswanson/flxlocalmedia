@@ -60,7 +60,7 @@ flxlm_pg_open();
 <section class="section section--gray pg-studios">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow">Visit us</span>
+			<span class="flx-eyebrow">Visit us</span>
 			<h2 class="section__title">Our Studios</h2>
 			<p class="section__subtitle">Three studios across the Finger Lakes, broadcasting seven stations across the region.</p>
 		</div>
