@@ -11,7 +11,7 @@ get_header();
 <div class="page-header">
 	<div class="container">
 		<h1 class="page-header__title">Content Marketing</h1>
-		<p class="page-header__subtitle">Reach 210K+ monthly users and 700K+ monthly pageviews on Finger Lakes Daily News.</p>
+		<p class="page-header__subtitle">Reach 180K+ monthly users and 700K+ monthly pageviews on Finger Lakes Daily News.</p>
 	</div>
 </div>
 

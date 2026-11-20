@@ -187,7 +187,7 @@ flxlm_pg_open();
 			<p>The Finger Lakes is not a big-city media market. The regional newspapers are either gone or arriving days after the news happened. What is left is FLX Local Media, a media company built on local voices, local news, and local relationships in this region.</p>
 			<ul>
 				<li><strong>7 radio stations across six formats.</strong> Country, News/Talk, AC, Classic Rock, Classic Hits, Easy Rock.</li>
-				<li><strong>Finger Lakes Daily News</strong> is our local digital news site, with 210,000+ monthly users (Google Analytics 4, September 2026).</li>
+				<li><strong>Finger Lakes Daily News</strong> is our local digital news site, with more than 180,000 monthly users (Google Analytics 4, August to October 2026, robot traffic removed).</li>
 				<li><strong>Radio, digital news, and a daily newsletter</strong> from one local team, so your radio, online, and email can be planned together.</li>
 				<li><strong>Regional TV comes from Rochester and Syracuse</strong>. Neither treats the Finger Lakes as a primary market.</li>
 			</ul>
