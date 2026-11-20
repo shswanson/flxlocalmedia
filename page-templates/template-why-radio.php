@@ -70,13 +70,13 @@ flxlm_pg_open();
 		</div>
 
 		<div class="why-radio-stat-hero">
-			<div class="why-radio-stat-hero__number">93%</div>
+			<div class="why-radio-stat-hero__number">92%</div>
 			<div class="why-radio-stat-hero__label">of American adults listen to radio every month (national figure)</div>
 			<div class="why-radio-stat-hero__detail">241.9 million people, more than any other platform. Source: Nielsen Audio Today 2026.</div>
 		</div>
 
 		<div class="post-content">
-			<p>More than smartphones. More than television. More than streaming, social media, or anything else. Nationally, radio reaches 93% of American adults every single month. Among the 35-49 age group, the prime spending years, that number is 95%.</p>
+			<p>More than smartphones. More than television. More than streaming, social media, or anything else. Nationally, radio reaches 92% of American adults in a month (Nielsen).</p>
 		</div>
 	</div>
 </section>

@@ -10,7 +10,7 @@
   "how-we-work": { "type": "trio", "eyebrow": "How we work", "line": "No rate card. *We build a plan.*", "sub": "Built around your business, your customers and your goal.", "trio": ["jd-chapman-insurance", "enstech-automotive", "church-creative-flooring"] },
   "contact": { "type": "trio", "eyebrow": "Contact", "line": "Get a free *local marketing review*", "trio": ["aster-financial-group", "ryan-phelps-auto-sales", "speno-music"] },
   "testimonials": { "type": "trio", "eyebrow": "Client stories", "line": "Radio *works.*", "sub": "Local owners on camera, in their own words.", "trio": ["main-deck", "e-v-energy", "ryan-phelps-auto-sales"] },
-  "why-radio": { "type": "photo", "eyebrow": "Proof", "line": "Why radio *works*", "num": "93%", "numLabel": "of American adults listen to radio every month", "img": "assets/images/testimonials/ryan-phelps-auto-sales/hero-wide.jpg", "pos": "14% 50%" },
+  "why-radio": { "type": "photo", "eyebrow": "Proof", "line": "Why radio *works*", "num": "92%", "numLabel": "of American adults listen to radio every month", "img": "assets/images/testimonials/ryan-phelps-auto-sales/hero-wide.jpg", "pos": "14% 50%" },
   "methodology": { "type": "tiles", "eyebrow": "Proof", "line": "How we *count* our audience", "num": "825K", "numLabel": "people in our FM signal areas", "tiles": "stations" },
   "apps": { "type": "station", "eyebrow": "Free app", "freq": "FLX.fm", "tag": "All seven stations. One free app.", "aud": "Free for iPhone and Android", "logo": "assets/images/products/flx-fm/logo.png", "bg": "#6b2fa0", "deep": "#4a1d73" },
   "careers": { "type": "mark", "eyebrow": "Careers", "line": "Join the *team*", "sub": "Radio and media jobs in the Finger Lakes." },
@@ -45,11 +45,11 @@
   "digital-advertising": { "type": "photo", "eyebrow": "Digital", "line": "Ads we *run for you*", "sub": "Display, retargeting and geofencing.", "img": "assets/images/products/digital-advertising/testimonial.jpg", "pos": "14% 40%" },
   "content-marketing": { "type": "photo", "eyebrow": "Digital", "line": "Your story on *Finger Lakes Daily News*", "num": "700K+", "numLabel": "monthly pageviews", "img": "assets/images/products/content-marketing/testimonial.jpg", "pos": "14% 40%" },
 
-  "case-study": { "type": "figure", "eyebrow": "Proof", "line": "Real work for *local businesses*", "num": "5,065", "numLabel": "email subscribers, one case study", "img": "assets/images/og-case-study-seo.png", "pos": "0% 0%" },
+  "case-study": { "type": "figure", "eyebrow": "Proof", "line": "Real work for *local businesses*", "num": "4", "numLabel": "case studies with the real numbers", "img": "assets/images/og-case-study-seo.png", "pos": "0% 0%" },
   "fldn-seo": { "type": "figure", "eyebrow": "Case study", "line": "100 days to *storm-proof*", "num": "54→99", "numLabel": "mobile PageSpeed", "img": "assets/images/og-case-study-seo.png", "pos": "0% 0%" },
   "weather-alerts-case-study": { "type": "figure", "eyebrow": "Case study", "line": "Live before you *reach your desk*", "num": "3h 07m", "numLabel": "watch-before-warning lead", "img": "assets/images/wx-live-alert-map.png", "pos": "0% 0%" },
   "feed-spam-case-study": { "type": "figure", "eyebrow": "Case study", "line": "Stopping a *feed spam attack*", "num": "4,080", "numLabel": "peak crawl spike", "img": "assets/images/case-study-feed-spam-crawl-spikes.png", "pos": "0% 0%" },
-  "contests-email-list": { "type": "photo", "eyebrow": "Case study", "line": "Contests built a *local email list*", "num": "5,065", "numLabel": "subscribers who asked to be there", "img": "assets/images/products/contests/testimonial.jpg", "pos": "14% 40%" },
+  "contests-email-list": { "type": "photo", "eyebrow": "Case study", "line": "Contests built a *local email list*", "num": "5,065", "numLabel": "subscribers, up from 2,972 in February", "img": "assets/images/products/contests/testimonial.jpg", "pos": "14% 40%" },
 
   "testimonial-e-v-energy": { "type": "story", "slug": "e-v-energy", "quote": "We’ve grown every single year since we started using radio.", "who": "Jeff Leavens", "biz": "E & V Energy", "pos": "30% 30%" },
   "testimonial-speno-music": { "type": "story", "slug": "speno-music", "quote": "… we’ve reached all of our demographics through FLX Local Media.", "who": "Mike Speno", "biz": "Speno Music", "pos": "30% 30%" },

@@ -45,6 +45,7 @@ jobs:
             --exclude '.github' \
             --exclude '.vscode' \
             --exclude 'tests' \
+            --exclude 'tools' \
             --exclude 'plugin' \
             --exclude 'mu-plugins' \
             --exclude '*.md' \
