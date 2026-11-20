@@ -1166,6 +1166,9 @@ body.flxlm-dark-hero .hb-hero {
 
 .flxlm-hub--home .hb-hero .hb-title {
 	max-width: 26ch;
+	/* The home hero is the one deliberate exception to the site h1 token: calmer. */
+	font-size: calc(var(--fs-h1) * 0.88);
+	font-weight: var(--fw-h3);
 }
 
 .flxlm-hub--home .hb-hero .hb-lead {

@@ -10,6 +10,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * URL of a theme file with ?ver=<file modified time>, so browsers and the CDN
+ * fetch a changed image again even when its file name did not change.
+ *
+ * @param string $rel Path inside the theme, e.g. 'assets/images/brand/x.svg'.
+ * @return string
+ */
+function flxlm_asset_url( $rel ) {
+	$rel   = ltrim( (string) $rel, '/' );
+	$path  = get_template_directory() . '/' . $rel;
+	$url   = get_template_directory_uri() . '/' . $rel;
+	$mtime = is_readable( $path ) ? (int) filemtime( $path ) : 0;
+	return $mtime ? add_query_arg( 'ver', $mtime, $url ) : $url;
+}
+
+/**
  * Query testimonials.
  *
  * @param array $args Optional. Override WP_Query args.

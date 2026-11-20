@@ -59,11 +59,11 @@ if ( $has_proof ) {
 	$toc['proof'] = 'From an advertiser';
 }
 
-// Sources for the bar of numbers: each stat's own source, then the note.
+// Sources for the bar of numbers: each stat's short source label, in the same order as the stats. The long wording stays in each stat's 'source_detail' (inc/products.php) and is not printed.
 $sources = array();
 foreach ( $p['stats'] as $stat ) {
 	if ( '' !== $stat['source'] ) {
-		$sources[] = ( '' !== $stat['label'] ? $stat['label'] . ': ' : '' ) . $stat['source'];
+		$sources[] = array( $stat['value'], $stat['source'] );
 	}
 }
 
@@ -122,7 +122,7 @@ get_header();
 						<?php endif; ?>
 						<div class="pr-band__row<?php echo $is_badges ? ' pr-band__row--badges' : ''; ?>">
 							<?php foreach ( $group_logos as $lg ) : ?>
-								<?php $src = esc_url( get_theme_file_uri( 'assets/images/products/logos/' . $lg['file'] ) ); ?>
+								<?php $src = esc_url( flxlm_asset_url( 'assets/images/products/logos/' . $lg['file'] ) ); ?>
 								<?php if ( $is_badges ) : ?>
 									<span class="pr-band__badge"><img<?php echo '' !== $lg['fit'] ? ' class="' . esc_attr( $lg['fit'] ) . '"' : ''; ?> src="<?php echo $src; ?>" alt="<?php echo esc_attr( $lg['alt'] ); ?>" loading="lazy" decoding="async"></span>
 								<?php else : ?>
@@ -148,13 +148,18 @@ get_header();
 						<?php endforeach; ?>
 					</div>
 				</div>
-				<?php if ( $sources || '' !== $p['stats_note'] ) : ?>
-					<p class="st-specs-note">
-						<?php if ( $sources ) : ?>
-							<?php echo esc_html( 'Sources: ' . implode( '; ', $sources ) . '.' ); ?>
-						<?php endif; ?>
-						<?php echo '' !== $p['stats_note'] ? esc_html( $p['stats_note'] ) : ''; ?>
-					</p>
+				<?php if ( $sources ) : ?>
+					<details class="st-specs-note st-sources">
+						<summary>Sources</summary>
+						<ol>
+							<?php foreach ( $sources as $src ) : ?>
+								<li><b><?php echo esc_html( $src[0] ); ?></b> <?php echo esc_html( $src[1] ); ?></li>
+							<?php endforeach; ?>
+						</ol>
+					</details>
+				<?php endif; ?>
+				<?php if ( '' !== $p['stats_note'] ) : ?>
+					<p class="st-specs-note"><?php echo esc_html( $p['stats_note'] ); ?></p>
 				<?php endif; ?>
 			<?php endif; ?>
 
@@ -181,12 +186,12 @@ get_header();
 						<?php foreach ( $p['offers'] as $way ) : ?>
 							<div class="pr-way">
 								<?php if ( ! empty( $way['logos'] ) ) : ?>
-									<div class="pr-logos">
+									<div class="pr-logos<?php echo count( $way['logos'] ) > 5 ? ' pr-logos--many' : ''; ?>">
 										<?php foreach ( $way['logos'] as $lg ) : ?>
 											<?php if ( isset( $lg['text'] ) ) : ?>
 												<span class="pr-logo pr-logo--text"><?php echo esc_html( $lg['text'] ); ?></span>
 											<?php else : ?>
-												<span class="pr-logo<?php echo ! empty( $lg['chip'] ) ? ' pr-logo--chip' : ''; ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/products/logos/' . $lg['file'] ) ); ?>" alt="<?php echo esc_attr( $lg['alt'] ); ?>" loading="lazy" decoding="async"></span>
+												<span class="pr-logo<?php echo ! empty( $lg['chip'] ) ? ' pr-logo--chip' : ''; ?>"><img src="<?php echo esc_url( flxlm_asset_url( 'assets/images/products/logos/' . $lg['file'] ) ); ?>" alt="<?php echo esc_attr( $lg['alt'] ); ?>" loading="lazy" decoding="async"></span>
 											<?php endif; ?>
 										<?php endforeach; ?>
 									</div>

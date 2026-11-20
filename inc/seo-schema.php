@@ -259,6 +259,8 @@ function flxlm_seo_iso( $gmt ) {
 		return '';
 	}
 	$ts = strtotime( $gmt . ' UTC' );
+	// A page date can never be in the future (a clock or timezone slip in the stored date would otherwise print as one).
+	$ts = $ts ? min( $ts, time() ) : 0;
 	return $ts ? gmdate( 'c', $ts ) : '';
 }
 

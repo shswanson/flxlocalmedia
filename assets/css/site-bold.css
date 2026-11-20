@@ -370,9 +370,12 @@ body.fx-nav-open {
 	grid-row: 1 / span 2;
 	width: 24px;
 	height: 24px;
-	object-fit: cover;
-	border-radius: 6px;
-	box-shadow: 0 0 0 1px rgba(137, 166, 187, 0.35);
+	box-sizing: border-box;
+	padding: 2px;
+	background: #fff;
+	object-fit: contain;
+	border-radius: 7px;
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
 .fx-links__has-icon small {
@@ -1197,6 +1200,18 @@ body:not(.page-template-template-station) .cta-banner .btn {
 	max-width: 100%;
 	height: 100%;
 	object-fit: contain;
+}
+
+.flxlm-product .pr-logos--many {
+	flex-wrap: nowrap;
+	gap: 4px;
+}
+
+.flxlm-product .pr-logos--many .pr-logo {
+	flex: 1 1 0;
+	height: 32px;
+	min-width: 0;
+	padding: 3px 4px;
 }
 
 .flxlm-product .pr-logo--chip {

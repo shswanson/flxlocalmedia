@@ -289,3 +289,14 @@ function flxlm_pg_close() {
 	}
 	echo "</div><!-- .flxlm-pg -->\n";
 }
+
+/**
+ * The /apps/ page body carries its own <h1> in the database while the theme hero already prints the page's H1.
+ * Demote the body one to an <h2> at render time so the page has a single H1 (the stored content is left alone).
+ */
+add_filter( 'the_content', function ( $content ) {
+	if ( ! is_page( 'apps' ) || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+	return preg_replace( array( '#<h1(\s[^>]*)?>#i', '#</h1>#i' ), array( '<h2$1>', '</h2>' ), $content );
+}, 9 );

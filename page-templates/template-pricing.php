@@ -7,10 +7,12 @@
  * @package flxlm
  */
 
-// Block indexing.
-add_action( 'wp_head', function() {
-	echo '<meta name="robots" content="noindex, nofollow" />' . "\n";
-}, 1 );
+// Block indexing, through core's single robots tag (inc/seo.php adds the same pair from the page entry).
+add_filter( 'wp_robots', function ( $robots ) {
+	$robots['noindex']  = true;
+	$robots['nofollow'] = true;
+	return $robots;
+} );
 
 get_header();
 ?>

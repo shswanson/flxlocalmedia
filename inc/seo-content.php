@@ -283,7 +283,7 @@ function flxlm_seo_static_pages() {
 			'kind'  => 'hub',
 			'crumb' => 'Radio',
 			'lead'  => array( 'Radio Advertising in the Finger Lakes' ),
-			'color' => 'blue',
+			'color' => 'navy',
 			'og'    => array( 'kicker' => 'Radio advertising', 'headline' => 'Seven stations. One call.', 'promise' => 'Compare formats, audiences and coverage across the Finger Lakes.' ),
 		),
 		'solutions/why-radio'    => array(
@@ -758,22 +758,10 @@ function flxlm_seo_entry_product( $post, $slug ) {
 	$leads = isset( $c['lead'] ) ? $c['lead'] : array( $prod['name'] . ' from FLX Local Media', $prod['name'] );
 	$desc  = isset( $c['desc'] ) ? $c['desc'] : flxlm_seo_fit_desc( array( $prod['lead'] ) );
 
-	// Color: the product's own color from its data, unless that is the default navy;
-	// then the section color from the color system.
-	$section = array(
-		'Media'            => 'purple',
-		'Advertising'      => 'orange',
-		'Digital Services' => 'green',
-		'Proof'            => 'gold',
-	);
+	// Color: a brand product (FLDN, newsletter, Discover FLX, FLX Finest, FLX.fm)
+	// keeps its own color; every other product is a generic page and goes navy.
 	$primary = $prod['colors']['primary'];
-	if ( 'sports' === $slug ) {
-		$color = 'navy' === strtolower( $primary ) || '#003b5b' === strtolower( $primary ) ? 'red' : $primary;
-	} elseif ( '#003b5b' === strtolower( $primary ) ) {
-		$color = isset( $section[ $group ] ) ? $section[ $group ] : 'navy';
-	} else {
-		$color = $primary;
-	}
+	$color   = '#003b5b' === strtolower( $primary ) ? 'navy' : $primary;
 	$deep = $color === $primary ? $prod['colors']['deep'] : '';
 
 	return flxlm_seo_entry_defaults( array(

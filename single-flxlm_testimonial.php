@@ -58,6 +58,8 @@ while ( have_posts() ) : the_post();
 	<div class="story-hero__content">
 		<a href="<?php echo esc_url( get_post_type_archive_link( 'flxlm_testimonial' ) ?: home_url( '/testimonials/' ) ); ?>" class="story-hero__back">&larr; All Client Stories</a>
 
+		<h1 class="sr-only"><?php echo esc_html( $business ? $business : $person ); ?>: client story</h1>
+
 		<?php if ( $quote ) : ?>
 			<p class="story-hero__quote"><?php echo esc_html( $quote ); ?></p>
 		<?php endif; ?>

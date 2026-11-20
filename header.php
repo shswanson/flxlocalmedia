@@ -30,14 +30,13 @@ $flxlm_caret    = '<svg class="fx-nav__caret" viewBox="0 0 10 6" width="10" heig
  * (see inc/site-frame.php). The glass itself is the .fx-header__glass layer, not the
  * header, so the phone drawer (position: fixed) is not trapped inside a filtered parent.
  */
-$flxlm_brand = get_template_directory_uri() . '/assets/images/brand/';
 ?>
 <header class="site-header fx-header" id="site-header">
 	<div class="fx-header__glass" aria-hidden="true"></div>
 	<div class="container site-header__inner">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-header__logo fx-logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>: Home">
-			<img class="fx-logo__img fx-logo__img--white" src="<?php echo esc_url( $flxlm_brand . 'FLX-Logo-Horizontal-White.png' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="221" height="30">
-			<img class="fx-logo__img fx-logo__img--navy" src="<?php echo esc_url( $flxlm_brand . 'FLX-Logo-Horizontal-Navy.png' ); ?>" alt="" width="221" height="30">
+			<img class="fx-logo__img fx-logo__img--white" src="<?php echo esc_url( flxlm_asset_url( 'assets/images/brand/FLX-Logo-Horizontal-White.svg' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="221" height="30">
+			<img class="fx-logo__img fx-logo__img--navy" src="<?php echo esc_url( flxlm_asset_url( 'assets/images/brand/FLX-Logo-Horizontal-Navy.svg' ) ); ?>" alt="" width="221" height="30">
 		</a>
 
 		<button type="button" class="fx-burger" id="fx-burger" aria-expanded="false" aria-controls="fx-nav" aria-label="Menu">

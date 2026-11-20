@@ -177,20 +177,17 @@ get_header();
 					<?php endif; ?>
 				</div>
 				<?php if ( $has_est || $has_streaming ) : ?>
-					<p class="st-specs-note">
-						<?php
-						if ( $has_est && $has_streaming ) {
-							echo esc_html( 'Over-the-air listeners are estimates from Census and format-share research; streaming hours are measured directly.' );
-						} elseif ( $has_est ) {
-							echo esc_html( 'Over-the-air listeners are estimates from Census and format-share research.' );
-						} else {
-							echo esc_html( 'Streaming hours are measured directly.' );
-						}
-						if ( $has_est ) :
-							?>
-							<a href="<?php echo esc_url( home_url( '/methodology/' ) ); ?>">How we estimate</a>
-						<?php endif; ?>
-					</p>
+					<details class="st-specs-note st-sources">
+						<summary>Sources</summary>
+						<ol>
+							<?php if ( $has_est ) : ?>
+								<li>Over-the-air listeners: Census and format-share estimates. <a href="<?php echo esc_url( home_url( '/methodology/' ) ); ?>">How we estimate</a></li>
+							<?php endif; ?>
+							<?php if ( $has_streaming ) : ?>
+								<li>Streaming hours: measured directly</li>
+							<?php endif; ?>
+						</ol>
+					</details>
 				<?php endif; ?>
 			<?php endif; ?>
 

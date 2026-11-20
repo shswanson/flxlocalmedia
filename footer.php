@@ -11,14 +11,13 @@
 
 $flxlm_groups   = function_exists( 'flxlm_nav_groups' ) ? flxlm_nav_groups() : array();
 $flxlm_stations = function_exists( 'flxlm_get_stations' ) ? flxlm_get_stations() : array();
-$flxlm_brand    = get_template_directory_uri() . '/assets/images/brand/';
 
 // SBA badge: the filter in inc/site-frame.php sets the verification link and alt text.
 // If the helper is missing, fall back to the same values here.
 $flxlm_badge = function_exists( 'flxlm_sdvosb_badge' ) ? flxlm_sdvosb_badge() : null;
 if ( ! $flxlm_badge && is_readable( get_template_directory() . '/assets/images/brand/sba-sdvosb-400.png' ) ) {
 	$flxlm_badge = array(
-		'src' => $flxlm_brand . 'sba-sdvosb-400.png',
+		'src' => flxlm_asset_url( 'assets/images/brand/sba-sdvosb-400.png' ),
 		'url' => 'https://search.certifications.sba.gov/profile/W1J2NFT4ZTH9',
 		'alt' => 'TOTIB Media Inc, doing business as FLX Local Media, is an SBA-certified Service-Disabled Veteran-Owned Small Business.',
 	);
@@ -34,7 +33,7 @@ if ( ! $flxlm_badge && is_readable( get_template_directory() . '/assets/images/b
 			<div class="site-footer__brandline">
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-footer__logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>, Home">
 					<img
-						src="<?php echo esc_url( $flxlm_brand . 'FLX-Logo-Horizontal-White.png' ); ?>"
+						src="<?php echo esc_url( flxlm_asset_url( 'assets/images/brand/FLX-Logo-Horizontal-White.svg' ) ); ?>"
 						alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
 						width="221"
 						height="30"
