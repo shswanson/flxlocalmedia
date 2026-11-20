@@ -81,7 +81,8 @@ while ( have_posts() ) : the_post();
 		<div class="story-win__card">
 			<span class="flx-eyebrow">Client story</span>
 			<?php if ( $hero_quote ) : ?>
-				<p class="story-win__quote"><?php echo esc_html( $hero_quote ); ?></p>
+				<?php // The card prints its own outer quote marks, so a quote inside the quote uses single marks. ?>
+				<p class="story-win__quote"><?php echo esc_html( str_replace( array( '“', '”' ), array( '‘', '’' ), $hero_quote ) ); ?></p>
 			<?php endif; ?>
 			<div class="story-win__by">
 				<img src="<?php echo esc_url( flxlm_asset_url( $hero_portrait ) ); ?>" alt="" width="64" height="64" />
