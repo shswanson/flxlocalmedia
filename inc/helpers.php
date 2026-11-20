@@ -838,6 +838,11 @@ function flxlm_get_station_data( $slug = '' ) {
 		),
 	);
 
+	// The fldn station registry is the source for these facts; it overrides the copies above.
+	foreach ( $stations as $k => $st ) {
+		$stations[ $k ] = flxlm_apply_station_registry( $k, $st );
+	}
+
 	if ( $slug && isset( $stations[ $slug ] ) ) {
 		return $stations[ $slug ];
 	}
@@ -855,7 +860,7 @@ function flxlm_get_station_data( $slug = '' ) {
  * @return array
  */
 function flxlm_get_stations() {
-	return array(
+	$list = array(
 		array(
 			'name'          => 'Mix 98.5',
 			'slug'          => 'mix-985',
@@ -915,4 +920,33 @@ function flxlm_get_stations() {
 			'reach'         => '756K market (Rochester) · $71K median HHI',
 		),
 	);
+	foreach ( $list as $i => $st ) {
+		$list[ $i ] = flxlm_apply_station_registry( $st['slug'], $st );
+	}
+	return $list;
+}
+
+/**
+ * Overlay the station registry (assets/data/stations-registry.json, exported from
+ * shswanson/fldn stations/registry.json) onto a station array: frequency (main FM only),
+ * format, target audience and tagline.
+ */
+function flxlm_apply_station_registry( $slug, $st ) {
+	$reg = function_exists( 'flxlm_station_registry' ) ? flxlm_station_registry( $slug ) : null;
+	if ( ! $reg ) {
+		return $st;
+	}
+	if ( ! empty( $reg['frequency_display'] ) ) {
+		$st['frequency'] = $reg['frequency_display'];
+	}
+	if ( isset( $reg['format'] ) ) {
+		$st['format'] = $reg['format'];
+	}
+	if ( isset( $reg['target'] ) ) {
+		$st['demo'] = $reg['target'];
+	}
+	if ( array_key_exists( 'tagline', $reg ) ) {
+		$st['tagline'] = $reg['tagline'];
+	}
+	return $st;
 }
