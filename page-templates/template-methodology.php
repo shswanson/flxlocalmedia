@@ -426,9 +426,9 @@ flxlm_pg_open();
 			'head' => array( 'Census product', 'Years', 'Population', 'Used on this site' ),
 			'rows' => array(
 				array( 'American Community Survey 5-year', '2018 to 2022', 697705, 'Yes, everywhere' ),
-				array( 'Decennial Census head count', '2020', 701781, 'No, shown for comparison' ),
+				array( 'Decennial Census head count', 'April 2020', 701781, 'No, shown for comparison' ),
 				array( 'American Community Survey 5-year', '2020 to 2024', 694434, 'Commute minutes on station pages' ),
-				array( 'Census population estimate, July', '2024', 692787, 'No, shown for comparison' ),
+				array( 'Census population estimate', 'July 2024', 692787, 'No, shown for comparison' ),
 			),
 		) );
 		?>

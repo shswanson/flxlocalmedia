@@ -1430,6 +1430,16 @@ body.flxlm-pg-band .cta-banner {
 	color: var(--color-text-muted);
 }
 
+/* Long-form prose and source notes under a section head line up with it on the left (Methodology). */
+.flxlm-pg .sol-wrap > .post-content {
+	margin: 32px 0 0;
+}
+
+.flxlm-pg .sol-wrap > .methodology-link {
+	margin: 0;
+	text-align: left;
+}
+
 .flxlm-pg .sol-hub.flxlm-hub {
 	background: transparent;
 }
