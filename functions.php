@@ -272,7 +272,7 @@ function flxlm_station_page_data( $slug ) {
 	$col     = isset( $pg['colors'] ) && is_array( $pg['colors'] ) ? $pg['colors'] : array();
 	$primary = flxlm_station_hex( isset( $col['primary'] ) ? $col['primary'] : '', '#003b5b' );
 	$deep    = flxlm_station_hex( isset( $col['deep'] ) ? $col['deep'] : '', flxlm_station_blend( $primary, '#000000', 0.3 ) );
-	$accent  = flxlm_station_hex( isset( $col['accent'] ) ? $col['accent'] : '', '#52cfd8' );
+	$accent  = flxlm_station_hex( isset( $col['accent'] ) ? $col['accent'] : '', '#e3a72f' );
 	$ink     = flxlm_station_blend( $deep, '#000000', 0.62 );
 	// Station colour for small text on white: the primary, or the deep colour, darkened until it reads (4.5:1).
 	$link = flxlm_station_contrast( $primary, '#ffffff' ) >= 4.5 ? $primary : $deep;
@@ -496,3 +496,35 @@ require_once get_template_directory() . '/inc/hidden-testimonials.php';
 require_once get_template_directory() . '/inc/forms.php';
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/disable-block-editor.php';
+
+// Stations hub, Proof page and homepage: shared helpers, stylesheet and scripts.
+require_once get_template_directory() . '/inc/site-hubs.php';
+
+// Primary navigation, footer extras, product pages (inc/products.php) and their shared assets.
+require_once get_template_directory() . '/inc/products.php';
+
+/**
+ * Bold site layer: navigation, footer and product page styles, plus the navigation script.
+ * Loads on every page. On the Product template it also loads the station page design
+ * (station.css, station-page.js) that the product page reuses.
+ */
+function flxlm_enqueue_site_bold() {
+	$dir  = get_template_directory();
+	$uri  = get_template_directory_uri();
+	$deps = array( 'flxlm-style' );
+
+	if ( is_page_template( 'page-templates/template-product.php' ) ) {
+		wp_enqueue_style( 'flxlm-station-fonts', 'https://fonts.googleapis.com/css2?family=Poppins:wght@800;900&display=swap', array(), null );
+		wp_enqueue_style( 'flxlm-station', $uri . '/assets/css/station.css', array( 'flxlm-style' ), filemtime( $dir . '/assets/css/station.css' ) );
+		wp_enqueue_script( 'flxlm-station-page', $uri . '/assets/js/station-page.js', array(), filemtime( $dir . '/assets/js/station-page.js' ), true );
+		$deps[] = 'flxlm-station';
+	}
+
+	wp_enqueue_style( 'flxlm-site-bold', $uri . '/assets/css/site-bold.css', $deps, filemtime( $dir . '/assets/css/site-bold.css' ) );
+	wp_enqueue_script( 'flxlm-site-nav', $uri . '/assets/js/site-nav.js', array(), filemtime( $dir . '/assets/js/site-nav.js' ), true );
+}
+add_action( 'wp_enqueue_scripts', 'flxlm_enqueue_site_bold', 20 );
+
+// Site redesign: frame (palette, glass nav, logo) and the remaining pages.
+require_once get_template_directory() . '/inc/site-frame.php';
+require_once get_template_directory() . '/inc/site-pages.php';

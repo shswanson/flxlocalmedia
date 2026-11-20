@@ -6,9 +6,9 @@
 :root {
     --color-primary: #003b5b;
     --color-primary-dark: #0a4a6e;
-    --color-ochre: #077a89;
-    --color-purple: #6B2FA0;
-    --color-blue: #1f6889;
+    --color-ochre: #855e0a;
+    --color-purple: #7a4ba9;
+    --color-blue: #146aab;
     --color-text: #2b3a45;
     --color-text-light: #556673;
     --color-text-muted: #5d6d82;
@@ -22,7 +22,7 @@
     --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
     --radius: 12px;
     --color-card: #ffffff;
-    --color-alt: #eff8fa;
+    --color-alt: #f3f6f9;
     --shadow: 0 1px 3px rgba(0,59,91,0.05), 0 1px 2px rgba(0,59,91,0.08);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -47,7 +47,7 @@ a:hover { text-decoration: underline; }
     position: absolute;
     top: -100px; right: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(82,207,216,0.10) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(227,167,47,0.10) 0%, transparent 70%);
     border-radius: 50%;
 }
 .hero::after { display: none !important; }
@@ -56,7 +56,7 @@ a:hover { text-decoration: underline; }
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #52cfd8;
+    color: #e3a72f;
     margin-bottom: 12px;
 }
 .hero__title {
@@ -137,7 +137,7 @@ a:hover { text-decoration: underline; }
     color: var(--color-ochre);
     margin-bottom: 6px;
 }
-.sect--dark .sect__eyebrow { color: #52cfd8; }
+.sect--dark .sect__eyebrow { color: #e3a72f; }
 .sect__title {
     font-size: clamp(22px, 3.5vw, 32px);
     font-weight: 700;
@@ -195,7 +195,7 @@ a:hover { text-decoration: underline; }
     margin-bottom: 10px;
 }
 .impl-card__icon--teal { background: rgba(0,59,91,0.1); }
-.impl-card__icon--ochre { background: rgba(7,122,137,0.1); }
+.impl-card__icon--ochre { background: rgba(133,94,10,0.1); }
 .impl-card__title {
     font-size: 14px;
     font-weight: 700;
@@ -269,7 +269,7 @@ a:hover { text-decoration: underline; }
 
 /* Callout */
 .callout {
-    background: rgba(11,156,175,0.08);
+    background: rgba(0,59,91,0.08);
     border-radius: var(--radius);
     border-left: 3px solid var(--color-primary);
     padding: 16px 20px;
@@ -423,7 +423,7 @@ a:hover { text-decoration: underline; }
 
     <p class="sect__lead mt-md">No one wrote it. No one was on shift. A background service caught the National Weather Service alert off the wire, wrote a branded, plain-English story, drew the map, and pushed it live, in the seconds it took to cross the room. When the storm changes, the same story updates itself. When it&rsquo;s over, it marks itself lifted.</p>
 
-    <div class="callout" style="border-left-color:var(--color-ochre);background:rgba(7,122,137,0.06);">
+    <div class="callout" style="border-left-color:var(--color-ochre);background:rgba(133,94,10,0.06);">
         <strong>And none of it existed a few months ago.</strong> When FLX Local Media took over Finger Lakes Daily News in January 2026, the site had <em>no weather section at all</em>: not a forecast, not an alert, nothing. Every piece of this (the alert desk, the self-updating live-blogs, the town forecast pages, the search dominance) was built from a standing start this spring.
     </div>
 </div>
@@ -606,11 +606,11 @@ a:hover { text-decoration: underline; }
     <p class="sect__lead">Severe weather is the single biggest reason people turn to a local station&rsquo;s website and social, and it&rsquo;s exactly when a lean newsroom is slammed or off the clock. Turning the free government alert feed into instant, on-brand, self-updating coverage means you own the storm story instead of losing that audience to TV or weather.com. We built the whole thing from a standing start in a few months this year: proof it&rsquo;s a realistic play, not a moonshot.</p>
     <div class="two-col mt-md">
         <div>
-            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Free input, owned audience</h3>
+            <h3 style="margin-bottom:8px;">Free input, owned audience</h3>
             <p class="text-sm text-muted">The NWS alert feed is public and license-free. The cost isn&rsquo;t data or talent: it&rsquo;s the plumbing that turns a warning into a branded post the instant it&rsquo;s issued, and takes it down the instant it clears.</p>
         </div>
         <div>
-            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">A sponsorable franchise</h3>
+            <h3 style="margin-bottom:8px;">A sponsorable franchise</h3>
             <p class="text-sm text-muted">Always-on weather coverage (alerts, the live-blog, the email signup beside it) is a natural &ldquo;Weather brought to you by&nbsp;___&rdquo; package. Automated public service that funds itself, not a cost center.</p>
         </div>
     </div>
@@ -634,7 +634,7 @@ a:hover { text-decoration: underline; }
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     var impressions = [3568, 4773, 9195, 148064, 175856, 457933];
     var clicks = [6, 14, 25, 3321, 524, 2162];
-    var teal = '#003b5b', ochre = '#0b9caf', grid = 'rgba(0,59,91,0.08)', ink = '#556673';
+    var teal = '#003b5b', ochre = '#e3a72f', grid = 'rgba(0,59,91,0.08)', ink = '#556673';
     var base = {
       responsive: true,
       maintainAspectRatio: false,

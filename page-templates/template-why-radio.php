@@ -12,15 +12,15 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'  => 'navy',
+	'eyebrow' => 'Radio advertising',
+	'title'   => 'Why Radio',
+	'lead'    => 'The most undervalued advertising medium in America, and it is working right here in the Finger Lakes.',
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">Why Radio</h1>
-		<p class="page-header__subtitle">The most undervalued advertising medium in America, and it is working right here in the Finger Lakes.</p>
-	</div>
-</div>
 
 <!-- Section 1: Your Market (local first) -->
 <section class="section">
@@ -210,4 +210,7 @@ get_header();
 	</div>
 </section>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

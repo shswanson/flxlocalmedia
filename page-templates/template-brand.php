@@ -8,16 +8,17 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'     => 'navy',
+	'eyebrow'    => 'How we are organized',
+	'title_html' => 'One region.<br>One newsroom.<br>Many voices.',
+	'lead'       => 'A reference document for advertisers, partners, journalism organizations, and internal teams, explaining how FLX Local Media is organized.',
+	'after'      => 'mist',
+	'cta'        => false,
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<!-- Hero -->
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">One region.<br>One newsroom.<br>Many voices.</h1>
-		<p class="page-header__subtitle">A reference document for advertisers, partners, journalism organizations, and internal teams, explaining how FLX Local Media is organized.</p>
-	</div>
-</div>
 
 <!-- The Portfolio -->
 <section class="section section--gray">
@@ -478,4 +479,5 @@ get_header();
 </section>
 
 <?php
+flxlm_pg_close();
 get_footer();

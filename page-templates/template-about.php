@@ -5,15 +5,15 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'  => 'navy',
+	'eyebrow' => 'About us',
+	'title'   => 'About FLX Local Media',
+	'lead'    => 'Local roots. Local results.',
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">About FLX Local Media</h1>
-		<p class="page-header__subtitle">Local roots. Local results.</p>
-	</div>
-</div>
 
 <!-- Story -->
 <section class="section">
@@ -82,4 +82,7 @@ if ( $testimonials->have_posts() ) :
 </section>
 <?php endif; ?>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

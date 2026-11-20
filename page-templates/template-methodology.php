@@ -8,15 +8,16 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'  => 'navy',
+	'eyebrow' => 'Stations',
+	'title'   => 'Our Methodology',
+	'lead'    => 'How we measure our audience and market reach',
+	'cta'     => false,
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">Our Methodology</h1>
-		<p class="page-header__subtitle">How we measure our audience and market reach</p>
-	</div>
-</div>
 
 <section class="section">
 	<div class="container">
@@ -122,4 +123,7 @@ get_header();
 	</div>
 </section>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

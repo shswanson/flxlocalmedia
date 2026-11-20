@@ -7,7 +7,13 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'    => 'navy',
+	'hero'      => false,
+	'dark_hero' => true,
+) );
 get_header();
+flxlm_pg_open();
 
 while ( have_posts() ) : the_post();
 	$person     = get_post_meta( get_the_ID(), 'person_name', true );
@@ -171,4 +177,7 @@ $more_query = new WP_Query( $more_args );
 </section>
 <?php endif; ?>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

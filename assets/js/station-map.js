@@ -48,7 +48,7 @@
     attributionControl: true
   }).setView([42.75, -77.0], 9);
 
-  /* Esri light-grey canvas, base + labels. Replaces CARTO light_all, which
+  /* Esri light-grey canvas, base only. Replaces CARTO light_all, which
      started stamping "API KEY REQUIRED" diagonally across every unkeyed tile
      (we never had a CARTO key) - it was printing that across the coverage map
      on this page. Esri needs no key. Note the {z}/{y}/{x} order. */
@@ -57,14 +57,8 @@
     maxZoom: 16
   }).addTo(map);
 
-  map.createPane('mapLabels');
-  map.getPane('mapLabels').style.zIndex = 650;
-  map.getPane('mapLabels').style.pointerEvents = 'none';
-  L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 16,
-    pane: 'mapLabels',
-    opacity: 0.95
-  }).addTo(map);
+  /* No Esri reference-label tiles: our own town markers below carry the names,
+     so a town is never printed twice. */
 
   /* ------------------------------------------------------------------ */
   /*  Load contour data                                                  */

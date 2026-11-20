@@ -1,0 +1,204 @@
+/* ==========================================================================
+   FLX Local Media - palette tokens (frame)
+   Generated from assets/data/flx-palette.json (decided 2026-11-19, light version):
+   navy #003b5b is primary (step 800), gold #e3a72f is secondary (step 400),
+   accents red, orange, green, blue, purple. Enqueued site-wide before every
+   other stylesheet by inc/site-frame.php. To change a colour, change the JSON
+   and regenerate this block; do not hand-edit the scale values.
+   ========================================================================== */
+
+:root {
+	--navy-50: #eff8ff;
+	--navy-100: #e0effb;
+	--navy-200: #cbdeec;
+	--navy-300: #adc4d6;
+	--navy-400: #89a6bb;
+	--navy-500: #6688a1;
+	--navy-600: #446b87;
+	--navy-700: #255270;
+	--navy-800: #003b5b;
+	--navy-900: #00273e;
+	--navy-950: #001627;
+
+	--gold-50: #fff6e7;
+	--gold-100: #f8ebd7;
+	--gold-200: #fed48c;
+	--gold-300: #efb64c;
+	--gold-400: #e3a72f;
+	--gold-500: #a87a19;
+	--gold-600: #855e0a;
+	--gold-700: #664700;
+	--gold-800: #4b3300;
+	--gold-900: #322000;
+	--gold-950: #1d1100;
+
+	--red-50: #fff4f2;
+	--red-100: #ffe6e3;
+	--red-200: #fecdc7;
+	--red-300: #fca79d;
+	--red-400: #f67469;
+	--red-500: #db4a42;
+	--red-600: #b52b28;
+	--red-700: #8f1617;
+	--red-800: #6e0107;
+	--red-900: #4c0002;
+	--red-950: #2f0000;
+
+	--orange-50: #fff4ee;
+	--orange-100: #fee8db;
+	--orange-200: #fed0b5;
+	--orange-300: #fdab78;
+	--orange-400: #ef7f2e;
+	--orange-500: #c66518;
+	--orange-600: #9d4c05;
+	--orange-700: #793903;
+	--orange-800: #5a2800;
+	--orange-900: #3c1900;
+	--orange-950: #250b00;
+
+	--green-50: #e6feeb;
+	--green-100: #dcf4e2;
+	--green-200: #aeecbe;
+	--green-300: #8dd4a0;
+	--green-400: #64b77c;
+	--green-500: #36995a;
+	--green-600: #1d7941;
+	--green-700: #075d2e;
+	--green-800: #00441f;
+	--green-900: #012d13;
+	--green-950: #001a07;
+
+	--blue-50: #f1f8ff;
+	--blue-100: #dfefff;
+	--blue-200: #bfdffd;
+	--blue-300: #8ec7fd;
+	--blue-400: #61a7e8;
+	--blue-500: #3488d0;
+	--blue-600: #146aab;
+	--blue-700: #085085;
+	--blue-800: #003a64;
+	--blue-900: #002545;
+	--blue-950: #00152a;
+
+	--purple-50: #f9f4ff;
+	--purple-100: #f2e8fe;
+	--purple-200: #e5d0ff;
+	--purple-300: #d0b1f5;
+	--purple-400: #b38edc;
+	--purple-500: #966cc3;
+	--purple-600: #7a4ba9;
+	--purple-700: #5e3586;
+	--purple-800: #472268;
+	--purple-900: #30104b;
+	--purple-950: #1e0234;
+
+	/* Type scale for every page except the seven station pages
+	   (decided 2026-11-19). Families stay Poppins (--font-body). One size and
+	   weight per role; the clamps handle phones, so there are no mobile
+	   overrides. Station pages (template-station.php) keep their own type. */
+	--fs-h1: clamp(2.25rem, 4.2vw, 3.25rem);
+	--fw-h1: 800;
+	--lh-h1: 1.08;
+	--ls-h1: -0.02em;
+
+	--fs-h2: clamp(1.75rem, 2.8vw, 2.375rem);
+	--fw-h2: 800;
+	--lh-h2: 1.15;
+	--ls-h2: -0.01em;
+
+	--fs-h3: 1.25rem;
+	--fw-h3: 700;
+	--lh-h3: 1.3;
+
+	--fs-h4: 1.0625rem;
+	--fw-h4: 700;
+
+	--fs-eyebrow: 0.75rem;
+	--fw-eyebrow: 700;
+	--ls-eyebrow: 0.12em;
+
+	--fs-lead: 1.1875rem;
+	--fw-lead: 400;
+	--lh-lead: 1.55;
+
+	--fs-body: 1.0625rem;
+	--fw-body: 400;
+	--lh-body: 1.65;
+
+	--fs-small: 0.875rem;
+	--fw-small: 500;
+
+	--fs-stat: clamp(2.25rem, 3.6vw, 3rem);
+	--fw-stat: 800;
+	--lh-stat: 1;
+	--fs-stat-label: 0.875rem;
+	--fw-stat-label: 600;
+
+	--fs-quote: 1.5rem;
+	--fw-quote: 700;
+	--lh-quote: 1.3;
+
+	--fs-btn: 1rem;
+	--fw-btn: 700;
+
+	--fw-nav: 600;
+	--fw-footer-link: 400;
+
+	/* Semantic tokens for the fixed frame */
+	--frame-ink: var(--navy-800);
+	--frame-ink-deep: var(--navy-900);
+	--frame-bg: #ffffff;
+	--frame-tint: var(--navy-50);
+	--frame-line: var(--navy-100);
+	--frame-link: var(--blue-600);
+	--frame-link-hover: var(--blue-700);
+	--frame-focus: var(--blue-500);
+	--frame-cta: var(--gold-400);
+	--frame-cta-hover: var(--gold-300);
+	--frame-cta-ink: var(--navy-800);
+	--frame-on-dark: #ffffff;
+	--frame-accent-on-dark: var(--gold-400);
+
+	/* Section accents: Stations blue, Media purple, Advertising orange,
+	   Digital Services green, Proof gold, Sports red. */
+	--sec-stations: var(--blue-500);
+	--sec-media: var(--purple-600);
+	--sec-advertising: var(--orange-400);
+	--sec-digital: var(--green-500);
+	--sec-proof: var(--gold-400);
+	--sec-sports: var(--red-500);
+
+	/* The glass bar. See header.php and assets/css/site-bold.css. */
+	--fx-inset: 12px;
+	--fx-bar-h: 64px;
+}
+
+@media (max-width: 1079px) {
+	:root {
+		--fx-inset: 8px;
+		--fx-bar-h: 56px;
+	}
+}
+
+/* Total space the floating bar takes from the top of the page. style.css sets
+   --header-height to 72px; the bar is the header now, so the two stay in step
+   (station.css uses it for the floating contents card and anchor offsets).
+   html:root outranks style.css's :root whichever file loads first. */
+html:root {
+	--header-height: calc(var(--fx-bar-h) + var(--fx-inset));
+
+	/* The retired logo teal. style.css still names these tokens in about 130
+	   places; pointing them at the palette moves all of them at once.
+	   teal = graphics, rules, focus rings; teal-ink = links, small accent text;
+	   cyan = the accent that sits on navy (now gold). */
+	--color-teal: var(--blue-500);
+	--color-teal-ink: var(--blue-600);
+	--color-teal-ink-hover: var(--blue-700);
+	--color-cyan: var(--gold-400);
+	--color-mist: var(--navy-50);
+	--color-mist-deep: var(--navy-100);
+	--color-blue: var(--blue-600);
+	--color-accent-soft: rgba(52, 136, 208, 0.08);
+	--color-border: var(--navy-100);
+	--color-border-light: #e8f1f9;
+}

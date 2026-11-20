@@ -6,9 +6,9 @@
 :root {
     --color-primary: #003b5b;
     --color-primary-dark: #0a4a6e;
-    --color-ochre: #077a89;
-    --color-purple: #6B2FA0;
-    --color-blue: #1f6889;
+    --color-ochre: #855e0a;
+    --color-purple: #7a4ba9;
+    --color-blue: #146aab;
     --color-text: #2b3a45;
     --color-text-light: #556673;
     --color-text-muted: #5d6d82;
@@ -22,7 +22,7 @@
     --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
     --radius: 12px;
     --color-card: #ffffff;
-    --color-alt: #eff8fa;
+    --color-alt: #f3f6f9;
     --shadow: 0 1px 3px rgba(0,59,91,0.05), 0 1px 2px rgba(0,59,91,0.08);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -47,7 +47,7 @@ a:hover { text-decoration: underline; }
     position: absolute;
     top: -100px; right: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(82,207,216,0.10) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(227,167,47,0.10) 0%, transparent 70%);
     border-radius: 50%;
 }
 .hero::after { display: none !important; }
@@ -56,7 +56,7 @@ a:hover { text-decoration: underline; }
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #52cfd8;
+    color: #e3a72f;
     margin-bottom: 12px;
 }
 .hero__title {
@@ -139,7 +139,7 @@ a:hover { text-decoration: underline; }
     color: var(--color-ochre);
     margin-bottom: 6px;
 }
-.sect--dark .sect__eyebrow { color: #52cfd8; }
+.sect--dark .sect__eyebrow { color: #e3a72f; }
 .sect__title {
     font-size: clamp(22px, 3.5vw, 32px);
     font-weight: 700;
@@ -236,7 +236,7 @@ a:hover { text-decoration: underline; }
     margin-bottom: 10px;
 }
 .impl-card__icon--teal { background: rgba(0,59,91,0.1); }
-.impl-card__icon--ochre { background: rgba(7,122,137,0.1); }
+.impl-card__icon--ochre { background: rgba(133,94,10,0.1); }
 .impl-card__title {
     font-size: 14px;
     font-weight: 700;
@@ -278,11 +278,11 @@ a:hover { text-decoration: underline; }
     border-bottom: 1px solid var(--color-border);
     vertical-align: top;
 }
-.schema-tbl tbody tr:hover { background: #eff8fa; }
+.schema-tbl tbody tr:hover { background: #f3f6f9; }
 .schema-tbl code {
     font-family: var(--mono);
     font-size: 11px;
-    background: #dceef2;
+    background: #e4ebf1;
     padding: 2px 5px;
     border-radius: 3px;
     color: var(--color-primary);
@@ -329,7 +329,7 @@ a:hover { text-decoration: underline; }
 
 /* Callout */
 .callout {
-    background: rgba(11,156,175,0.08);
+    background: rgba(0,59,91,0.08);
     border-radius: var(--radius);
     border-left: 3px solid var(--color-primary);
     padding: 16px 20px;
@@ -407,7 +407,7 @@ a:hover { text-decoration: underline; }
 }
 .cs-footer .btn {
     display: inline-block;
-    background: #52cfd8;
+    background: #e3a72f;
     color: var(--color-primary);
     font-weight: 700;
     font-size: 14px;
@@ -449,7 +449,7 @@ a:hover { text-decoration: underline; }
     max-height: 320px;
     overflow-y: auto;
 }
-.code-block .key { color: #7ec8e3; }
+.code-block .key { color: #8ec7fd; }
 .code-block .str { color: #a8d4a0; }
 .code-block .punct { color: #8c8f94; }
 
@@ -574,11 +574,11 @@ a:hover { text-decoration: underline; }
 
     <div class="two-col mt-md">
         <div>
-            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">1. Hard-fail the spam vector</h3>
+            <h3 style="margin-bottom:8px;">1. Hard-fail the spam vector</h3>
             <p class="text-sm text-muted">A <code>template_redirect</code> hook at priority <code>-1</code> intercepts <code>/search/*/feed/</code>, <code>/tag/*/feed/</code>, <code>/author/*/feed/</code>, and deep-pagination archive feeds <em>before</em> WordPress tries to render them. Returns <strong>410 Gone</strong> with <code>X-Robots-Tag: noindex, nofollow</code>. 410 is the strongest signal we can send Google: <em>this URL existed, it's gone, stop asking.</em></p>
         </div>
         <div>
-            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">2. Seal it off at robots.txt</h3>
+            <h3 style="margin-bottom:8px;">2. Seal it off at robots.txt</h3>
             <p class="text-sm text-muted">Five new <code>Disallow:</code> rules covering tag feeds, author feeds, category deep-pagination feeds, the <code>/ad_block/</code> taxonomy leak, and generic paginated feeds. Belt-and-suspenders: 410 handles already-indexed URLs; robots.txt prevents <em>new</em> crawlers from hitting them in the first place.</p>
         </div>
     </div>

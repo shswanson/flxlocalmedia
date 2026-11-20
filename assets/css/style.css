@@ -11,20 +11,20 @@
 	/* Brand palette */
 	--color-navy: #003b5b;          /* primary: headings, dark sections, footer, header text */
 	--color-navy-light: #0a4a6e;    /* hover on navy surfaces */
-	--color-teal: #0b9caf;          /* the logo teal: graphics, rules, icons, focus rings; text only at >=24px regular / >=19px bold */
-	--color-teal-ink: #077a89;      /* 5.06:1 on white: links, eyebrows, small accent text, CTA background */
-	--color-teal-ink-hover: #06646f;
-	--color-cyan: #52cfd8;          /* accent on navy ONLY (6.35:1): eyebrows, highlights, primary button on navy */
-	--color-mist: #eff8fa;          /* alternate section background (the card watermark tint) */
-	--color-mist-deep: #dceef2;     /* hover / selected tint */
-	--color-blue: #1f6889;          /* secondary blue */
+	--color-teal: #3488d0;          /* the logo teal: graphics, rules, icons, focus rings; text only at >=24px regular / >=19px bold */
+	--color-teal-ink: #146aab;      /* 5.06:1 on white: links, eyebrows, small accent text, CTA background */
+	--color-teal-ink-hover: #085085;
+	--color-cyan: #e3a72f;          /* accent on navy ONLY (6.35:1): eyebrows, highlights, primary button on navy */
+	--color-mist: #eff8ff;          /* alternate section background (the card watermark tint) */
+	--color-mist-deep: #e0effb;     /* hover / selected tint */
+	--color-blue: #146aab;          /* secondary blue */
 
 	/* Semantic aliases (kept so the whole file keeps working) */
 	--color-primary: var(--color-navy);
 	--color-primary-light: var(--color-navy-light);
 	--color-accent: var(--color-teal-ink);
 	--color-accent-hover: var(--color-teal-ink-hover);
-	--color-accent-soft: rgba(7, 122, 137, 0.08);
+	--color-accent-soft: rgba(52, 136, 208, 0.08);
 	--color-white: #ffffff;
 	--color-text: #2b3a45;
 	--color-text-light: #556673;
@@ -1440,7 +1440,7 @@ p + p {
 .flxlm-form__field textarea:focus {
 	outline: none;
 	border-color: var(--color-teal);
-	box-shadow: 0 0 0 3px rgba(11, 156, 175, 0.18);
+	box-shadow: 0 0 0 3px rgba(52, 136, 208, 0.18);
 }
 
 .flxlm-form__field textarea {
@@ -1546,7 +1546,7 @@ p + p {
 	background: var(--color-cyan);
 	border: none;
 	cursor: pointer;
-	box-shadow: 0 4px 24px rgba(0, 59, 91, 0.4), 0 0 0 6px rgba(82, 207, 216, 0.25);
+	box-shadow: 0 4px 24px rgba(0, 59, 91, 0.4), 0 0 0 6px rgba(227, 167, 47, 0.25);
 	transition: background var(--transition), transform var(--transition);
 }
 

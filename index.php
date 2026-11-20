@@ -8,7 +8,14 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'  => 'navy',
+	'eyebrow' => 'FLX Local Media',
+	'title'   => get_bloginfo( 'name' ),
+	'cta'     => false,
+) );
 get_header();
+flxlm_pg_open();
 
 if ( have_posts() ) :
 ?>
@@ -41,4 +48,7 @@ if ( have_posts() ) :
 </section>
 <?php endif; ?>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

@@ -5,16 +5,17 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'  => 'navy',
+	'eyebrow' => 'FLX Local Media',
+	'title'   => get_the_title( get_queried_object_id() ),
+	'cta'     => false,
+) );
 get_header();
+flxlm_pg_open();
 
 while ( have_posts() ) : the_post();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title"><?php the_title(); ?></h1>
-	</div>
-</div>
 
 <section class="section">
 	<div class="container">
@@ -26,4 +27,6 @@ while ( have_posts() ) : the_post();
 
 <?php endwhile; ?>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();

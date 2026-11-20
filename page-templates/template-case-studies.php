@@ -9,8 +9,6 @@
  * @package flxlm
  */
 
-get_header();
-
 $parent_id = get_the_ID();
 
 $case_studies = new WP_Query( array(
@@ -24,14 +22,16 @@ $case_studies = new WP_Query( array(
 	),
 	'no_found_rows'  => true,
 ) );
-?>
 
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title"><?php echo esc_html( get_the_title( $parent_id ) ); ?></h1>
-		<p class="page-header__subtitle">Real work for Finger Lakes businesses, and what came out of it.</p>
-	</div>
-</div>
+flxlm_pg_begin( array(
+	'accent'  => 'navy',
+	'eyebrow' => 'Proof',
+	'title'   => get_the_title( $parent_id ),
+	'lead'    => 'Real work for Finger Lakes businesses, and what came out of it.',
+) );
+get_header();
+flxlm_pg_open();
+?>
 
 <section class="section">
 	<div class="container">
@@ -77,4 +77,7 @@ $case_studies = new WP_Query( array(
 	</div>
 </section>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

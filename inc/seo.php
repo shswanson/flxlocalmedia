@@ -1,10 +1,19 @@
 <?php
 /**
- * SEO — Meta descriptions, Open Graph, Twitter Cards, JSON-LD, IndexNow.
+ * SEO for flxlocalmedia.com: titles, descriptions, canonicals, Open Graph,
+ * Twitter cards, JSON-LD, sitemap, robots.txt, llms.txt and IndexNow.
  *
- * Single file handles all structured data output for flxlocalmedia.com.
- * Hooks into wp_head at priority 1 (meta tags) and priority 5 (JSON-LD),
- * and pings IndexNow on publish (section 5).
+ * Where the work lives:
+ *   inc/seo-content.php   one "entry" per public page (title, description, canonical,
+ *                         share-image copy), built from each page's own data
+ *   inc/seo-schema.php    the JSON-LD graph for an entry
+ *   inc/seo.php           (this file) prints the tags and owns the sitemap, robots.txt,
+ *                         llms.txt and IndexNow
+ *
+ * Share images are files in assets/images/og/<key>.png, made by the generator in
+ * the fldn repo (scripts/flxlm-og/). A page without its own image gets default.png.
+ *
+ * Hooks into wp_head at priority 1 (meta tags) and priority 5 (JSON-LD).
  *
  * @package flxlm
  */
@@ -13,45 +22,123 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once get_template_directory() . '/inc/seo-content.php';
+require_once get_template_directory() . '/inc/seo-schema.php';
+
 /*--------------------------------------------------------------
- * 1. Meta Tags (descriptions, OG, Twitter Cards)
+ * 1. Share images
  *--------------------------------------------------------------*/
+
+/**
+ * URL of a page's share image (1200 x 630 PNG), or the default image when that
+ * page has none yet.
+ *
+ * @param string $key Share-image key from the page's entry.
+ * @return string
+ */
+function flxlm_seo_og_url( $key ) {
+	$dir = get_template_directory() . '/assets/images/og/';
+	$rel = 'assets/images/og/' . sanitize_file_name( $key ) . '.png';
+	if ( '' === $key || ! is_readable( $dir . sanitize_file_name( $key ) . '.png' ) ) {
+		$key = 'default';
+		$rel = 'assets/images/og/default.png';
+		if ( ! is_readable( $dir . 'default.png' ) ) {
+			// Before the generator has run: the old default image.
+			return get_theme_file_uri( 'assets/images/og-default.png' );
+		}
+	}
+	return add_query_arg( 'v', (int) filemtime( get_template_directory() . '/' . $rel ), get_theme_file_uri( $rel ) );
+}
+
+/**
+ * What the share-image generator needs, one row per image: the copy, colors and
+ * local files. Read by scripts/flxlm-og/export-manifest.php in the fldn repo.
+ *
+ * @return array[]
+ */
+function flxlm_seo_og_manifest() {
+	$rows = array();
+	foreach ( flxlm_seo_manifest( false ) as $key => $e ) {
+		if ( empty( $e['og'] ) ) {
+			continue;
+		}
+		$rows[] = array(
+			'key'   => $key,
+			'kind'  => $e['kind'],
+			'url'   => $e['url'],
+			'title' => $e['og_title'],
+			'og'    => $e['og'],
+		);
+	}
+	$c      = flxlm_seo_color( 'navy' );
+	$rows[] = array(
+		'key'   => 'default',
+		'kind'  => 'default',
+		'url'   => flxlm_seo_public_url( '/' ),
+		'title' => 'FLX Local Media',
+		'og'    => array_merge( array(
+			'kicker'   => 'Finger Lakes marketing',
+			'headline' => 'Radio, news and digital for the Finger Lakes',
+			'promise'  => 'Seven radio stations, Finger Lakes Daily News, digital and events from one local team.',
+			'logo'     => '',
+			'logos'    => flxlm_seo_station_logos(),
+			'poster'   => '',
+			'quote'    => '',
+			'who'      => '',
+			'position' => '',
+		), array( 'bg' => $c['bg'], 'accent' => '#e3a72f', 'deep' => $c['deep'], 'ink' => $c['ink'], 'logo_ink' => $c['logo'] ) ),
+	);
+	return $rows;
+}
+
+/*--------------------------------------------------------------
+ * 2. Meta Tags (description, canonical, Open Graph, Twitter Cards)
+ *--------------------------------------------------------------*/
+
+// One canonical per page, from the page's entry (www host, trailing slash), instead of core's.
+add_action( 'init', function () {
+	remove_action( 'wp_head', 'rel_canonical' );
+} );
 
 add_action( 'wp_head', 'flxlm_seo_meta_tags', 1 );
 
 /**
- * Output meta description, Open Graph, and Twitter Card tags.
+ * Output the canonical, meta description, Open Graph and Twitter Card tags.
  */
 function flxlm_seo_meta_tags() {
-	$meta = flxlm_seo_get_meta();
-
-	if ( empty( $meta['title'] ) ) {
+	$e = flxlm_seo_current_entry();
+	if ( ! $e || '' === $e['title'] ) {
 		return;
 	}
 
+	$image = flxlm_seo_og_url( $e['key'] );
+	$alt   = $e['og_title'] . ' (FLX Local Media)';
+
 	echo "\n<!-- FLXLM SEO -->\n";
 
-	// Meta description.
-	if ( ! empty( $meta['description'] ) ) {
-		printf( '<meta name="description" content="%s">' . "\n", esc_attr( $meta['description'] ) );
+	if ( '' !== $e['description'] ) {
+		printf( '<meta name="description" content="%s">' . "\n", esc_attr( $e['description'] ) );
 	}
+	printf( '<link rel="canonical" href="%s">' . "\n", esc_url( $e['canonical'] ) );
 
-	// Open Graph.
 	$og = array(
-		'og:title'       => $meta['title'],
-		'og:description' => $meta['description'],
-		'og:url'         => $meta['url'],
-		'og:site_name'   => get_bloginfo( 'name' ),
-		'og:locale'      => get_locale(),
-		'og:type'        => $meta['og_type'],
+		'og:title'            => $e['og_title'],
+		'og:description'      => $e['description'],
+		'og:url'              => $e['canonical'],
+		'og:site_name'        => 'FLX Local Media',
+		'og:locale'           => 'en_US',
+		'og:type'             => $e['og_type'],
+		'og:image'            => $image,
+		'og:image:secure_url' => $image,
+		'og:image:type'       => 'image/png',
+		'og:image:width'      => '1200',
+		'og:image:height'     => '630',
+		'og:image:alt'        => $alt,
 	);
-
-	if ( ! empty( $meta['image'] ) ) {
-		$og['og:image']        = $meta['image'];
-		$og['og:image:width']  = '1200';
-		$og['og:image:height'] = '630';
+	if ( 'article' === $e['og_type'] ) {
+		$og['article:published_time'] = flxlm_seo_iso( $e['published'] );
+		$og['article:modified_time']  = flxlm_seo_iso( $e['modified'] );
 	}
-
 	foreach ( $og as $prop => $val ) {
 		if ( '' === $val || null === $val ) {
 			continue;
@@ -59,16 +146,13 @@ function flxlm_seo_meta_tags() {
 		printf( '<meta property="%s" content="%s">' . "\n", esc_attr( $prop ), esc_attr( $val ) );
 	}
 
-	// Twitter Card.
 	$twitter = array(
-		'twitter:card'        => ! empty( $meta['image'] ) ? 'summary_large_image' : 'summary',
-		'twitter:title'       => $meta['title'],
-		'twitter:description' => $meta['description'],
+		'twitter:card'        => 'summary_large_image',
+		'twitter:title'       => $e['og_title'],
+		'twitter:description' => $e['description'],
+		'twitter:image'       => $image,
+		'twitter:image:alt'   => $alt,
 	);
-	if ( ! empty( $meta['image'] ) ) {
-		$twitter['twitter:image'] = $meta['image'];
-	}
-
 	foreach ( $twitter as $name => $val ) {
 		if ( '' === $val || null === $val ) {
 			continue;
@@ -80,188 +164,23 @@ function flxlm_seo_meta_tags() {
 }
 
 /**
- * Build meta tag values for the current page.
- *
- * Uses page slug to look up hand-written descriptions. For testimonial singles,
- * builds description from post meta. Falls back to site tagline.
- *
- * @return array Associative array of meta values.
+ * Pages that stay out of search say so through core's robots tag. Hidden
+ * testimonials already print their own tag (inc/hidden-testimonials.php).
  */
-function flxlm_seo_get_meta() {
-	$defaults = array(
-		'title'       => '',
-		'description' => '',
-		'url'         => '',
-		'image'       => '',
-		'og_type'     => 'website',
-	);
-
-	$site_name     = get_bloginfo( 'name' );
-	$default_image = get_theme_file_uri( 'assets/images/og-default.png' );
-
-	// Page-level descriptions keyed by slug.
-	$page_descriptions = flxlm_seo_page_descriptions();
-
-	// Front page.
-	if ( is_front_page() ) {
-		return array_merge( $defaults, array(
-			'title'       => 'FLX Local Media | Radio, Digital, Events & Content Marketing in the Finger Lakes',
-			'description' => 'FLX Local Media reaches 160,000+ people across the Finger Lakes with seven radio stations, Finger Lakes Daily News, digital marketing, events, and content solutions.',
-			'url'         => home_url( '/' ),
-			'image'       => $default_image,
-		) );
-	}
-
-	// Singular job (flxlm_job CPT).
-	if ( is_singular( 'flxlm_job' ) ) {
-		$pid       = get_the_ID();
-		$location  = get_post_meta( $pid, 'job_location', true );
-		$type      = get_post_meta( $pid, 'job_type', true );
-		$canonical = get_post_meta( $pid, 'job_canonical_url', true );
-
-		$title_parts = array_filter( array( get_the_title(), $location ) );
-		$title       = implode( ': ', $title_parts ) . ' | Careers at ' . $site_name;
-
-		$excerpt = get_the_excerpt();
-		if ( ! $excerpt ) {
-			$excerpt = wp_strip_all_tags( get_the_content() );
-		}
-		$desc_bits = array_filter( array( $location && $type ? "$location · $type." : '' ) );
-		$desc      = trim( implode( ' ', $desc_bits ) . ' ' . $excerpt );
-
-		return array_merge( $defaults, array(
-			'title'       => $title,
-			'description' => flxlm_seo_truncate( $desc, 160 ),
-			'url'         => $canonical ?: get_permalink(),
-			'image'       => has_post_thumbnail() ? get_the_post_thumbnail_url( $pid, 'full' ) : $default_image,
-			'og_type'     => 'article',
-		) );
-	}
-
-	// Singular testimonial.
+add_filter( 'wp_robots', function ( $robots ) {
 	if ( is_singular( 'flxlm_testimonial' ) ) {
-		$person   = get_post_meta( get_the_ID(), 'person_name', true );
-		$business = get_post_meta( get_the_ID(), 'business_name', true );
-		$quote    = get_post_meta( get_the_ID(), 'quote_short', true );
-
-		$title = sprintf( '%s, %s | %s', $person, $business, $site_name );
-		$desc  = $quote ? $quote : sprintf( 'See how %s grew their business with FLX Local Media.', $business );
-
-		$poster = get_post_meta( get_the_ID(), 'poster_jpg', true );
-
-		return array_merge( $defaults, array(
-			'title'       => $title,
-			'description' => flxlm_seo_truncate( $desc, 160 ),
-			'url'         => get_permalink(),
-			'image'       => $poster ? $poster : $default_image,
-			'og_type'     => 'article',
-		) );
+		return $robots;
 	}
-
-	// Singular page — use slug-based lookup.
-	if ( is_singular( 'page' ) ) {
-		$slug = get_queried_object()->post_name;
-
-		// Check page descriptions map.
-		$desc = isset( $page_descriptions[ $slug ] ) ? $page_descriptions[ $slug ] : '';
-
-		// Build title: use the WP page title with site name.
-		$page_title = get_the_title();
-		$title      = $page_title . ' | ' . $site_name;
-
-		// Override titles for key pages.
-		$title_overrides = flxlm_seo_title_overrides();
-		if ( isset( $title_overrides[ $slug ] ) ) {
-			$title = $title_overrides[ $slug ];
-		}
-
-		// Per-page OG images.
-		$page_images = array(
-			'finger-lakes-daily-news-com-seo' => get_theme_file_uri( 'assets/images/og-case-study-seo.png' ),
-		);
-		$page_image = isset( $page_images[ $slug ] ) ? $page_images[ $slug ] : $default_image;
-
-		return array_merge( $defaults, array(
-			'title'       => $title,
-			'description' => $desc,
-			'url'         => get_permalink(),
-			'image'       => $page_image,
-		) );
+	$e = flxlm_seo_current_entry();
+	if ( $e && ! empty( $e['noindex'] ) ) {
+		$robots['noindex']  = true;
+		$robots['nofollow'] = true;
 	}
-
-	// Archive: careers (flxlm_job).
-	if ( is_post_type_archive( 'flxlm_job' ) ) {
-		return array_merge( $defaults, array(
-			'title'       => 'Careers | ' . $site_name,
-			'description' => 'Open positions at FLX Local Media: seven radio stations plus Finger Lakes Daily News, based in Geneva, NY.',
-			'url'         => get_post_type_archive_link( 'flxlm_job' ),
-			'image'       => $default_image,
-		) );
-	}
-
-	// Archive: testimonials.
-	if ( is_post_type_archive( 'flxlm_testimonial' ) ) {
-		return array_merge( $defaults, array(
-			'title'       => 'Client Stories | ' . $site_name,
-			'description' => 'Hear from Finger Lakes businesses growing with FLX Local Media. Video testimonials, results, and real stories from our clients.',
-			'url'         => get_post_type_archive_link( 'flxlm_testimonial' ),
-			'image'       => $default_image,
-		) );
-	}
-
-	// Fallback.
-	return array_merge( $defaults, array(
-		'title'       => wp_get_document_title(),
-		'description' => get_bloginfo( 'description' ),
-		'url'         => home_url( $_SERVER['REQUEST_URI'] ?? '/' ),
-		'image'       => $default_image,
-	) );
-}
-
-/**
- * Hand-written meta descriptions keyed by page slug.
- *
- * @return array
- */
-function flxlm_seo_page_descriptions() {
-	return array(
-		'solutions'         => 'Radio, digital, events, and content marketing solutions for Finger Lakes businesses. One team, total market reach across the region.',
-		'radio'             => 'Advertise on seven Finger Lakes radio stations reaching 160,000+ listeners. WGVA, WAUB, WFLR, WCGR, WFLK, WLLW, and WNYR.',
-		'digital'           => 'Full-service digital marketing for Finger Lakes businesses. Web design, SEO, Google Ads, social media, video production, and geo-targeting.',
-		'events'            => 'Event marketing and sponsorship opportunities across the Finger Lakes. Concerts, festivals, community events, and custom brand activations.',
-		'content-marketing' => 'Content marketing on Finger Lakes Daily News. Sponsored content, display advertising, and native articles reaching 730K+ monthly pageviews.',
-		'about'             => 'FLX Local Media owns seven radio stations and Finger Lakes Daily News. Offices in Geneva, Auburn, and Penn Yan serving the Finger Lakes region.',
-		'contact'           => 'Contact FLX Local Media for advertising, marketing, and media solutions in the Finger Lakes. Offices in Geneva, Auburn, and Penn Yan.',
-		'geneva'            => 'Contact FLX Local Media\'s Geneva office for radio, digital, events, and content marketing solutions in the Finger Lakes.',
-		'auburn'            => 'Contact FLX Local Media\'s Auburn office for radio, digital, events, and content marketing solutions in the Finger Lakes.',
-		'penn-yan'          => 'Contact FLX Local Media\'s Penn Yan office for radio, digital, events, and content marketing solutions in the Finger Lakes.',
-		'testimonials'      => 'Hear from Finger Lakes businesses growing with FLX Local Media. Video testimonials, results, and real stories from our clients.',
-	);
-}
-
-/**
- * Custom title tag overrides keyed by page slug.
- *
- * @return array
- */
-function flxlm_seo_title_overrides() {
-	return array(
-		'solutions'         => 'Marketing Solutions | Radio, Digital, Events & Content | FLX Local Media',
-		'radio'             => 'Radio Advertising | 7 Finger Lakes Stations | FLX Local Media',
-		'digital'           => 'Digital Marketing for Finger Lakes Businesses | FLX Local Media',
-		'events'            => 'Event Marketing & Sponsorships | FLX Local Media',
-		'content-marketing' => 'Content Marketing on Finger Lakes Daily News | FLX Local Media',
-		'about'             => 'About FLX Local Media | Local Media Company in the Finger Lakes',
-		'contact'           => 'Contact Us | FLX Local Media | Geneva, Auburn & Penn Yan',
-		'geneva'            => 'Contact Our Geneva Office | FLX Local Media',
-		'auburn'            => 'Contact Our Auburn Office | FLX Local Media',
-		'penn-yan'          => 'Contact Our Penn Yan Office | FLX Local Media',
-		'testimonials'      => 'Client Stories | FLX Local Media',
-	);
-}
+	return $robots;
+} );
 
 /*--------------------------------------------------------------
- * 1b. Canonical Override for Contact Child Pages
+ * 2b. Canonical overrides (used by IndexNow and anything that asks core)
  *--------------------------------------------------------------*/
 
 add_filter( 'get_canonical_url', 'flxlm_seo_contact_canonical', 10, 2 );
@@ -284,33 +203,37 @@ function flxlm_seo_contact_canonical( $canonical, $post ) {
 }
 
 /*--------------------------------------------------------------
- * 1c. Methodology: /methodology-2/ -> /methodology/
+ * 2c. Methodology: /methodology-2/ -> /methodology/
  *--------------------------------------------------------------*/
 
 add_action( 'template_redirect', 'flxlm_seo_methodology_redirect' );
 
 /**
- * 301 the duplicate methodology page (ID 49) to /methodology/ (ID 48).
+ * 301 the duplicate methodology page to /methodology/. The duplicate also
+ * carries a canonical to /methodology/ and stays out of the sitemap (its entry
+ * in inc/seo-content.php), so a search engine that sees it first gets the same
+ * answer.
  *
- * Only fires once page 48 is using the methodology template, so nothing
- * breaks while /methodology/ is still empty.
+ * Only fires once /methodology/ is using the methodology template, so nothing
+ * breaks while /methodology/ is still empty. Matched by slug: page IDs differ
+ * between the live site and staging.
  */
 function flxlm_seo_methodology_redirect() {
-	if ( ! is_page( 49 ) ) {
+	if ( ! is_page( 'methodology-2' ) ) {
 		return;
 	}
 
-	$target = get_post( 48 );
+	$target = get_page_by_path( 'methodology' );
 	if ( ! $target || 'publish' !== $target->post_status ) {
 		return;
 	}
 
-	$slug = (string) get_page_template_slug( 48 );
+	$slug = (string) get_page_template_slug( $target->ID );
 	if ( 'template-methodology.php' !== basename( $slug ) ) {
 		return;
 	}
 
-	wp_safe_redirect( get_permalink( 48 ), 301 );
+	wp_safe_redirect( get_permalink( $target ), 301 );
 	exit;
 }
 
@@ -336,7 +259,7 @@ function flxlm_seo_job_canonical( $canonical, $post ) {
 }
 
 /*--------------------------------------------------------------
- * 2. Title Tag Filter
+ * 3. Title Tag Filter
  *--------------------------------------------------------------*/
 
 add_filter( 'pre_get_document_title', 'flxlm_seo_document_title', 10 );
@@ -347,292 +270,48 @@ add_filter( 'document_title_separator', function () {
 } );
 
 /**
- * Override WordPress document title with our SEO titles.
+ * Override WordPress document title with the page's SEO title (60 characters
+ * or fewer, brand last).
  *
  * @param string $title The current title.
  * @return string
  */
 function flxlm_seo_document_title( $title ) {
-	if ( is_front_page() ) {
-		return 'FLX Local Media | Radio, Digital, Events & Content Marketing in the Finger Lakes';
+	$e = flxlm_seo_current_entry();
+	if ( $e && '' !== $e['title'] ) {
+		return $e['title'];
 	}
-
-	if ( is_singular( 'page' ) ) {
-		$overrides = flxlm_seo_title_overrides();
-		$slug      = get_queried_object()->post_name;
-
-		if ( isset( $overrides[ $slug ] ) ) {
-			return $overrides[ $slug ];
-		}
-	}
-
-	if ( is_singular( 'flxlm_job' ) ) {
-		$location    = get_post_meta( get_the_ID(), 'job_location', true );
-		$title_parts = array_filter( array( get_the_title(), $location ) );
-		return implode( ': ', $title_parts ) . ' | Careers at FLX Local Media';
-	}
-
-	if ( is_post_type_archive( 'flxlm_job' ) ) {
-		return 'Careers | FLX Local Media';
-	}
-
 	return $title;
 }
 
 /*--------------------------------------------------------------
- * 3. JSON-LD Structured Data
+ * 4. JSON-LD Structured Data
  *--------------------------------------------------------------*/
 
 add_action( 'wp_head', 'flxlm_seo_jsonld', 5 );
 
 /**
- * Output JSON-LD structured data blocks.
+ * Output the page's JSON-LD graph (see inc/seo-schema.php).
  */
 function flxlm_seo_jsonld() {
-	$blocks = array();
-
-	// Site-wide: Organization + WebSite.
-	$blocks[] = flxlm_seo_jsonld_organization();
-	$blocks[] = flxlm_seo_jsonld_website();
-
-	// Breadcrumbs.
-	$breadcrumb = flxlm_seo_jsonld_breadcrumbs();
-	if ( $breadcrumb ) {
-		$blocks[] = $breadcrumb;
-	}
-
-	// Testimonial singles — Review schema.
-	if ( is_singular( 'flxlm_testimonial' ) ) {
-		$review = flxlm_seo_jsonld_review();
-		if ( $review ) {
-			$blocks[] = $review;
-		}
-	}
-
-	$blocks = array_filter( $blocks );
-	if ( empty( $blocks ) ) {
+	$e = flxlm_seo_current_entry();
+	if ( ! $e ) {
 		return;
 	}
-
-	foreach ( $blocks as $data ) {
-		echo '<script type="application/ld+json">';
-		echo wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
-		echo "</script>\n";
+	$graph = flxlm_seo_graph( $e );
+	if ( ! $graph ) {
+		return;
 	}
-}
-
-/**
- * Organization schema — LocalBusiness with multiple locations.
- */
-function flxlm_seo_jsonld_organization() {
-	return array(
-		'@context'    => 'https://schema.org',
-		'@type'       => 'LocalBusiness',
-		'@id'         => home_url( '/#organization' ),
-		'name'        => 'FLX Local Media',
-		'legalName'   => 'TOTIB Media, Inc.', // FLX Local Media is its d/b/a; Apple Business verifies the legal entity against the site.
-		'url'         => home_url( '/' ),
-		'description' => 'FLX Local Media owns seven radio stations and Finger Lakes Daily News, providing radio, digital, events, and content marketing solutions across the Finger Lakes region.',
-		'telephone'   => '+1-315-781-7000',
-		'address'     => array(
-			array(
-				'@type'           => 'PostalAddress',
-				'streetAddress'   => '3568 Lenox Road',
-				'addressLocality' => 'Geneva',
-				'addressRegion'   => 'NY',
-				'postalCode'      => '14456',
-				'addressCountry'  => 'US',
-			),
-			array(
-				'@type'           => 'PostalAddress',
-				'addressLocality' => 'Auburn',
-				'addressRegion'   => 'NY',
-				'postalCode'      => '13021',
-				'addressCountry'  => 'US',
-			),
-			array(
-				'@type'           => 'PostalAddress',
-				'addressLocality' => 'Penn Yan',
-				'addressRegion'   => 'NY',
-				'postalCode'      => '14527',
-				'addressCountry'  => 'US',
-			),
-		),
-		'areaServed'  => array(
-			'@type' => 'GeoCircle',
-			'geoMidpoint' => array(
-				'@type'     => 'GeoCoordinates',
-				'latitude'  => 42.7284,
-				'longitude' => -76.9278,
-			),
-			'geoRadius' => '80000',
-		),
-		// Profiles of this same business elsewhere. Our own news brand is a brand, not the same entity.
-		'sameAs'      => array(
-			'https://www.google.com/maps/place/?q=place_id:ChIJM5WA39Xa0IkRrnC4mkSru98',
-			'https://www.discoverflx.com/directory/flx-local-media/',
-			'https://members.flxchamber.com/list/member/flx-local-media-526',
-			'https://www.discoverseneca.com/seneca-chamber/directory/flx-local-media',
-		),
-		'brand'       => array(
-			'@type' => 'Brand',
-			'name'  => 'Finger Lakes Daily News',
-			'url'   => 'https://www.fingerlakesdailynews.com',
-		),
-	);
-}
-
-/**
- * WebSite schema.
- */
-function flxlm_seo_jsonld_website() {
-	return array(
-		'@context' => 'https://schema.org',
-		'@type'    => 'WebSite',
-		'@id'      => home_url( '/#website' ),
-		'name'     => get_bloginfo( 'name' ),
-		'url'      => home_url( '/' ),
-	);
-}
-
-/**
- * BreadcrumbList schema.
- */
-function flxlm_seo_jsonld_breadcrumbs() {
-	$items = array();
-	$pos   = 1;
-
-	// Home is always first.
-	$items[] = array(
-		'@type'    => 'ListItem',
-		'position' => $pos++,
-		'name'     => 'Home',
-		'item'     => home_url( '/' ),
-	);
-
-	if ( is_front_page() ) {
-		return null; // No breadcrumbs on homepage.
+	// "<" is escaped so no field can close the script tag early.
+	$json = wp_json_encode( $graph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG );
+	if ( ! $json ) {
+		return;
 	}
-
-	// Solutions sub-pages.
-	if ( is_singular( 'page' ) ) {
-		$slug = get_queried_object()->post_name;
-
-		$solution_slugs = array( 'radio', 'digital', 'events', 'content-marketing' );
-		if ( in_array( $slug, $solution_slugs, true ) ) {
-			$items[] = array(
-				'@type'    => 'ListItem',
-				'position' => $pos++,
-				'name'     => 'Solutions',
-				'item'     => home_url( '/solutions/' ),
-			);
-		}
-
-		$contact_location_slugs = array( 'geneva', 'auburn', 'penn-yan' );
-		if ( in_array( $slug, $contact_location_slugs, true ) ) {
-			$items[] = array(
-				'@type'    => 'ListItem',
-				'position' => $pos++,
-				'name'     => 'Contact',
-				'item'     => home_url( '/contact/' ),
-			);
-		}
-
-		$items[] = array(
-			'@type'    => 'ListItem',
-			'position' => $pos++,
-			'name'     => get_the_title(),
-			'item'     => get_permalink(),
-		);
-	}
-
-	// Job single — Home › Careers › {Title}.
-	if ( is_singular( 'flxlm_job' ) ) {
-		$items[] = array(
-			'@type'    => 'ListItem',
-			'position' => $pos++,
-			'name'     => 'Careers',
-			'item'     => get_post_type_archive_link( 'flxlm_job' ),
-		);
-		$items[] = array(
-			'@type'    => 'ListItem',
-			'position' => $pos++,
-			'name'     => get_the_title(),
-			'item'     => get_permalink(),
-		);
-	}
-
-	// Careers archive — Home › Careers.
-	if ( is_post_type_archive( 'flxlm_job' ) ) {
-		$items[] = array(
-			'@type'    => 'ListItem',
-			'position' => $pos++,
-			'name'     => 'Careers',
-			'item'     => get_post_type_archive_link( 'flxlm_job' ),
-		);
-	}
-
-	// Testimonial single.
-	if ( is_singular( 'flxlm_testimonial' ) ) {
-		$items[] = array(
-			'@type'    => 'ListItem',
-			'position' => $pos++,
-			'name'     => 'Client Stories',
-			'item'     => home_url( '/testimonials/' ),
-		);
-		$items[] = array(
-			'@type'    => 'ListItem',
-			'position' => $pos++,
-			'name'     => get_post_meta( get_the_ID(), 'person_name', true ) ?: get_the_title(),
-			'item'     => get_permalink(),
-		);
-	}
-
-	if ( count( $items ) < 2 ) {
-		return null;
-	}
-
-	return array(
-		'@context'        => 'https://schema.org',
-		'@type'           => 'BreadcrumbList',
-		'itemListElement' => $items,
-	);
-}
-
-/**
- * Review schema for testimonial singles.
- */
-function flxlm_seo_jsonld_review() {
-	$person   = get_post_meta( get_the_ID(), 'person_name', true );
-	$business = get_post_meta( get_the_ID(), 'business_name', true );
-	$quote    = get_post_meta( get_the_ID(), 'quote_full', true );
-
-	if ( ! $person || ! $quote ) {
-		return null;
-	}
-
-	return array(
-		'@context'      => 'https://schema.org',
-		'@type'         => 'Review',
-		'author'        => array(
-			'@type' => 'Person',
-			'name'  => $person,
-		),
-		'itemReviewed'  => array(
-			'@type' => 'LocalBusiness',
-			'@id'   => home_url( '/#organization' ),
-			'name'  => 'FLX Local Media',
-		),
-		'reviewBody'    => $quote,
-		'publisher'     => array(
-			'@type' => 'Organization',
-			'name'  => $business,
-		),
-	);
+	echo '<script type="application/ld+json">' . $json . "</script>\n";
 }
 
 /*--------------------------------------------------------------
- * 4. Sitemap Exclusions
+ * 5. Sitemap
  *--------------------------------------------------------------*/
 
 /*
@@ -643,36 +322,325 @@ function flxlm_seo_jsonld_review() {
 add_filter( 'wp_sitemaps_stylesheet_url', '__return_false' );
 add_filter( 'wp_sitemaps_stylesheet_index_url', '__return_false' );
 
+/**
+ * Pages kept out of the sitemap, by path. Page IDs differ between the live
+ * site and staging, so these are paths.
+ *
+ *   240e1cc9-pricing-2026   unlisted pricing page (noindex)
+ *   methodology-2           duplicate of /methodology/ (301 and canonical)
+ *   brand                   internal brand document (noindex)
+ *   resources               redirects to the home page until it has content
+ *   contact/*               office pages show the /contact/ content and name it as their canonical
+ *   finger-lakes-daily-news-com-seo   older copy of the FLDN SEO case study
+ *   solutions/example       the product template, never a real page
+ *
+ * @return string[]
+ */
+function flxlm_seo_sitemap_excluded_paths() {
+	return apply_filters( 'flxlm_seo_sitemap_excluded_paths', array(
+		'240e1cc9-pricing-2026',
+		'methodology-2',
+		'brand',
+		'resources',
+		'contact/geneva',
+		'contact/auburn',
+		'contact/penn-yan',
+		'finger-lakes-daily-news-com-seo',
+		'case-study/finger-lakes-daily-news-com-seo',
+		'solutions/example',
+	) );
+}
+
 add_filter( 'wp_sitemaps_posts_query_args', 'flxlm_seo_sitemap_exclude', 10, 2 );
 
 /**
- * Exclude specific pages from the WP core sitemap.
+ * Keep duplicates and private pages out of the core sitemap.
  *
  * @param array  $args      WP_Query args for the sitemap.
  * @param string $post_type The post type.
  * @return array
  */
 function flxlm_seo_sitemap_exclude( $args, $post_type ) {
-	if ( 'page' !== $post_type ) {
-		return $args;
+	if ( 'page' === $post_type ) {
+		$exclude = array();
+		foreach ( flxlm_seo_sitemap_excluded_paths() as $path ) {
+			$p = get_page_by_path( $path );
+			if ( $p ) {
+				$exclude[] = (int) $p->ID;
+			}
+		}
+		$args['post__not_in'] = array_values( array_unique( array_merge( ! empty( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array(), $exclude ) ) );
 	}
 
-	// Page IDs to exclude from sitemap.
-	$exclude = array(
-		39, // fldn-seo case study
-	);
-
-	if ( ! empty( $args['post__not_in'] ) ) {
-		$args['post__not_in'] = array_merge( $args['post__not_in'], $exclude );
-	} else {
-		$args['post__not_in'] = $exclude;
+	// Jobs mirrored on Finger Lakes Daily News name that copy as their canonical.
+	if ( 'flxlm_job' === $post_type ) {
+		$args['meta_query'] = array(
+			'relation' => 'OR',
+			array( 'key' => 'job_canonical_url', 'compare' => 'NOT EXISTS' ),
+			array( 'key' => 'job_canonical_url', 'value' => '', 'compare' => '=' ),
+		);
 	}
-
 	return $args;
 }
 
+// No author pages and no thin taxonomy pages in the sitemap.
+add_filter( 'wp_sitemaps_add_provider', function ( $provider, $name ) {
+	return 'users' === $name ? false : $provider;
+}, 10, 2 );
+
+add_filter( 'wp_sitemaps_taxonomies', function ( $taxonomies ) {
+	unset( $taxonomies['flxlm_service'] );
+	return $taxonomies;
+} );
+
+add_action( 'wp_sitemaps_init', 'flxlm_seo_register_sitemap_extras' );
+
+/**
+ * List the careers page in the sitemap. It is a post type archive, which core
+ * sitemaps do not include.
+ *
+ * @return void
+ */
+function flxlm_seo_register_sitemap_extras() {
+	if ( ! class_exists( 'WP_Sitemaps_Provider' ) || ! function_exists( 'wp_register_sitemap_provider' ) ) {
+		return;
+	}
+
+	if ( ! class_exists( 'FLXLM_Sitemap_Extras' ) ) {
+		/**
+		 * One extra sitemap: pages that are archives, not posts.
+		 */
+		class FLXLM_Sitemap_Extras extends WP_Sitemaps_Provider {
+			public function __construct() {
+				$this->name        = 'flxlm';
+				$this->object_type = 'flxlm';
+			}
+
+			public function get_url_list( $page_num, $object_subtype = '' ) {
+				$link = get_post_type_archive_link( 'flxlm_job' );
+				return $link ? array( array( 'loc' => $link ) ) : array();
+			}
+
+			public function get_max_num_pages( $object_subtype = '' ) {
+				return get_post_type_archive_link( 'flxlm_job' ) ? 1 : 0;
+			}
+		}
+	}
+
+	wp_register_sitemap_provider( 'flxlm', new FLXLM_Sitemap_Extras() );
+}
+
 /*--------------------------------------------------------------
- * 5. IndexNow — Instant search engine notification
+ * 5b. robots.txt
+ *--------------------------------------------------------------*/
+
+// Priority -1: core's own rules are already in $output, and the Sitemap line is added at 0.
+add_filter( 'robots_txt', 'flxlm_seo_robots_txt', -1, 2 );
+
+/**
+ * Add our rules to the public robots.txt. A private site keeps core's
+ * "Disallow: /" untouched.
+ *
+ * @param string $output Robots.txt so far.
+ * @param bool   $public Whether the site is public.
+ * @return string
+ */
+function flxlm_seo_robots_txt( $output, $public ) {
+	if ( ! $public ) {
+		return $output;
+	}
+	$output .= "Disallow: /?s=\n";
+	$output .= "Disallow: /search/\n";
+	$output .= "Disallow: /*?flxlm_vtt=\n";
+	$output .= "# For AI assistants: " . flxlm_seo_public_url( '/llms.txt' ) . "\n";
+	return $output;
+}
+
+/*--------------------------------------------------------------
+ * 5c. llms.txt
+ *
+ * A plain list of the key pages with one line each, for AI assistants
+ * (llmstxt.org). Built from the same entries as the head tags, so it never
+ * disagrees with them. Cached for six hours and cleared whenever a post saves.
+ *--------------------------------------------------------------*/
+
+add_action( 'template_redirect', 'flxlm_seo_serve_llms', 0 );
+
+/**
+ * Serve /llms.txt.
+ */
+function flxlm_seo_serve_llms() {
+	$path = trim( (string) wp_parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
+	if ( 'llms.txt' !== $path ) {
+		return;
+	}
+
+	$text = get_transient( 'flxlm_llms_txt' );
+	if ( ! is_string( $text ) || '' === $text ) {
+		$text = flxlm_seo_llms_txt();
+		set_transient( 'flxlm_llms_txt', $text, 6 * HOUR_IN_SECONDS );
+	}
+
+	status_header( 200 );
+	header( 'Content-Type: text/plain; charset=UTF-8' );
+	header( 'Cache-Control: public, max-age=3600' );
+	if ( ! get_option( 'blog_public' ) ) {
+		header( 'X-Robots-Tag: noindex, nofollow' );
+	}
+	echo $text; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plain text.
+	exit;
+}
+
+add_action( 'save_post', function () {
+	delete_transient( 'flxlm_llms_txt' );
+} );
+add_action( 'deleted_post', function () {
+	delete_transient( 'flxlm_llms_txt' );
+} );
+
+/**
+ * A short label for a page in a list.
+ *
+ * @param array $e Entry.
+ * @return string
+ */
+function flxlm_seo_label( array $e ) {
+	if ( 'home' === $e['kind'] ) {
+		return 'Home';
+	}
+	if ( ! empty( $e['data']['name'] ) ) {
+		return $e['data']['name'];
+	}
+	if ( ! empty( $e['crumbs'] ) ) {
+		$last = end( $e['crumbs'] );
+		return $last[0];
+	}
+	return $e['og_title'];
+}
+
+/**
+ * One list line: - [Label](url): description.
+ *
+ * @param array $e Entry.
+ * @return string
+ */
+function flxlm_seo_llms_line( array $e ) {
+	$text = $e['description'];
+	if ( 'testimonial' === $e['kind'] && ! empty( $e['data']['quote'] ) ) {
+		// "Client video, Speno Music in Downtown Auburn, NY: quote".
+		$text = 'Client video, ' . $e['data']['business'] . ( $e['data']['place'] ? ' in ' . $e['data']['place'] : '' ) . ': ' . $e['data']['quote'];
+	}
+	return '- [' . flxlm_seo_label( $e ) . '](' . $e['url'] . '): ' . $text . "\n";
+}
+
+/**
+ * Where a page sits in its llms.txt list. Hubs first, then the pages in menu
+ * order; anything not named keeps its place after them.
+ *
+ * @param array $e Entry.
+ * @return int
+ */
+function flxlm_seo_llms_rank( array $e ) {
+	$order = array(
+		'home', 'solutions', 'about', 'contact',
+		'radio',
+		'fldn', 'newsletter', 'discover-flx', 'flx-finest', 'flx-fm', 'apps',
+		'sports', 'shop-local', 'contests', 'seasonal', 'events',
+		'digital', 'website-starter', 'listings', 'content-marketing',
+		'why-radio', 'methodology', 'testimonials', 'case-study',
+		'privacy-policy', 'terms',
+	);
+	$i = array_search( $e['key'], $order, true );
+	if ( false !== $i ) {
+		return (int) $i;
+	}
+	// Stations, testimonials, case studies and jobs follow their hub.
+	return 100 + ( 'case-study' === $e['kind'] ? 1 : 0 );
+}
+
+/**
+ * The text of /llms.txt.
+ *
+ * @return string
+ */
+function flxlm_seo_llms_txt() {
+	$all = flxlm_seo_manifest( false );
+
+	$groups = array(
+		'Company'                      => array(),
+		'Radio stations'               => array(),
+		'Media products'               => array(),
+		'Advertising products'         => array(),
+		'Digital services'             => array(),
+		'Proof: client stories and case studies' => array(),
+		'Careers'                      => array(),
+		'Legal'                        => array(),
+	);
+	$other = array();
+	foreach ( $all as $e ) {
+		$k = $e['kind'];
+		if ( in_array( $k, array( 'home', 'company', 'office' ), true ) ) {
+			// Offices share the contact page's canonical; list the contact page, not each office.
+			if ( 'office' !== $k ) {
+				$groups['Company'][] = $e;
+			}
+		} elseif ( 'station' === $k || 'radio' === $e['key'] ) {
+			$groups['Radio stations'][] = $e;
+		} elseif ( 'product' === $k ) {
+			$g = $e['menu_group'];
+			if ( 'Advertising' === $g ) {
+				$groups['Advertising products'][] = $e;
+			} elseif ( 'Digital Services' === $g ) {
+				$groups['Digital services'][] = $e;
+			} else {
+				$groups['Media products'][] = $e;
+			}
+		} elseif ( in_array( $k, array( 'proof', 'testimonial', 'case-study' ), true ) || in_array( $e['key'], array( 'testimonials', 'case-study' ), true ) ) {
+			$groups['Proof: client stories and case studies'][] = $e;
+		} elseif ( 'job' === $k || 'careers' === $e['key'] ) {
+			$groups['Careers'][] = $e;
+		} elseif ( 'legal' === $k ) {
+			$groups['Legal'][] = $e;
+		} elseif ( 'solutions' === $e['key'] ) {
+			$groups['Company'][] = $e;
+		} else {
+			$other[] = $e;
+		}
+	}
+	$groups['Company'] = array_merge( $groups['Company'], $other );
+
+	$out  = "# FLX Local Media\n\n";
+	$out .= "> FLX Local Media (a d/b/a of TOTIB Media, Inc.) is a marketing and media company in the Finger Lakes of New York. It runs seven radio stations and the news site Finger Lakes Daily News, and sells radio, digital, event and content marketing to local businesses. Offices are in Geneva, Auburn and Penn Yan.\n\n";
+	$out .= "The Finger Lakes is not a rated radio market. Audience figures on this site come from U.S. Census Bureau data and our own stream logs, and the method is explained on the methodology page.\n";
+
+	$studios = flxlm_get_studios();
+	$out    .= "\n## Offices\n\n";
+	foreach ( $studios as $s ) {
+		$out .= '- ' . $s['name'] . ': ' . $s['address'] . ', ' . $s['city'] . ', ' . $s['state'] . ' ' . $s['zip'] . ', ' . $s['phone'] . "\n";
+	}
+
+	foreach ( $groups as $heading => $items ) {
+		if ( ! $items ) {
+			continue;
+		}
+		// A stable sort: pages of the same rank keep the order they came in.
+		foreach ( $items as $n => $e ) {
+			$items[ $n ]['_n'] = $n;
+		}
+		usort( $items, function ( $a, $b ) {
+			$d = flxlm_seo_llms_rank( $a ) - flxlm_seo_llms_rank( $b );
+			return $d ? $d : $a['_n'] - $b['_n'];
+		} );
+		$out .= "\n## " . $heading . "\n\n";
+		foreach ( $items as $e ) {
+			$out .= flxlm_seo_llms_line( $e );
+		}
+	}
+	return $out;
+}
+
+/*--------------------------------------------------------------
+ * 6. IndexNow — Instant search engine notification
  *
  * Pings the IndexNow API when posts are published or updated,
  * notifying Bing, Yandex, Seznam, and other participating engines
@@ -774,7 +742,7 @@ function flxlm_seo_indexnow_ping( $new_status, $old_status, $post ) {
 }
 
 /*--------------------------------------------------------------
- * 6. Utility
+ * 7. Utility
  *--------------------------------------------------------------*/
 
 /**

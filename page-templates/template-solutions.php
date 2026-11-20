@@ -5,15 +5,15 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'  => 'navy',
+	'eyebrow' => 'Advertising',
+	'title'   => 'Marketing Solutions',
+	'lead'    => 'Four ways to reach your customers in the Finger Lakes.',
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">Marketing Solutions</h1>
-		<p class="page-header__subtitle">Four ways to reach your customers in the Finger Lakes.</p>
-	</div>
-</div>
 
 <section class="section">
 	<div class="container">
@@ -68,4 +68,7 @@ if ( $testimonials->have_posts() ) :
 </section>
 <?php endif; ?>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+
