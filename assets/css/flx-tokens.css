@@ -395,3 +395,73 @@ body:not(.page-template-template-station) .flx-btn__ic {
 	text-decoration: underline;
 	text-underline-offset: 2px;
 }
+
+/* ---------- The one data table ----------
+   Any grid of numbers on any page: wrap a .flx-table in a .flx-table-wrap and the wrapper
+   scrolls sideways on a phone, so the page itself never does. Numbers carry .flx-table__num
+   (right-aligned, even digits); a closing totals row carries .flx-table__total. */
+.flx-table-wrap {
+	max-width: 100%;
+	margin: 24px 0 12px;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	background: #fff;
+	border: 1px solid var(--navy-200);
+	border-radius: 16px;
+}
+
+.flx-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: var(--fs-small);
+	font-weight: 400;
+	line-height: 1.4;
+	color: var(--navy-950);
+}
+
+.flx-table caption {
+	padding: 14px 16px 10px;
+	color: var(--navy-800);
+	font-size: var(--fs-h4);
+	font-weight: var(--fw-h4);
+	text-align: left;
+}
+
+.flx-table th,
+.flx-table td {
+	padding: 10px 14px;
+	text-align: left;
+	vertical-align: top;
+}
+
+.flx-table thead th {
+	background: var(--navy-800);
+	color: #fff;
+	font-weight: 700;
+	vertical-align: bottom;
+}
+
+.flx-table tbody tr:nth-child(even) {
+	background: var(--navy-50);
+}
+
+.flx-table tbody td {
+	border-top: 1px solid var(--navy-100);
+}
+
+.flx-table tbody td:first-child {
+	font-weight: 700;
+	color: var(--navy-800);
+}
+
+.flx-table .flx-table__num {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.flx-table .flx-table__total td {
+	border-top: 2px solid var(--gold-400);
+	background: var(--gold-50);
+	font-weight: 700;
+}

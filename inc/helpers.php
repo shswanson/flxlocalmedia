@@ -340,7 +340,7 @@ function flxlm_get_station_data( $slug = '' ) {
 					'facts' => array(
 						array( '$81K', 'Typical household income' ),
 						array( '69.9%', 'Own their home' ),
-						array( '86.9%', 'Drive alone to work' ),
+						array( '86.9%', 'Commute by car, truck or van' ),
 						// Commute: ACS 2024 5-year, B08013 / B08303, five counties combined = 22.7 min (137,695 workers).
 						array( '23 min', 'Average commute, each way' ),
 					),
@@ -424,7 +424,7 @@ function flxlm_get_station_data( $slug = '' ) {
 						// flxlocalmedia inc/helpers.php, classic-hits-993 homeownership_pct 78.2 (US Census ACS 2022, same four counties)
 						array( '78.2%', 'Own their home' ),
 						// flxlocalmedia inc/helpers.php, classic-hits-993 drive_alone_pct 87.3 (US Census ACS 2022, same four counties)
-						array( '87.3%', 'Drive alone to work' ),
+						array( '87.3%', 'Commute by car, truck or van' ),
 						// Census Reporter, ACS 2024 5-year (2020-2024), tables B08013 aggregate travel time and B08303 workers, Ontario 36069 + Cayuga 36011 + Seneca 36099 + Wayne 36117 combined: 2,933,110 
 						array( '23 min', 'Average commute, each way' ),
 					),
@@ -501,7 +501,7 @@ function flxlm_get_station_data( $slug = '' ) {
 						// flxlocalmedia/inc/helpers.php, the-wall, homeownership_pct 79.0
 						array( '79%', 'Own their home' ),
 						// flxlocalmedia/inc/helpers.php, the-wall, drive_alone_pct 87.2
-						array( '87.2%', 'Drive alone to work' ),
+						array( '87.2%', 'Commute by car, truck or van' ),
 						// Census Reporter, ACS 2024 5-year (2020-2024), tables B08013 aggregate travel time / B08303 workers, Ontario + Seneca + Wayne combined: 2,216,645 min / 97,426 workers = 22.75 min, r
 						array( '23 min', 'Average commute, each way' ),
 					),
@@ -584,7 +584,7 @@ function flxlm_get_station_data( $slug = '' ) {
 						// flxlocalmedia inc/helpers.php, finger-lakes-country homeownership_pct 72.6 (stations.json demo_homeownership_pct, same Ontario and Yates basis).
 						array( '72.6%', 'Own their home' ),
 						// flxlocalmedia inc/helpers.php, finger-lakes-country drive_alone_pct 84.8 (stations.json, same Ontario and Yates basis).
-						array( '84.8%', 'Drive alone to work' ),
+						array( '84.8%', 'Commute by car, truck or van' ),
 						// Census Reporter, ACS 2024 5-year (2020-2024), B08013 aggregate travel time / B08303 workers, six counties combined (Yates, Schuyler, Steuben, Chemung, Seneca, Ontario): 3,143,755 m
 						array( '22 min', 'Average commute, each way' ),
 					),
@@ -640,7 +640,7 @@ function flxlm_get_station_data( $slug = '' ) {
 				'eyebrow' => 'WGVA · Radio advertising',
 				'lead' => 'Reach the Finger Lakes homeowners and investors who follow the local news all day.',
 				'profile_seconds' => 39,
-				'stats' => array( 'streaming_hours' => 4976, 'streaming_window' => 'last 28 days' ),
+				'stats' => array( 'streaming_hours' => 4042, 'streaming_window' => 'last 28 days, 6 AM to midnight' ),
 				'persona' => array(
 					'name' => 'Bob', 'age' => 62, 'line1' => 'Accountant, Geneva', 'line2' => 'Village planning board member', 'photo' => 'persona.jpg',
 					'story' => array(
@@ -653,7 +653,7 @@ function flxlm_get_station_data( $slug = '' ) {
 						// /Users/scott/flxlocalmedia/inc/helpers.php, wgva homeownership_pct 77.1
 						array( '77.1%', 'Own their home' ),
 						// /Users/scott/flxlocalmedia/inc/helpers.php, wgva drive_alone_pct 85.7
-						array( '85.7%', 'Drive alone to work' ),
+						array( '85.7%', 'Commute by car, truck or van' ),
 						// Census ACS 2024 5-year (2020-2024), Ontario County (05000US36069): B08013 aggregate travel time 1,032,620 minutes divided by B08303 workers 46,367 = 22.27 minutes, rounded to 22. h
 						array( '22 min', 'Average commute, each way' ),
 					),
@@ -718,7 +718,7 @@ function flxlm_get_station_data( $slug = '' ) {
 				'eyebrow' => 'WAUB · Radio advertising',
 				'lead' => 'Reach Cayuga County adults with higher incomes while they follow the local news and sports.',
 				'profile_seconds' => 39,
-				'stats' => array( 'streaming_hours' => 3571, 'streaming_window' => 'last 28 days' ),
+				'stats' => array( 'streaming_hours' => 2944, 'streaming_window' => 'last 28 days, 6 AM to midnight' ),
 				'persona' => array(
 					'name' => 'Carol', 'age' => 66, 'line1' => 'Retired school district employee', 'line2' => 'Lives in Auburn', 'photo' => 'persona.jpg',
 					'story' => array(
@@ -731,7 +731,7 @@ function flxlm_get_station_data( $slug = '' ) {
 						// flxlocalmedia inc/helpers.php, waub homeownership_pct 75.4
 						array( '75.4%', 'Own their home' ),
 						// flxlocalmedia inc/helpers.php, waub drive_alone_pct 87.6
-						array( '87.6%', 'Drive alone to work' ),
+						array( '87.6%', 'Commute by car, truck or van' ),
 						// Census Reporter, ACS 2024 5-year (2020-2024), tables B08013 aggregate travel time 716,465 min / B08303 workers 31,472 = 22.8 min, Cayuga County (05000US36011). URL: https://api.cen
 						array( '23 min', 'Average commute, each way' ),
 					),
@@ -809,7 +809,7 @@ function flxlm_get_station_data( $slug = '' ) {
 						// /Users/scott/flxlocalmedia/inc/helpers.php, the-lake homeownership_pct 69.9 (Census ACS 2022, same women 35-64 basis as the income figure; the all-household Monroe County rate is 6
 						array( '69.9%', 'Own their home' ),
 						// /Users/scott/flxlocalmedia/inc/helpers.php, the-lake drive_alone_pct 82.4 (Census ACS 2022, Monroe County, matches ~/customer-flx/data/census/ny_counties.json pct_drive_alone).
-						array( '82.4%', 'Drive alone to work' ),
+						array( '82.4%', 'Commute by car, truck or van' ),
 						// Census Reporter, ACS 2024 5-year (2020-2024), table B08013 aggregate travel time to work divided by B08303 workers, Ontario + Livingston + Monroe counties combined: 7,782,135 minut
 						array( '21 min', 'Average commute, each way' ),
 					),
