@@ -456,7 +456,7 @@ function flxlm_seo_nodes_for_entry( array $entry ) {
  * @return array|null Graph document, or null for a page that stays out of search.
  */
 function flxlm_seo_graph( array $entry ) {
-	if ( ! empty( $entry['noindex'] ) ) {
+	if ( ! empty( $entry['noindex'] ) && empty( $entry['schema'] ) ) {
 		return null;
 	}
 	$origin = flxlm_seo_origin();

@@ -5,7 +5,7 @@
  * An entry holds everything search engines and share cards need for a page:
  * title, description, canonical URL, share-image key and the copy printed on
  * the share image. The head tags (inc/seo.php), the JSON-LD (inc/seo-schema.php),
- * llms.txt and the share-image generator (/scripts/flxlm-og/ in the fldn repo)
+ * llms.txt and the share-image generator (tools/og/ in this theme)
  * all read the same entries, so a fact is written once.
  *
  * Where a page has its own data, the entry is built from it:
@@ -356,7 +356,7 @@ function flxlm_seo_static_pages() {
 			'kind'  => 'company',
 			'crumb' => 'How We Work',
 			'lead'  => array( 'How We Build Your Marketing Plan' ),
-			'desc'  => 'We start with your business, not a rate card. Five steps from the first conversation to regular reviews, and every radio, digital and event option we can put in your plan.',
+			'desc'  => 'We start with your business, not a rate card. Five steps from the first talk to regular reviews, plus every radio, digital and event option for your plan.',
 			'color' => 'navy',
 			'og'    => array( 'kicker' => 'How we work', 'headline' => 'We build a plan', 'promise' => 'No rate card. A plan built around your business, your customers and your goal.' ),
 		),
@@ -402,7 +402,8 @@ function flxlm_seo_static_pages() {
 			'kind'    => 'hidden',
 			'noindex' => true,
 			'lead'    => array( 'Brand' ),
-			'desc'    => '',
+			'desc'    => 'The FLX Local Media brand guide for our team and partners: logos, colors, type and how our stations, news site and sales pages look and sound.',
+			'schema'  => true,
 			'color'   => 'navy',
 			'og'      => array(),
 		),
@@ -527,7 +528,7 @@ function flxlm_seo_product_copy() {
 		),
 		'digital'           => array(
 			'lead'    => array( 'Digital Marketing in the Finger Lakes' ),
-			'desc'    => 'FLX Local Media builds your website, keeps your business listings correct, manages your social media, runs your Google and Facebook ads and makes video, from Geneva, Auburn and Penn Yan.',
+			'desc'    => 'FLX Local Media builds your website, fixes listings, manages social media, runs Google and Facebook ads and makes video, from Geneva, Auburn and Penn Yan.',
 			'promise' => 'Websites, listings, ads and video from a local team.',
 		),
 		'website-starter'   => array(
@@ -542,7 +543,7 @@ function flxlm_seo_product_copy() {
 		),
 		'digital-advertising' => array(
 			'lead'    => array( 'Google Display and Retargeting Ads', 'Digital Advertising' ),
-			'desc'    => 'FLX Local Media runs Google display ads, retargeting and geofencing, search ads and Facebook and Instagram ads for Finger Lakes businesses. We choose the audiences and manage the bids.',
+			'desc'    => 'FLX Local Media runs Google display, retargeting, geofencing, search, Facebook and Instagram ads for Finger Lakes businesses. We pick the audiences and bids.',
 			'promise' => 'Google display, retargeting and geofencing ads, run for you.',
 		),
 		'content-marketing' => array(
@@ -601,6 +602,7 @@ function flxlm_seo_entry_defaults( array $e ) {
 		'description' => '',
 		'og_type'     => 'website',
 		'noindex'     => false,
+		'schema'      => false,
 		'crumbs'      => array(),
 		'color'       => 'navy',
 		'og'          => array(),
@@ -1101,6 +1103,7 @@ function flxlm_seo_entry_page( $post ) {
 				'url'         => $url,
 				'canonical'   => $canonical,
 				'noindex'     => ! empty( $s['noindex'] ),
+				'schema'      => ! empty( $s['schema'] ),
 				'title'       => flxlm_seo_fit_title( $s['lead'] ),
 				'description' => isset( $s['desc'] ) ? $s['desc'] : '',
 				'color'       => $s['color'],
