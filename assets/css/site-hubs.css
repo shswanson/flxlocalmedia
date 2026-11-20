@@ -79,15 +79,33 @@
 }
 
 .hb-eyebrow {
-	font-size: var(--fs-eyebrow);
-	font-weight: var(--fw-eyebrow);
-	letter-spacing: var(--ls-eyebrow);
-	text-transform: uppercase;
-	color: var(--hb-cyan);
+	display: inline-block;
+	font-family: var(--ff-eyebrow-script);
+	font-size: var(--fs-eyebrow-script);
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0;
+	text-transform: none;
+	transform: var(--rot-eyebrow-script);
+	transform-origin: left bottom;
+	margin-bottom: 10px;
+	color: #e3a72f;
 }
 
 .hb-eyebrow--dark {
-	color: var(--hb-ink);
+	color: #003b5b;
+}
+
+.flxlm-hub .section__eyebrow {
+	display: inline-block;
+	font-family: var(--ff-eyebrow-script);
+	font-size: var(--fs-eyebrow-script);
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0;
+	text-transform: none;
+	transform: var(--rot-eyebrow-script);
+	transform-origin: left bottom;
 	margin-bottom: 10px;
 }
 

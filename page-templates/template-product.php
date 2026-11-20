@@ -74,8 +74,10 @@ get_header();
 
 	<!-- 1. Hero -->
 	<section class="st-hero" aria-labelledby="st-title">
-		<div class="st-wrap st-hero__grid<?php echo $p['logo'] ? '' : ' st-hero__grid--solo'; ?>">
-			<?php if ( $p['logo'] ) : ?>
+		<div class="st-wrap st-hero__grid<?php echo ( $p['hero_mark'] || $p['logo'] ) ? '' : ' st-hero__grid--solo'; ?>">
+			<?php if ( $p['hero_mark'] ) : ?>
+				<img class="st-hero__mark st-hero__mark--<?php echo esc_attr( $p['hero_mark_style'] ); ?>" src="<?php echo esc_url( $p['hero_mark'] ); ?>" alt="<?php echo esc_attr( $name . ' logo' ); ?>">
+			<?php elseif ( $p['logo'] ) : ?>
 				<img class="st-hero__logo" src="<?php echo esc_url( $p['logo'] ); ?>" alt="<?php echo esc_attr( $name . ' logo' ); ?>">
 			<?php endif; ?>
 			<div class="st-hero__text">

@@ -994,9 +994,17 @@ body.fx-nav-open {
    the seven station pages, which share station.css, keep their own type. Sizes and
    weights only; layout is untouched. */
 .flxlm-product .st-eyebrow {
-	font-size: var(--fs-eyebrow);
-	font-weight: var(--fw-eyebrow);
-	letter-spacing: var(--ls-eyebrow);
+	display: inline-block;
+	font-family: var(--ff-eyebrow-script);
+	font-size: var(--fs-eyebrow-script);
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0;
+	text-transform: none;
+	transform: var(--rot-eyebrow-script);
+	transform-origin: left bottom;
+	margin-bottom: 10px;
+	color: #e3a72f;
 }
 
 .flxlm-product .st-tag {
@@ -1277,5 +1285,39 @@ body:not(.page-template-template-station) .cta-banner .btn {
 	.flxlm-product .pr-ways {
 		grid-template-columns: minmax(0, 1fr);
 		padding: 14px;
+	}
+}
+
+/* Product hero: real brand marks. Dark art sits on a white rounded panel so it reads
+   on the coloured hero; an app icon is shown at app-icon size with rounded corners. */
+.flxlm-product .st-hero__mark {
+	display: block;
+	justify-self: center;
+	height: auto;
+	box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
+}
+
+.flxlm-product .st-hero__mark--panel {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 460px;
+	padding: 36px 40px;
+	border-radius: 20px;
+	background: #fff;
+}
+
+.flxlm-product .st-hero__mark--app {
+	width: 190px;
+	border-radius: 22%;
+}
+
+@media (max-width: 760px) {
+	.flxlm-product .st-hero__mark--panel {
+		max-width: 320px;
+		padding: 22px 24px;
+	}
+
+	.flxlm-product .st-hero__mark--app {
+		width: 110px;
 	}
 }

@@ -93,11 +93,17 @@
 }
 
 .flxlm-pg .pg-eyebrow {
-	font-size: var(--fs-eyebrow);
-	font-weight: var(--fw-eyebrow);
-	letter-spacing: var(--ls-eyebrow);
-	text-transform: uppercase;
-	color: var(--pg-accent);
+	display: inline-block;
+	font-family: var(--ff-eyebrow-script);
+	font-size: var(--fs-eyebrow-script);
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0;
+	text-transform: none;
+	transform: var(--rot-eyebrow-script);
+	transform-origin: left bottom;
+	margin-bottom: 10px;
+	color: #e3a72f;
 }
 
 .flxlm-pg .pg-eyebrow a {
@@ -259,10 +265,21 @@
 .flxlm-pg .section__eyebrow--lake,
 .flxlm-pg .section__eyebrow--sage,
 .flxlm-pg .section__eyebrow--navy {
-	color: var(--pg-eyebrow);
-	font-size: var(--fs-eyebrow);
-	font-weight: var(--fw-eyebrow);
-	letter-spacing: var(--ls-eyebrow);
+	display: inline-block;
+	font-family: var(--ff-eyebrow-script);
+	font-size: var(--fs-eyebrow-script);
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0;
+	text-transform: none;
+	transform: var(--rot-eyebrow-script);
+	transform-origin: left bottom;
+	margin-bottom: 10px;
+	color: #003b5b;
+}
+
+.flxlm-pg .section--dark .section__eyebrow {
+	color: #e3a72f;
 }
 
 .flxlm-pg .section__title {
@@ -970,10 +987,17 @@ body.flxlm-pg-band .cta-banner {
 }
 
 .flxlm-pg .cs-wrap .hero__eyebrow {
+	display: inline-block;
+	font-family: var(--ff-eyebrow-script);
+	font-size: var(--fs-eyebrow-script);
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0;
+	text-transform: none;
+	transform: var(--rot-eyebrow-script);
+	transform-origin: left bottom;
+	margin-bottom: 10px;
 	color: #e3a72f;
-	font-size: var(--fs-eyebrow);
-	font-weight: var(--fw-eyebrow);
-	letter-spacing: var(--ls-eyebrow);
 }
 
 .flxlm-pg .cs-wrap .hero h1,
@@ -1102,13 +1126,6 @@ body.flxlm-pg-band .cta-banner {
 }
 
 /* ---------- Type scale for shared components (tokens in flx-tokens.css) ---------- */
-.flxlm-pg .section__eyebrow,
-.flxlm-hub .section__eyebrow {
-	font-size: var(--fs-eyebrow);
-	font-weight: var(--fw-eyebrow);
-	letter-spacing: var(--ls-eyebrow);
-}
-
 .flxlm-pg .testimonial-card__industry,
 .flxlm-hub .testimonial-card__industry,
 .flxlm-pg .meta-cards__label,

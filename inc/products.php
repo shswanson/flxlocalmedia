@@ -188,6 +188,8 @@ function flxlm_product_icon( $name ) {
  *   cta_label    => string   button text (default 'Get a free plan for <name>')
  *   colors       => [ primary, deep, accent ]    #rrggbb strings, all optional
  *   logo         => string   file under assets/images/products/<slug>/ or https URL (white or light art on the colour)
+ *   hero_mark   => string   optional real brand mark for the hero (file under assets/images/products/<slug>/), shown instead of logo on the page; logo stays the white art used for share images
+ *   hero_mark_style => string   'panel' (dark art on a white rounded panel) or 'app' (square app icon with rounded corners)
  *   hero_logos   => [ [ file, alt, small? ], ... ]   optional band of logos right under the hero, shown under "On the air with". Same file/alt format as offer logos; small => true puts it in a second, slightly smaller row
  *   stats        => [ [ value, label, source ], ... ]   bar of numbers; source is the plain-English origin of the number
  *   stats_note   => string   one line under the bar, e.g. how the numbers are made
@@ -418,6 +420,7 @@ function flxlm_get_products() {
 			'menu_group' => 'Media', 'menu_label' => 'Finger Lakes Daily News', 'menu_blurb' => 'Display ads and sponsorships on the local news site.',
 			'colors' => array( 'primary' => '#1e5b70', 'deep' => '#002936', 'accent' => '#e3a72f' ),
 			'logo' => 'logo.png',
+			'hero_mark' => 'mark.webp', 'hero_mark_style' => 'panel',
 			'stats' => array(
 				array( 'value' => '380,494', 'label' => 'visits to the site in October 2026', 'source' => 'Google Analytics sessions, BigQuery fldn_analytics.ga4_daily_traffic, Oct 1 to 31, 2026. Automated desktop traffic is removed, so this is about 6% below the Google Analytics screen.' ),
 				array( 'value' => '717,725', 'label' => 'pages viewed in October 2026', 'source' => 'Google Analytics pageviews, BigQuery fldn_analytics.ga4_daily_traffic, Oct 1 to 31, 2026, same bot filter.' ),
@@ -448,6 +451,7 @@ function flxlm_get_products() {
 			'menu_group' => 'Media', 'menu_label' => 'FLDN newsletter', 'menu_blurb' => 'Sponsor the daily local news email.',
 			'colors' => array( 'primary' => '#1e5b70', 'deep' => '#002936', 'accent' => '#e3a72f' ),
 			'logo' => 'logo.png',
+			'hero_mark' => 'mark.webp', 'hero_mark_style' => 'panel',
 			'stats' => array(
 				array( 'value' => '5,065', 'label' => 'subscribers received the November 19, 2026 email, up from 2,980 on March 2', 'source' => 'BigQuery fldn_analytics.mailchimp_campaigns, emails_sent for the Finger Lakes Daily News RSS campaign on 2026-11-19 (5,065) and 2026-03-02 (2,980).' ),
 				array( 'value' => '11.6%', 'label' => 'of subscribers clicked a link in the average send in October 2026', 'source' => 'BigQuery fldn_analytics.mailchimp_campaigns, 31 daily sends Oct 1 to 31, 2026: sum of subscriber_clicks (17,643) divided by sum of emails_sent. Each subscriber counts once per send.' ),
@@ -476,6 +480,7 @@ function flxlm_get_products() {
 			'menu_group' => 'Media', 'menu_label' => 'FLX.fm app and streaming', 'menu_blurb' => 'Ads on the live streams, with listening we count ourselves.',
 			'colors' => array( 'primary' => '#6b2fa0', 'deep' => '#340057', 'accent' => '#e3a72f' ),
 			'logo' => 'logo.png',
+			'hero_mark' => 'mark.webp', 'hero_mark_style' => 'app',
 			'stats' => array(
 				array( 'value' => '45,159', 'label' => 'hours of listening on our streams in the last 28 days', 'source' => 'BigQuery fldn_analytics.v_streaming_raw_sessions (sessions of 60 seconds or longer, bots and re-streamers removed), all seven stations, Oct 22 to Nov 18, 2026, sum of duration_secs divided by 3,600.' ),
 				array( 'value' => '11,141', 'label' => 'different internet connections tuned in', 'source' => 'Same view and period: distinct ip_address, the dashboard\'s definition of unique listeners (v_dash_streaming_daily). One connection can be several people, and one person can use several connections.' ),
@@ -834,6 +839,8 @@ function flxlm_get_product( $slug ) {
 		),
 		'css_vars'    => $colors['css'],
 		'logo'        => flxlm_product_asset( $slug, $str( $in, 'logo' ) ),
+		'hero_mark'   => flxlm_product_asset( $slug, $str( $in, 'hero_mark' ) ),
+		'hero_mark_style' => 'app' === $str( $in, 'hero_mark_style' ) ? 'app' : 'panel',
 		'hero_logos'  => $hero_logos,
 		'stats'       => $stats,
 		'stats_note'  => $str( $in, 'stats_note' ),
