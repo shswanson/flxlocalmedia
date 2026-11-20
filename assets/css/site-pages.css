@@ -1731,6 +1731,11 @@ body.flxlm-pg-band .cta-banner {
 .flxlm-pg .hw-step__gets {
 	margin: 0;
 	padding-left: 1.2em;
+	list-style: disc;
+}
+
+.flxlm-pg .hw-step__gets li::marker {
+	color: var(--pg-gold);
 }
 
 .flxlm-pg .hw-stations {

@@ -33,8 +33,8 @@ get_header();
 	<section class="hb-hero hb-hero--home" aria-labelledby="hb-title">
 		<div class="hb-wrap hb-hero__inner">
 			<p class="flx-eyebrow">Local Solutions for Local Businesses</p>
-			<h1 class="hb-title" id="hb-title">Your customers are on the road across the Finger&nbsp;Lakes every day. <span>What are they hearing about&nbsp;you?</span></h1>
-			<p class="hb-lead">Most local businesses advertise in one place and hope for the best. We put you where your customers already are: on 7 radio stations, across digital, at community events, and in the local news.</p>
+			<h1 class="hb-title" id="hb-title">What are your customers <span>hearing about&nbsp;you?</span></h1>
+			<p class="hb-lead">Seven radio stations, the local news site and its daily email, in one plan built for your business.</p>
 			<div class="hb-actions">
 				<a class="hb-btn hb-btn--primary" href="<?php echo esc_url( flxlm_hub_contact_url() ); ?>">Get a free plan</a>
 				<a class="hb-btn hb-btn--ghost" href="<?php echo esc_url( home_url( '/solutions/' ) ); ?>">Our Solutions</a>

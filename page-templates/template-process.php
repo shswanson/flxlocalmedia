@@ -77,7 +77,7 @@ flxlm_pg_open();
 <section class="section sol-sec" aria-labelledby="hw-steps">
 	<div class="sol-wrap">
 		<div class="sol-head">
-			<span class="section__eyebrow">Five steps</span>
+			<span class="flx-eyebrow">Five steps</span>
 			<h2 class="section__title" id="hw-steps">From first conversation to regular check-ins</h2>
 			<p class="sol-head__text">Every plan starts the same way and ends up different, because every business is.</p>
 		</div>
@@ -104,7 +104,7 @@ flxlm_pg_open();
 <section class="section section--gray sol-sec" aria-labelledby="hw-all">
 	<div class="sol-wrap">
 		<div class="sol-head">
-			<span class="section__eyebrow">The toolbox</span>
+			<span class="flx-eyebrow">The toolbox</span>
 			<h2 class="section__title" id="hw-all">Everything we can put in a plan</h2>
 			<p class="sol-head__text">We pick from all of it, and only what fits your goal.</p>
 		</div>
@@ -146,7 +146,7 @@ flxlm_pg_open();
 <section class="section sol-sec" aria-labelledby="hw-proof">
 	<div class="sol-wrap">
 		<div class="sol-head">
-			<span class="section__eyebrow">In their words</span>
+			<span class="flx-eyebrow">In their words</span>
 			<h2 class="section__title" id="hw-proof">What working with us looks like</h2>
 		</div>
 		<div class="testimonial-grid">
@@ -165,7 +165,7 @@ flxlm_pg_open();
 <section class="section section--gray sol-sec" aria-labelledby="hw-faq">
 	<div class="sol-wrap">
 		<div class="sol-head">
-			<span class="section__eyebrow">Straight answers</span>
+			<span class="flx-eyebrow">Straight answers</span>
 			<h2 class="section__title" id="hw-faq">Questions people ask first</h2>
 		</div>
 		<div class="hw-faq">
