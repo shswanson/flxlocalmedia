@@ -423,7 +423,7 @@ flxlm_pg_open();
 		</div>
 		<?php
 		$tbl( 'Population of the ten counties, by Census product', array(
-			'head' => array( 'Census product', 'Years', 'Population', 'Used on this site' ),
+			'head' => array( 'Census product', 'Period', 'Population', 'Used on this site' ),
 			'rows' => array(
 				array( 'American Community Survey 5-year', '2018 to 2022', 697705, 'Yes, everywhere' ),
 				array( 'Decennial Census head count', 'April 2020', 701781, 'No, shown for comparison' ),
