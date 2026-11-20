@@ -191,7 +191,8 @@ function flxlm_product_icon( $name ) {
  *   stats        => [ [ value, label, source ], ... ]   bar of numbers; source is the plain-English origin of the number
  *   stats_note   => string   one line under the bar, e.g. how the numbers are made
  *   who          => [ heading, paragraphs => string[] ]   "Who you reach"
- *   offers       => [ [ title, text, icon ], ... ]       "Ways to advertise". icon: spots|sponsorship|remote|stream|contest|news|sports|season|email|web|video|award|app|search|people|list
+ *   offers       => [ [ title, text, icon, logos? ], ... ]       "Ways to advertise". icon: spots|sponsorship|remote|stream|contest|news|sports|season|email|web|video|award|app|search|people|list
+ *                   logos (optional): [ [ file, alt, chip? ] | [ text ], ... ] files under assets/images/products/logos/; chip => true puts light art on a navy chip; text => a text badge when no file exists. With logos, they replace the icon.
  *   extra        => [ [ heading, items => string[] ], ... ]   more lists, each its own panel
  *   testimonial  => [ person, business, quote, page_url, video_seconds int, thumb ]   thumb: file under assets/images/products/<slug>/ or https URL
  *
@@ -275,11 +276,11 @@ function flxlm_get_products() {
 			),
 			'who' => array( 'heading' => 'Who tunes in for the game', 'paragraphs' => array( 'A person who tunes in for a game picked that time on purpose. Some are parents and grandparents following a team from the stands or from the kitchen. Some are graduates of Auburn, Geneva, Penn Yan or Waterloo who still follow the school. Others are Bills and Syracuse fans who want the radio call while they drive or work. Local teams come first on our stations, then Syracuse and Buffalo.', 'A game gives you a long stretch of listening that has a set start time. In the Bills and Syracuse package your commercial airs at least three times in a football game and at least twice in a basketball game, and your name is read in the opening and closing billboards. Listeners hear you more than once in the same sitting, from a voice they are already paying attention to.' ) ),
 			'offers' => array(
-				array( 'title' => 'Bills and Syracuse football and basketball', 'text' => 'Your commercials in Buffalo Bills and Syracuse University football and basketball broadcasts on WAUB and WGVA, from September through March. The package adds a commercial in the weekly Syracuse Coaches Show and your name in the opening and closing billboards of each game.', 'icon' => 'sports' ),
-				array( 'title' => 'Auburn and Weedsport on WAUB', 'text' => 'High school football, basketball, hockey, lacrosse and baseball for Auburn and Weedsport, from September through May. Your commercials run in each game, with billboards and promotional announcements through the week.', 'icon' => 'sports' ),
-				array( 'title' => 'Geneva, Mynderse and Waterloo football on WGVA', 'text' => 'A football game of the week in September and October with at least three of your commercials in each game, live mentions during the game and promotional announcements on WGVA all week.', 'icon' => 'spots' ),
-				array( 'title' => 'Penn Yan and Dundee on WFLR', 'text' => 'Football, basketball and lacrosse from September through June, with at least three commercials per game and live mentions. Sponsor every sport for the school year or choose one sport.', 'icon' => 'sponsorship' ),
-				array( 'title' => 'NASCAR on WFLR', 'text' => 'Two commercials in every race, plus one each week in Fast Talk on Monday evenings, NASCAR LIVE on Tuesday evenings and the Saturday morning Kyle Petty Countdown. The season runs from early spring through November.', 'icon' => 'sports' ),
+				array( 'title' => 'Bills and Syracuse football and basketball', 'text' => 'Your commercials in Buffalo Bills and Syracuse University football and basketball broadcasts on WAUB and WGVA, from September through March. The package adds a commercial in the weekly Syracuse Coaches Show and your name in the opening and closing billboards of each game.', 'icon' => 'sports', 'logos' => array( array( 'file' => 'bills.svg', 'alt' => 'Buffalo Bills' ), array( 'file' => 'syracuse.svg', 'alt' => 'Syracuse Orange' ) ) ),
+				array( 'title' => 'Auburn and Weedsport on WAUB', 'text' => 'High school football, basketball, hockey, lacrosse and baseball for Auburn and Weedsport, from September through May. Your commercials run in each game, with billboards and promotional announcements through the week.', 'icon' => 'sports', 'logos' => array( array( 'file' => 'auburn.png', 'alt' => 'Auburn Maroons', 'chip' => true ), array( 'text' => 'Weedsport' ), array( 'file' => 'je.png', 'alt' => 'Jordan-Elbridge', 'chip' => true ) ) ),
+				array( 'title' => 'Geneva, Mynderse and Waterloo football on WGVA', 'text' => 'A football game of the week in September and October with at least three of your commercials in each game, live mentions during the game and promotional announcements on WGVA all week.', 'icon' => 'spots', 'logos' => array( array( 'file' => 'geneva.png', 'alt' => 'Geneva' ), array( 'file' => 'mynderse.png', 'alt' => 'Seneca Falls (Mynderse)' ), array( 'file' => 'waterloo.png', 'alt' => 'Waterloo' ) ) ),
+				array( 'title' => 'Penn Yan and Dundee on WFLR', 'text' => 'Football, basketball and lacrosse from September through June, with at least three commercials per game and live mentions. Sponsor every sport for the school year or choose one sport.', 'icon' => 'sponsorship', 'logos' => array( array( 'text' => 'Penn Yan' ), array( 'file' => 'dundee.png', 'alt' => 'Dundee' ) ) ),
+				array( 'title' => 'NASCAR on WFLR', 'text' => 'Two commercials in every race, plus one each week in Fast Talk on Monday evenings, NASCAR LIVE on Tuesday evenings and the Saturday morning Kyle Petty Countdown. The season runs from early spring through November.', 'icon' => 'sports', 'logos' => array( array( 'file' => 'nascar.svg', 'alt' => 'NASCAR' ), array( 'file' => 'mrn.svg', 'alt' => 'Motor Racing Network' ), array( 'file' => 'prn.png', 'alt' => 'Performance Racing Network' ) ) ),
 			),
 			'extra' => array(
 				array( 'heading' => 'On the air this fall', 'items' => array( 'WAUB: Auburn football and Weedsport/Jordan-Elbridge football', 'WGVA: Geneva football and Mynderse/Waterloo football', 'WFLR: Penn Yan/Dundee football and NASCAR', 'WAUB and WGVA: Syracuse football and basketball, and the Buffalo Bills' ) ),
@@ -734,10 +735,28 @@ function flxlm_get_product( $slug ) {
 	if ( isset( $in['offers'] ) && is_array( $in['offers'] ) ) {
 		foreach ( $in['offers'] as $o ) {
 			if ( is_array( $o ) && '' !== $str( $o, 'title' ) ) {
+				$logos = array();
+				if ( isset( $o['logos'] ) && is_array( $o['logos'] ) ) {
+					foreach ( $o['logos'] as $lg ) {
+						if ( ! is_array( $lg ) ) {
+							continue;
+						}
+						if ( '' !== $str( $lg, 'file' ) ) {
+							$logos[] = array(
+								'file' => basename( $str( $lg, 'file' ) ),
+								'alt'  => $str( $lg, 'alt' ),
+								'chip' => ! empty( $lg['chip'] ),
+							);
+						} elseif ( '' !== $str( $lg, 'text' ) ) {
+							$logos[] = array( 'text' => $str( $lg, 'text' ) );
+						}
+					}
+				}
 				$offers[] = array(
 					'title' => $str( $o, 'title' ),
 					'text'  => $str( $o, 'text' ),
 					'icon'  => $str( $o, 'icon' ),
+					'logos' => $logos,
 				);
 			}
 		}

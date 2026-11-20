@@ -1,0 +1,20 @@
+Logo sources (downloaded 2026-11-19)
+
+GOT
+bills.svg      Buffalo Bills        https://static.www.nfl.com/league/api/clubs/logos/BUF.svg  (NFL, official)
+syracuse.svg   Syracuse Orange      https://commons.wikimedia.org/wiki/Special:FilePath/Syracuse_Orange_logo.svg  (Wikimedia Commons copy of the athletics Block S; cuse.com serves only a white-on-transparent version)
+nascar.svg     NASCAR               https://commons.wikimedia.org/wiki/Special:FilePath/NASCAR_logo_2017.svg  (Wikimedia Commons; nascar.com blocks downloads with 403)
+mrn.svg        Motor Racing Network https://upload.wikimedia.org/wikipedia/commons/0/05/Motor_Racing_Network_logo.svg  (Wikimedia Commons; mrn.com blocks downloads with 403)
+prn.png        Performance Racing Network  https://www.goprn.com/layout/bg_logo.png  (goprn.com, official; only 193x70 px, below the 256px target)
+auburn.png     Auburn Maroons (Auburn Enlarged City SD)  https://files.smartsites.parentsquare.com/8276/_variants/contain-1440w/header_logo_img_mvjllka8b30i6nleipd.png  (header logo on auburnschools.org; only 132x100 px, below the 256px target)
+je.png         Jordan-Elbridge      https://www.jecsd.org/images/header_logo.png  (district header logo on jecsd.org, 640x82 wide banner form)
+geneva.png     Geneva CSD           https://resources.finalsite.net/images/v1722277944/genevacsdorg/pt4wt3uslbe27hltwz96/GCSD-Logo-for-Favicon.png  (genevacsd.org site icon, 256x256; confirm it is the Panthers mark)
+mynderse.png   Seneca Falls CSD (Mynderse Academy's district)  https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1620400730/senecafallscsdorg/dvaze5mwp3fvzx3pjgin/Logo.png  (district logo on senecafallscsd.org; not a Mynderse-specific mark)
+waterloo.png   Waterloo CSD (Tiger) https://resources.finalsite.net/images/f_auto,q_auto/v1682517957/waterloocsdorg/vmvjephxvukaseripnco/WaterlooTiger-NoBkg.png  (waterloocsd.org homepage)
+dundee.png     Dundee CSD           https://files.smartsites.parentsquare.com/4073/design_img__ur2ojr.png  (dundeecs.org homepage banner logo)
+
+MISSING (text badge used in the mockup)
+Weedsport                 weedsport.org page renders its logo with scripts; no direct file found
+Penn Yan Academy Mustangs pycsd.org: no logo file found (only a favicon)
+Buffalo Bills Radio Network affiliate mark   no clean file found
+Syracuse Orange radio network / ISP mark     no clean file found

@@ -140,14 +140,25 @@ get_header();
 			<?php endif; ?>
 
 			<?php if ( $has_ways ) : ?>
-				<?php $way_cols = count( $p['offers'] ) <= 5 ? max( 1, count( $p['offers'] ) ) : 3; ?>
 				<!-- 4. Ways to advertise -->
 				<section class="st-panel" id="ways">
 					<h2>Ways to advertise <span>What you can buy</span></h2>
-					<div class="st-cards" style="--cols:<?php echo (int) $way_cols; ?>">
+					<div class="pr-ways">
 						<?php foreach ( $p['offers'] as $way ) : ?>
-							<div class="st-way">
-								<?php echo flxlm_product_icon( $way['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static markup built in inc/products.php. ?>
+							<div class="pr-way">
+								<?php if ( ! empty( $way['logos'] ) ) : ?>
+									<div class="pr-logos">
+										<?php foreach ( $way['logos'] as $lg ) : ?>
+											<?php if ( isset( $lg['text'] ) ) : ?>
+												<span class="pr-logo pr-logo--text"><?php echo esc_html( $lg['text'] ); ?></span>
+											<?php else : ?>
+												<span class="pr-logo<?php echo ! empty( $lg['chip'] ) ? ' pr-logo--chip' : ''; ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/products/logos/' . $lg['file'] ) ); ?>" alt="<?php echo esc_attr( $lg['alt'] ); ?>" loading="lazy" decoding="async"></span>
+											<?php endif; ?>
+										<?php endforeach; ?>
+									</div>
+								<?php else : ?>
+									<?php echo flxlm_product_icon( $way['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static markup built in inc/products.php. ?>
+								<?php endif; ?>
 								<h3><?php echo esc_html( $way['title'] ); ?></h3>
 								<?php if ( '' !== $way['text'] ) : ?>
 									<p><?php echo esc_html( $way['text'] ); ?></p>

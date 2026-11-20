@@ -23,21 +23,25 @@
   /* ------------------------------------------------------------------ */
 
   var cities = [
-    { name: 'Geneva',       lat: 42.8690, lng: -76.9778 },
-    { name: 'Auburn',       lat: 42.9317, lng: -76.5661 },
-    { name: 'Penn Yan',     lat: 42.6612, lng: -77.0536 },
-    { name: 'Canandaigua',  lat: 42.8873, lng: -77.2814 },
-    { name: 'Seneca Falls', lat: 42.9109, lng: -76.7966 },
-    { name: 'Watkins Glen', lat: 42.3809, lng: -76.8724 },
-    { name: 'Bath',         lat: 42.3370, lng: -77.3178 },
-    { name: 'Elmira',       lat: 42.0898, lng: -76.8077 },
-    { name: 'Rochester',    lat: 43.1566, lng: -77.6088 },
-    { name: 'Victor',       lat: 42.9826, lng: -77.4089 },
-    { name: 'Dundee',       lat: 42.5237, lng: -76.9767 },
-    { name: 'Ithaca',       lat: 42.4440, lng: -76.5019 },
-    { name: 'Newark',       lat: 43.0467, lng: -77.0952 },
-    { name: 'Syracuse',     lat: 43.0481, lng: -76.1474 }
+    { name: 'Geneva',       lat: 42.8690, lng: -76.9778, dir: 'bottom' },
+    { name: 'Auburn',       lat: 42.9317, lng: -76.5661, dir: 'right' },
+    { name: 'Penn Yan',     lat: 42.6612, lng: -77.0536, dir: 'left' },
+    { name: 'Canandaigua',  lat: 42.8873, lng: -77.2814, dir: 'left' },
+    { name: 'Seneca Falls', lat: 42.9109, lng: -76.7966, dir: 'top' },
+    { name: 'Watkins Glen', lat: 42.3809, lng: -76.8724, dir: 'bottom' },
+    { name: 'Bath',         lat: 42.3370, lng: -77.3178, dir: 'left' },
+    { name: 'Elmira',       lat: 42.0898, lng: -76.8077, dir: 'right' },
+    { name: 'Rochester',    lat: 43.1566, lng: -77.6088, dir: 'left' },
+    { name: 'Victor',       lat: 42.9826, lng: -77.4089, dir: 'top' },
+    { name: 'Dundee',       lat: 42.5237, lng: -76.9767, dir: 'right' },
+    { name: 'Ithaca',       lat: 42.4440, lng: -76.5019, dir: 'right' },
+    { name: 'Newark',       lat: 43.0467, lng: -77.0952, dir: 'top' },
+    { name: 'Syracuse',     lat: 43.0481, lng: -76.1474, dir: 'top' }
   ];
+
+  /* Tooltip offset per direction: a few pixels clear of the dot. Same table as
+     the hub map (site-hubs.js); each town's dir keeps its label off its neighbours. */
+  var OFFSETS = { right: [6, 0], left: [-6, 0], top: [0, -5], bottom: [0, 5] };
 
   /* ------------------------------------------------------------------ */
   /*  Initialize map                                                     */
@@ -134,8 +138,8 @@
 
       marker.bindTooltip(city.name, {
         permanent: true,
-        direction: 'right',
-        offset: [6, 0],
+        direction: city.dir || 'right',
+        offset: OFFSETS[city.dir || 'right'],
         className: 'station-map-city-label'
       });
     });
