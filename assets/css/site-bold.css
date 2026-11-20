@@ -1074,16 +1074,16 @@ body.fx-nav-open {
 	text-align: center;
 }
 
-/* Closing call-to-action band in the footer: same scale as the pages above it.
-   Not applied on the seven station pages, which keep their own type. */
-body:not(.page-template-template-station) .cta-banner__title {
+/* Closing call-to-action band in the footer: one shared component, same scale on every page
+   (station pages included; their own type applies to station content, not this band). */
+body .cta-banner__title {
 	font-size: var(--fs-h2);
 	font-weight: var(--fw-h2);
 	line-height: var(--lh-h2);
 	letter-spacing: var(--ls-h2);
 }
 
-body:not(.page-template-template-station) .cta-banner__subtitle {
+body .cta-banner__subtitle {
 	font-size: var(--fs-lead);
 	font-weight: var(--fw-lead);
 	line-height: var(--lh-lead);
