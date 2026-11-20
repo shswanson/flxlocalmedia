@@ -49,6 +49,7 @@ flxlm_pg_open();
 						'fldn-seo'                  => 'case-study-fldn-seo-content.html',
 						'feed-spam-case-study'      => 'case-study-feed-spam-content.html',
 						'weather-alerts-case-study' => 'case-study-weather-alerts-content.html',
+						'contests-email-list'       => 'case-study-contests-email-content.html',
 					);
 					if ( isset( $files[ $slug ] ) && is_readable( get_template_directory() . '/' . $files[ $slug ] ) ) {
 						$raw = (string) file_get_contents( get_template_directory() . '/' . $files[ $slug ] );

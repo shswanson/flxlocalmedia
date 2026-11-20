@@ -457,6 +457,13 @@ function flxlm_seo_case_studies() {
 			'headline' => 'Automated storm alerts, built from zero',
 			'promise'  => 'A storm desk that checks the National Weather Service every 60 seconds.',
 		),
+		'contests-email-list'       => array(
+			'crumb'    => 'Contests Built an Email List',
+			'lead'     => array( 'Case Study: Contests Built an Email List', 'Contest Email List Case Study' ),
+			'desc'     => 'How FLX Local Media used one unchecked box on radio contest entry forms to help grow the Finger Lakes Daily News email to 5,065 subscribers.',
+			'headline' => 'How radio contests built a local email list',
+			'promise'  => 'One unchecked box on every entry form. 5,065 subscribers who asked to be there.',
+		),
 	);
 }
 
