@@ -1207,7 +1207,73 @@ body:not(.page-template-template-station) .cta-banner .btn {
 	text-transform: uppercase;
 }
 
+/* Logo band under the hero: the partners we broadcast for. */
+.flxlm-product .pr-band {
+	padding: 36px 0 52px;
+	background: #fff;
+	text-align: center;
+}
+
+.flxlm-product .pr-band__eyebrow {
+	margin-bottom: 20px;
+	color: var(--st-primary);
+	font-size: var(--fs-eyebrow);
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.flxlm-product .pr-band__row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 20px 48px;
+}
+
+.flxlm-product .pr-band__row img {
+	display: block;
+	width: auto;
+	max-width: 190px;
+	height: 72px;
+	object-fit: contain;
+}
+
+.flxlm-product .pr-band__row--small {
+	margin-top: 22px;
+	padding-top: 22px;
+	border-top: 1px solid #e0effb;
+	gap: 16px 40px;
+}
+
+.flxlm-product .pr-band__row--small img {
+	max-width: 150px;
+	height: 52px;
+}
+
 @media (max-width: 639px) {
+	.flxlm-product .pr-band {
+		padding: 28px 0 40px;
+	}
+
+	.flxlm-product .pr-band__row {
+		gap: 16px 28px;
+	}
+
+	.flxlm-product .pr-band__row img {
+		max-width: 120px;
+		height: 44px;
+	}
+
+	.flxlm-product .pr-band__row--small {
+		gap: 14px 24px;
+	}
+
+	.flxlm-product .pr-band__row--small img {
+		max-width: 90px;
+		height: 36px;
+	}
+
 	.flxlm-product .pr-ways {
 		grid-template-columns: minmax(0, 1fr);
 		padding: 14px;

@@ -188,6 +188,7 @@ function flxlm_product_icon( $name ) {
  *   cta_label    => string   button text (default 'Get a free plan for <name>')
  *   colors       => [ primary, deep, accent ]    #rrggbb strings, all optional
  *   logo         => string   file under assets/images/products/<slug>/ or https URL (white or light art on the colour)
+ *   hero_logos   => [ [ file, alt, small? ], ... ]   optional band of logos right under the hero, shown under "On the air with". Same file/alt format as offer logos; small => true puts it in a second, slightly smaller row
  *   stats        => [ [ value, label, source ], ... ]   bar of numbers; source is the plain-English origin of the number
  *   stats_note   => string   one line under the bar, e.g. how the numbers are made
  *   who          => [ heading, paragraphs => string[] ]   "Who you reach"
@@ -269,6 +270,21 @@ function flxlm_get_products() {
 			'menu_group' => 'Advertising', 'menu_label' => 'Sports', 'menu_blurb' => 'Bills, Syracuse, high school games and NASCAR on WAUB, WGVA and WFLR.',
 			'colors' => array( 'primary' => '#003b5b', 'deep' => '#00273e', 'accent' => '#e3a72f' ),
 			'logo' => '',
+			'hero_logos' => array(
+				array( 'file' => 'bills.svg', 'alt' => 'Buffalo Bills' ),
+				array( 'file' => 'syracuse.svg', 'alt' => 'Syracuse Orange' ),
+				array( 'file' => 'nascar.svg', 'alt' => 'NASCAR' ),
+				array( 'file' => 'mrn.svg', 'alt' => 'Motor Racing Network' ),
+				array( 'file' => 'prn.png', 'alt' => 'Performance Racing Network' ),
+				array( 'file' => 'auburn.png', 'alt' => 'Auburn Maroons', 'small' => true ),
+				array( 'file' => 'weedsport.png', 'alt' => 'Weedsport Wolverines', 'small' => true ),
+				array( 'file' => 'je.png', 'alt' => 'Jordan-Elbridge', 'small' => true ),
+				array( 'file' => 'geneva.png', 'alt' => 'Geneva Panthers', 'small' => true ),
+				array( 'file' => 'mynderse.png', 'alt' => 'Seneca Falls Mynderse', 'small' => true ),
+				array( 'file' => 'waterloo.png', 'alt' => 'Waterloo Tigers', 'small' => true ),
+				array( 'file' => 'pennyan.png', 'alt' => 'Penn Yan Mustangs', 'small' => true ),
+				array( 'file' => 'dundee.png', 'alt' => 'Dundee', 'small' => true ),
+			),
 			'stats' => array(
 				array( 'value' => '239', 'label' => 'live sports broadcasts scheduled on our stations and Finger Lakes Daily News, September 2025 through August 2026', 'source' => 'FLX sports broadcast calendar (BigQuery fldn_analytics.streaming_sports_events), cancelled events and talk shows removed, counted November 19, 2026' ),
 				array( 'value' => '60+', 'label' => 'games in the Bills and Syracuse football and basketball package, with at least three commercials in each football game and two in each basketball game', 'source' => '2025-26 Buffalo Bills and Syracuse sponsor sheet, September through March' ),
@@ -762,6 +778,19 @@ function flxlm_get_product( $slug ) {
 		}
 	}
 
+	$hero_logos = array();
+	if ( isset( $in['hero_logos'] ) && is_array( $in['hero_logos'] ) ) {
+		foreach ( $in['hero_logos'] as $lg ) {
+			if ( is_array( $lg ) && '' !== $str( $lg, 'file' ) ) {
+				$hero_logos[] = array(
+					'file'  => basename( $str( $lg, 'file' ) ),
+					'alt'   => $str( $lg, 'alt' ),
+					'small' => ! empty( $lg['small'] ),
+				);
+			}
+		}
+	}
+
 	$extra = array();
 	if ( isset( $in['extra'] ) && is_array( $in['extra'] ) ) {
 		foreach ( $in['extra'] as $e ) {
@@ -805,6 +834,7 @@ function flxlm_get_product( $slug ) {
 		),
 		'css_vars'    => $colors['css'],
 		'logo'        => flxlm_product_asset( $slug, $str( $in, 'logo' ) ),
+		'hero_logos'  => $hero_logos,
 		'stats'       => $stats,
 		'stats_note'  => $str( $in, 'stats_note' ),
 		'who'         => $who,

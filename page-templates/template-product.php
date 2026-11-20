@@ -102,6 +102,32 @@ get_header();
 		</div>
 	</section>
 
+	<?php if ( ! empty( $p['hero_logos'] ) ) : ?>
+		<!-- 1b. Logo band: who we are on the air with. -->
+		<section class="pr-band" aria-label="On the air with">
+			<div class="st-wrap">
+				<div class="pr-band__eyebrow">On the air with</div>
+				<?php foreach ( array( false, true ) as $small_row ) : ?>
+					<?php
+					$row = array_filter(
+						$p['hero_logos'],
+						function ( $lg ) use ( $small_row ) {
+							return $small_row === $lg['small'];
+						}
+					);
+					?>
+					<?php if ( $row ) : ?>
+						<div class="pr-band__row<?php echo $small_row ? ' pr-band__row--small' : ''; ?>">
+							<?php foreach ( $row as $lg ) : ?>
+								<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/products/logos/' . $lg['file'] ) ); ?>" alt="<?php echo esc_attr( $lg['alt'] ); ?>" loading="lazy" decoding="async">
+							<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</div>
+		</section>
+	<?php endif; ?>
+
 	<div class="st-sheet">
 		<div class="st-main">
 
