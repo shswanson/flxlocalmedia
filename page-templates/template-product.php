@@ -149,14 +149,7 @@ get_header();
 					</div>
 				</div>
 				<?php if ( $sources ) : ?>
-					<details class="st-specs-note st-sources">
-						<summary>Sources</summary>
-						<ol>
-							<?php foreach ( $sources as $src ) : ?>
-								<li><b><?php echo esc_html( $src[0] ); ?></b> <?php echo esc_html( $src[1] ); ?></li>
-							<?php endforeach; ?>
-						</ol>
-					</details>
+					<?php /* Sources kept in code only (Scott, 2026-11-20: no source link on the page). */ ?>
 				<?php endif; ?>
 				<?php if ( '' !== $p['stats_note'] ) : ?>
 					<p class="st-specs-note"><?php echo esc_html( $p['stats_note'] ); ?></p>

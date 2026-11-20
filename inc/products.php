@@ -209,7 +209,7 @@ function flxlm_get_products() {
 			'name' => 'Discover FLX',
 			'eyebrow' => 'Discover FLX · Media',
 			'title' => 'Discover FLX',
-			'tagline' => 'Here\'s what the locals actually love.',
+			'tagline' => 'What the locals love.',
 			'lead' => 'A Finger Lakes guide to the best places to eat, shop, stay and visit, ranked by what locals voted in FLX Finest.',
 			'menu_group' => 'Media', 'menu_label' => 'Discover FLX', 'menu_blurb' => 'The Finger Lakes guide where FLX Finest winners come first.',
 			'colors' => array( 'primary' => '#1f5c38', 'deep' => '#002d14', 'accent' => '#e3a72f' ),

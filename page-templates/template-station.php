@@ -177,17 +177,7 @@ get_header();
 					<?php endif; ?>
 				</div>
 				<?php if ( $has_est || $has_streaming ) : ?>
-					<details class="st-specs-note st-sources">
-						<summary>Sources</summary>
-						<ol>
-							<?php if ( $has_est ) : ?>
-								<li>Over-the-air listeners: Census and format-share estimates. <a href="<?php echo esc_url( home_url( '/methodology/' ) ); ?>">How we estimate</a></li>
-							<?php endif; ?>
-							<?php if ( $has_streaming ) : ?>
-								<li>Streaming hours: measured directly</li>
-							<?php endif; ?>
-						</ol>
-					</details>
+					<?php /* Sources kept in code only (Scott, 2026-11-20: no source link on the page). */ ?>
 				<?php endif; ?>
 			<?php endif; ?>
 
