@@ -11,15 +11,15 @@
 wp_safe_redirect( home_url( '/' ), 302 );
 exit;
 
+flxlm_pg_begin( array(
+	'accent'  => 'navy',
+	'eyebrow' => 'Resources',
+	'title'   => 'Resources',
+	'lead'    => 'Guides, tools, and insights to help you market smarter in the Finger Lakes.',
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">Resources</h1>
-		<p class="page-header__subtitle">Guides, tools, and insights to help you market smarter in the Finger Lakes.</p>
-	</div>
-</div>
 
 <!-- Featured Resources -->
 <section class="section">
@@ -30,7 +30,7 @@ get_header();
 					<span class="resource-card__tag">Client Stories</span>
 					<h2 class="resource-card__title">Video Testimonials</h2>
 					<p class="resource-card__desc">Watch Finger Lakes business owners share how radio, digital, and multi-channel marketing helped them grow.</p>
-					<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="btn btn--primary">Watch Stories</a>
+					<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="flx-btn">Watch Stories</a>
 				</div>
 			</div>
 		<?php endif; ?>
@@ -73,4 +73,7 @@ get_header();
 	</div>
 </section>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

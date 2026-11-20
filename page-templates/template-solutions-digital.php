@@ -31,7 +31,7 @@ get_header();
 <section class="section section--wash">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow">Our Services</span>
+			<span class="flx-eyebrow">Our Services</span>
 			<h2 class="section__title">Everything You Need to Compete Online</h2>
 		</div>
 
@@ -66,7 +66,7 @@ get_header();
 			</div>
 			<div class="service-item">
 				<h3 class="service-item__title">Display Advertising</h3>
-				<p class="service-item__desc">Banner ads on Finger Lakes Daily News, which draws 730K+ monthly pageviews, reaching local readers where they already read and engage.</p>
+				<p class="service-item__desc">Banner ads on Finger Lakes Daily News, which draws 700K+ monthly pageviews, reaching local readers where they already read and engage.</p>
 			</div>
 			<div class="service-item">
 				<h3 class="service-item__title">Content Marketing</h3>

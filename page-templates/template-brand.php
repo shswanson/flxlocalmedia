@@ -8,22 +8,23 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'     => 'navy',
+	'eyebrow'    => 'How we are organized',
+	'title_html' => 'One region.<br>One newsroom.<br>Many voices.',
+	'lead'       => 'A reference document for advertisers, partners, journalism organizations, and internal teams, explaining how FLX Local Media is organized.',
+	'after'      => 'mist',
+	'cta'        => false,
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<!-- Hero -->
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">One region.<br>One newsroom.<br>Many voices.</h1>
-		<p class="page-header__subtitle">A reference document for advertisers, partners, journalism organizations, and internal teams, explaining how FLX Local Media is organized.</p>
-	</div>
-</div>
 
 <!-- The Portfolio -->
 <section class="section section--gray">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow">The Portfolio</span>
+			<span class="flx-eyebrow">The Portfolio</span>
 			<h2 class="section__title">Eleven consumer brands across radio, digital, and email.</h2>
 		</div>
 
@@ -101,7 +102,7 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow section__eyebrow--terracotta">The Full Suite</span>
+			<span class="flx-eyebrow">The Full Suite</span>
 			<h2 class="section__title">One operator. Four product lines.</h2>
 			<p class="section__subtitle">Most local-media operators sell one or two of these. We sell across all four, bundled by data and billed by line.</p>
 		</div>
@@ -162,7 +163,7 @@ get_header();
 		</div>
 
 		<aside class="data-network">
-			<span class="data-network__eyebrow">The Connective Tissue</span>
+			<span class="flx-eyebrow">The Connective Tissue</span>
 			<h3 class="data-network__title">FLX Data Network</h3>
 			<p class="data-network__lede">First-party data flows across all four lines. The same audience graph powers every product.</p>
 			<div class="data-network__flow">
@@ -190,7 +191,7 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow section__eyebrow--lake">Owned-Media Distribution</span>
+			<span class="flx-eyebrow">Owned-Media Distribution</span>
 			<h2 class="section__title">Editorial content moves across owned channels.</h2>
 			<p class="section__subtitle">Inside the Broadcast and Digital O&amp;O lines, one piece of content moves across multiple distribution channels. This is the matrix.</p>
 		</div>
@@ -263,7 +264,7 @@ get_header();
 <section class="section section--gray">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow section__eyebrow--sage">Three Views, One Company</span>
+			<span class="flx-eyebrow">Three Views, One Company</span>
 			<h2 class="section__title">Each audience sees a different lens.</h2>
 			<p class="section__subtitle">Consumers see brands. Advertisers see product lines. Internal teams see roles. Same organization, three optimizations.</p>
 		</div>
@@ -317,7 +318,7 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow section__eyebrow--terracotta">Brand Hierarchy &amp; Lockups</span>
+			<span class="flx-eyebrow">Brand Hierarchy &amp; Lockups</span>
 			<h2 class="section__title">Three tiers. One umbrella.</h2>
 			<p class="section__subtitle">How the portfolio is grouped by who it&rsquo;s for, and how lockups attach to FLX Local Media as the master brand.</p>
 		</div>
@@ -363,7 +364,7 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow section__eyebrow--terracotta">Style Guide</span>
+			<span class="flx-eyebrow">Style Guide</span>
 			<h2 class="section__title">The brand in the wild.</h2>
 			<p class="section__subtitle">How "FLX Local Media" appears across the surfaces audiences and partners encounter.</p>
 		</div>
@@ -439,7 +440,7 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow section__eyebrow--navy">Corporate Structure</span>
+			<span class="flx-eyebrow">Corporate Structure</span>
 			<h2 class="section__title">The formal record.</h2>
 		</div>
 
@@ -478,4 +479,5 @@ get_header();
 </section>
 
 <?php
+flxlm_pg_close();
 get_footer();

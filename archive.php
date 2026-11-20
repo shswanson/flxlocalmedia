@@ -5,17 +5,16 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'    => 'navy',
+	'eyebrow'   => 'Archive',
+	'title'     => wp_strip_all_tags( get_the_archive_title() ),
+	'lead_html' => wp_strip_all_tags( get_the_archive_description() ),
+	'cta'       => false,
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title"><?php the_archive_title(); ?></h1>
-		<?php if ( the_archive_description() ) : ?>
-			<p class="page-header__subtitle"><?php the_archive_description(); ?></p>
-		<?php endif; ?>
-	</div>
-</div>
 
 <section class="section">
 	<div class="container">
@@ -53,4 +52,7 @@ get_header();
 	</div>
 </section>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

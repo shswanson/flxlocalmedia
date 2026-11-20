@@ -5,15 +5,18 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'         => 'navy',
+	'eyebrow'        => 'Contact',
+	'title'          => 'Get a free local marketing review',
+	'lead'           => "Tell us what is holding your business back, and we'll come back with a plan, not a pitch.",
+	'cta'            => false,
+	'band'           => false,
+	'no_footer_band' => true,
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">Get a free local marketing review</h1>
-		<p class="page-header__subtitle">Tell us what is holding your business back, and we'll come back with a plan, not a pitch.</p>
-	</div>
-</div>
 
 <!-- Contact Form Section -->
 <section class="section" id="review">
@@ -54,10 +57,10 @@ get_header();
 </section>
 
 <!-- Studios Section -->
-<section class="section" style="padding-top: 0;">
+<section class="section section--gray pg-studios">
 	<div class="container">
 		<div class="section__header section__header--center">
-			<span class="section__eyebrow">Visit us</span>
+			<span class="flx-eyebrow">Visit us</span>
 			<h2 class="section__title">Our Studios</h2>
 			<p class="section__subtitle">Three studios across the Finger Lakes, broadcasting seven stations across the region.</p>
 		</div>
@@ -96,4 +99,7 @@ get_header();
 	</div>
 </section>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

@@ -7,10 +7,12 @@
  * @package flxlm
  */
 
-// Block indexing.
-add_action( 'wp_head', function() {
-	echo '<meta name="robots" content="noindex, nofollow" />' . "\n";
-}, 1 );
+// Block indexing, through core's single robots tag (inc/seo.php adds the same pair from the page entry).
+add_filter( 'wp_robots', function ( $robots ) {
+	$robots['noindex']  = true;
+	$robots['nofollow'] = true;
+	return $robots;
+} );
 
 get_header();
 ?>
@@ -26,7 +28,7 @@ get_header();
 
 		<div style="margin-top: var(--space-3xl); text-align: center;">
 			<p style="color: var(--color-text-muted, #64748b); margin-bottom: var(--space-lg);">Ready to get started?</p>
-			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary btn--lg">Contact Us</a>
+			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="flx-btn">Contact Us</a>
 		</div>
 	</div>
 </section>

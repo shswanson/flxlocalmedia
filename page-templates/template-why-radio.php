@@ -12,21 +12,21 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'  => 'navy',
+	'eyebrow' => 'Radio advertising',
+	'title'   => 'Why Radio',
+	'lead'    => 'The most undervalued advertising medium in America, and it is working right here in the Finger Lakes.',
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">Why Radio</h1>
-		<p class="page-header__subtitle">The most undervalued advertising medium in America, and it is working right here in the Finger Lakes.</p>
-	</div>
-</div>
 
 <!-- Section 1: Your Market (local first) -->
 <section class="section">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">Your Market</span>
+			<span class="flx-eyebrow">Your Market</span>
 			<h2 class="section__title">The Medium Your Customers Already Use</h2>
 		</div>
 		<div class="post-content">
@@ -65,7 +65,7 @@ get_header();
 <section class="section section--gray">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">The National Picture</span>
+			<span class="flx-eyebrow">The National Picture</span>
 			<h2 class="section__title">Across the Country, the Numbers Back It Up</h2>
 		</div>
 
@@ -85,7 +85,7 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">ROI</span>
+			<span class="flx-eyebrow">ROI</span>
 			<h2 class="section__title">The ROI Nobody Talks About</h2>
 		</div>
 		<div class="post-content">
@@ -129,7 +129,7 @@ get_header();
 <section class="section section--gray">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">In-Car Listening</span>
+			<span class="flx-eyebrow">In-Car Listening</span>
 			<h2 class="section__title">Radio Dominates the Car</h2>
 		</div>
 		<div class="post-content">
@@ -166,7 +166,7 @@ get_header();
 <section class="section">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">Trust</span>
+			<span class="flx-eyebrow">Trust</span>
 			<h2 class="section__title">More Than Background Noise</h2>
 		</div>
 		<div class="post-content">
@@ -180,14 +180,14 @@ get_header();
 <section class="section section--gray">
 	<div class="container">
 		<div class="section__header">
-			<span class="section__eyebrow">Our Advantage</span>
+			<span class="flx-eyebrow">Our Advantage</span>
 			<h2 class="section__title">The Finger Lakes Media Landscape</h2>
 		</div>
 		<div class="post-content">
 			<p>The Finger Lakes is not a big-city media market. The regional newspapers are either gone or arriving days after the news happened. What is left is FLX Local Media, a media company built on local voices, local news, and local relationships in this region.</p>
 			<ul>
 				<li><strong>7 radio stations across six formats.</strong> Country, News/Talk, AC, Classic Rock, Classic Hits, Easy Rock.</li>
-				<li><strong>Finger Lakes Daily News</strong> is our local digital news site, with 210,000+ monthly users (Google Analytics 4, September 2026).</li>
+				<li><strong>Finger Lakes Daily News</strong> is our local digital news site, with more than 180,000 monthly users (Google Analytics 4, August to October 2026, robot traffic removed).</li>
 				<li><strong>Radio, digital news, and a daily newsletter</strong> from one local team, so your radio, online, and email can be planned together.</li>
 				<li><strong>Regional TV comes from Rochester and Syracuse</strong>. Neither treats the Finger Lakes as a primary market.</li>
 			</ul>
@@ -204,10 +204,13 @@ get_header();
 			<p class="section__subtitle">No pressure, no jargon. Let's talk about what radio can do for your business.</p>
 		</div>
 		<div class="text-center">
-			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary btn--lg">Get in Touch</a>
+			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="flx-btn">Get in Touch</a>
 		</div>
 		<p class="methodology-link">National figures: Nielsen Audio Today 2026 and Edison Research Share of Ear, Q4 2025. Local figures: U.S. Census Bureau, American Community Survey 5-Year Estimates, 2022. Finger Lakes Daily News users: Google Analytics 4, September 2026. <a href="<?php echo esc_url( home_url( '/methodology/' ) ); ?>">See our full methodology.</a></p>
 	</div>
 </section>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

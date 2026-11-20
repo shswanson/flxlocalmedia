@@ -1,0 +1,1395 @@
+/* ==========================================================================
+   FLX Local Media - bold site layer (the frame)
+   Loads on every page, after style.css (and after station.css on the Product
+   template). Parts:
+     0. Frame basics: buttons, anchor offsets, page headers under the bar
+     1. Glass menu (header.php, assets/js/site-nav.js)
+     2. Footer (footer.php)
+     3. Product page additions (page-templates/template-product.php)
+   Colours are the palette tokens in flx-tokens.css (--navy-800, --gold-400 ...)
+   and the frame tokens built from them (--frame-*, --sec-*).
+   Navigation classes start with fx-.
+
+   Dark or light bar: body.flxlm-dark-hero (set in inc/site-frame.php) means the
+   page opens with a dark or colour hero; the bar is navy glass, white logo, and
+   floats over the hero. Without the class the bar is light glass with the navy
+   logo and sits above the content.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   0. Frame basics
+   ========================================================================== */
+
+html {
+	scroll-padding-top: calc(var(--header-height) + 8px);
+}
+
+/* The navy title band (.page-header) on a page that has the dark bar: start
+   the content below the bar, the band itself runs to the top of the page. */
+body.flxlm-dark-hero .page-header {
+	padding-top: calc(var(--header-height) + var(--space-xl));
+}
+
+
+/* ==========================================================================
+   1. Glass menu
+   The glass is the .fx-header__glass layer, never the header itself: a filter
+   on the header would trap the phone drawer (position: fixed) inside the bar.
+   Phone and tablet (up to 1079px): a bar and a full-height glass drawer with
+   accordions. 1080px and up: dropdowns (Stations is a panel of logos).
+   ========================================================================== */
+
+.site-header.fx-header {
+	/* Light glass is the default. */
+	--fxg-ink: var(--navy-800);
+	--fxg-ink-soft: var(--navy-600);
+	--fxg-glass: rgba(255, 255, 255, 0.75);
+	--fxg-glass-scrolled: rgba(255, 255, 255, 0.92);
+	--fxg-line: rgba(0, 59, 91, 0.16);
+	--fxg-hover: var(--navy-50);
+	--fxg-current: var(--navy-800);
+	--fxg-panel: rgba(255, 255, 255, 0.97);
+	--fxg-drawer: rgba(255, 255, 255, 0.96);
+	--fxg-ring: var(--blue-500);
+
+	position: sticky;
+	top: var(--fx-inset);
+	z-index: 1000;
+	height: var(--fx-bar-h);
+	margin: var(--fx-inset) var(--fx-inset) var(--fx-inset);
+	background: none;
+	border: 0;
+}
+
+body.admin-bar .site-header.fx-header {
+	top: calc(var(--fx-inset) + 32px);
+}
+
+@media (max-width: 782px) {
+	body.admin-bar .site-header.fx-header {
+		top: calc(var(--fx-inset) + 46px);
+	}
+}
+
+/* Dark glass over a hero. The bar takes no room: the hero starts at the top
+   of the page, under it. */
+body.flxlm-dark-hero .site-header.fx-header {
+	--fxg-ink: #ffffff;
+	--fxg-ink-soft: rgba(255, 255, 255, 0.74);
+	--fxg-glass: rgba(0, 59, 91, 0.55);
+	--fxg-glass-scrolled: rgba(0, 39, 62, 0.8);
+	--fxg-line: rgba(255, 255, 255, 0.24);
+	--fxg-hover: rgba(255, 255, 255, 0.13);
+	--fxg-current: var(--gold-300);
+	--fxg-panel: rgba(0, 39, 62, 0.84);
+	--fxg-drawer: rgba(0, 31, 49, 0.92);
+	--fxg-ring: var(--gold-400);
+
+	margin-bottom: calc(-1 * (var(--fx-bar-h) + var(--fx-inset)));
+}
+
+.fx-header__glass {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	border: 1px solid var(--fxg-line);
+	border-radius: 14px;
+	background: var(--fxg-glass);
+	-webkit-backdrop-filter: blur(14px) saturate(140%);
+	backdrop-filter: blur(14px) saturate(140%);
+	box-shadow: 0 8px 28px rgba(0, 22, 39, 0.16);
+	transition: background 0.2s;
+}
+
+.fx-header.is-scrolled .fx-header__glass {
+	background: var(--fxg-glass-scrolled);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+	.fx-header__glass {
+		background: var(--fxg-glass-scrolled);
+	}
+}
+
+.fx-header :focus-visible {
+	outline-color: var(--fxg-ring);
+}
+
+.fx-header .site-header__inner {
+	position: relative;
+	z-index: 2;
+	gap: 16px;
+	max-width: none;
+	padding-left: 22px;
+	padding-right: 12px;
+}
+
+/* The logo and the button stay above the phone drawer, which is a sibling inside the same row. */
+.fx-header .fx-logo,
+.fx-header .fx-burger {
+	position: relative;
+	z-index: 2;
+}
+
+/* Logo: the horizontal one-line logo. White on dark glass, navy on light. */
+.fx-logo {
+	flex: none;
+}
+
+.fx-header .fx-logo .fx-logo__img {
+	width: auto;
+	height: 30px;
+}
+
+.fx-header .fx-logo .fx-logo__img--white {
+	display: none;
+}
+
+body.flxlm-dark-hero .fx-header .fx-logo .fx-logo__img--white {
+	display: block;
+}
+
+body.flxlm-dark-hero .fx-header .fx-logo .fx-logo__img--navy {
+	display: none;
+}
+
+@media (max-width: 1079px) {
+	.fx-header .fx-logo .fx-logo__img {
+		height: 26px;
+	}
+}
+
+/* Menu button (phones and tablets) */
+.fx-burger {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 44px;
+	height: 44px;
+	margin-left: auto;
+	padding: 0;
+	background: none;
+	border: 0;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.fx-burger__bars,
+.fx-burger__bars::before,
+.fx-burger__bars::after {
+	display: block;
+	width: 22px;
+	height: 2px;
+	background: var(--fxg-ink);
+	border-radius: 2px;
+	transition: transform 0.2s, top 0.2s, background 0.2s;
+}
+
+.fx-burger__bars {
+	position: relative;
+}
+
+.fx-burger__bars::before,
+.fx-burger__bars::after {
+	content: "";
+	position: absolute;
+	left: 0;
+}
+
+.fx-burger__bars::before {
+	top: -7px;
+}
+
+.fx-burger__bars::after {
+	top: 7px;
+}
+
+.fx-burger[aria-expanded="true"] .fx-burger__bars {
+	background: transparent;
+}
+
+.fx-burger[aria-expanded="true"] .fx-burger__bars::before {
+	top: 0;
+	transform: rotate(45deg);
+}
+
+.fx-burger[aria-expanded="true"] .fx-burger__bars::after {
+	top: 0;
+	transform: rotate(-45deg);
+}
+
+body.fx-nav-open {
+	overflow: hidden;
+}
+
+/* The drawer: the whole screen as glass, the bar's own row left clear at the top. */
+.fx-nav {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 1;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding: calc(var(--fx-bar-h) + var(--fx-inset) * 2) 0 32px;
+	background: var(--fxg-drawer);
+	-webkit-backdrop-filter: blur(22px) saturate(140%);
+	backdrop-filter: blur(22px) saturate(140%);
+}
+
+.fx-nav.is-open {
+	display: block;
+}
+
+.fx-nav__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fx-item {
+	border-bottom: 1px solid var(--fxg-line);
+}
+
+.fx-item--stations {
+	--fx-dot: var(--sec-stations);
+}
+
+.fx-item--media {
+	--fx-dot: var(--sec-media);
+}
+
+.fx-item--advertising {
+	--fx-dot: var(--sec-advertising);
+}
+
+.fx-item--digital {
+	--fx-dot: var(--sec-digital);
+}
+
+.fx-item--proof {
+	--fx-dot: var(--sec-proof);
+}
+
+/* The small section-colour dot before each footer column heading. */
+.fx-dot {
+	display: inline-block;
+	flex: none;
+	width: 8px;
+	height: 8px;
+	background: var(--fx-dot, var(--gold-400));
+	border-radius: 50%;
+}
+
+.fx-nav__btn {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	width: 100%;
+	padding: 15px 20px;
+	background: none;
+	border: 0;
+	color: var(--fxg-ink);
+	font: 600 1rem/1.3 var(--font-body);
+	text-align: left;
+	cursor: pointer;
+}
+
+.fx-nav__btn[aria-expanded="true"] {
+	background: var(--fxg-hover);
+}
+
+.fx-nav__caret {
+	flex: none;
+	margin-left: auto;
+	transition: transform 0.2s;
+}
+
+.fx-nav__btn[aria-expanded="true"] .fx-nav__caret {
+	transform: rotate(180deg);
+}
+
+.fx-item.is-current > .fx-nav__btn {
+	color: var(--fxg-current);
+}
+
+.fx-panel {
+	display: none;
+}
+
+.fx-item.is-open > .fx-panel {
+	display: block;
+}
+
+/* Link lists */
+.fx-links {
+	margin: 0;
+	padding: 4px 0 8px;
+	list-style: none;
+}
+
+.fx-links a {
+	display: block;
+	padding: 11px 20px 11px 37px;
+	color: var(--fxg-ink);
+	font-size: var(--fs-sm);
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.fx-links a:hover,
+.fx-links a[aria-current="page"] {
+	background: var(--fxg-hover);
+	color: var(--fxg-ink);
+}
+
+.fx-links a.fx-links__has-icon {
+	display: grid;
+	grid-template-columns: 24px minmax(0, 1fr);
+	column-gap: 12px;
+	align-items: center;
+}
+
+.fx-links__icon {
+	grid-row: 1 / span 2;
+	width: 24px;
+	height: 24px;
+	box-sizing: border-box;
+	padding: 2px;
+	background: #fff;
+	object-fit: contain;
+	border-radius: 7px;
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.fx-links__has-icon small {
+	grid-column: 2;
+}
+
+.fx-links small {
+	display: block;
+	margin-top: 2px;
+	color: var(--fxg-ink-soft);
+	font-size: 0.8rem;
+	font-weight: 400;
+}
+
+/* Stations as a three-column grid of logo tiles. Names stay for screen readers.
+   The tiles are white in both looks so the colour logos read. */
+.fx-mega {
+	padding-top: 14px;
+	padding-bottom: 16px;
+}
+
+.fx-panel__title {
+	display: none;
+	margin: 0 0 10px;
+	color: var(--fxg-ink-soft);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.fx-stations {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fx-station {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	height: 100%;
+	min-height: 64px;
+	padding: 8px 6px;
+	background: #ffffff;
+	border: 1px solid var(--navy-100);
+	border-radius: 10px;
+	color: var(--navy-800);
+	text-align: center;
+}
+
+.fx-station:hover {
+	background: var(--navy-50);
+	border-color: var(--blue-500);
+	color: var(--navy-800);
+}
+
+.fx-station img {
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	max-height: 38px;
+	object-fit: contain;
+}
+
+.fx-station b {
+	font-size: 0.78rem;
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+.fx-station small {
+	color: var(--navy-600);
+	font-size: 0.7rem;
+	font-weight: 500;
+	line-height: 1.3;
+}
+
+/* On a phone the logo says the name; keep the text for screen readers only. */
+.fx-station:not(.fx-station--all):not(.fx-station--text) b,
+.fx-station:not(.fx-station--all):not(.fx-station--text) small {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.fx-stations > li:last-child {
+	grid-column: 1 / -1;
+}
+
+.fx-station--all {
+	min-height: 0;
+	background: var(--gold-400);
+	border-color: var(--gold-400);
+	color: var(--navy-800);
+}
+
+.fx-station--all small {
+	color: var(--navy-800);
+}
+
+.fx-station--all:hover {
+	background: var(--gold-300);
+	border-color: var(--gold-300);
+	color: var(--navy-800);
+}
+
+/* The side card in the Stations menu is for desktop only. */
+.fx-mega__feature {
+	display: none;
+}
+
+/* Button in the bar (a .flx-btn): where it sits. */
+.fx-nav__cta {
+	display: flex;
+	margin: 20px;
+	white-space: nowrap;
+}
+
+/* ---------- Dropdown bar (1080px and up) ---------- */
+@media (min-width: 1080px) {
+	.fx-burger {
+		display: none;
+	}
+
+	body.fx-nav-open {
+		overflow: visible;
+	}
+
+	.fx-nav {
+		display: flex;
+		position: static;
+		inset: auto;
+		z-index: auto;
+		align-items: stretch;
+		align-self: stretch;
+		gap: 4px;
+		margin-left: auto;
+		padding: 0;
+		overflow: visible;
+		background: none;
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
+
+	.fx-nav__list {
+		display: flex;
+		align-items: stretch;
+	}
+
+	.fx-item {
+		position: relative;
+		display: flex;
+		align-items: center;
+		border: 0;
+	}
+
+	.fx-item--mega {
+		position: static;
+	}
+
+	.fx-nav__btn {
+		width: auto;
+		gap: 8px;
+		padding: 9px 11px;
+		border-radius: 9px;
+		font-size: 0.93rem;
+		font-weight: var(--fw-nav);
+		white-space: nowrap;
+		transition: background 0.15s;
+	}
+
+	.fx-nav__caret {
+		margin-left: 0;
+		opacity: 0.8;
+	}
+
+	.fx-nav__btn:hover,
+	.fx-nav__btn[aria-expanded="true"] {
+		background: var(--fxg-hover);
+	}
+
+	.fx-item.is-current > .fx-nav__btn {
+		font-weight: var(--fw-nav);
+	}
+
+	.fx-nav__cta {
+		align-self: center;
+		margin: 0 0 0 8px;
+	}
+
+	/* Without the script, open on hover so the menu still works. */
+	html:not(.fx-js) .fx-item:hover > .fx-panel {
+		display: block;
+	}
+
+	/* Panels are glass too and sit just under the bar. */
+	.fx-panel {
+		position: absolute;
+		top: calc(100% + 10px);
+		left: 0;
+		z-index: 100;
+		background: var(--fxg-panel);
+		-webkit-backdrop-filter: blur(18px) saturate(140%);
+		backdrop-filter: blur(18px) saturate(140%);
+		border: 1px solid var(--fxg-line);
+		border-radius: 14px;
+		box-shadow: 0 18px 40px rgba(0, 22, 39, 0.2);
+		animation: fx-pop 0.14s ease-out;
+	}
+
+	/* Keeps the pointer inside the item while it crosses the gap. */
+	.fx-panel::before {
+		content: "";
+		position: absolute;
+		top: -12px;
+		left: 0;
+		right: 0;
+		height: 12px;
+	}
+
+	.fx-panel--links {
+		min-width: 340px;
+	}
+
+	.fx-item:last-child .fx-panel--links {
+		left: auto;
+		right: 0;
+	}
+
+	.fx-panel--mega {
+		left: 0;
+		right: 0;
+	}
+
+	.fx-links {
+		padding: 10px;
+	}
+
+	.fx-links a {
+		padding: 10px 14px;
+		border-radius: 10px;
+		font-size: 0.93rem;
+	}
+
+	.fx-mega {
+		display: grid;
+		grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr);
+		gap: 28px;
+		padding-top: 22px;
+		padding-bottom: 24px;
+	}
+
+	.fx-panel__title {
+		display: block;
+	}
+
+	.fx-stations {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 10px;
+	}
+
+	.fx-station {
+		min-height: 118px;
+		padding: 12px 8px;
+		border-radius: 12px;
+	}
+
+	.fx-station img {
+		max-width: 110px;
+		max-height: 54px;
+	}
+
+	.fx-station b,
+	.fx-station small {
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+		margin: 0 !important;
+		overflow: visible !important;
+		clip: auto !important;
+		white-space: normal !important;
+	}
+
+	.fx-stations > li:last-child {
+		grid-column: auto;
+	}
+
+	.fx-station--all {
+		min-height: 118px;
+	}
+
+	.fx-mega__feature {
+		display: flex;
+		align-items: flex-end;
+	}
+
+	.fx-feature {
+		width: 100%;
+		padding: 18px;
+		background: var(--navy-800);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 12px;
+		color: #ffffff;
+	}
+
+	.fx-feature b {
+		display: block;
+		margin-bottom: 4px;
+		font-size: 1rem;
+	}
+
+	.fx-feature span {
+		display: block;
+		color: var(--navy-200);
+		font-size: 0.85rem;
+		line-height: 1.5;
+	}
+
+	.fx-feature a {
+		display: inline-block;
+		margin-top: 12px;
+		color: var(--gold-400);
+		font-size: 0.88rem;
+		font-weight: 700;
+	}
+
+	.fx-feature a:hover {
+		color: #ffffff;
+	}
+}
+
+@keyframes fx-pop {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.fx-panel {
+		animation: none;
+	}
+
+	.fx-burger__bars,
+	.fx-burger__bars::before,
+	.fx-burger__bars::after,
+	.fx-nav__caret,
+	.fx-header__glass {
+		transition: none;
+	}
+}
+
+
+/* ==========================================================================
+   2. Footer: navy, the same on every page
+   ========================================================================== */
+
+.site-footer__inner {
+	gap: 2.5rem 3rem;
+}
+
+@media (min-width: 900px) {
+	.site-footer__inner {
+		grid-template-columns: minmax(230px, 0.9fr) minmax(0, 4fr);
+	}
+}
+
+.site-footer__brandline {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px 16px;
+	margin-bottom: 1rem;
+}
+
+.site-footer__brandline .site-footer__logo {
+	margin-bottom: 0;
+}
+
+.site-footer__logo img {
+	width: auto;
+	height: 30px;
+}
+
+.site-footer__owned {
+	margin: 0;
+	padding-left: 16px;
+	border-left: 2px solid var(--gold-400);
+	color: var(--color-white);
+	font-size: var(--fs-sm);
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.site-footer__sba {
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+	margin-top: 1.25rem;
+}
+
+/* The badge is the official image, shown as supplied: no recolor, no crop, no frame. */
+.site-footer__badge {
+	display: block;
+	flex: none;
+	line-height: 0;
+}
+
+.site-footer__badge img {
+	display: block;
+	width: 90px;
+	height: auto;
+}
+
+.site-footer__sba-text {
+	margin: 0;
+	max-width: 190px;
+	font-size: 0.8rem;
+	line-height: 1.5;
+}
+
+.site-footer__nav {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1.75rem 1.5rem;
+	align-content: start;
+}
+
+@media (min-width: 640px) {
+	.site-footer__nav {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1080px) {
+	.site-footer__nav {
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		gap: 1.75rem 1.25rem;
+	}
+}
+
+.site-footer__col--stations {
+	--fx-dot: var(--sec-stations);
+}
+
+.site-footer__col--media {
+	--fx-dot: var(--sec-media);
+}
+
+.site-footer__col--advertising {
+	--fx-dot: var(--sec-advertising);
+}
+
+.site-footer__col--digital {
+	--fx-dot: var(--sec-digital);
+}
+
+.site-footer__col--proof {
+	--fx-dot: var(--sec-proof);
+}
+
+.site-footer__heading {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.site-footer .fx-dot {
+	box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.5);
+}
+
+.site-footer__col ul li {
+	margin-bottom: 0.4rem;
+}
+
+.site-footer__col ul li a {
+	display: inline-block;
+	font-weight: var(--fw-footer-link);
+	line-height: 1.4;
+}
+
+.site-footer__subheading {
+	margin: 1.25rem 0 0.6rem;
+	color: rgba(255, 255, 255, 0.62);
+	font-size: var(--fs-xs);
+	font-weight: var(--fw-semibold);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.site-footer__legal {
+	margin-top: 0.35rem;
+	opacity: 0.75;
+}
+
+
+/* ==========================================================================
+   3. Product page (only what station.css does not already do)
+   The page is wrapped in .flxlm-station.flxlm-product, so every station.css
+   rule applies and the colours come from the same --st-* properties.
+   ========================================================================== */
+
+/* The page heading is words, not a frequency, so it is sized for sentences. */
+.flxlm-station .st-title {
+	margin: 6px 0 4px;
+	color: var(--st-on-primary);
+	font-size: var(--fs-h1);
+	font-weight: var(--fw-h1);
+	line-height: var(--lh-h1);
+	letter-spacing: var(--ls-h1);
+	text-wrap: balance;
+}
+
+.flxlm-station .st-lead--wide {
+	max-width: 46ch;
+}
+
+/* Who you reach */
+.flxlm-station .pr-who h3 {
+	margin-bottom: 12px;
+	font-size: var(--fs-h3);
+	font-weight: var(--fw-h3);
+	line-height: var(--lh-h3);
+}
+
+.flxlm-station .pr-who p {
+	max-width: 70ch;
+	font-size: var(--fs-body);
+	font-weight: var(--fw-body);
+	line-height: var(--lh-body);
+	color: var(--color-text);
+}
+
+.flxlm-station .pr-who p + p {
+	margin-top: 12px;
+}
+
+/* Extra lists */
+.flxlm-station .pr-list {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px 28px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.flxlm-station .pr-list li {
+	position: relative;
+	padding-left: 28px;
+	font-size: var(--fs-body);
+	font-weight: var(--fw-body);
+	line-height: var(--lh-body);
+	color: var(--color-text);
+}
+
+.flxlm-station .pr-list li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0.28em;
+	width: 16px;
+	height: 16px;
+	background: var(--st-link);
+	border-radius: 50%;
+}
+
+.flxlm-station .pr-list li::after {
+	content: "";
+	position: absolute;
+	left: 5px;
+	top: calc(0.28em + 3px);
+	width: 4px;
+	height: 8px;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}
+
+@media (max-width: 760px) {
+	.flxlm-station .pr-list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* Product page type scale (tokens in flx-tokens.css). Scoped to .flxlm-product so
+   the seven station pages, which share station.css, keep their own type. Sizes and
+   weights only; layout is untouched. */
+.flxlm-product .st-tag {
+	font-size: var(--fs-h3);
+	font-weight: var(--fw-h3);
+	line-height: var(--lh-h3);
+}
+
+.flxlm-product .st-lead {
+	font-size: var(--fs-lead);
+	font-weight: var(--fw-lead);
+	line-height: var(--lh-lead);
+}
+
+/* The gold stats bar: numbers on the stat scale, labels in plain sentence case. */
+.flxlm-product .st-specs b {
+	font-size: var(--fs-stat);
+	font-weight: var(--fw-stat);
+	line-height: var(--lh-stat);
+}
+
+.flxlm-product .st-specs span {
+	font-size: var(--fs-stat-label);
+	font-weight: var(--fw-stat-label);
+	letter-spacing: normal;
+	text-transform: none;
+}
+
+.flxlm-product .st-specs-note {
+	font-size: var(--fs-small);
+	font-weight: var(--fw-small);
+}
+
+.flxlm-product .st-specs-note a {
+	font-weight: inherit;
+}
+
+.flxlm-product .st-panel > h2 {
+	font-size: var(--fs-h3);
+	font-weight: var(--fw-h3);
+	letter-spacing: normal;
+	text-transform: none;
+}
+
+.flxlm-product .st-panel > h2 span {
+	font-size: var(--fs-small);
+	font-weight: var(--fw-small);
+}
+
+.flxlm-product .st-pq-quote {
+	font-size: var(--fs-quote);
+	font-weight: var(--fw-quote);
+	line-height: var(--lh-quote);
+}
+
+.flxlm-product .st-pq-who,
+.flxlm-product .st-pq-len {
+	font-size: var(--fs-small);
+	font-weight: var(--fw-small);
+}
+
+.flxlm-product .st-proof-link {
+	font-size: var(--fs-btn);
+	font-weight: var(--fw-btn);
+}
+
+.flxlm-product .st-aside-card h2 {
+	font-size: var(--fs-h3);
+	font-weight: var(--fw-h3);
+}
+
+.flxlm-product .st-aside-card .sub,
+.flxlm-product .st-aside-card .small {
+	font-size: var(--fs-small);
+	font-weight: var(--fw-small);
+}
+
+.flxlm-product .st-aside-card nav a {
+	font-size: var(--fs-small);
+	font-weight: var(--fw-small);
+}
+
+.flxlm-product .st-aside-card nav a.active {
+	font-weight: var(--fw-btn);
+}
+
+/* The secondary "How we build a plan" link (.flx-btn-link) under the side card's button: where it sits (hidden with the card's other small print on phones). */
+.flxlm-product .st-aside-card .st-aside-link {
+	display: block;
+	margin-top: 8px;
+	text-align: center;
+	font-size: var(--fs-small);
+}
+
+.flxlm-product .st-aside-card .flx-btn {
+	margin-top: 18px;
+}
+
+@media (max-width: 980px) {
+	.flxlm-product .st-aside-card .st-aside-link {
+		display: none;
+	}
+}
+
+/* The same secondary link (.flx-btn-link) under the footer band's button: where it sits. */
+.cta-banner__link {
+	display: block;
+	width: 100%;
+	margin-top: 4px;
+	text-align: center;
+}
+
+/* Closing call-to-action band in the footer: one shared component, same scale on every page
+   (station pages included; their own type applies to station content, not this band). */
+body .cta-banner__title {
+	font-size: var(--fs-h2);
+	font-weight: var(--fw-h2);
+	line-height: var(--lh-h2);
+	letter-spacing: var(--ls-h2);
+}
+
+body .cta-banner__subtitle {
+	font-size: var(--fs-lead);
+	font-weight: var(--fw-lead);
+	line-height: var(--lh-lead);
+}
+
+/* Product page "Ways to advertise": two-column white cards with a navy top rule.
+   An odd last card spans the row; one column under 640px. Scoped to
+   .flxlm-product so the station pages keep their coloured tiles. */
+.flxlm-product .pr-ways {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+	padding: 18px;
+	background: var(--color-mist, #f3f6f9);
+}
+
+.flxlm-product .pr-way {
+	padding: 18px;
+	background: #fff;
+	border: 1px solid #e0effb;
+	border-top: 4px solid var(--color-navy, #003b5b);
+	border-radius: 10px;
+}
+
+.flxlm-product .pr-way:last-child:nth-child(odd) {
+	grid-column: 1 / -1;
+}
+
+.flxlm-product .pr-way > svg {
+	display: block;
+	width: 44px;
+	height: 44px;
+	margin-bottom: 12px;
+	color: var(--color-navy, #003b5b);
+}
+
+.flxlm-product .pr-way h3 {
+	margin-bottom: 6px;
+	color: var(--color-navy, #003b5b);
+	font-size: var(--fs-h3);
+	font-weight: var(--fw-h3);
+	line-height: var(--lh-h3);
+}
+
+.flxlm-product .pr-way p {
+	font-size: var(--fs-body);
+	font-weight: var(--fw-body);
+	line-height: var(--lh-body);
+}
+
+.flxlm-product .pr-way__more {
+	display: inline-block;
+	margin-top: 10px;
+	font-weight: 700;
+	color: var(--color-navy, #003b5b);
+}
+
+.flxlm-product .pr-way__more:hover {
+	color: #855e0a;
+}
+
+.flxlm-product .pr-logos {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 12px;
+}
+
+.flxlm-product .pr-logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 44px;
+	min-width: 44px;
+	max-width: 140px;
+	padding: 4px 8px;
+	background: #fff;
+	border: 1px solid #e0effb;
+	border-radius: 8px;
+}
+
+.flxlm-product .pr-logo img {
+	display: block;
+	width: auto;
+	max-width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.flxlm-product .pr-logos--many {
+	flex-wrap: nowrap;
+	gap: 4px;
+}
+
+.flxlm-product .pr-logos--many .pr-logo {
+	flex: 1 1 0;
+	height: 32px;
+	min-width: 0;
+	padding: 3px 4px;
+}
+
+.flxlm-product .pr-logo--chip {
+	background: var(--color-navy, #003b5b);
+	border-color: var(--color-navy, #003b5b);
+}
+
+.flxlm-product .pr-logo--text {
+	border-style: dashed;
+	color: var(--color-navy, #003b5b);
+	font-size: var(--fs-eyebrow);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	line-height: 1.15;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+/* Logo band under the hero: the partners we broadcast for, in captioned groups. */
+.flxlm-product .pr-band {
+	padding: 46px 0 50px;
+	background: #f3f6f9;
+	text-align: center;
+}
+
+.flxlm-product .pr-band__groups {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.flxlm-product .pr-band__group {
+	padding: 0 30px;
+}
+
+.flxlm-product .pr-band__group + .pr-band__group {
+	border-left: 1px solid #dde6ee;
+}
+
+.flxlm-product .pr-band__cap {
+	margin: 0 0 22px;
+	color: #6688a1;
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+}
+
+.flxlm-product .pr-band__row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 56px;
+	gap: 28px;
+}
+
+.flxlm-product .pr-band__mark {
+	display: block;
+	width: calc(var(--w) * 1px);
+	height: calc(var(--h) * 1px);
+	object-fit: contain;
+}
+
+.flxlm-product .pr-band__row--badges {
+	gap: 8px;
+}
+
+.flxlm-product .pr-band__badge {
+	display: grid;
+	flex: none;
+	place-items: center;
+	width: 46px;
+	height: 46px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 0 0 1px #d3dee8, 0 2px 6px rgba(0, 39, 62, 0.07);
+}
+
+.flxlm-product .pr-band__badge img {
+	display: block;
+	width: auto;
+	height: auto;
+	max-width: 66%;
+	max-height: 66%;
+	object-fit: contain;
+}
+
+.flxlm-product .pr-band__badge img.disc {
+	max-width: 88%;
+	max-height: 88%;
+}
+
+.flxlm-product .pr-band__badge img.wide {
+	max-width: 78%;
+	max-height: 60%;
+}
+
+@media (max-width: 899px) {
+	.flxlm-product .pr-band {
+		padding: 34px 0 38px;
+	}
+
+	.flxlm-product .pr-band__groups {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.flxlm-product .pr-band__group {
+		width: 100%;
+		padding: 26px 0;
+	}
+
+	.flxlm-product .pr-band__group:first-child {
+		padding-top: 0;
+	}
+
+	.flxlm-product .pr-band__group:last-child {
+		padding-bottom: 0;
+	}
+
+	.flxlm-product .pr-band__group + .pr-band__group {
+		border-top: 1px solid #dde6ee;
+		border-left: 0;
+	}
+
+	.flxlm-product .pr-band__row {
+		gap: 24px;
+	}
+
+	.flxlm-product .pr-band__mark {
+		width: calc(var(--w) * 0.82px);
+		height: calc(var(--h) * 0.82px);
+	}
+
+	.flxlm-product .pr-band__row--badges {
+		flex-wrap: wrap;
+		width: 208px;
+		height: auto;
+		margin: 0 auto;
+		gap: 8px;
+	}
+}
+
+@media (max-width: 639px) {
+	.flxlm-product .pr-ways {
+		grid-template-columns: minmax(0, 1fr);
+		padding: 14px;
+	}
+}
+
+/* Product hero: real brand marks. Dark art sits on a white rounded panel so it reads
+   on the coloured hero; an app icon is shown at app-icon size with rounded corners. */
+.flxlm-product .st-hero__mark {
+	display: block;
+	justify-self: center;
+	height: auto;
+	box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
+}
+
+.flxlm-product .st-hero__mark--panel {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 460px;
+	padding: 36px 40px;
+	border-radius: 20px;
+	background: #fff;
+}
+
+.flxlm-product .st-hero__mark--app {
+	width: 190px;
+	border-radius: 22%;
+}
+
+@media (max-width: 760px) {
+	.flxlm-product .st-hero__mark--panel {
+		max-width: 320px;
+		padding: 22px 24px;
+	}
+
+	.flxlm-product .st-hero__mark--app {
+		width: 110px;
+	}
+}
+
+/* One play button for every video thumbnail (token --play-bg in flx-tokens.css).
+   Each thumbnail keeps its own position and hover scale; only the look is shared. */
+.video-facade__play,
+.hb-play,
+.story-hero__image-play,
+.flxlm-pg .story-hero__image-play,
+.flxlm-pg .story-win__play,
+.flxlm-station .st-pq-play {
+	display: grid;
+	place-items: center;
+	width: 64px;
+	height: 64px;
+	padding: 0 0 0 3px;
+	border-radius: 50%;
+	background: var(--play-bg);
+	color: #fff;
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.video-facade__play svg,
+.hb-play svg {
+	width: 24px;
+	height: 24px;
+}

@@ -11,20 +11,20 @@
 	/* Brand palette */
 	--color-navy: #003b5b;          /* primary: headings, dark sections, footer, header text */
 	--color-navy-light: #0a4a6e;    /* hover on navy surfaces */
-	--color-teal: #0b9caf;          /* the logo teal: graphics, rules, icons, focus rings; text only at >=24px regular / >=19px bold */
-	--color-teal-ink: #077a89;      /* 5.06:1 on white: links, eyebrows, small accent text, CTA background */
-	--color-teal-ink-hover: #06646f;
-	--color-cyan: #52cfd8;          /* accent on navy ONLY (6.35:1): eyebrows, highlights, primary button on navy */
-	--color-mist: #eff8fa;          /* alternate section background (the card watermark tint) */
-	--color-mist-deep: #dceef2;     /* hover / selected tint */
-	--color-blue: #1f6889;          /* secondary blue */
+	--color-teal: #3488d0;          /* the logo teal: graphics, rules, icons, focus rings; text only at >=24px regular / >=19px bold */
+	--color-teal-ink: #146aab;      /* 5.06:1 on white: links, eyebrows, small accent text, CTA background */
+	--color-teal-ink-hover: #085085;
+	--color-cyan: #e3a72f;          /* accent on navy ONLY (6.35:1): eyebrows, highlights, primary button on navy */
+	--color-mist: #eff8ff;          /* alternate section background (the card watermark tint) */
+	--color-mist-deep: #e0effb;     /* hover / selected tint */
+	--color-blue: #146aab;          /* secondary blue */
 
 	/* Semantic aliases (kept so the whole file keeps working) */
 	--color-primary: var(--color-navy);
 	--color-primary-light: var(--color-navy-light);
 	--color-accent: var(--color-teal-ink);
 	--color-accent-hover: var(--color-teal-ink-hover);
-	--color-accent-soft: rgba(7, 122, 137, 0.08);
+	--color-accent-soft: rgba(52, 136, 208, 0.08);
 	--color-white: #ffffff;
 	--color-text: #2b3a45;
 	--color-text-light: #556673;
@@ -276,106 +276,6 @@ p + p {
 	border-radius: var(--radius);
 	cursor: pointer;
 	transition: all var(--transition);
-}
-
-.btn--primary {
-	background: var(--color-teal-ink);
-	color: var(--color-white);
-	border-color: var(--color-teal-ink);
-}
-
-.btn--primary:hover {
-	background: var(--color-navy);
-	border-color: var(--color-navy);
-	color: var(--color-white);
-}
-
-.btn--secondary {
-	background: transparent;
-	color: var(--color-navy);
-	border-color: var(--color-navy);
-}
-
-.btn--secondary:hover {
-	background: var(--color-navy);
-	border-color: var(--color-navy);
-	color: var(--color-white);
-}
-
-.btn--outline {
-	background: transparent;
-	color: var(--color-navy);
-	border-color: var(--color-navy);
-}
-
-.btn--outline:hover {
-	background: var(--color-navy);
-	border-color: var(--color-navy);
-	color: var(--color-white);
-}
-
-.btn--white {
-	background: var(--color-white);
-	color: var(--color-primary);
-	border-color: var(--color-white);
-}
-
-.btn--white:hover {
-	background: var(--color-mist);
-	border-color: var(--color-mist);
-	color: var(--color-navy);
-}
-
-/* Buttons on navy surfaces: primary = cyan + navy text (hover white); outline = white */
-.section--dark .btn--primary,
-.cta-banner .btn--primary,
-.cta-banner .btn--white,
-.page-header .btn--primary,
-.story-hero .btn--primary {
-	background: var(--color-cyan);
-	border-color: var(--color-cyan);
-	color: var(--color-navy);
-}
-
-.section--dark .btn--primary:hover,
-.cta-banner .btn--primary:hover,
-.cta-banner .btn--white:hover,
-.page-header .btn--primary:hover,
-.story-hero .btn--primary:hover {
-	background: var(--color-white);
-	border-color: var(--color-white);
-	color: var(--color-navy);
-}
-
-.section--dark .btn--secondary,
-.section--dark .btn--outline,
-.cta-banner .btn--secondary,
-.cta-banner .btn--outline,
-.page-header .btn--secondary,
-.page-header .btn--outline,
-.story-hero .btn--secondary,
-.story-hero .btn--outline {
-	background: transparent;
-	border-color: var(--color-white);
-	color: var(--color-white);
-}
-
-.section--dark .btn--secondary:hover,
-.section--dark .btn--outline:hover,
-.cta-banner .btn--secondary:hover,
-.cta-banner .btn--outline:hover,
-.page-header .btn--secondary:hover,
-.page-header .btn--outline:hover,
-.story-hero .btn--secondary:hover,
-.story-hero .btn--outline:hover {
-	background: var(--color-white);
-	border-color: var(--color-white);
-	color: var(--color-navy);
-}
-
-.btn--lg {
-	padding: 1rem 2.5rem;
-	font-size: 1rem;
 }
 
 /* ---------- Header ---------- */
@@ -741,11 +641,11 @@ p + p {
 	color: var(--color-white);
 }
 
-.section--dark a:not(.btn) {
+.section--dark a:not(.btn):not(.flx-btn) {
 	color: var(--color-cyan);
 }
 
-.section--dark a:not(.btn):hover {
+.section--dark a:not(.btn):not(.flx-btn):hover {
 	color: var(--color-white);
 }
 
@@ -911,6 +811,10 @@ p + p {
 	position: relative;
 	aspect-ratio: 16 / 10;
 	overflow: hidden;
+}
+
+.testimonial-card__image--wide {
+	aspect-ratio: 1200 / 630;
 }
 
 .testimonial-card__image::after {
@@ -1440,7 +1344,7 @@ p + p {
 .flxlm-form__field textarea:focus {
 	outline: none;
 	border-color: var(--color-teal);
-	box-shadow: 0 0 0 3px rgba(11, 156, 175, 0.18);
+	box-shadow: 0 0 0 3px rgba(52, 136, 208, 0.18);
 }
 
 .flxlm-form__field textarea {
@@ -1461,24 +1365,6 @@ p + p {
 /* ---------- Transcript Toggle ---------- */
 .transcript {
 	margin-top: var(--space-xl);
-}
-
-.transcript__toggle {
-	background: none;
-	border: 1px solid var(--color-border);
-	border-radius: var(--radius);
-	padding: var(--space-sm) var(--space-lg);
-	font-family: var(--font-body);
-	font-size: var(--fs-sm);
-	font-weight: var(--fw-medium);
-	color: var(--color-text-light);
-	cursor: pointer;
-	transition: all var(--transition);
-}
-
-.transcript__toggle:hover {
-	border-color: var(--color-primary);
-	color: var(--color-primary);
 }
 
 .transcript__content {
@@ -1542,16 +1428,12 @@ p + p {
 	justify-content: center;
 	width: 72px;
 	height: 72px;
-	border-radius: 50%;
-	background: var(--color-cyan);
 	border: none;
 	cursor: pointer;
-	box-shadow: 0 4px 24px rgba(0, 59, 91, 0.4), 0 0 0 6px rgba(82, 207, 216, 0.25);
-	transition: background var(--transition), transform var(--transition);
+	transition: transform var(--transition);
 }
 
 .story-hero__image-play:hover {
-	background: var(--color-white);
 	transform: translate(-50%, -50%) scale(1.08);
 }
 
@@ -1564,9 +1446,6 @@ p + p {
 	fill: currentColor;
 }
 
-.story-hero__image-play {
-	color: var(--color-navy);
-}
 
 @media (min-width: 768px) {
 	.story-hero__image-block {
@@ -2021,6 +1900,7 @@ p + p {
 	width: 100%;
 	height: 180px;
 	border: none;
+	background: #eef3f7;
 	display: block;
 }
 
@@ -2172,8 +2052,6 @@ p + p {
 
 .site-footer__bottom a {
 	color: inherit;
-	text-decoration: underline;
-	text-underline-offset: 2px;
 }
 
 .site-footer__bottom a:hover {
@@ -2731,19 +2609,20 @@ p + p {
 	box-shadow: none;
 }
 
-.station-map-city-label {
-	background: none;
+.leaflet-tooltip.station-map-city-label {
+	background: rgba(255, 255, 255, 0.88);
 	border: none;
-	box-shadow: none;
+	border-radius: 4px;
+	box-shadow: 0 0 0 1px rgba(0, 59, 91, 0.12);
 	font-family: var(--font-body);
 	font-size: 0.6875rem;
 	font-weight: var(--fw-medium);
-	color: var(--color-text-muted);
-	padding: 0;
+	color: var(--navy-900, var(--color-text-muted));
+	padding: 1px 5px;
 	white-space: nowrap;
 }
 
-.station-map-city-label::before {
+.leaflet-tooltip.station-map-city-label::before {
 	display: none;
 }
 
@@ -2904,12 +2783,6 @@ p + p {
      - Style Guide:      teal-ink
      - Corporate:        primary navy
    ============================================================ */
-
-/* Section eyebrow color modifiers (per-section identity) */
-.section__eyebrow--terracotta { color: var(--color-accent); }
-.section__eyebrow--lake { color: var(--color-blue); }
-.section__eyebrow--sage { color: var(--color-teal-ink-hover); }
-.section__eyebrow--navy { color: var(--color-primary); }
 
 /* Shared card vocabulary — used across brand-card, view-card, mockup, etc. */
 .brand-card,
@@ -3075,16 +2948,6 @@ p + p {
 
 @media (min-width: 768px) {
 	.data-network { padding: var(--space-xl); }
-}
-
-.data-network__eyebrow {
-	display: block;
-	font-size: var(--fs-xs);
-	font-weight: var(--fw-bold);
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-	color: var(--color-cyan);
-	margin-bottom: var(--space-sm);
 }
 
 .data-network__title {
@@ -3655,26 +3518,6 @@ p + p {
 }
 
 /* ---------- Careers (flxlm_job CPT) ---------- */
-.page-header__eyebrow {
-	font-size: var(--fs-xs);
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	color: var(--color-cyan);
-	margin-bottom: var(--space-sm);
-	position: relative;
-	z-index: 1;
-	font-weight: var(--fw-semibold);
-}
-
-.page-header__eyebrow a {
-	color: inherit;
-	text-decoration: none;
-}
-
-.page-header__eyebrow a:hover {
-	color: var(--color-white);
-}
-
 .job-meta {
 	font-size: var(--fs-sm);
 	color: var(--color-text-light);
@@ -3789,10 +3632,26 @@ p + p {
 	scroll-margin-top: 96px;
 }
 
-.case-study-index .archive-card__image {
-	display: block;
+/* Collapsed "Sources" disclosure under a bar of numbers (home, product and station pages). */
+.st-sources > summary {
+	display: inline-block;
+	cursor: pointer;
+	font-size: 0.75rem;
+	text-decoration: underline;
+	list-style: none;
 }
-
-.case-study-index .archive-card__title {
-	line-height: 1.3;
+.st-sources > summary::-webkit-details-marker {
+	display: none;
+}
+.st-sources > ol {
+	margin: 6px 0 0;
+	padding-left: 1.4em;
+	text-align: left;
+	font-size: 0.75rem;
+}
+.methodology-link.st-sources > ol {
+	display: inline-block;
+}
+.st-sources li b {
+	font-weight: 600;
 }

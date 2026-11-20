@@ -1,0 +1,34 @@
+Logo sources (downloaded 2026-11-19)
+
+GOT
+bills.svg      Buffalo Bills        https://static.www.nfl.com/league/api/clubs/logos/BUF.svg  (NFL, official)
+syracuse.svg   Syracuse Orange      https://commons.wikimedia.org/wiki/Special:FilePath/Syracuse_Orange_logo.svg  (Wikimedia Commons copy of the athletics Block S; cuse.com serves only a white-on-transparent version)
+nascar.svg     NASCAR               https://commons.wikimedia.org/wiki/Special:FilePath/NASCAR_logo_2017.svg  (Wikimedia Commons; nascar.com blocks downloads with 403)
+mrn.svg        Motor Racing Network https://upload.wikimedia.org/wikipedia/commons/0/05/Motor_Racing_Network_logo.svg  (Wikimedia Commons; mrn.com blocks downloads with 403)
+prn.png        Performance Racing Network  https://www.goprn.com/layout/bg_logo.png  (goprn.com, official; only 193x70 px, below the 256px target)
+auburn-navy.png Auburn Maroons (Auburn Enlarged City SD)  https://files.smartsites.parentsquare.com/8276/_variants/contain-1440w/header_logo_img_mvjllka8b30i6nleipd.png  (header logo on auburnschools.org; only 132x100 px, below the 256px target)
+je-navy.png      Jordan-Elbridge      https://www.jecsd.org/images/header_logo.png  (district header logo on jecsd.org, 640x82 wide banner form)
+geneva.png     Geneva CSD           https://resources.finalsite.net/images/v1722277944/genevacsdorg/pt4wt3uslbe27hltwz96/GCSD-Logo-for-Favicon.png  (genevacsd.org site icon, 256x256; confirm it is the Panthers mark)
+mynderse.png   Seneca Falls CSD (Mynderse Academy's district)  https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1620400730/senecafallscsdorg/dvaze5mwp3fvzx3pjgin/Logo.png  (district logo on senecafallscsd.org; not a Mynderse-specific mark)
+waterloo.png   Waterloo CSD (Tiger) https://resources.finalsite.net/images/f_auto,q_auto/v1682517957/waterloocsdorg/vmvjephxvukaseripnco/WaterlooTiger-NoBkg.png  (waterloocsd.org homepage)
+dundee.png     Dundee CSD           https://files.smartsites.parentsquare.com/4073/design_img__ur2ojr.png  (dundeecs.org homepage banner logo)
+
+MISSING (text badge used in the mockup)
+Weedsport                 weedsport.org page renders its logo with scripts; no direct file found
+Penn Yan Academy Mustangs pycsd.org: no logo file found (only a favicon)
+Buffalo Bills Radio Network affiliate mark   no clean file found
+Syracuse Orange radio network / ISP mark     no clean file found
+pennyan.png	https://www.youtube.com/c/PennYanAthletics (Penn Yan Athletics channel avatar, 900px), circle-cropped
+auburn-navy.png, je-navy.png (renamed from auburn.png, je.png so cached white copies miss)	recolored white art to navy #003b5b for white tiles (2026-11-19)
+weedsport.png	https://files.smartsites.parentsquare.com/8445/_variants/contain-1440w/header_logo_img_0cavbfkfs8drabegobm.png (weedsport.org header logo), resized to 512
+
+band-*.png   2026-11-19  Trimmed, single-color-on-transparent crops of the marks above, made for the sports logo band (mockup /Users/scott/flxlocalmedia-mockups/band, files c-*.png). Same artwork and sources as the matching file; only the crop/trim differs (the Jordan-Elbridge eagle is cropped out of the wide banner). The offer cards keep using the original files.
+
+ADDED 2026-11-19 (Ways to advertise cards on the non-sports product pages; marks are trademarks of their owners, used nominatively to identify the service)
+ext-*.svg      Third-party marks from Wikimedia Commons (google, google-maps, google-ads, bing, facebook-f, instagram, meta, yelp, foursquare, nextdoor, bbb); exact Commons file names are in the mockups folder gaps/logos/SOURCES.txt
+station-*.svg/.webp  Our own station logos from assets/images/stations/<station>/ (The Wall: logo-brick.webp)
+flx-local-media-logo.svg  FLX Local Media Medium Color vector (hub brand assets)
+discover-flx-logo.svg  discoverflx-theme/assets/images/discover-flx-logo.svg
+fldn-logo.png, fldn-icon.png, flx-fm-icon.png  fldn-theme assets (trimmed, rounded corners made transparent)
+flx-finest-icon.png  assets/images/products/flx-finest/icon.png (96px)
+NOT USED on purpose: ChatGPT and Alexa marks (would imply an integration), Apple Maps, app-store badges.

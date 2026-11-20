@@ -1,0 +1,507 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --color-primary: #003b5b;
+    --color-primary-dark: #0a4a6e;
+    --color-ochre: #855e0a;
+    --color-purple: #7a4ba9;
+    --color-blue: #146aab;
+    --color-text: #2b3a45;
+    --color-text-light: #556673;
+    --color-text-muted: #5d6d82;
+    --color-border: #dbe7ec;
+    --color-bg: #ffffff;
+    --color-white: #ffffff;
+    --color-success: #0a7a2e;
+    --color-error: #c62828;
+    --color-warn: #dba617;
+    --font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
+    --radius: 12px;
+    --color-card: #ffffff;
+    --color-alt: #f3f6f9;
+    --shadow: 0 1px 3px rgba(0,59,91,0.05), 0 1px 2px rgba(0,59,91,0.08);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Layout */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+.wrap--wide { max-width: 1080px; }
+
+/* Hero */
+.hero {
+    background: linear-gradient(135deg, #0a4a6e 0%, #003b5b 60%);
+    color: #fff;
+    padding: 56px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(227,167,47,0.10) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.hero::after { display: none !important; }
+.hero__title {
+    font-size: clamp(28px, 4.5vw, 42px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    max-width: 720px;
+    margin-bottom: 16px;
+}
+.hero__sub {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    max-width: 600px;
+}
+
+/* KPI row */
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: -48px;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 2;
+}
+@media (max-width: 700px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+.kpi {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px;
+    text-align: center;
+}
+.kpi__value {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--color-primary);
+    line-height: 1;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+}
+.kpi__value--sm { font-size: 26px; }
+.kpi__label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 6px;
+}
+.kpi__delta {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-success);
+    margin-top: 4px;
+}
+
+/* Sections */
+.sect {
+    padding: 48px 0;
+}
+.sect--alt {
+    background: var(--color-alt);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+.sect--dark {
+    background: linear-gradient(135deg, #0a4a6e 0%, #003b5b 100%);
+    color: #fff;
+    border: none;
+}
+.sect__title {
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+.sect--dark .sect__title { color: #fff; }
+.sect__lead {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    max-width: 640px;
+    margin-bottom: 32px;
+}
+.sect--dark .sect__lead { color: rgba(255,255,255,0.7); }
+
+/* Cards */
+.card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.card__head {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+.card__body { padding: 16px; }
+.card canvas { max-height: 300px; }
+
+/* Implementation grid */
+.impl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+.impl-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px;
+}
+.impl-card__icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.impl-card__icon--teal { background: rgba(0,59,91,0.1); }
+.impl-card__icon--ochre { background: rgba(133,94,10,0.1); }
+.impl-card__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 6px;
+}
+.impl-card__desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-light);
+}
+.impl-card__stat {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Schema table */
+.schema-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.schema-tbl thead { background: var(--color-primary); color: #fff; }
+.schema-tbl th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.schema-tbl td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+.schema-tbl tbody tr:hover { background: #f3f6f9; }
+.schema-tbl code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: #e4ebf1;
+    padding: 2px 5px;
+    border-radius: 3px;
+    color: var(--color-primary);
+}
+
+/* Two-col */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+/* Callout */
+.callout {
+    background: rgba(0,59,91,0.08);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--color-primary);
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-light);
+}
+.callout strong { color: var(--color-text); }
+
+/* Footer */
+.cs-footer {
+    background: var(--color-primary);
+    color: #fff;
+    text-align: center;
+    padding: 48px 0;
+}
+.cs-footer__title {
+    color: #fff;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+}
+.cs-footer__sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    max-width: 520px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+}
+
+/* Early results banner */
+.early-banner {
+    background: rgba(219,166,23,0.08);
+    border: 1px solid rgba(219,166,23,0.25);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 24px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.early-banner__icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.early-banner__text { font-size: 13px; line-height: 1.6; color: var(--color-text-light); }
+.early-banner__text strong { color: var(--color-text); }
+
+/* Utility */
+.mb-sm { margin-bottom: 12px; }
+.mb-md { margin-bottom: 24px; }
+.mb-lg { margin-bottom: 32px; }
+.mt-md { margin-top: 24px; }
+.mt-lg { margin-top: 32px; }
+.text-sm { font-size: 13px; }
+.text-muted { color: var(--color-text-light); }
+.tbl-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--color-border); }
+
+/* Chart + table */
+.chart-box { position: relative; height: 260px; }
+.share-bar { display: block; height: 8px; border-radius: 4px; background: var(--color-alt); min-width: 80px; }
+.share-bar i { display: block; height: 100%; border-radius: 4px; background: var(--color-primary); }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+</style>
+
+<!-- Hero -->
+<section class="hero">
+<div class="wrap">
+    <p class="flx-eyebrow">Case Study: Finger Lakes Daily News</p>
+    <h1 class="hero__title">How Radio Contests Built a Local Email List</h1>
+    <p class="hero__sub">One unchecked box on every contest entry form helped grow the Finger Lakes Daily News email from 2,972 subscribers at the end of February to 5,065 today.</p>
+</div>
+</section>
+
+<!-- KPIs -->
+<div class="wrap wrap--wide">
+<div class="kpi-row">
+    <div class="kpi">
+        <div class="kpi__value">5,065</div>
+        <div class="kpi__label">Email Subscribers</div>
+        <div class="kpi__delta">Mailchimp, Nov 19, 2026</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value">36%</div>
+        <div class="kpi__label">Of Entries Ticked the Box</div>
+        <div class="kpi__delta">1,861 of 5,182 since March</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value">244</div>
+        <div class="kpi__label">Box Ticks in 10 Days</div>
+        <div class="kpi__delta">One cabin-stay giveaway</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__value">76</div>
+        <div class="kpi__label">Box Ticks in July</div>
+        <div class="kpi__delta">A month with no big giveaway</div>
+    </div>
+</div>
+</div>
+
+<!-- Problem -->
+<section class="sect">
+<div class="wrap">
+    <p class="flx-eyebrow">The Problem</p>
+    <h2 class="sect__title">A Radio Audience Disappears Between Spots</h2>
+    <p class="sect__lead">A station knows how many people listen, but it cannot reach any of them by name. When a spot ends, so does the contact. An advertiser who wants a second place to reach the same local people has nowhere to go.</p>
+    <p class="sect__lead">A daily email is that second place. But a list only works if the people on it asked to be there. A list that is bought, or filled in without asking, is full of strangers who never open it. We wanted a list of neighbors who chose to join.</p>
+</div>
+</section>
+
+<!-- What we did -->
+<section class="sect sect--alt">
+<div class="wrap">
+    <p class="flx-eyebrow">What We Did</p>
+    <h2 class="sect__title">One Unchecked Box, on Every Entry Form</h2>
+    <p class="sect__lead">Our stations run on-air contests all year. Every entry form for those contests has one extra line at the bottom: &ldquo;Sign me up for the Finger Lakes Daily News email.&rdquo;</p>
+
+    <div class="impl-grid mt-md">
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#9745;</div>
+            <div class="impl-card__title">The box starts empty</div>
+            <div class="impl-card__desc">Nobody is signed up unless they tick it themselves. We never turn it on for them, and we never add a person who entered a contest without ticking it.</div>
+            <div class="impl-card__stat">Opt-in only</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--ochre">&#127911;</div>
+            <div class="impl-card__title">The radio does the promoting</div>
+            <div class="impl-card__desc">The station talks up the prize on air. Listeners go to the entry page. The email signup is one tick away, at the moment they are already handing over their name.</div>
+            <div class="impl-card__stat">Radio feeds the list</div>
+        </div>
+        <div class="impl-card">
+            <div class="impl-card__icon impl-card__icon--teal">&#128202;</div>
+            <div class="impl-card__title">Every entry is counted</div>
+            <div class="impl-card__desc">We record each entry by contest and by prize, and whether the box was ticked. That shows which giveaways bring in subscribers and which bring in only entries.</div>
+            <div class="impl-card__stat">Tracked by contest</div>
+        </div>
+    </div>
+
+    <div class="callout">
+        <strong>Why not just add everyone?</strong> A person who asked for the email opens it. A person who did not ask marks it as spam, and that hurts delivery for the whole list. The unchecked box costs us some signups. It keeps the list worth advertising to.
+    </div>
+</div>
+</section>
+
+<!-- Results -->
+<section class="sect">
+<div class="wrap">
+    <p class="flx-eyebrow">The Results</p>
+    <h2 class="sect__title">The List Grew Fastest in the Months With a Big Giveaway</h2>
+    <p class="sect__lead">Since the first contest we can count (late March), there have been <strong>5,182 contest entries</strong>. On <strong>1,861</strong> of them, which is 36%, the person ticked the email box. The left chart shows box ticks by month. The right chart shows the size of the email list at the end of each month.</p>
+
+    <div class="two-col mt-md">
+        <div class="card">
+            <div class="card__head">Email box ticks per month, March to November 2026</div>
+            <div class="card__body"><div class="chart-box"><canvas id="ceTicks"></canvas></div></div>
+        </div>
+        <div class="card">
+            <div class="card__head">Email subscribers at the end of each month</div>
+            <div class="card__body"><div class="chart-box"><canvas id="ceList"></canvas></div></div>
+        </div>
+    </div>
+    <p class="text-sm text-muted mt-md" style="text-align:center;">Source: contest entries and Mailchimp send records. November covers Nov 1 to Nov 20, and its list size is the Nov 19 send.</p>
+
+    <h3 class="mt-lg mb-sm">Which giveaways brought people in</h3>
+    <div class="tbl-wrap">
+    <table class="schema-tbl">
+        <thead>
+            <tr><th>Giveaway</th><th>Open for</th><th class="num">Entries</th><th class="num">Box ticks</th><th class="num">Ticked</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>A cabin-stay giveaway</td><td>10 days</td><td class="num">682</td><td class="num">244</td><td class="num">36%</td></tr>
+            <tr><td>A summer prize package</td><td>7 days</td><td class="num">605</td><td class="num">236</td><td class="num">39%</td></tr>
+            <tr><td>State fair tickets</td><td>6 days</td><td class="num">583</td><td class="num">224</td><td class="num">38%</td></tr>
+            <tr><td>A guitar from a local music store</td><td>20 days</td><td class="num">288</td><td class="num">70</td><td class="num">24%</td></tr>
+            <tr><td>Bowling tickets</td><td>21 days</td><td class="num">251</td><td class="num">66</td><td class="num">26%</td></tr>
+            <tr><td>A gift-card drawing that never closed</td><td>8 months</td><td class="num">1,931</td><td class="num">752</td><td class="num">39%</td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <div class="two-col mt-lg">
+        <div>
+            <h3 style="margin-bottom:8px;">A big prize adds a burst</h3>
+            <p class="text-sm text-muted">The cabin giveaway drew 278 entries on its first day, and 124 of them ticked the box. The three giveaways that drew more than 580 entries each brought in 224 to 244 box ticks. Smaller giveaways, like tickets to one show, brought in 4 to 70.</p>
+        </div>
+        <div>
+            <h3 style="margin-bottom:8px;">An always-open drawing sets the floor</h3>
+            <p class="text-sm text-muted">One gift-card drawing stayed open from March to now and collected between 75 and 136 box ticks in every full month. In July, when no new giveaway ran, all of the month&rsquo;s 76 box ticks came from the two drawings that were already open.</p>
+        </div>
+    </div>
+
+    <div class="callout">
+        <strong>What the numbers do and do not say.</strong> The 1,861 box ticks came from 852 different people, because people enter more than once and some were already on the list. The email also collects signups from the news site, so we do not credit every new subscriber to a contest. What we can say is that the list grew by 2,093 subscribers (70%) from the end of February to Nov 19, and that it grew most in the months with a big giveaway.
+    </div>
+
+    <div class="early-banner mt-md">
+        <div class="early-banner__icon">&#128236;</div>
+        <div class="early-banner__text"><strong>The people who joined read it.</strong> Over the last 31 daily sends (Oct 21 to Nov 19), about 45% of subscribers opened each email. Some of those opens are automatic ones from phone privacy settings, so the true figure is lower, but the list is awake.</div>
+    </div>
+</div>
+</section>
+
+<!-- What it means for advertisers -->
+<section class="sect sect--dark">
+<div class="wrap">
+    <p class="flx-eyebrow">What It Means for Advertisers</p>
+    <h2 class="sect__title">Radio Builds the Audience, the Email Keeps It</h2>
+    <p class="sect__lead">An advertiser on our stations is not buying a spot and hoping. The same contest that gets a listener to the entry page also puts a local person on a list that gets a message every morning, with a link you can click and a count of who clicked.</p>
+    <p class="sect__lead">The method is not specific to us. Any business that runs a giveaway can put the same unchecked box on its own entry form. A radio contest that sends people to that form turns a one-week promotion into a list of customers who asked to hear from you again.</p>
+    <p class="sect__lead">Put your ad in the Finger Lakes Daily News email, or run a contest with us. See <a href="/solutions/newsletter/">newsletter advertising</a> and <a href="/solutions/contests/">contests</a>.</p>
+</div>
+</section>
+
+<!-- Footer -->
+<section class="cs-footer">
+<div class="wrap">
+    <h2 class="cs-footer__title">Want a list of customers who asked to hear from you?</h2>
+    <p class="cs-footer__sub">FLX Local Media runs seven radio stations and a news site. We use these methods on ourselves first.</p>
+    <a href="/contact/" class="flx-btn">Get in Touch</a>
+</div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+  function draw() {
+    if (typeof Chart === 'undefined') { return setTimeout(draw, 200); }
+    var months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
+    var ticks = [15, 215, 367, 400, 76, 374, 100, 218, 96];
+    var list = [3140, 3387, 3762, 4138, 4347, 4655, 4787, 4967, 5065];
+    var teal = '#003b5b', ochre = '#e3a72f', grid = 'rgba(0,59,91,0.08)', ink = '#556673';
+    function opts(unit, fmt) {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false },
+          tooltip: { backgroundColor: '#1d2327', padding: 10, displayColors: false,
+            callbacks: { label: function (c) { return c.parsed.y.toLocaleString() + ' ' + unit; } } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: ink, font: { size: 11 } } },
+          y: { beginAtZero: true, grid: { color: grid }, border: { display: false },
+               ticks: { color: ink, font: { size: 11 }, callback: fmt } }
+        }
+      };
+    }
+    var a = document.getElementById('ceTicks');
+    if (a) {
+      new Chart(a, { type: 'bar',
+        data: { labels: months, datasets: [{ data: ticks, backgroundColor: ochre, borderRadius: 4, borderSkipped: false, maxBarThickness: 36 }] },
+        options: opts('box ticks', function (v) { return v; }) });
+    }
+    var b = document.getElementById('ceList');
+    if (b) {
+      new Chart(b, { type: 'line',
+        data: { labels: months, datasets: [{ data: list, borderColor: teal, backgroundColor: 'rgba(0,59,91,0.10)',
+          borderWidth: 2, tension: 0.3, fill: true, pointBackgroundColor: teal, pointRadius: 3, pointHoverRadius: 5 }] },
+        options: opts('subscribers', function (v) { return v.toLocaleString(); }) });
+    }
+  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', draw); } else { draw(); }
+})();
+</script>

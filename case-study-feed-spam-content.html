@@ -6,9 +6,9 @@
 :root {
     --color-primary: #003b5b;
     --color-primary-dark: #0a4a6e;
-    --color-ochre: #077a89;
-    --color-purple: #6B2FA0;
-    --color-blue: #1f6889;
+    --color-ochre: #855e0a;
+    --color-purple: #7a4ba9;
+    --color-blue: #146aab;
     --color-text: #2b3a45;
     --color-text-light: #556673;
     --color-text-muted: #5d6d82;
@@ -22,7 +22,7 @@
     --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
     --radius: 12px;
     --color-card: #ffffff;
-    --color-alt: #eff8fa;
+    --color-alt: #f3f6f9;
     --shadow: 0 1px 3px rgba(0,59,91,0.05), 0 1px 2px rgba(0,59,91,0.08);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -47,18 +47,10 @@ a:hover { text-decoration: underline; }
     position: absolute;
     top: -100px; right: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(82,207,216,0.10) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(227,167,47,0.10) 0%, transparent 70%);
     border-radius: 50%;
 }
 .hero::after { display: none !important; }
-.hero__eyebrow {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #52cfd8;
-    margin-bottom: 12px;
-}
 .hero__title {
     font-size: clamp(28px, 4.5vw, 42px);
     font-weight: 700;
@@ -131,15 +123,6 @@ a:hover { text-decoration: underline; }
     color: #fff;
     border: none;
 }
-.sect__eyebrow {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--color-ochre);
-    margin-bottom: 6px;
-}
-.sect--dark .sect__eyebrow { color: #52cfd8; }
 .sect__title {
     font-size: clamp(22px, 3.5vw, 32px);
     font-weight: 700;
@@ -236,7 +219,7 @@ a:hover { text-decoration: underline; }
     margin-bottom: 10px;
 }
 .impl-card__icon--teal { background: rgba(0,59,91,0.1); }
-.impl-card__icon--ochre { background: rgba(7,122,137,0.1); }
+.impl-card__icon--ochre { background: rgba(133,94,10,0.1); }
 .impl-card__title {
     font-size: 14px;
     font-weight: 700;
@@ -278,11 +261,11 @@ a:hover { text-decoration: underline; }
     border-bottom: 1px solid var(--color-border);
     vertical-align: top;
 }
-.schema-tbl tbody tr:hover { background: #eff8fa; }
+.schema-tbl tbody tr:hover { background: #f3f6f9; }
 .schema-tbl code {
     font-family: var(--mono);
     font-size: 11px;
-    background: #dceef2;
+    background: #e4ebf1;
     padding: 2px 5px;
     border-radius: 3px;
     color: var(--color-primary);
@@ -329,7 +312,7 @@ a:hover { text-decoration: underline; }
 
 /* Callout */
 .callout {
-    background: rgba(11,156,175,0.08);
+    background: rgba(0,59,91,0.08);
     border-radius: var(--radius);
     border-left: 3px solid var(--color-primary);
     padding: 16px 20px;
@@ -405,17 +388,6 @@ a:hover { text-decoration: underline; }
     margin: 0 auto 24px;
     line-height: 1.6;
 }
-.cs-footer .btn {
-    display: inline-block;
-    background: #52cfd8;
-    color: var(--color-primary);
-    font-weight: 700;
-    font-size: 14px;
-    padding: 12px 28px;
-    border-radius: var(--radius);
-    transition: background 0.2s;
-}
-.cs-footer .btn:hover { background: #fff; text-decoration: none; }
 
 /* Storm photo */
 .storm-photo {
@@ -449,7 +421,7 @@ a:hover { text-decoration: underline; }
     max-height: 320px;
     overflow-y: auto;
 }
-.code-block .key { color: #7ec8e3; }
+.code-block .key { color: #8ec7fd; }
 .code-block .str { color: #a8d4a0; }
 .code-block .punct { color: #8c8f94; }
 
@@ -482,7 +454,7 @@ a:hover { text-decoration: underline; }
 <!-- Hero -->
 <section class="hero">
 <div class="wrap">
-    <p class="hero__eyebrow">Case Study: Finger Lakes Daily News</p>
+    <p class="flx-eyebrow">Case Study: Finger Lakes Daily News</p>
     <h1 class="hero__title">When Pharma Spammers Try to Poison a Local News Site</h1>
     <p class="hero__sub">How we caught and killed an SEO attack that was weaponizing WordPress's own RSS feeds, in a single afternoon.</p>
 </div>
@@ -517,7 +489,7 @@ a:hover { text-decoration: underline; }
 <!-- Signal -->
 <section class="sect">
 <div class="wrap">
-    <p class="sect__eyebrow">The Signal</p>
+    <p class="flx-eyebrow">The Signal</p>
     <h2 class="sect__title">Something Was Telling Google to Come Back for More</h2>
     <p class="sect__lead">Google Search Console's feed-crawler report showed a strange pattern: every two weeks, crawl requests against Finger Lakes Daily News jumped from ~200/day to <strong>2,000 to 4,000/day</strong>, then returned to baseline. Like clockwork: Jan 27, Feb 10, Feb 24, Mar 10, Mar 24, Apr 7. Exactly 14 days apart.</p>
     <p class="sect__lead">Normal crawl behavior doesn't spike on a calendar. Something was pulling Googlebot back on a schedule.</p>
@@ -525,7 +497,7 @@ a:hover { text-decoration: underline; }
     <div class="card mt-md">
         <div class="card__head">Feed-Crawler Requests: Google Search Console (Jan 20 to Apr 18, 2026)</div>
         <div class="card__body">
-            <img src="/wp-content/themes/flxlocalmedia/assets/images/case-study-feed-spam-crawl-spikes.png" alt="GSC feed-crawler requests chart showing six biweekly spikes between 2,000 and 4,000 requests between late January and early April, with a ~200/day baseline." style="width:100%;height:auto;display:block;">
+            <img src="{{THEME_URI}}/assets/images/case-study-feed-spam-crawl-spikes.png" alt="GSC feed-crawler requests chart showing six biweekly spikes between 2,000 and 4,000 requests between late January and early April, with a ~200/day baseline." style="width:100%;height:auto;display:block;">
         </div>
     </div>
 
@@ -538,7 +510,7 @@ a:hover { text-decoration: underline; }
 <!-- Investigation -->
 <section class="sect sect--alt">
 <div class="wrap">
-    <p class="sect__eyebrow">The Investigation</p>
+    <p class="flx-eyebrow">The Investigation</p>
     <h2 class="sect__title">Three Problems in the URL List: One of Them an Active Attack</h2>
     <p class="sect__lead">We pulled the list of URLs Google's feed crawler was hitting. The pattern was immediately obvious, and it wasn't just one thing going wrong.</p>
 
@@ -568,17 +540,17 @@ a:hover { text-decoration: underline; }
 <!-- Fix -->
 <section class="sect">
 <div class="wrap">
-    <p class="sect__eyebrow">The Fix</p>
+    <p class="flx-eyebrow">The Fix</p>
     <h2 class="sect__title">410 Gone, at the Origin, Before Anything Else Runs</h2>
     <p class="sect__lead">Two commits to the theme's SEO module: roughly 70 lines of PHP. The fix had to neutralize the active attack without breaking the feeds that actual readers and syndication partners depend on.</p>
 
     <div class="two-col mt-md">
         <div>
-            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">1. Hard-fail the spam vector</h3>
+            <h3 style="margin-bottom:8px;">1. Hard-fail the spam vector</h3>
             <p class="text-sm text-muted">A <code>template_redirect</code> hook at priority <code>-1</code> intercepts <code>/search/*/feed/</code>, <code>/tag/*/feed/</code>, <code>/author/*/feed/</code>, and deep-pagination archive feeds <em>before</em> WordPress tries to render them. Returns <strong>410 Gone</strong> with <code>X-Robots-Tag: noindex, nofollow</code>. 410 is the strongest signal we can send Google: <em>this URL existed, it's gone, stop asking.</em></p>
         </div>
         <div>
-            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">2. Seal it off at robots.txt</h3>
+            <h3 style="margin-bottom:8px;">2. Seal it off at robots.txt</h3>
             <p class="text-sm text-muted">Five new <code>Disallow:</code> rules covering tag feeds, author feeds, category deep-pagination feeds, the <code>/ad_block/</code> taxonomy leak, and generic paginated feeds. Belt-and-suspenders: 410 handles already-indexed URLs; robots.txt prevents <em>new</em> crawlers from hitting them in the first place.</p>
         </div>
     </div>
@@ -609,7 +581,7 @@ a:hover { text-decoration: underline; }
 <!-- Verification -->
 <section class="sect sect--alt">
 <div class="wrap">
-    <p class="sect__eyebrow">Verification</p>
+    <p class="flx-eyebrow">Verification</p>
     <h2 class="sect__title">What Changed, What Didn't</h2>
     <p class="sect__lead">Measured on production after CF cache purge. Every URL confirmed with <code>curl -sI</code>.</p>
 
@@ -641,7 +613,7 @@ a:hover { text-decoration: underline; }
 <!-- Why it matters -->
 <section class="sect sect--dark">
 <div class="wrap">
-    <p class="sect__eyebrow">Why It Matters</p>
+    <p class="flx-eyebrow">Why It Matters</p>
     <h2 class="sect__title">This Is Running Against Thousands of Sites Right Now</h2>
     <p class="sect__lead">This kind of attack isn't rare. It's quietly running against thousands of WordPress sites this week. Cheap for attackers: just links from compromised sites, nothing installed, nothing exploited. Expensive for the targets: index pollution, crawl-budget waste, potential manual spam penalties. And invisible unless someone is actually reading their crawl-stats reports.</p>
     <p class="sect__lead">Local newsrooms don't have a dedicated SEO engineer watching GSC every week. What caught this was the monitoring infrastructure we built out earlier this year: daily crawl-stats ingested into BigQuery, anomaly detection running on the droplet, and an AI assistant reading the report so humans don't have to.</p>
@@ -654,6 +626,6 @@ a:hover { text-decoration: underline; }
 <div class="wrap">
     <h2 class="cs-footer__title">Want this kind of monitoring on your site?</h2>
     <p class="cs-footer__sub">FLX Local Media operates seven radio stations and a news site. We build and share the infrastructure we run on.</p>
-    <a href="/contact/" class="btn">Get in Touch</a>
+    <a href="/contact/" class="flx-btn">Get in Touch</a>
 </div>
 </section>

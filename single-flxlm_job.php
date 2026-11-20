@@ -9,66 +9,63 @@
  * @package flxlm
  */
 
+$flxlm_job_id    = get_queried_object_id();
+$job_location         = get_post_meta( $flxlm_job_id, 'job_location', true );
+$job_type             = get_post_meta( $flxlm_job_id, 'job_type', true );
+$job_email            = get_post_meta( $flxlm_job_id, 'job_email', true );
+$job_responsibilities = get_post_meta( $flxlm_job_id, 'job_responsibilities', true );
+$job_qualifications   = get_post_meta( $flxlm_job_id, 'job_qualifications', true );
+$job_offer            = get_post_meta( $flxlm_job_id, 'job_offer', true );
+
+// Location, type and pay range, joined with dots, for the line under the title.
+$flxlm_job_bits = array();
+if ( $job_location ) {
+	$flxlm_job_bits[] = '<span class="job-meta__item">' . esc_html( $job_location ) . '</span>';
+}
+if ( $job_type ) {
+	$flxlm_job_bits[] = '<span class="job-meta__item">' . esc_html( $job_type ) . '</span>';
+}
+/*
+ * The pay range. New York Labor Law 194-b requires a good faith
+ * minimum and maximum on any posting for work performed in the
+ * state, and this site rendered no figure at all until now.
+ */
+$flxlm_salary = function_exists( 'flxlm_careers_salary_display' )
+	? flxlm_careers_salary_display( $flxlm_job_id )
+	: '';
+if ( ( $job_location || $job_type ) && $flxlm_salary ) {
+	$flxlm_job_bits[] = '<span class="job-meta__item job-meta__item--salary">' . esc_html( $flxlm_salary ) . '</span>';
+}
+$flxlm_job_lead = implode( ' <span class="job-meta__sep" aria-hidden="true">&middot;</span> ', $flxlm_job_bits );
+
+/*
+ * Apply above the fold.
+ *
+ * Most people who read a job posting decide within the first screenful,
+ * and the old page gave them nothing to act on until they had scrolled
+ * the entire description. This anchors down to the form rather than
+ * duplicating it, so there is still only one form on the page.
+ */
+$flxlm_job_apply = function_exists( 'flxlm_ats_render_form' )
+	? '<a class="flx-btn" href="#apply">Apply for this job</a>'
+	: '';
+
+flxlm_pg_begin( array(
+	'accent'         => 'navy',
+	'eyebrow'        => 'Careers',
+	'eyebrow_url'    => home_url( '/careers/' ),
+	'title'          => get_the_title( $flxlm_job_id ),
+	'lead_html'      => $flxlm_job_lead,
+	'hero_extra'     => $flxlm_job_apply,
+	'cta'            => false,
+	'band'           => false,
+	'no_footer_band' => true,
+) );
 get_header();
+flxlm_pg_open();
 
 while ( have_posts() ) : the_post();
-	$job_location         = get_post_meta( get_the_ID(), 'job_location', true );
-	$job_type             = get_post_meta( get_the_ID(), 'job_type', true );
-	$job_email            = get_post_meta( get_the_ID(), 'job_email', true );
-	$job_responsibilities = get_post_meta( get_the_ID(), 'job_responsibilities', true );
-	$job_qualifications   = get_post_meta( get_the_ID(), 'job_qualifications', true );
-	$job_offer            = get_post_meta( get_the_ID(), 'job_offer', true );
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<p class="page-header__eyebrow"><a href="<?php echo esc_url( home_url( '/careers/' ) ); ?>">Careers</a></p>
-		<h1 class="page-header__title"><?php the_title(); ?></h1>
-		<?php if ( $job_location || $job_type ) : ?>
-			<p class="page-header__subtitle job-meta">
-				<?php if ( $job_location ) : ?>
-					<span class="job-meta__item"><?php echo esc_html( $job_location ); ?></span>
-				<?php endif; ?>
-				<?php if ( $job_location && $job_type ) : ?>
-					<span class="job-meta__sep" aria-hidden="true">&middot;</span>
-				<?php endif; ?>
-				<?php if ( $job_type ) : ?>
-					<span class="job-meta__item"><?php echo esc_html( $job_type ); ?></span>
-				<?php endif; ?>
-				<?php
-				/*
-				 * The pay range. New York Labor Law 194-b requires a good faith
-				 * minimum and maximum on any posting for work performed in the
-				 * state, and this site rendered no figure at all until now.
-				 */
-				$flxlm_salary = function_exists( 'flxlm_careers_salary_display' )
-					? flxlm_careers_salary_display( get_the_ID() )
-					: '';
-				if ( $flxlm_salary ) :
-					?>
-					<span class="job-meta__sep" aria-hidden="true">&middot;</span>
-					<span class="job-meta__item job-meta__item--salary"><?php echo esc_html( $flxlm_salary ); ?></span>
-				<?php endif; ?>
-			</p>
-		<?php endif; ?>
-
-		<?php
-		/*
-		 * Apply above the fold.
-		 *
-		 * Most people who read a job posting decide within the first screenful,
-		 * and the old page gave them nothing to act on until they had scrolled
-		 * the entire description. This anchors down to the form rather than
-		 * duplicating it, so there is still only one form on the page.
-		 */
-		if ( function_exists( 'flxlm_ats_render_form' ) ) :
-			?>
-			<p class="page-header__cta flxlm-ats-apply-cta">
-				<a class="btn btn--primary" href="#apply">Apply for this job</a>
-			</p>
-		<?php endif; ?>
-	</div>
-</div>
 
 <section class="section">
 	<div class="container container--narrow">
@@ -185,4 +182,7 @@ while ( have_posts() ) : the_post();
 
 <?php endwhile; ?>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+

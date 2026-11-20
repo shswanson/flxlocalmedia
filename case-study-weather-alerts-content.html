@@ -6,9 +6,9 @@
 :root {
     --color-primary: #003b5b;
     --color-primary-dark: #0a4a6e;
-    --color-ochre: #077a89;
-    --color-purple: #6B2FA0;
-    --color-blue: #1f6889;
+    --color-ochre: #855e0a;
+    --color-purple: #7a4ba9;
+    --color-blue: #146aab;
     --color-text: #2b3a45;
     --color-text-light: #556673;
     --color-text-muted: #5d6d82;
@@ -22,7 +22,7 @@
     --mono: 'SF Mono', SFMono-Regular, Consolas, monospace;
     --radius: 12px;
     --color-card: #ffffff;
-    --color-alt: #eff8fa;
+    --color-alt: #f3f6f9;
     --shadow: 0 1px 3px rgba(0,59,91,0.05), 0 1px 2px rgba(0,59,91,0.08);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -47,18 +47,10 @@ a:hover { text-decoration: underline; }
     position: absolute;
     top: -100px; right: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(82,207,216,0.10) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(227,167,47,0.10) 0%, transparent 70%);
     border-radius: 50%;
 }
 .hero::after { display: none !important; }
-.hero__eyebrow {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #52cfd8;
-    margin-bottom: 12px;
-}
 .hero__title {
     font-size: clamp(28px, 4.5vw, 42px);
     font-weight: 700;
@@ -129,15 +121,6 @@ a:hover { text-decoration: underline; }
     color: #fff;
     border: none;
 }
-.sect__eyebrow {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--color-ochre);
-    margin-bottom: 6px;
-}
-.sect--dark .sect__eyebrow { color: #52cfd8; }
 .sect__title {
     font-size: clamp(22px, 3.5vw, 32px);
     font-weight: 700;
@@ -195,7 +178,7 @@ a:hover { text-decoration: underline; }
     margin-bottom: 10px;
 }
 .impl-card__icon--teal { background: rgba(0,59,91,0.1); }
-.impl-card__icon--ochre { background: rgba(7,122,137,0.1); }
+.impl-card__icon--ochre { background: rgba(133,94,10,0.1); }
 .impl-card__title {
     font-size: 14px;
     font-weight: 700;
@@ -269,7 +252,7 @@ a:hover { text-decoration: underline; }
 
 /* Callout */
 .callout {
-    background: rgba(11,156,175,0.08);
+    background: rgba(0,59,91,0.08);
     border-radius: var(--radius);
     border-left: 3px solid var(--color-primary);
     padding: 16px 20px;
@@ -363,8 +346,6 @@ a:hover { text-decoration: underline; }
 .cs-footer { background: var(--color-primary); color: #fff; text-align: center; padding: 48px 0; }
 .cs-footer__title { color: #fff; font-size: clamp(20px, 3vw, 28px); font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
 .cs-footer__sub { font-size: 14px; color: rgba(255,255,255,0.7); max-width: 520px; margin: 0 auto 24px; line-height: 1.6; }
-.cs-footer .btn { display: inline-block; background: #fff; color: var(--color-primary); font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: var(--radius); transition: background 0.2s; }
-.cs-footer .btn:hover { background: #fff; text-decoration: none; }
 
 /* Utility */
 .mb-md { margin-bottom: 24px; }
@@ -377,7 +358,7 @@ a:hover { text-decoration: underline; }
 <!-- Hero -->
 <section class="hero">
 <div class="wrap">
-    <p class="hero__eyebrow">Case Study: Finger Lakes Daily News</p>
+    <p class="flx-eyebrow">Case Study: Finger Lakes Daily News</p>
     <h1 class="hero__title">Live Before You Reach Your Desk</h1>
     <p class="hero__sub">An automated storm desk that reads the National Weather Service feed every 60 seconds and publishes branded, self-updating alert coverage: the watch hours before the warning, the warning before the broadcast cycle catches up. No staff. No paid data. <strong style="color:#fff;">None of it existed a few months ago.</strong></p>
 </div>
@@ -412,7 +393,7 @@ a:hover { text-decoration: underline; }
 <!-- The Moment -->
 <section class="sect">
 <div class="wrap">
-    <p class="sect__eyebrow">The Moment</p>
+    <p class="flx-eyebrow">The Moment</p>
     <h2 class="sect__title">It&rsquo;s Already Up by the Time You Walk Over</h2>
     <p class="sect__lead">The tell that this actually works isn&rsquo;t a dashboard. It&rsquo;s what happens in the office when the sky turns.</p>
 
@@ -423,7 +404,7 @@ a:hover { text-decoration: underline; }
 
     <p class="sect__lead mt-md">No one wrote it. No one was on shift. A background service caught the National Weather Service alert off the wire, wrote a branded, plain-English story, drew the map, and pushed it live, in the seconds it took to cross the room. When the storm changes, the same story updates itself. When it&rsquo;s over, it marks itself lifted.</p>
 
-    <div class="callout" style="border-left-color:var(--color-ochre);background:rgba(7,122,137,0.06);">
+    <div class="callout" style="border-left-color:var(--color-ochre);background:rgba(133,94,10,0.06);">
         <strong>And none of it existed a few months ago.</strong> When FLX Local Media took over Finger Lakes Daily News in January 2026, the site had <em>no weather section at all</em>: not a forecast, not an alert, nothing. Every piece of this (the alert desk, the self-updating live-blogs, the town forecast pages, the search dominance) was built from a standing start this spring.
     </div>
 </div>
@@ -432,7 +413,7 @@ a:hover { text-decoration: underline; }
 <!-- How it works -->
 <section class="sect sect--alt">
 <div class="wrap">
-    <p class="sect__eyebrow">How It Works</p>
+    <p class="flx-eyebrow">How It Works</p>
     <h2 class="sect__title">The Same Official Feed: Just Faster to Our Audience</h2>
     <p class="sect__lead">We don&rsquo;t front-run the National Weather Service or replace anyone&rsquo;s emergency alerting. We read the <em>same</em> public NWS alert feed that EAS and NOAA Weather Radio pull from, and surface it on our own site the instant it changes, before it has finished cycling onto the airwaves.</p>
 
@@ -472,7 +453,7 @@ a:hover { text-decoration: underline; }
 <!-- Receipt 1: watch before warning -->
 <section class="sect">
 <div class="wrap">
-    <p class="sect__eyebrow">The Receipt: June 14, 2026</p>
+    <p class="flx-eyebrow">The Receipt: June 14, 2026</p>
     <h2 class="sect__title">The Threat Was on Our Site 3 Hours Before the Warning</h2>
     <p class="sect__lead">A real severe-weather afternoon, reconstructed from the timestamps on our own live page. The Severe Thunderstorm <strong>Watch</strong> posted at 2:46 p.m. The <strong>Warning</strong> that follows on the airwaves didn&rsquo;t come until 5:53 p.m., <strong>3 hours and 7 minutes later</strong>. Our readers had the head start the whole time.</p>
 
@@ -506,8 +487,8 @@ a:hover { text-decoration: underline; }
         </div>
         <div class="shot">
             <div class="shot__frame">
-                <a href="/wp-content/themes/flxlocalmedia/assets/images/wx-watch-to-warning-timeline.png" target="_blank" rel="noopener">
-                    <img src="/wp-content/themes/flxlocalmedia/assets/images/wx-watch-to-warning-timeline.png" alt="Live Finger Lakes Daily News weather-alert page for June 14, 2026, showing a self-updating timeline: Severe Thunderstorm Watch issued 2:46 PM, Warning issued 5:53 PM, and every alert marked expired, each entry citing the National Weather Service issuance time.">
+                <a href="{{THEME_URI}}/assets/images/wx-watch-to-warning-timeline.png" target="_blank" rel="noopener">
+                    <img src="{{THEME_URI}}/assets/images/wx-watch-to-warning-timeline.png" alt="Live Finger Lakes Daily News weather-alert page for June 14, 2026, showing a self-updating timeline: Severe Thunderstorm Watch issued 2:46 PM, Warning issued 5:53 PM, and every alert marked expired, each entry citing the National Weather Service issuance time.">
                 </a>
             </div>
             <p class="shot__cap">As it appeared on fingerlakesdailynews.com, every entry stamped with the NWS issuance time. Scroll to see the full self-updating timeline.</p>
@@ -519,13 +500,13 @@ a:hover { text-decoration: underline; }
 <!-- Receipt 2: self-updating live-blog -->
 <section class="sect sect--alt">
 <div class="wrap">
-    <p class="sect__eyebrow">The Receipt: July 21, 2026</p>
+    <p class="flx-eyebrow">The Receipt: July 21, 2026</p>
     <h2 class="sect__title">One Story That Writes, Extends, and Retires Itself</h2>
     <p class="sect__lead">A single storm, one live page, four automatic updates: issued at 12:32 p.m., extended at 1:10, cleared at 2:16, expired at 5:16, then closed out with related coverage. The footer says it plainly: <em>&ldquo;Sourced from the National Weather Service alert feed. Auto-updates as alerts are issued, upgraded, and lifted.&rdquo;</em></p>
     <div class="shot mt-md">
         <div class="shot__frame">
-            <a href="/wp-content/themes/flxlocalmedia/assets/images/wx-liveblog-storm-timeline.png" target="_blank" rel="noopener">
-                <img src="/wp-content/themes/flxlocalmedia/assets/images/wx-liveblog-storm-timeline.png" alt="Live Finger Lakes Daily News severe thunderstorm warning page for July 21, 2026, showing a self-updating timeline from warning issued at 12:32 PM through cleared and expired, with a weather-alert email signup and a live Beach Hazards Statement card in the sidebar.">
+            <a href="{{THEME_URI}}/assets/images/wx-liveblog-storm-timeline.png" target="_blank" rel="noopener">
+                <img src="{{THEME_URI}}/assets/images/wx-liveblog-storm-timeline.png" alt="Live Finger Lakes Daily News severe thunderstorm warning page for July 21, 2026, showing a self-updating timeline from warning issued at 12:32 PM through cleared and expired, with a weather-alert email signup and a live Beach Hazards Statement card in the sidebar.">
             </a>
         </div>
         <p class="shot__cap">Note the sidebar: a live Beach Hazards Statement (issued that day) and a &ldquo;Weather Alert Email&rdquo; signup, the audience surface a sponsor attaches to.</p>
@@ -536,11 +517,11 @@ a:hover { text-decoration: underline; }
 <!-- Live right now -->
 <section class="sect">
 <div class="wrap">
-    <p class="sect__eyebrow">Not a Demo: It&rsquo;s On Right Now</p>
+    <p class="flx-eyebrow">Not a Demo: It&rsquo;s On Right Now</p>
     <h2 class="sect__title">Every Alert, Automatically, Every Day</h2>
     <p class="sect__lead">This isn&rsquo;t a highlight reel of two storms. The alert desk runs continuously: severe thunderstorms, floods, winter storms, heat and air-quality advisories, beach hazards. Here it is handling a live NWS Beach Hazards Statement, captured straight off the site.</p>
     <div class="wide-img">
-        <img src="/wp-content/themes/flxlocalmedia/assets/images/wx-live-alert-map.png" alt="Live weather-alert article on fingerlakesdailynews.com showing a current NWS Beach Hazards Statement for the Finger Lakes with an auto-generated regional radar map.">
+        <img src="{{THEME_URI}}/assets/images/wx-live-alert-map.png" alt="Live weather-alert article on fingerlakesdailynews.com showing a current NWS Beach Hazards Statement for the Finger Lakes with an auto-generated regional radar map.">
     </div>
 </div>
 </section>
@@ -548,7 +529,7 @@ a:hover { text-decoration: underline; }
 <!-- Growth charts: from zero -->
 <section class="sect">
 <div class="wrap">
-    <p class="sect__eyebrow">The Curve: Google Search Console</p>
+    <p class="flx-eyebrow">The Curve: Google Search Console</p>
     <h2 class="sect__title">From 3,568 to 457,933, in Six Months</h2>
     <p class="sect__lead">In January the weather section had almost no search footprint, because it didn&rsquo;t exist. As the alert desk and forecast pages came online this spring, the reach compounded: monthly Google impressions for the weather pages grew <strong>128&times;</strong> from January to June 2026. Visits (clicks) follow the storms: every severe-weather event is a spike.</p>
     <div class="two-col mt-md">
@@ -568,12 +549,12 @@ a:hover { text-decoration: underline; }
 <!-- SOV payoff -->
 <section class="sect sect--dark">
 <div class="wrap">
-    <p class="sect__eyebrow">The Payoff: Share of Voice</p>
+    <p class="flx-eyebrow">The Payoff: Share of Voice</p>
     <h2 class="sect__title">When a Storm Hits, We Own the Results Page</h2>
     <p class="sect__lead">Speed isn&rsquo;t just a nice story: it&rsquo;s search dominance in the exact moment demand spikes. Because our alert pages publish and get indexed <em>during</em> the event, not after, they land at the top of Google when the whole region is searching. On a live &ldquo;Flood Warning for Finger Lakes Region&rdquo; query, Finger Lakes Daily News is the #1 organic result <strong>and every single Top Story.</strong></p>
 
     <div class="wide-img">
-        <img src="/wp-content/themes/flxlocalmedia/assets/images/serp-flood-warning-sov.png" alt="Google results page for 'Flood Warning for Finger Lakes Region' with Finger Lakes Daily News as the #1 organic result and all four Top Stories, each carrying an auto-generated radar map thumbnail.">
+        <img src="{{THEME_URI}}/assets/images/serp-flood-warning-sov.png" alt="Google results page for 'Flood Warning for Finger Lakes Region' with Finger Lakes Daily News as the #1 organic result and all four Top Stories, each carrying an auto-generated radar map thumbnail.">
     </div>
 
     <div class="storm-row">
@@ -601,16 +582,16 @@ a:hover { text-decoration: underline; }
 <!-- Why it matters / steal this -->
 <section class="sect sect--alt">
 <div class="wrap">
-    <p class="sect__eyebrow">Why It Matters</p>
+    <p class="flx-eyebrow">Why It Matters</p>
     <h2 class="sect__title">Weather Is the Moment Local Media Is For</h2>
     <p class="sect__lead">Severe weather is the single biggest reason people turn to a local station&rsquo;s website and social, and it&rsquo;s exactly when a lean newsroom is slammed or off the clock. Turning the free government alert feed into instant, on-brand, self-updating coverage means you own the storm story instead of losing that audience to TV or weather.com. We built the whole thing from a standing start in a few months this year: proof it&rsquo;s a realistic play, not a moonshot.</p>
     <div class="two-col mt-md">
         <div>
-            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Free input, owned audience</h3>
+            <h3 style="margin-bottom:8px;">Free input, owned audience</h3>
             <p class="text-sm text-muted">The NWS alert feed is public and license-free. The cost isn&rsquo;t data or talent: it&rsquo;s the plumbing that turns a warning into a branded post the instant it&rsquo;s issued, and takes it down the instant it clears.</p>
         </div>
         <div>
-            <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">A sponsorable franchise</h3>
+            <h3 style="margin-bottom:8px;">A sponsorable franchise</h3>
             <p class="text-sm text-muted">Always-on weather coverage (alerts, the live-blog, the email signup beside it) is a natural &ldquo;Weather brought to you by&nbsp;___&rdquo; package. Automated public service that funds itself, not a cost center.</p>
         </div>
     </div>
@@ -622,7 +603,7 @@ a:hover { text-decoration: underline; }
 <div class="wrap">
     <h2 class="cs-footer__title">Want your stations first on the storm?</h2>
     <p class="cs-footer__sub">FLX Local Media operates seven radio stations and a news site. We build, and share, the infrastructure we run on.</p>
-    <a href="/contact/" class="btn">Get in Touch</a>
+    <a href="/contact/" class="flx-btn">Get in Touch</a>
 </div>
 </section>
 
@@ -634,7 +615,7 @@ a:hover { text-decoration: underline; }
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     var impressions = [3568, 4773, 9195, 148064, 175856, 457933];
     var clicks = [6, 14, 25, 3321, 524, 2162];
-    var teal = '#003b5b', ochre = '#0b9caf', grid = 'rgba(0,59,91,0.08)', ink = '#556673';
+    var teal = '#003b5b', ochre = '#e3a72f', grid = 'rgba(0,59,91,0.08)', ink = '#556673';
     var base = {
       responsive: true,
       maintainAspectRatio: false,

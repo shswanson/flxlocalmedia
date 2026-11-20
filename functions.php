@@ -34,7 +34,7 @@ function flxlm_enqueue_assets() {
 	$css_ver = filemtime( get_template_directory() . '/assets/css/style.css' );
 	$js_ver  = filemtime( get_template_directory() . '/assets/js/main.js' );
 
-	wp_enqueue_style( 'flxlm-fonts', 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap', array(), null );
+	wp_enqueue_style( 'flxlm-fonts', 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Kaushan+Script&display=swap', array(), null );
 	wp_enqueue_style( 'flxlm-style', get_template_directory_uri() . '/assets/css/style.css', array( 'flxlm-fonts' ), $css_ver );
 	wp_enqueue_script( 'flxlm-main', get_template_directory_uri() . '/assets/js/main.js', array(), $js_ver, true );
 }
@@ -224,6 +224,38 @@ function flxlm_station_registry( $slug ) {
 	return isset( $all[ $slug ] ) && is_array( $all[ $slug ] ) ? $all[ $slug ] : null;
 }
 
+/**
+ * A station's counties as one phrase: the counties with 25% or more of their people inside
+ * the signal area, then "plus parts of" the 5-25% ones. "(estimated)" for the two stations
+ * whose outline is an estimate.
+ *
+ * @param array $p         Station page data from flxlm_station_page_data().
+ * @param bool  $with_word Add the word "counties" / "County" after the main list.
+ * @return string
+ */
+function flxlm_station_counties_text( $p, $with_word = false ) {
+	$and = function ( $items ) {
+		$last = array_pop( $items );
+		return $items ? implode( ', ', $items ) . ' and ' . $last : (string) $last;
+	};
+	$word  = function ( $items ) {
+		return count( $items ) > 1 ? ' counties' : ' County';
+	};
+	$main  = isset( $p['counties'] ) ? $p['counties'] : array();
+	$parts = isset( $p['counties_parts'] ) ? $p['counties_parts'] : array();
+	if ( $main ) {
+		$out = $and( $main ) . ( $with_word ? $word( $main ) : '' );
+		if ( $parts ) {
+			$out .= ', plus parts of ' . $and( $parts ) . $word( $parts );
+		}
+	} elseif ( $parts ) {
+		$out = 'Parts of ' . $and( $parts ) . $word( $parts );
+	} else {
+		return '';
+	}
+	return ! empty( $p['signal_estimated'] ) ? $out . ' (estimated)' : $out;
+}
+
 function flxlm_station_page_data( $slug ) {
 	$st = flxlm_get_station_data( $slug );
 	if ( ! $st || ! is_array( $st ) ) {
@@ -236,7 +268,7 @@ function flxlm_station_page_data( $slug ) {
 	// assets/data/stations-registry.json). It wins over anything in helpers.php: one source per fact.
 	$reg = flxlm_station_registry( $slug );
 	if ( $reg ) {
-		$map = array( 'frequency_display', 'frequency_also', 'tagline', 'target', 'counties', 'colors', 'nowplaying_slug', 'stream_url', 'profile_audio' );
+		$map = array( 'frequency_display', 'frequency_also', 'tagline', 'target', 'counties', 'counties_parts', 'colors', 'nowplaying_slug', 'stream_url', 'profile_audio' );
 		foreach ( $map as $k ) {
 			if ( array_key_exists( $k, $reg ) ) {
 				$pg[ $k ] = $reg[ $k ];
@@ -272,7 +304,7 @@ function flxlm_station_page_data( $slug ) {
 	$col     = isset( $pg['colors'] ) && is_array( $pg['colors'] ) ? $pg['colors'] : array();
 	$primary = flxlm_station_hex( isset( $col['primary'] ) ? $col['primary'] : '', '#003b5b' );
 	$deep    = flxlm_station_hex( isset( $col['deep'] ) ? $col['deep'] : '', flxlm_station_blend( $primary, '#000000', 0.3 ) );
-	$accent  = flxlm_station_hex( isset( $col['accent'] ) ? $col['accent'] : '', '#52cfd8' );
+	$accent  = flxlm_station_hex( isset( $col['accent'] ) ? $col['accent'] : '', '#e3a72f' );
 	$ink     = flxlm_station_blend( $deep, '#000000', 0.62 );
 	// Station colour for small text on white: the primary, or the deep colour, darkened until it reads (4.5:1).
 	$link = flxlm_station_contrast( $primary, '#ffffff' ) >= 4.5 ? $primary : $deep;
@@ -356,7 +388,23 @@ function flxlm_station_page_data( $slug ) {
 		'population' => $str( $mk, 'population' ),
 		'label'      => $str( $mk, 'label' ),
 		'towns'      => $list( $mk, 'towns' ),
+		'signal'     => '',
 	);
+	// One county figure and one signal-area figure per station, both from the registry
+	// (shswanson/fldn stations/registry.json, coverage_basis). County figure: people in the
+	// counties the station serves. Signal-area figure: people inside the FM 54 dBu outline.
+	if ( $reg ) {
+		$county_pop = isset( $reg['county_population'] ) ? (int) $reg['county_population'] : 0;
+		$serves     = isset( $reg['counties'] ) && is_array( $reg['counties'] ) ? count( $reg['counties'] ) : 0;
+		$words      = array( 1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six' );
+		$brand      = isset( $reg['brand'] ) ? (string) $reg['brand'] : $slug;
+		$market['population'] = $county_pop > 0 ? round( $county_pop / 1000 ) . 'K' : '';
+		$market['label']      = $county_pop > 0 ? ( 1 === $serves ? 'people live in the one county ' : 'people live in the ' . ( isset( $words[ $serves ] ) ? $words[ $serves ] : $serves ) . ' counties ' ) . $brand . ' serves.' : '';
+		$sig_pop              = isset( $reg['signal_population'] ) ? (int) $reg['signal_population'] : 0;
+		if ( $sig_pop > 0 ) {
+			$market['signal'] = 'About ' . number_format( (int) ( round( $sig_pop / 1000 ) * 1000 ) ) . ' people live inside the FM signal area' . ( ! empty( $reg['signal_estimated'] ) ? ' (estimated).' : '.' );
+		}
+	}
 
 	// Ways to advertise.
 	$ways = array();
@@ -410,6 +458,8 @@ function flxlm_station_page_data( $slug ) {
 		'nowplaying_slug'   => preg_replace( '/[^a-z0-9_-]/i', '', $str( $pg, 'nowplaying_slug' ) ),
 		'stream_url'        => preg_match( '#^https://#i', $stream ) ? esc_url_raw( $stream ) : '',
 		'stats'             => $stats,
+		'counties_parts'    => isset( $pg['counties_parts'] ) ? $list( $pg, 'counties_parts' ) : array(),
+		'signal_estimated'  => $reg && ! empty( $reg['signal_estimated'] ),
 		'counties'          => isset( $pg['counties'] ) ? $list( $pg, 'counties' ) : ( isset( $st['coverage_counties'] ) && is_array( $st['coverage_counties'] ) ? array_values( array_filter( array_map( 'strval', $st['coverage_counties'] ) ) ) : array() ),
 		'target'            => $str( $pg, 'target', isset( $st['demo'] ) ? (string) $st['demo'] : '' ),
 		'persona'           => $persona,
@@ -496,3 +546,35 @@ require_once get_template_directory() . '/inc/hidden-testimonials.php';
 require_once get_template_directory() . '/inc/forms.php';
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/disable-block-editor.php';
+
+// Stations hub, Proof page and homepage: shared helpers, stylesheet and scripts.
+require_once get_template_directory() . '/inc/site-hubs.php';
+
+// Primary navigation, footer extras, product pages (inc/products.php) and their shared assets.
+require_once get_template_directory() . '/inc/products.php';
+
+/**
+ * Bold site layer: navigation, footer and product page styles, plus the navigation script.
+ * Loads on every page. On the Product template it also loads the station page design
+ * (station.css, station-page.js) that the product page reuses.
+ */
+function flxlm_enqueue_site_bold() {
+	$dir  = get_template_directory();
+	$uri  = get_template_directory_uri();
+	$deps = array( 'flxlm-style' );
+
+	if ( is_page_template( 'page-templates/template-product.php' ) ) {
+		wp_enqueue_style( 'flxlm-station-fonts', 'https://fonts.googleapis.com/css2?family=Poppins:wght@800;900&display=swap', array(), null );
+		wp_enqueue_style( 'flxlm-station', $uri . '/assets/css/station.css', array( 'flxlm-style' ), filemtime( $dir . '/assets/css/station.css' ) );
+		wp_enqueue_script( 'flxlm-station-page', $uri . '/assets/js/station-page.js', array(), filemtime( $dir . '/assets/js/station-page.js' ), true );
+		$deps[] = 'flxlm-station';
+	}
+
+	wp_enqueue_style( 'flxlm-site-bold', $uri . '/assets/css/site-bold.css', $deps, filemtime( $dir . '/assets/css/site-bold.css' ) );
+	wp_enqueue_script( 'flxlm-site-nav', $uri . '/assets/js/site-nav.js', array(), filemtime( $dir . '/assets/js/site-nav.js' ), true );
+}
+add_action( 'wp_enqueue_scripts', 'flxlm_enqueue_site_bold', 20 );
+
+// Site redesign: frame (palette, glass nav, logo) and the remaining pages.
+require_once get_template_directory() . '/inc/site-frame.php';
+require_once get_template_directory() . '/inc/site-pages.php';

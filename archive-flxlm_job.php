@@ -5,15 +5,18 @@
  * @package flxlm
  */
 
+flxlm_pg_begin( array(
+	'accent'         => 'navy',
+	'eyebrow'        => 'Join our team',
+	'title'          => 'Careers',
+	'lead'           => 'Join our team at FLX Local Media, locally owned multimedia connecting the Finger Lakes through seven radio stations and Finger Lakes Daily News.',
+	'cta'            => false,
+	'band'           => false,
+	'no_footer_band' => true,
+) );
 get_header();
+flxlm_pg_open();
 ?>
-
-<div class="page-header">
-	<div class="container">
-		<h1 class="page-header__title">Careers</h1>
-		<p class="page-header__subtitle">Join our team at FLX Local Media, locally owned multimedia connecting the Finger Lakes through seven radio stations and Finger Lakes Daily News.</p>
-	</div>
-</div>
 
 <section class="section">
 	<div class="container">
@@ -47,7 +50,7 @@ get_header();
 								</p>
 							<?php endif; ?>
 							<p class="archive-card__excerpt"><?php echo esc_html( wp_trim_words( wp_strip_all_tags( get_the_content() ), 24 ) ); ?></p>
-							<p><a class="btn btn--outline" href="<?php the_permalink(); ?>">View Job</a></p>
+							<p><a class="flx-btn flx-btn--ghost flx-btn--sm" href="<?php the_permalink(); ?>">View Job</a></p>
 						</div>
 					</article>
 				<?php endwhile; ?>
@@ -58,4 +61,7 @@ get_header();
 	</div>
 </section>
 
-<?php get_footer(); ?>
+<?php
+flxlm_pg_close();
+get_footer();
+
