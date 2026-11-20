@@ -117,7 +117,7 @@ get_header();
 				<?php if ( '' !== $p['frequency_also'] ) : ?>
 					<div class="st-also"><?php echo esc_html( $p['frequency_also'] ); ?></div>
 				<?php endif; ?>
-				<?php if ( '' !== $p['format_label'] ) : ?>
+				<?php if ( '' !== $p['format_label'] && $p['format_label'] !== $p['tagline'] ) : ?>
 					<div class="st-format"><?php echo esc_html( $p['format_label'] ); ?></div>
 				<?php endif; ?>
 				<?php if ( '' !== $p['tagline'] ) : ?>
