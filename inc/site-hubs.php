@@ -312,6 +312,7 @@ function flxlm_enqueue_site_hubs_assets() {
 		wp_localize_script( 'flxlm-site-hubs', 'flxlmHubs', array(
 			'minSongSeconds' => 90,
 			'contoursUrl'    => $uri . '/assets/data/contours-coverage.geojson?v=' . (int) filemtime( $dir . '/assets/data/contours-coverage.geojson' ),
+			'footprintUrl'   => $uri . '/assets/data/contours-footprint.geojson?v=' . (int) filemtime( $dir . '/assets/data/contours-footprint.geojson' ),
 			'stations'       => $map,
 		) );
 	}

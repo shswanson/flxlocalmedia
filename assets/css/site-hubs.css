@@ -16,6 +16,7 @@
 	--hb-ink: var(--navy-700);
 	--hb-mist: var(--navy-50);
 	--hb-line: #dbe7ec;
+	--hb-map-grey: #8a9ba4;
 	background: var(--hb-mist);
 	color: var(--color-text);
 	font-family: var(--font-body);
@@ -569,6 +570,17 @@
 .hb-legend a:focus-visible {
 	border-color: var(--hb-navy);
 	box-shadow: 0 4px 14px rgba(0, 59, 91, 0.12);
+}
+
+/* The station being shown on the map (hover, focus or tap). */
+.hb-legend a.is-map-active {
+	border-color: var(--hb-navy);
+	box-shadow: 0 4px 14px rgba(0, 59, 91, 0.12);
+}
+
+.hb-tile.is-map-active {
+	outline: 3px solid var(--st-accent);
+	outline-offset: 2px;
 }
 
 .hb-swatch {

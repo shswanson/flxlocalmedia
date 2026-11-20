@@ -4,11 +4,12 @@
  * Reads window.flxlmHubs (wp_localize_script):
  *   minSongSeconds  tracks shorter than this are treated as ads and hidden
  *   contoursUrl     coverage GeoJSON (property parent_station = call sign)
+ *   footprintUrl    one dissolved outline of all stations (the default map view)
  *   stations        [ { call, name, freq, url, color, dash } ] for the map
  *
  * Markup hooks (each feature skips when its element is absent):
  *   .hb-np[data-np]   "on air now" line: data-np is the FLDN now-playing URL
- *   #hub-map          Leaflet coverage map; .hb-legend a[data-legend-call]
+ *   #hub-map          Leaflet coverage map; .hb-legend a[data-legend-call], .hb-tiles .hb-tile
  *
  * Every feature fails quietly: the page keeps the text it was rendered with.
  */
@@ -69,7 +70,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /*  Coverage map: all seven stations, each in its own colour.          */
+  /*  Coverage map: one footprint; a station lights up on hover/tap.        */
   /* ------------------------------------------------------------------ */
 
   var cities = [
@@ -110,54 +111,106 @@
     // No Esri reference-label tiles here: our own town markers below carry the names,
     // so a town is never printed twice.
 
-    var layers = {};
+    var layers = {};      // per-station outlines, drawn only while a station is highlighted
+    var footprint = null; // one outline of everything we cover
+    var active = '';      // call sign currently highlighted
+    var pinned = false;   // true after a click or tap: hover no longer changes it
+    var lastPointer = 'mouse';
 
-    fetch(cfg.contoursUrl)
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        if (!data || !data.features) return;
-        var bounds = L.latLngBounds();
-        var any = false;
+    var cs = window.getComputedStyle(el);
+    var NAVY = (cs.getPropertyValue('--hb-navy') || '').trim() || '#003b5b';
+    var GREY = (cs.getPropertyValue('--hb-map-grey') || '').trim() || '#8a9ba4';
+
+    function fetchJson(url) {
+      return fetch(url).then(function (r) { return r.json(); });
+    }
+
+    // Station tiles and legend entries that belong to one station.
+    var targets = {};
+    // node = the link that receives the pointer; mark = the element that shows it is active.
+    function addTarget(call, node, mark) {
+      (targets[call] = targets[call] || []).push({ node: node, mark: mark || node });
+    }
+    [].slice.call(document.querySelectorAll('.hb-legend a[data-legend-call]')).forEach(function (a) {
+      addTarget(String(a.getAttribute('data-legend-call')).toUpperCase(), a);
+    });
+    [].slice.call(document.querySelectorAll('.hb-tiles .hb-tile')).forEach(function (tile) {
+      var link = tile.querySelector('.hb-tile__link');
+      if (!link) return;
+      var href = link.getAttribute('href');
+      Object.keys(byCall).forEach(function (call) {
+        if (byCall[call].url === href) addTarget(call, link, tile);
+      });
+    });
+
+    function paint() {
+      if (!footprint) return;
+      footprint.setStyle(active
+        ? { color: GREY, weight: 2, opacity: 0.9, fillColor: GREY, fillOpacity: 0.1 }
+        : { color: NAVY, weight: 2.5, opacity: 0.95, fillColor: NAVY, fillOpacity: 0.18 });
+      Object.keys(layers).forEach(function (call) {
+        if (call === active) {
+          layers[call].addTo(map).bringToFront();
+        } else if (map.hasLayer(layers[call])) {
+          map.removeLayer(layers[call]);
+        }
+      });
+      Object.keys(targets).forEach(function (call) {
+        targets[call].forEach(function (n) { n.mark.classList.toggle('is-map-active', call === active); });
+      });
+    }
+
+    function show(call) { active = call; paint(); }
+    function clear() { active = ''; pinned = false; paint(); }
+
+    Object.keys(byCall).forEach(function (call) {
+      (targets[call] || []).forEach(function (t) {
+        var node = t.node;
+        node.addEventListener('pointerdown', function (e) { lastPointer = e.pointerType || 'mouse'; });
+        node.addEventListener('mouseenter', function () { if (!pinned && lastPointer === 'mouse') show(call); });
+        node.addEventListener('mouseleave', function () { if (!pinned) clear(); });
+        node.addEventListener('focusin', function () { if (!pinned) show(call); });
+        node.addEventListener('focusout', function () { if (!pinned) clear(); });
+        node.addEventListener('click', function (e) {
+          // A mouse click goes straight to the station (hover already shows it on the map).
+          // On touch the first tap highlights the station on the map and the second tap opens it.
+          if (lastPointer !== 'mouse' && !(pinned && active === call)) {
+            e.preventDefault();
+            pinned = true;
+            show(call);
+          }
+        });
+      });
+    });
+
+    map.on('click', clear); // tapping the map itself restores the default view
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') clear(); });
+
+    Promise.all([fetchJson(cfg.footprintUrl), fetchJson(cfg.contoursUrl)])
+      .then(function (res) {
+        var foot = res[0];
+        var data = res[1];
+        if (!foot || !foot.features || !data || !data.features) return;
+
+        footprint = L.geoJSON(foot, { interactive: false }).addTo(map);
 
         L.geoJSON(data, {
+          interactive: false,
           filter: function (f) {
             return !!byCall[String((f.properties || {}).parent_station || '').toUpperCase()];
           },
           style: function (f) {
             var s = byCall[String(f.properties.parent_station).toUpperCase()];
-            return {
-              color: s.color,
-              weight: 2.5,
-              opacity: 0.95,
-              dashArray: s.dash || null,
-              fillColor: s.color,
-              fillOpacity: 0.06
-            };
+            return { color: s.color, weight: 2.5, opacity: 1, fillColor: s.color, fillOpacity: 0.22 };
           },
           onEachFeature: function (f, layer) {
             var call = String(f.properties.parent_station).toUpperCase();
-            var s = byCall[call];
-            layer.bindPopup('<strong>' + esc(s.name) + '</strong><br>' + esc(s.freq) + '<br><a href="' + esc(s.url) + '">See the station</a>');
             layers[call] = layer;
-            bounds.extend(layer.getBounds());
-            any = true;
           }
-        }).addTo(map);
-
-        if (any) map.fitBounds(bounds, { padding: [12, 12], maxZoom: 16 });
-
-        // Legend: hovering or focusing a name thickens that station's outline.
-        [].slice.call(document.querySelectorAll('.hb-legend a[data-legend-call]')).forEach(function (a) {
-          var layer = layers[String(a.getAttribute('data-legend-call')).toUpperCase()];
-          if (!layer) return;
-          function on() { layer.setStyle({ weight: 5, fillOpacity: 0.3 }); layer.bringToFront(); }
-          function off() { layer.setStyle({ weight: 2.5, fillOpacity: 0.06 }); }
-          a.addEventListener('mouseenter', on);
-          a.addEventListener('mouseleave', off);
-          a.addEventListener('focus', on);
-          a.addEventListener('blur', off);
         });
 
+        paint();
+        map.fitBounds(footprint.getBounds(), { padding: [12, 12], maxZoom: 16 });
         addCities();
       })
       .catch(function () {});
