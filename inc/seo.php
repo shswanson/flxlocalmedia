@@ -11,7 +11,7 @@
  *                         llms.txt and IndexNow
  *
  * Share images are files in assets/images/og/<key>.png, made by the generator in
- * the fldn repo (scripts/flxlm-og/). A page without its own image gets default.png.
+ * tools/og/ in this theme. A page without its own image gets default.png.
  *
  * Hooks into wp_head at priority 1 (meta tags) and priority 5 (JSON-LD).
  *
@@ -52,7 +52,7 @@ function flxlm_seo_og_url( $key ) {
 
 /**
  * What the share-image generator needs, one row per image: the copy, colors and
- * local files. Read by scripts/flxlm-og/export-manifest.php in the fldn repo.
+ * local files. Read by tools/og/export-manifest.php.
  *
  * @return array[]
  */
