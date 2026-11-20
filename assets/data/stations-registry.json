@@ -1,6 +1,6 @@
 {
   "_generated_from": "shswanson/fldn stations/registry.json via scripts/stations/export.py. Do not edit by hand.",
-  "updated": "2026-11-19",
+  "updated": "2026-11-20",
   "stations": {
     "mix-985": {
       "brand": "Mix 98.5",
@@ -11,12 +11,16 @@
       "frequency_display": "98.5 FM",
       "frequency_also": "",
       "counties": [
-        "Ontario",
         "Cayuga",
+        "Ontario",
         "Seneca",
         "Wayne",
         "Yates"
       ],
+      "counties_parts": [],
+      "county_population": 338147,
+      "signal_population": 210418,
+      "signal_estimated": false,
       "colors": {
         "primary": "#e4141c",
         "deep": "#a80d14",
@@ -35,11 +39,17 @@
       "frequency_display": "99.3 FM",
       "frequency_also": "Also on 98.1 FM",
       "counties": [
-        "Ontario",
+        "Wayne",
         "Cayuga",
-        "Seneca",
-        "Wayne"
+        "Ontario",
+        "Seneca"
       ],
+      "counties_parts": [
+        "Yates"
+      ],
+      "county_population": 313434,
+      "signal_population": 236744,
+      "signal_estimated": false,
       "colors": {
         "primary": "#2b6cb0",
         "deep": "#1c4a7e",
@@ -60,8 +70,14 @@
       "counties": [
         "Ontario",
         "Seneca",
-        "Wayne"
+        "Wayne",
+        "Cayuga",
+        "Yates"
       ],
+      "counties_parts": [],
+      "county_population": 338147,
+      "signal_population": 131042,
+      "signal_estimated": false,
       "colors": {
         "primary": "#8b4226",
         "deep": "#5e2c18",
@@ -80,13 +96,15 @@
       "frequency_display": "96.1 FM",
       "frequency_also": "Also on 95.9 · 96.9 · 101.9 FM",
       "counties": [
-        "Yates",
-        "Schuyler",
-        "Steuben",
-        "Chemung",
+        "Ontario",
         "Seneca",
-        "Ontario"
+        "Yates",
+        "Schuyler"
       ],
+      "counties_parts": [],
+      "county_population": 188507,
+      "signal_population": 96570,
+      "signal_estimated": false,
       "colors": {
         "primary": "#c41230",
         "deep": "#8f1024",
@@ -104,9 +122,14 @@
       "target": "Adults 45+",
       "frequency_display": "106.3 FM",
       "frequency_also": "",
-      "counties": [
-        "Ontario"
+      "counties": [],
+      "counties_parts": [
+        "Ontario",
+        "Seneca"
       ],
+      "county_population": null,
+      "signal_population": 29475,
+      "signal_estimated": true,
       "colors": {
         "primary": "#283890",
         "deep": "#13215b",
@@ -127,6 +150,10 @@
       "counties": [
         "Cayuga"
       ],
+      "counties_parts": [],
+      "county_population": 76171,
+      "signal_population": 42674,
+      "signal_estimated": true,
       "colors": {
         "primary": "#283890",
         "deep": "#13215b",
@@ -145,10 +172,16 @@
       "frequency_display": "100.1 FM",
       "frequency_also": "Also on 104.5 FM",
       "counties": [
+        "Monroe",
         "Ontario",
-        "Livingston",
-        "Monroe"
+        "Wayne"
       ],
+      "counties_parts": [
+        "Livingston"
+      ],
+      "county_population": 960018,
+      "signal_population": 578106,
+      "signal_estimated": false,
       "colors": {
         "primary": "#1976d2",
         "deep": "#0f4c81",

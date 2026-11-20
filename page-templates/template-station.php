@@ -80,8 +80,8 @@ if ( $st['streaming_hours'] ) {
 	$spec_nums[] = array( number_format( $st['streaming_hours'] ), 'Streaming hours' . ( '' !== $st['streaming_window'] ? ', ' . $st['streaming_window'] : '' ) );
 }
 $spec_meta = array();
-if ( $p['counties'] ) {
-	$spec_meta[] = array( implode( ', ', $p['counties'] ), count( $p['counties'] ) > 1 ? 'Counties covered' : 'County covered', true );
+if ( $p['counties'] || $p['counties_parts'] ) {
+	$spec_meta[] = array( flxlm_station_counties_text( $p ), count( $p['counties'] ) + count( $p['counties_parts'] ) > 1 ? 'Counties covered' : 'County covered', true );
 }
 if ( '' !== $p['target'] ) {
 	$spec_meta[] = array( $p['target'], 'Target audience', false );
@@ -284,8 +284,8 @@ get_header();
 			<?php if ( $has_market ) : ?>
 				<?php
 				$mk        = $p['market'];
-				$has_left  = '' !== $mk['population'] || $mk['towns'];
-				$map_note  = '' !== $p['map_note'] ? $p['map_note'] : 'Shaded area: where ' . $name . ' can typically be heard on all of its signals combined. FM areas are modelled on real terrain to the 54 dBu level (60 dBu for some translators); AM areas use the FCC\'s daytime 0.5 mV/m contour. Reception varies with terrain, buildings and the radio.';
+				$has_left  = '' !== $mk['population'] || '' !== $mk['signal'] || $mk['towns'];
+				$map_note  = '' !== $p['map_note'] ? $p['map_note'] : 'Shaded area: where ' . $name . ' can typically be heard on its FM signals combined, modelled on real terrain to the 54 dBu level. Reception varies with terrain, buildings and the radio.' . ( $p['signal_estimated'] ? ' This outline is an estimate: there is no licensed FCC contour on file for this translator.' : '' );
 				?>
 				<!-- 5. The market, with the coverage map -->
 				<section class="st-panel st-market" id="market">
@@ -298,6 +298,9 @@ get_header();
 									<?php if ( '' !== $mk['label'] ) : ?>
 										<p class="pop-label"><?php echo esc_html( $mk['label'] ); ?></p>
 									<?php endif; ?>
+								<?php endif; ?>
+								<?php if ( '' !== $mk['signal'] ) : ?>
+									<p class="pop-label pop-label--signal"><?php echo esc_html( $mk['signal'] ); ?></p>
 								<?php endif; ?>
 								<?php if ( $mk['towns'] ) : ?>
 									<h3>Towns</h3>

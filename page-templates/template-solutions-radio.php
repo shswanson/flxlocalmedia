@@ -70,8 +70,8 @@ get_header();
 									<span class="hb-legend__text">
 										<b><?php echo esc_html( $t['name'] ); ?></b>
 										<span><?php echo esc_html( trim( $t['freq'] . ( '' !== $t['also'] ? ', ' . lcfirst( $t['also'] ) : '' ) ) ); ?></span>
-										<?php if ( $t['counties'] ) : ?>
-											<span><?php echo esc_html( implode( ', ', $t['counties'] ) . ( count( $t['counties'] ) > 1 ? ' counties' : ' County' ) ); ?></span>
+										<?php if ( '' !== $t['counties_text'] ) : ?>
+											<span><?php echo esc_html( $t['counties_text'] ); ?></span>
 										<?php endif; ?>
 									</span>
 								</a>
@@ -79,7 +79,7 @@ get_header();
 						<?php endforeach; ?>
 					</ul>
 				</div>
-				<p class="hb-note">Each area is where a station can typically be heard on all of its signals combined. FM areas are modelled on real terrain to the 54 dBu level (60 dBu for some translators). Reception varies with terrain, buildings and the radio. <a href="<?php echo esc_url( home_url( '/methodology/' ) ); ?>">How we count listeners</a></p>
+				<p class="hb-note">Each area is where a station can typically be heard on its FM signals combined, modelled on real terrain to the 54 dBu level. The WGVA and WAUB outlines are estimates: there is no licensed FCC contour on file for their translators. Reception varies with terrain, buildings and the radio. <a href="<?php echo esc_url( home_url( '/methodology/' ) ); ?>">How we count listeners</a></p>
 			</div>
 		</section>
 	<?php endif; ?>

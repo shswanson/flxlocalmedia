@@ -270,7 +270,6 @@ function flxlm_get_station_data( $slug = '' ) {
 			'format'              => 'Adult Contemporary',
 			'demo'                => 'Women 25-54',
 			'tagline'             => 'The Finger Lakes at-work station',
-			'market_population'   => 338147,
 			'median_hhi'          => 81353,
 			'homeownership_pct'   => 69.9,
 			'drive_alone_pct'     => 86.9,
@@ -300,7 +299,7 @@ function flxlm_get_station_data( $slug = '' ) {
 				),
 			),
 			'coverage_counties'    => array( 'Ontario', 'Cayuga', 'Seneca', 'Wayne', 'Yates' ),
-			'coverage_description' => 'Mix 98.5 covers the heart of the Finger Lakes, reaching Geneva, Canandaigua, Auburn, Penn Yan, Seneca Falls, and surrounding communities across five counties. The signal also extends into Rochester\'s eastern suburbs.',
+			'coverage_description' => 'Mix 98.5 covers the heart of the Finger Lakes, reaching Geneva, Canandaigua, Auburn, Penn Yan, Seneca Falls, and surrounding communities across five counties.',
 			'estimated_reach'      => array(
 				'weekly'  => 44622,
 				'daily'   => 32496,
@@ -385,8 +384,6 @@ function flxlm_get_station_data( $slug = '' ) {
 					),
 				),
 				'market'            => array(
-					'population' => '338K',
-					'label'      => 'people live in the five counties Mix 98.5 covers.',
 					'towns'      => array( 'Geneva', 'Canandaigua', 'Auburn', 'Penn Yan', 'Seneca Falls' ),
 				),
 				'map_note'          => 'Shaded area: where Mix 98.5 can typically be heard. Modelled on real terrain to the 54 dBu level. Reception varies with terrain, buildings and the radio.',
@@ -437,7 +434,7 @@ function flxlm_get_station_data( $slug = '' ) {
 					array( 'name' => 'Ken Paradise', 'when' => 'Afternoons, 12:00 – 5:00 PM', 'blurb' => 'Live reads and endorsements from a local host through the afternoon and the drive home.', 'photo' => '', 'photo_alt' => 'Ken Paradise', 'syndicated' => false ),
 					array( 'name' => 'Casey\'s Top 40', 'when' => 'Weekend mornings: Saturday 8:00 AM – 12:00 PM, Sunday 9:00 AM – 12:00 PM', 'blurb' => 'A syndicated countdown, so no live reads. Your spots run in the breaks around it.', 'photo' => '', 'photo_alt' => 'Casey\'s Top 40', 'syndicated' => true ),
 				),
-				'market' => array( 'population' => '313K', 'label' => 'people live in the four counties Classic Hits 99.3 covers.', 'towns' => array( 'Auburn', 'Seneca Falls', 'Geneva', 'Canandaigua', 'Newark', 'Waterloo' ) ),
+				'market' => array( 'towns' => array( 'Auburn', 'Seneca Falls', 'Geneva', 'Canandaigua', 'Newark', 'Waterloo' ) ),
 				'ways' => array(
 					array( 'title' => 'Spots', 'text' => 'Your commercial in rotation from the morning show through the afternoon drive, when listeners are in the truck and at work.', 'icon' => 'spots' ),
 					array( 'title' => 'Sponsorships', 'text' => 'Put your name on an hour of music, the top of the hour or the Classic Hits studio.', 'icon' => 'sponsorship' ),
@@ -452,13 +449,12 @@ function flxlm_get_station_data( $slug = '' ) {
 			'format'              => 'Classic Hits',
 			'demo'                => 'Adults 35-64',
 			'tagline'             => 'Greatest hits of the \'70s, \'80s, and \'90s',
-			'market_population'   => 313434,
 			'median_hhi'          => 83993,
 			'homeownership_pct'   => 78.2,
 			'drive_alone_pct'     => 87.3,
 			'description'         => '<p>Classic Hits 99.3 plays the greatest hits of the \'70s, \'80s, and \'90s, the songs that everyone knows, from Fleetwood Mac to Tom Petty to Whitney Houston. It is the station where people sing along on the drive to work and nod their heads while running errands. The format appeals to adults 35-64 with balanced gender reach, making it one of the most versatile advertising platforms in the market.</p>
 <p>Lisa Cruz starts the day with mornings, bringing familiar energy and local connection to the Finger Lakes audience. Ken Paradise takes over for afternoons, rounding out a lineup that keeps listeners tuned in through the full workday.</p>
-<p>With strong coverage across Ontario, Cayuga, Seneca, and Wayne counties, Classic Hits 99.3 delivers a broad audience that includes both men and women in their peak earning and spending years.</p>',
+<p>With strong coverage across Wayne, Cayuga, Ontario, and Seneca counties, Classic Hits 99.3 delivers a broad audience that includes both men and women in their peak earning and spending years.</p>',
 			'personalities'       => array(
 				array(
 					'name' => 'Lisa Cruz',
@@ -471,8 +467,8 @@ function flxlm_get_station_data( $slug = '' ) {
 					'time' => '12:00 - 5:00 PM',
 				),
 			),
-			'coverage_counties'    => array( 'Ontario', 'Cayuga', 'Seneca', 'Wayne' ),
-			'coverage_description' => 'Classic Hits 99.3 covers Geneva, Auburn, Seneca Falls, Canandaigua, and the surrounding communities across four counties, with signal extending into Rochester\'s eastern suburbs and Syracuse\'s western suburbs.',
+			'coverage_counties'    => array( 'Wayne', 'Cayuga', 'Ontario', 'Seneca' ),
+			'coverage_description' => 'Classic Hits 99.3 covers Geneva, Auburn, Seneca Falls, Canandaigua, and the surrounding communities across four counties and parts of Yates County.',
 			'estimated_reach'      => array(
 				'weekly'  => 38423,
 				'daily'   => 27981,
@@ -517,7 +513,7 @@ function flxlm_get_station_data( $slug = '' ) {
 					array( 'name' => 'Dee Snider\'s House of Hair', 'when' => 'Saturdays, 8:00 – 11:00 PM', 'blurb' => 'A syndicated show, so no live reads. Your spots run in the breaks around it.', 'photo' => 'voices/dee-snider.jpg', 'photo_alt' => 'Dee Snider\'s House of Hair', 'syndicated' => true ),
 					array( 'name' => 'Classic Rock Live & Floydian Slip', 'when' => 'Sundays, 7:00 – 11:00 PM', 'blurb' => 'Two syndicated shows, so no live reads. Your spots run in the breaks around them.', 'photo' => 'voices/craig-bailey.jpg', 'photo_alt' => 'Craig Bailey, host of Floydian Slip', 'syndicated' => true ),
 				),
-				'market' => array( 'population' => '237K', 'label' => 'people live in the three counties 101.7 The Wall covers.', 'towns' => array( 'Geneva', 'Canandaigua', 'Seneca Falls', 'Waterloo', 'Newark', 'Lyons' ) ),
+				'market' => array( 'towns' => array( 'Geneva', 'Canandaigua', 'Seneca Falls', 'Waterloo', 'Newark', 'Lyons' ) ),
 				'ways' => array(
 					array( 'title' => 'Spots', 'text' => 'Your commercial in rotation through the morning and afternoon shows, when the crew is in the truck and on the job.', 'icon' => 'spots' ),
 					array( 'title' => 'Sponsorships', 'text' => 'Put your name on the morning show or on a daily feature such as This Day in Music History.', 'icon' => 'sponsorship' ),
@@ -532,7 +528,6 @@ function flxlm_get_station_data( $slug = '' ) {
 			'format'              => 'Classic Rock',
 			'demo'                => 'Men 35-64',
 			'tagline'             => 'Classic rock for the Finger Lakes',
-			'market_population'   => 237263,
 			'median_hhi'          => 88143,
 			'homeownership_pct'   => 79.0,
 			'drive_alone_pct'     => 87.2,
@@ -551,8 +546,8 @@ function flxlm_get_station_data( $slug = '' ) {
 					'time' => 'Weekdays 12:00 - 5:00 PM',
 				),
 			),
-			'coverage_counties'    => array( 'Ontario', 'Seneca', 'Wayne' ),
-			'coverage_description' => 'The Wall covers Geneva, Penn Yan, Canandaigua, Bath, and Watkins Glen across Ontario, Seneca, and Wayne counties.',
+			'coverage_counties'    => array( 'Ontario', 'Seneca', 'Wayne', 'Cayuga', 'Yates' ),
+			'coverage_description' => 'The Wall covers Geneva, Penn Yan, Seneca Falls, Waterloo, Newark, and Lyons across Ontario, Seneca, Wayne, Cayuga, and Yates counties.',
 			'estimated_reach'      => array(
 				'weekly'  => 19610,
 				'daily'   => 14281,
@@ -601,7 +596,7 @@ function flxlm_get_station_data( $slug = '' ) {
 					array( 'name' => 'Kyle Petty\'s Back Then Again Country Countdown', 'when' => 'Saturdays, 10:00 AM – 12:00 PM', 'blurb' => 'A syndicated show, so no live reads. Your spots run in the breaks around it.', 'photo' => 'voices/kyle-petty-charlie-debbie.jpg', 'photo_alt' => 'Kyle Petty\'s Back Then Again Country Countdown', 'syndicated' => true ),
 					array( 'name' => 'Pure American Country', 'when' => 'Sundays, 7:00 – 9:00 AM', 'blurb' => 'A syndicated show of classic country, so no live reads. Your spots run in the breaks around it.', 'photo' => '', 'photo_alt' => 'Pure American Country', 'syndicated' => true ),
 				),
-				'market' => array( 'population' => '362K', 'label' => 'people live in the six counties Finger Lakes Country covers.', 'towns' => array( 'Penn Yan', 'Dundee', 'Watkins Glen', 'Bath', 'Corning', 'Elmira' ) ),
+				'market' => array( 'towns' => array( 'Penn Yan', 'Dundee', 'Watkins Glen', 'Geneva', 'Waterloo', 'Seneca Falls' ) ),
 				'ways' => array(
 					array( 'title' => 'Spots', 'text' => 'Your commercial in rotation across the day, led by the weekday morning show.', 'icon' => 'spots' ),
 					array( 'title' => 'Sponsorships', 'text' => 'Put your name on the Larry Timko morning show, the morning news and sports, or an hour of music.', 'icon' => 'sports' ),
@@ -617,11 +612,10 @@ function flxlm_get_station_data( $slug = '' ) {
 			'format'              => 'Country',
 			'demo'                => 'Adults 25-64',
 			'tagline'             => 'Finger Lakes Country!',
-			'market_population'   => 137001,
 			'median_hhi'          => 89727,
 			'homeownership_pct'   => 72.6,
 			'drive_alone_pct'     => 84.8,
-			'description'         => '<p>Finger Lakes Country is the region\'s only country music station, broadcasting across five frequencies to cover the widest geographic area of any station in the group. From Penn Yan to Dundee, Watkins Glen to Corning, Geneva to Elmira, if you are in the southern Finger Lakes, WFLR is the station people know.</p>
+			'description'         => '<p>Finger Lakes Country is the region\'s only country music station, broadcasting on four FM frequencies across the Finger Lakes. From Penn Yan to Dundee, Watkins Glen to Geneva, WFLR is the station people know.</p>
 <p>Mornings start with Larry Timko, a Marconi Award-winning host who has been a fixture of the Finger Lakes for decades. Larry does not just play music. He is a trusted voice in the community, the kind of host whose live read carries the weight of a personal recommendation. Lucas Day handles local news throughout the day, keeping the community connected.</p>
 <p>Country is the number one radio format in America with a 13.8% national audience share. In a region like the Finger Lakes, which is rural, agricultural, and community-oriented, that share is even higher. WFLR also carries NASCAR and high school sports, deepening its connection with listeners who care about the things that matter here.</p>',
 			'personalities'       => array(
@@ -636,8 +630,8 @@ function flxlm_get_station_data( $slug = '' ) {
 					'time' => 'All Day',
 				),
 			),
-			'coverage_counties'    => array( 'Ontario', 'Yates', 'Schuyler', 'Steuben', 'Chemung', 'Seneca' ),
-			'coverage_description' => 'With five frequencies, Finger Lakes Country reaches Penn Yan, Dundee, Watkins Glen, Corning, Elmira, Geneva, Waterloo, and Seneca Falls. The signal covers Ontario, Yates, Schuyler, Steuben, Chemung, and Seneca counties, the broadest coverage footprint of any station in the group.',
+			'coverage_counties'    => array( 'Ontario', 'Seneca', 'Yates', 'Schuyler' ),
+			'coverage_description' => 'With four FM frequencies, Finger Lakes Country reaches Penn Yan, Dundee, Watkins Glen, Geneva, Waterloo, and Seneca Falls. The signal covers Ontario, Seneca, Yates, and Schuyler counties.',
 		),
 		'wgva' => array(
 			'name'                => 'WGVA News Radio',
@@ -671,7 +665,7 @@ function flxlm_get_station_data( $slug = '' ) {
 					array( 'name' => 'Markley, Van Camp and Robbins', 'when' => 'Afternoon drive, 3:00 – 6:00 PM', 'blurb' => 'A syndicated show, so no live reads. Your spots run in the breaks through the afternoon drive.', 'photo' => 'voices/markley-van-camp-robbins.jpg', 'photo_alt' => 'Markley, Van Camp and Robbins', 'syndicated' => true ),
 					array( 'name' => 'Mark Levin', 'when' => 'The Mark Levin Show, 6:00 – 9:00 PM', 'blurb' => 'A syndicated show, so no live reads. Your spots run in the breaks through the evening.', 'photo' => 'voices/mark-levin.jpg', 'photo_alt' => 'Mark Levin', 'syndicated' => true ),
 				),
-				'market' => array( 'population' => '112K', 'label' => 'people live in Ontario County, home of WGVA.', 'towns' => array( 'Geneva', 'Canandaigua', 'Victor', 'Phelps', 'Clifton Springs', 'Farmington' ) ),
+				'market' => array( 'towns' => array( 'Geneva', 'Phelps' ) ),
 				'ways' => array(
 					array( 'title' => 'Spots', 'text' => 'Your commercial in rotation across the news and talk day, in the car and at the office.', 'icon' => 'spots' ),
 					array( 'title' => 'Sponsorships', 'text' => 'Put your name on a newscast, the farm report, the winter storm updates or the tax tips.', 'icon' => 'sponsorship' ),
@@ -686,11 +680,10 @@ function flxlm_get_station_data( $slug = '' ) {
 			'format'              => 'News, Talk, and Community',
 			'demo'                => 'Adults 35+',
 			'tagline'             => 'Finger Lakes News Radio',
-			'market_population'   => 112288,
 			'median_hhi'          => 96513,
 			'homeownership_pct'   => 77.1,
 			'drive_alone_pct'     => 85.7,
-			'description'         => '<p>WGVA is the Finger Lakes\' flagship news and talk station, serving Geneva, Canandaigua, Seneca Falls, Victor, and the broader Ontario County area. For listeners who want to know what is happening locally, nationally, and in the world, WGVA is where they turn.</p>
+			'description'         => '<p>WGVA is the Finger Lakes\' flagship news and talk station, serving Geneva, Phelps, and parts of Ontario and Seneca counties. For listeners who want to know what is happening locally, nationally, and in the world, WGVA is where they turn.</p>
 <p>Paul Szmal anchors FLX Mornings with local news, community conversation, and the kind of coverage that only a station rooted in the community can deliver. The rest of the day features Gordon Deal, Brian Kilmeade, Jimmy Failla, Markley Van Camp and Robbins, and Mark Levin, a lineup that keeps news and talk listeners engaged from early morning through the evening.</p>
 <p>WGVA\'s audience has the highest median household income and the highest rate of college education of any station in the group. These are informed, engaged decision-makers: business owners, professionals, and community leaders who pay attention and take action.</p>',
 			'personalities'       => array(
@@ -715,8 +708,8 @@ function flxlm_get_station_data( $slug = '' ) {
 					'time' => '6:00 - 9:00 PM',
 				),
 			),
-			'coverage_counties'    => array( 'Ontario' ),
-			'coverage_description' => 'WGVA covers Geneva, Canandaigua, Seneca Falls, Victor, and the Rochester suburbs across Ontario County. The station serves as the primary local news source for the central Finger Lakes. WGVA also carries Buffalo Bills and Syracuse University football and basketball.',
+			'coverage_counties'    => array(),
+			'coverage_description' => 'WGVA covers Geneva and Phelps and parts of Ontario and Seneca counties (estimated coverage: there is no licensed FCC contour on file for its FM translator). The station serves as the primary local news source for the central Finger Lakes. WGVA also carries Buffalo Bills and Syracuse University football and basketball.',
 		),
 		'waub' => array(
 			'name'                => 'WAUB News Radio',
@@ -750,7 +743,7 @@ function flxlm_get_station_data( $slug = '' ) {
 					array( 'name' => 'Markley, Van Camp & Robbins', 'when' => 'Afternoons, 3:00 – 6:00 PM', 'blurb' => 'A syndicated talk show, so no live reads. Your spots run in the breaks around it.', 'photo' => 'voices/markley-van-camp-robbins.jpg', 'photo_alt' => 'Markley, Van Camp & Robbins', 'syndicated' => true ),
 					array( 'name' => 'Mark Levin', 'when' => 'The Mark Levin Show, 6:00 – 9:00 PM', 'blurb' => 'A syndicated talk show, so no live reads. Your spots run in the breaks around it.', 'photo' => 'voices/mark-levin.jpg', 'photo_alt' => 'Mark Levin', 'syndicated' => true ),
 				),
-				'market' => array( 'population' => '76K', 'label' => 'people live in Cayuga County, home of WAUB.', 'towns' => array( 'Auburn', 'Skaneateles', 'Weedsport', 'Port Byron', 'Union Springs', 'Cato' ) ),
+				'market' => array( 'towns' => array( 'Auburn', 'Union Springs' ) ),
 				'ways' => array(
 					array( 'title' => 'Spots', 'text' => 'Your commercial in rotation across the news and talk day, heard by listeners who tune in for the local report and the weather.', 'icon' => 'spots' ),
 					array( 'title' => 'Sponsorships', 'text' => 'Put your name on a newscast, the Ag Report, Farm to Fork or the winter Storm Update.', 'icon' => 'sponsorship' ),
@@ -765,7 +758,6 @@ function flxlm_get_station_data( $slug = '' ) {
 			'format'              => 'News, Talk, and Local Sports',
 			'demo'                => 'Adults 35+',
 			'tagline'             => 'Finger Lakes News Radio',
-			'market_population'   => 76171,
 			'median_hhi'          => 79345,
 			'homeownership_pct'   => 75.4,
 			'drive_alone_pct'     => 87.6,
@@ -795,7 +787,7 @@ function flxlm_get_station_data( $slug = '' ) {
 				),
 			),
 			'coverage_counties'    => array( 'Cayuga' ),
-			'coverage_description' => 'WAUB covers Auburn, Weedsport, Skaneateles, and surrounding communities across Cayuga County. The station carries Buffalo Bills, Syracuse University, and local high school sports for the Auburn area.',
+			'coverage_description' => 'WAUB covers Auburn and Union Springs and surrounding communities in Cayuga County (estimated coverage: there is no licensed FCC contour on file for its FM translator). The station carries Buffalo Bills, Syracuse University, and local high school sports for the Auburn area.',
 		),
 		'the-lake' => array(
 			'name'                => 'The Lake',
@@ -824,7 +816,7 @@ function flxlm_get_station_data( $slug = '' ) {
 				),
 				'voices' => array(
 				),
-				'market' => array( 'population' => '931K', 'label' => 'people live in the three counties The Lake covers.', 'towns' => array( 'Canandaigua', 'Pittsford', 'Brighton', 'Victor', 'Geneseo', 'Le Roy' ) ),
+				'market' => array( 'towns' => array( 'Canandaigua', 'Pittsford', 'Brighton', 'Victor', 'Honeoye', 'Naples' ) ),
 				'ways' => array(
 					array( 'title' => 'Spots', 'text' => 'Your commercial in short breaks, with a limit of six minutes of commercials an hour, so it is heard and not lost in a long break.', 'icon' => 'spots' ),
 					array( 'title' => 'Streaming on FLX.fm', 'text' => 'More listening hours are streamed on The Lake than on any other station we run, on lake.fm and in the FLX.fm app.', 'icon' => 'stream' ),
@@ -838,16 +830,15 @@ function flxlm_get_station_data( $slug = '' ) {
 			'format'              => 'Easy Rock',
 			'demo'                => 'Women 35-64',
 			'tagline'             => 'The Lake 100.1 / 104.5',
-			'market_population'   => 756406,
 			'median_hhi'          => 83154,
 			'homeownership_pct'   => 69.9,
 			'drive_alone_pct'     => 82.4,
 			'description'         => '<p>The Lake is a premium easy rock station with a strict six-minute-per-hour commercial limit, the lowest commercial load of any station in the group. That means when your ad runs on The Lake, it is not buried in a long commercial break. It stands out. Listeners stay tuned because they know the music is never far away.</p>
 <p>The format features the easy rock classics: Eagles, Springsteen, Jackson Browne, James Taylor, and the artists that define relaxed, feel-good listening. The Lake broadcasts on two frequencies, 100.1 and 104.5 FM, covering the largest potential audience of any station in the group by reaching deep into the Rochester market.</p>
-<p>The Lake\'s audience skews female, 35-64, and includes the Rochester suburbs of Canandaigua, Pittsford, Geneseo, and Honeoye as well as communities like Naples, Le Roy, and Dansville. For advertisers who want to reach women with purchasing power across the western Finger Lakes and greater Rochester, The Lake delivers a unique combination of premium positioning and broad reach.</p>',
+<p>The Lake\'s audience skews female, 35-64, and includes the Rochester suburbs of Pittsford and Brighton as well as Finger Lakes communities like Canandaigua, Honeoye, and Naples. For advertisers who want to reach women with purchasing power across the western Finger Lakes and greater Rochester, The Lake delivers a unique combination of premium positioning and broad reach.</p>',
 			'personalities'       => array(),
-			'coverage_counties'    => array( 'Ontario', 'Livingston', 'Monroe' ),
-			'coverage_description' => 'The Lake covers the western Finger Lakes and greater Rochester market, including Canandaigua, Pittsford, Geneseo, Honeoye, Naples, Le Roy, and Dansville across Ontario, Livingston, and Monroe counties. It reaches the largest potential audience of any station in the group.',
+			'coverage_counties'    => array( 'Monroe', 'Ontario', 'Wayne' ),
+			'coverage_description' => 'The Lake covers the western Finger Lakes and greater Rochester market, including Canandaigua, Pittsford, Brighton, Victor, Honeoye, and Naples across Monroe, Ontario, and Wayne counties, plus parts of Livingston County. It reaches the largest potential audience of any station in the group.',
 		),
 	);
 

@@ -111,6 +111,7 @@ function flxlm_hub_stations() {
 			'format'    => $p['format_label'],
 			'target'    => $p['target'],
 			'counties'  => $p['counties'],
+			'counties_text' => flxlm_station_counties_text( $p, true ),
 			'np_url'    => '' !== $np_slug ? 'https://www.fingerlakesdailynews.com/wp-json/fldn/v1/nowplaying/' . rawurlencode( $np_slug ) . '/' : '',
 			'map_color' => $map_color,
 			'map_dash'  => $map_dash,
