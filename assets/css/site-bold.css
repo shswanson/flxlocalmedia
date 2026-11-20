@@ -1373,6 +1373,7 @@ body:not(.page-template-template-station) .cta-banner__subtitle {
 .hb-play,
 .story-hero__image-play,
 .flxlm-pg .story-hero__image-play,
+.flxlm-pg .story-win__play,
 .flxlm-station .st-pq-play {
 	display: grid;
 	place-items: center;

@@ -230,7 +230,7 @@ function flxlm_get_products() {
 			'extra' => array(
 				array( 'heading' => 'What a business page includes', 'items' => array( 'One ribbon for each FLX Finest award, with the year; the category shows on hover or tap.', 'Address, phone, website and map pin, shown on listings we have fact-checked.', 'A researched profile with links to outside press.', 'Links to the guides and itineraries that mention the business.', 'More places that won the same FLX Finest categories.' ) ),
 			),
-			'testimonial' => array( 'person' => 'Mike Speno', 'business' => 'Speno Music', 'quote' => 'There’s no yellow pages or phone book, and there certainly isn’t any local newspaper coverage … we’ve reached all of our demographics through the FLX Local Media.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/speno-music/', 'video_seconds' => 60, 'thumb' => 'testimonial.jpg' ),
+			'testimonial' => array( 'person' => 'Mike Speno', 'business' => 'Speno Music', 'quote' => 'There’s no yellow pages or phone book, and there certainly isn’t any meaningful local newspaper coverage anymore … we’ve reached all of our demographics through FLX Local Media.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/speno-music/', 'video_seconds' => 60, 'thumb' => 'testimonial.jpg' ),
 		),
 		'flx-finest' => array(
 			'name' => 'FLX Finest',
@@ -329,7 +329,7 @@ function flxlm_get_products() {
 			'extra' => array(
 				array( 'heading' => 'Station choices', 'items' => array( 'WAUB with Classic Hits 99.3, Mix 98.5 or 101.7 The Wall', 'WGVA with Classic Hits 99.3, Mix 98.5 or 101.7 The Wall', 'WFLR on its own', 'WCGR The Lake on its own' ) ),
 			),
-			'testimonial' => array( 'person' => 'Mike Speno', 'business' => 'Speno Music', 'quote' => 'There\'s no yellow pages or phone book, and there certainly isn\'t any local newspaper coverage … we\'ve reached all of our demographics through the FLX Local Media.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/speno-music/', 'video_seconds' => 60, 'thumb' => 'testimonial.jpg' ),
+			'testimonial' => array( 'person' => 'Mike Speno', 'business' => 'Speno Music', 'quote' => 'There\'s no yellow pages or phone book, and there certainly isn\'t any meaningful local newspaper coverage anymore … we\'ve reached all of our demographics through FLX Local Media.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/speno-music/', 'video_seconds' => 60, 'thumb' => 'testimonial.jpg' ),
 		),
 		'contests' => array(
 			'name' => 'Contests and Promotions',
@@ -440,7 +440,7 @@ function flxlm_get_products() {
 				array( 'heading' => 'Where your ad can run', 'items' => array( 'Home page: top banner or box ad', 'Every page: a sitewide top banner', 'Inside pages: articles, weather, the calendar and more (run of site)', 'Police blotter section: top banner', 'Obituaries section: top banner', 'Sports section: top banner', 'Home page video' ) ),
 				array( 'heading' => 'Ad sizes', 'items' => array( 'Desktop banner: 728 by 90 pixels', 'Phone banner: 600 by 200 pixels', 'Box ad: 300 by 250 pixels', 'Send your logo and your offer and we will build the ad for you.' ) ),
 			),
-			'testimonial' => array( 'person' => 'Alex Thompson', 'business' => 'The Main Deck', 'quote' => 'We’re in such a digital era right now. People get on their phones to look up things. So I think it’s just really important to stay relevant.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/main-deck/', 'video_seconds' => 105, 'thumb' => 'testimonial.jpg' ),
+			'testimonial' => array( 'person' => 'Alex Thompson', 'business' => 'The Main Deck', 'quote' => 'We’re in such a digital era right now … people get on their phones to look up things. I think it’s really important to stay relevant …', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/main-deck/', 'video_seconds' => 105, 'thumb' => 'testimonial.jpg' ),
 		),
 		'newsletter' => array(
 			'name' => 'FLDN Daily Newsletter',
@@ -469,7 +469,7 @@ function flxlm_get_products() {
 			'extra' => array(
 				array( 'heading' => 'How the email works', 'items' => array( 'Sent every day at about 7 AM Eastern, weekends included', 'Up to ten of the newest local stories from the past day, taken from our reporting', 'Two ad positions: a banner above the stories and a banner below them', 'Banners are 600 pixels wide. Send your logo and your offer and we will build the ad for you.', 'Clicks are reported for each ad' ) ),
 			),
-			'testimonial' => array( 'person' => 'Brian Chapman', 'business' => 'JD Chapman Insurance', 'quote' => 'Consistency is highly important … to keep that brand recognition out there, to keep your name front of mind.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/jd-chapman-insurance/', 'video_seconds' => 94, 'thumb' => 'testimonial.jpg' ),
+			'testimonial' => array( 'person' => 'Brian Chapman', 'business' => 'JD Chapman Insurance', 'quote' => 'Consistency is highly important, just to keep that brand recognition out there and keep your name front of mind.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/jd-chapman-insurance/', 'video_seconds' => 94, 'thumb' => 'testimonial.jpg' ),
 		),
 		'flx-fm' => array(
 			'name' => 'FLX.fm',
@@ -497,7 +497,7 @@ function flxlm_get_products() {
 			'extra' => array(
 				array( 'heading' => 'How people listen (share of listening hours, last 28 days)', 'items' => array( 'Phone and tablet apps, including FLX.fm and older station apps: 30%', 'Computer web browsers: 23%', 'Alexa smart speakers: 18%', 'TuneIn: 10%', 'Phone web browsers: 9%', 'Everything else: 10%' ) ),
 			),
-			'testimonial' => array( 'person' => 'Michael Enslow', 'business' => 'Enstech Automotive and Trailer', 'quote' => '…to have the staff actually come here and show you where you’re spending your money and show you how it’s paying off … Other forms of advertising we do, I don’t really get that.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/enstech-automotive/', 'video_seconds' => 90, 'thumb' => 'testimonial.jpg' ),
+			'testimonial' => array( 'person' => 'Michael Enslow', 'business' => 'Enstech Automotive and Trailer', 'quote' => 'I get to see where my money is going and how it’s paying off. Other forms of advertising we do, I don’t really get that.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/enstech-automotive/', 'video_seconds' => 90, 'thumb' => 'testimonial.jpg' ),
 		),
 		'digital' => array(
 			'name' => 'Digital',
@@ -557,7 +557,7 @@ function flxlm_get_products() {
 				array( 'heading' => 'What we will not promise', 'items' => array( 'A Google ranking. Nobody controls Google\'s results.', 'That a listing in the Finger Lakes Daily News directory moves you up in Google. It puts you in front of local readers.' ) ),
 				array( 'heading' => 'How year two works', 'items' => array( 'We write to you in writing 15 to 45 days before year one ends and ask which plan you want. If you do nothing, you stay on Found.', 'Growing includes directory setup on a 12-month commitment. Month to month, a $295 setup applies.', 'After year one you can cancel any time.' ) ),
 			),
-			'testimonial' => array( 'person' => 'Alex Thompson', 'business' => 'The Main Deck', 'quote' => 'If you have a radio ad that says ‘go check the website,’ and then things on the digital side that say ‘check out the radio spot at such and such a time,’ that gets people more engaged across both platforms. They feed each other.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/main-deck/', 'video_seconds' => 105, 'thumb' => 'testimonial.jpg' ),
+			'testimonial' => array( 'person' => 'Alex Thompson', 'business' => 'The Main Deck', 'quote' => 'I think if you have a radio ad that says “go check the website,” and then things on the digital side that say “check out the radio spot at such and such a time,” that gets people more engaged across both platforms. They feed each other.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/main-deck/', 'video_seconds' => 105, 'thumb' => 'testimonial.jpg' ),
 		),
 		'listings' => array(
 			'name' => 'Listings',
