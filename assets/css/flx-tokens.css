@@ -248,3 +248,150 @@ body:not(.page-template-template-station) .flx-eyebrow a:focus-visible {
 body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header) .flx-eyebrow {
 	color: #e3a72f;
 }
+
+/* ---------- The one button family ----------
+   Every button and button-like link on every page except the station pages (they keep their
+   own; only the shared footer band carries both classes). Nothing else sets a button.
+   .flx-btn            gold fill, navy text: the primary button
+   .flx-btn--ghost     outline: navy on light, white on navy
+   .flx-btn--plan      the two-line pill with the arrow circle ("Get a free plan / A plan, not a pitch");
+                       markup: .flx-btn__tx (b + small) then .flx-btn__ic
+   .flx-btn--sm        compact, for the header bar and list cards
+   .flx-btn--block     full width (the side card)
+   .flx-btn-link       the quiet text link under a button ("How we build a plan"); every page */
+body:not(.page-template-template-station) .flx-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	padding: 14px 28px;
+	border: 2px solid var(--gold-400);
+	border-radius: 999px;
+	background: var(--gold-400);
+	color: var(--navy-800);
+	font-family: inherit;
+	font-size: var(--fs-btn);
+	font-weight: var(--fw-btn);
+	line-height: 1.2;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	transition: transform 0.15s, background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+body:not(.page-template-template-station) .flx-btn:hover,
+body:not(.page-template-template-station) .flx-btn:focus-visible {
+	border-color: var(--gold-300);
+	background: var(--gold-300);
+	color: var(--navy-800);
+	transform: translateY(-1px);
+}
+
+body:not(.page-template-template-station) .flx-btn--sm {
+	padding: 0.6rem 1.1rem;
+	font-size: 0.92rem;
+}
+
+body:not(.page-template-template-station) .flx-btn--block {
+	display: flex;
+	width: 100%;
+}
+
+body:not(.page-template-template-station) .flx-btn--ghost {
+	border-color: var(--navy-800);
+	background: transparent;
+	color: var(--navy-800);
+}
+
+body:not(.page-template-template-station) .flx-btn--ghost:hover,
+body:not(.page-template-template-station) .flx-btn--ghost:focus-visible {
+	border-color: var(--navy-800);
+	background: var(--navy-800);
+	color: #fff;
+}
+
+body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header, .story-hero) .flx-btn--ghost {
+	border-color: rgba(255, 255, 255, 0.7);
+	background: transparent;
+	color: #fff;
+}
+
+body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header, .story-hero) .flx-btn--ghost:hover,
+body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header, .story-hero) .flx-btn--ghost:focus-visible {
+	border-color: #fff;
+	background: #fff;
+	color: var(--navy-800);
+}
+
+body:not(.page-template-template-station) .flx-btn--plan {
+	padding: 10px 10px 10px 26px;
+	box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
+	text-align: left;
+}
+
+body:not(.page-template-template-station) .flx-btn__tx b {
+	display: block;
+	font-size: var(--fs-btn);
+	font-weight: var(--fw-btn);
+	line-height: 1.25;
+}
+
+body:not(.page-template-template-station) .flx-btn__tx small {
+	display: block;
+	font-size: var(--fs-small);
+	font-weight: var(--fw-small);
+	opacity: 0.8;
+}
+
+body:not(.page-template-template-station) .flx-btn__ic {
+	display: grid;
+	flex: none;
+	place-items: center;
+	width: 46px;
+	height: 46px;
+	border-radius: 50%;
+	background: var(--navy-800);
+	color: var(--gold-400);
+	font-size: 1.15rem;
+}
+
+@media (max-width: 640px) {
+	body:not(.page-template-template-station) .flx-btn--plan {
+		padding-left: 20px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body:not(.page-template-template-station) .flx-btn {
+		transition: none;
+	}
+
+	body:not(.page-template-template-station) .flx-btn:hover,
+	body:not(.page-template-template-station) .flx-btn:focus-visible {
+		transform: none;
+	}
+}
+
+.flx-btn-link {
+	display: inline-block;
+	margin: 14px 0 0;
+	color: #fff;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.flx-btn-link:hover,
+.flx-btn-link:focus-visible {
+	color: var(--gold-400);
+}
+
+/* ---------- Footer links: never underlined at rest, underlined on hover ---------- */
+.site-footer a {
+	text-decoration: none;
+}
+
+.site-footer a:hover,
+.site-footer a:focus-visible {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}

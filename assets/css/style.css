@@ -278,42 +278,6 @@ p + p {
 	transition: all var(--transition);
 }
 
-.btn--primary {
-	background: var(--color-teal-ink);
-	color: var(--color-white);
-	border-color: var(--color-teal-ink);
-}
-
-.btn--primary:hover {
-	background: var(--color-navy);
-	border-color: var(--color-navy);
-	color: var(--color-white);
-}
-
-.btn--secondary {
-	background: transparent;
-	color: var(--color-navy);
-	border-color: var(--color-navy);
-}
-
-.btn--secondary:hover {
-	background: var(--color-navy);
-	border-color: var(--color-navy);
-	color: var(--color-white);
-}
-
-.btn--outline {
-	background: transparent;
-	color: var(--color-navy);
-	border-color: var(--color-navy);
-}
-
-.btn--outline:hover {
-	background: var(--color-navy);
-	border-color: var(--color-navy);
-	color: var(--color-white);
-}
-
 .btn--white {
 	background: var(--color-white);
 	color: var(--color-primary);
@@ -326,48 +290,14 @@ p + p {
 	color: var(--color-navy);
 }
 
-/* Buttons on navy surfaces: primary = cyan + navy text (hover white); outline = white */
-.section--dark .btn--primary,
-.cta-banner .btn--primary,
-.cta-banner .btn--white,
-.page-header .btn--primary,
-.story-hero .btn--primary {
+/* Station pages only (the shared footer band); every other page uses .flx-btn (flx-tokens.css). */
+.cta-banner .btn--white {
 	background: var(--color-cyan);
 	border-color: var(--color-cyan);
 	color: var(--color-navy);
 }
 
-.section--dark .btn--primary:hover,
-.cta-banner .btn--primary:hover,
-.cta-banner .btn--white:hover,
-.page-header .btn--primary:hover,
-.story-hero .btn--primary:hover {
-	background: var(--color-white);
-	border-color: var(--color-white);
-	color: var(--color-navy);
-}
-
-.section--dark .btn--secondary,
-.section--dark .btn--outline,
-.cta-banner .btn--secondary,
-.cta-banner .btn--outline,
-.page-header .btn--secondary,
-.page-header .btn--outline,
-.story-hero .btn--secondary,
-.story-hero .btn--outline {
-	background: transparent;
-	border-color: var(--color-white);
-	color: var(--color-white);
-}
-
-.section--dark .btn--secondary:hover,
-.section--dark .btn--outline:hover,
-.cta-banner .btn--secondary:hover,
-.cta-banner .btn--outline:hover,
-.page-header .btn--secondary:hover,
-.page-header .btn--outline:hover,
-.story-hero .btn--secondary:hover,
-.story-hero .btn--outline:hover {
+.cta-banner .btn--white:hover {
 	background: var(--color-white);
 	border-color: var(--color-white);
 	color: var(--color-navy);
@@ -741,11 +671,11 @@ p + p {
 	color: var(--color-white);
 }
 
-.section--dark a:not(.btn) {
+.section--dark a:not(.btn):not(.flx-btn) {
 	color: var(--color-cyan);
 }
 
-.section--dark a:not(.btn):hover {
+.section--dark a:not(.btn):not(.flx-btn):hover {
 	color: var(--color-white);
 }
 
@@ -1467,24 +1397,6 @@ p + p {
 	margin-top: var(--space-xl);
 }
 
-.transcript__toggle {
-	background: none;
-	border: 1px solid var(--color-border);
-	border-radius: var(--radius);
-	padding: var(--space-sm) var(--space-lg);
-	font-family: var(--font-body);
-	font-size: var(--fs-sm);
-	font-weight: var(--fw-medium);
-	color: var(--color-text-light);
-	cursor: pointer;
-	transition: all var(--transition);
-}
-
-.transcript__toggle:hover {
-	border-color: var(--color-primary);
-	color: var(--color-primary);
-}
-
 .transcript__content {
 	display: none;
 	margin-top: var(--space-lg);
@@ -2170,8 +2082,6 @@ p + p {
 
 .site-footer__bottom a {
 	color: inherit;
-	text-decoration: underline;
-	text-underline-offset: 2px;
 }
 
 .site-footer__bottom a:hover {

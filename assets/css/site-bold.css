@@ -25,21 +25,6 @@ html {
 	scroll-padding-top: calc(var(--header-height) + 8px);
 }
 
-/* One gold call to action. style.css already puts gold (as --color-cyan) on
-   buttons that sit on navy; this makes the primary button gold everywhere. */
-.btn--primary {
-	background: var(--frame-cta);
-	border-color: var(--frame-cta);
-	color: var(--frame-cta-ink);
-}
-
-.btn--primary:hover,
-.btn--primary:focus-visible {
-	background: var(--frame-cta-hover);
-	border-color: var(--frame-cta-hover);
-	color: var(--frame-cta-ink);
-}
-
 /* The navy title band (.page-header) on a page that has the dark bar: start
    the content below the bar, the band itself runs to the top of the page. */
 body.flxlm-dark-hero .page-header {
@@ -499,12 +484,10 @@ body.fx-nav-open {
 	display: none;
 }
 
-/* Button in the bar: the gold call to action. */
+/* Button in the bar (a .flx-btn): where it sits. */
 .fx-nav__cta {
-	display: block;
+	display: flex;
 	margin: 20px;
-	font-weight: 700;
-	text-align: center;
 	white-space: nowrap;
 }
 
@@ -578,9 +561,6 @@ body.fx-nav-open {
 	.fx-nav__cta {
 		align-self: center;
 		margin: 0 0 0 8px;
-		padding: 0.6rem 1.1rem;
-		font-size: 0.92rem;
-		border-radius: 10px;
 	}
 
 	/* Without the script, open on hover so the menu still works. */
@@ -913,18 +893,6 @@ body.fx-nav-open {
 	max-width: 46ch;
 }
 
-/* The hero button is a link with the label first and the arrow after it. */
-.flxlm-station .st-cta-btn--link {
-	padding: 12px 12px 12px 26px;
-	color: var(--st-on-accent);
-	text-decoration: none;
-}
-
-.flxlm-station .st-cta-btn--link:hover {
-	color: var(--st-on-accent);
-	transform: translateY(-1px);
-}
-
 /* Who you reach */
 .flxlm-station .pr-who h3 {
 	margin-bottom: 12px;
@@ -1008,16 +976,6 @@ body.fx-nav-open {
 	line-height: var(--lh-lead);
 }
 
-.flxlm-product .st-cta-btn .tx b {
-	font-size: var(--fs-btn);
-	font-weight: var(--fw-btn);
-}
-
-.flxlm-product .st-cta-btn .tx small {
-	font-size: var(--fs-small);
-	font-weight: var(--fw-small);
-}
-
 /* The gold stats bar: numbers on the stat scale, labels in plain sentence case. */
 .flxlm-product .st-specs b {
 	font-size: var(--fs-stat);
@@ -1090,25 +1048,16 @@ body.fx-nav-open {
 	font-weight: var(--fw-btn);
 }
 
-.flxlm-product .st-btn {
-	font-size: var(--fs-btn);
-	font-weight: var(--fw-btn);
-}
-
-/* The secondary "How we build a plan" link under the side card's button (hidden with the card's other small print on phones). */
+/* The secondary "How we build a plan" link (.flx-btn-link) under the side card's button: where it sits (hidden with the card's other small print on phones). */
 .flxlm-product .st-aside-card .st-aside-link {
 	display: block;
 	margin-top: 8px;
 	text-align: center;
-	color: #fff;
 	font-size: var(--fs-small);
-	font-weight: var(--fw-btn);
-	text-decoration: none;
 }
 
-.flxlm-product .st-aside-card .st-aside-link:hover,
-.flxlm-product .st-aside-card .st-aside-link:focus-visible {
-	color: var(--gold-400);
+.flxlm-product .st-aside-card .flx-btn {
+	margin-top: 18px;
 }
 
 @media (max-width: 980px) {
@@ -1117,20 +1066,12 @@ body.fx-nav-open {
 	}
 }
 
-/* The same secondary link under the footer band's button. */
+/* The same secondary link (.flx-btn-link) under the footer band's button: where it sits. */
 .cta-banner__link {
 	display: block;
 	width: 100%;
 	margin-top: 4px;
 	text-align: center;
-	color: #fff;
-	font-weight: var(--fw-btn);
-	text-decoration: none;
-}
-
-.cta-banner__link:hover,
-.cta-banner__link:focus-visible {
-	color: var(--gold-400);
 }
 
 /* Closing call-to-action band in the footer: same scale as the pages above it.
@@ -1146,11 +1087,6 @@ body:not(.page-template-template-station) .cta-banner__subtitle {
 	font-size: var(--fs-lead);
 	font-weight: var(--fw-lead);
 	line-height: var(--lh-lead);
-}
-
-body:not(.page-template-template-station) .cta-banner .btn {
-	font-size: var(--fs-btn);
-	font-weight: var(--fw-btn);
 }
 
 /* Product page "Ways to advertise": two-column white cards with a navy top rule.

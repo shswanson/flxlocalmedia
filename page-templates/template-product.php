@@ -92,13 +92,7 @@ get_header();
 					<p class="st-lead st-lead--wide"><?php echo esc_html( $p['lead'] ); ?></p>
 				<?php endif; ?>
 				<div class="st-hero-cta">
-					<a class="st-cta-btn st-cta-btn--link" href="<?php echo esc_url( $p['cta_url'] ); ?>">
-						<span class="tx">
-							<b><?php echo esc_html( $p['cta_label'] ); ?></b>
-							<small>A plan, not a pitch</small>
-						</span>
-						<span class="ic" aria-hidden="true">&rarr;</span>
-					</a>
+					<?php flxlm_pg_cta_button( $p['cta_label'], 'A plan, not a pitch', $p['cta_url'] ); ?>
 				</div>
 			</div>
 		</div>
@@ -278,9 +272,9 @@ get_header();
 						<?php endforeach; ?>
 					</nav>
 				<?php endif; ?>
-				<a class="st-btn" href="<?php echo esc_url( $p['cta_url'] ); ?>"><?php echo esc_html( $p['cta_label'] ); ?></a>
+				<a class="flx-btn flx-btn--block" href="<?php echo esc_url( $p['cta_url'] ); ?>"><?php echo esc_html( $p['cta_label'] ); ?></a>
 				<p class="small">A plan, not a pitch.</p>
-				<a class="st-aside-link" href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we build a plan</a>
+				<a class="st-aside-link flx-btn-link" href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we build a plan</a>
 			</div>
 		</aside>
 	</div><!-- .st-sheet -->

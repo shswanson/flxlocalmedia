@@ -161,7 +161,7 @@ $flxlm_caret    = '<svg class="fx-nav__caret" viewBox="0 0 10 6" width="10" heig
 					</li>
 				<?php endforeach; ?>
 			</ul>
-			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary fx-nav__cta">Get a free plan</a>
+			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="flx-btn flx-btn--sm fx-nav__cta">Get a free plan</a>
 		</nav>
 	</div>
 </header>

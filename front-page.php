@@ -36,8 +36,8 @@ get_header();
 			<h1 class="hb-title" id="hb-title">What are your customers <span>hearing about&nbsp;you?</span></h1>
 			<p class="hb-lead">Seven radio stations, the local news site and its daily email, in one plan built for your business.</p>
 			<div class="hb-actions">
-				<a class="hb-btn hb-btn--primary" href="<?php echo esc_url( flxlm_hub_contact_url() ); ?>">Get a free plan</a>
-				<a class="hb-btn hb-btn--ghost" href="<?php echo esc_url( home_url( '/solutions/' ) ); ?>">Our Solutions</a>
+				<?php flxlm_pg_cta_button( 'Get a free plan', 'A plan, not a pitch', flxlm_hub_contact_url() ); ?>
+				<a class="flx-btn flx-btn--ghost" href="<?php echo esc_url( home_url( '/solutions/' ) ); ?>">Our Solutions</a>
 			</div>
 		</div>
 	</section>
@@ -154,7 +154,7 @@ get_header();
 						<?php flxlm_hub_video_card(); ?>
 					<?php endwhile; wp_reset_postdata(); ?>
 				</div>
-				<p class="hb-more hb-more--center"><a class="hb-btn hb-btn--solid" href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>">See All Client Stories</a></p>
+				<p class="hb-more hb-more--center"><a class="flx-btn" href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>">See All Client Stories</a></p>
 			</div>
 		</section>
 	<?php endif; ?>

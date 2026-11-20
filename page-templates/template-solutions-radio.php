@@ -31,9 +31,9 @@ get_header();
 			<h1 class="hb-title" id="hb-title">Seven stations. <span>One call.</span></h1>
 			<p class="hb-lead">Each station has its own format and its own listeners. Pick one, or let us build a schedule across several of them.</p>
 			<div class="hb-actions">
-				<a class="hb-btn hb-btn--primary" href="<?php echo esc_url( flxlm_hub_contact_url( 'radio' ) ); ?>">Get a free plan for radio</a>
+				<?php flxlm_pg_cta_button( 'Get a free plan for radio', 'A plan, not a pitch', flxlm_hub_contact_url( 'radio' ) ); ?>
 				<?php if ( $stations ) : ?>
-					<a class="hb-btn hb-btn--ghost" href="#coverage">See the coverage map</a>
+					<a class="flx-btn flx-btn--ghost" href="#coverage">See the coverage map</a>
 				<?php endif; ?>
 			</div>
 		</div>

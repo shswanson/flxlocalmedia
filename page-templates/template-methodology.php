@@ -118,7 +118,7 @@ flxlm_pg_open();
 	<div class="container" style="text-align: center;">
 		<div class="post-content" style="max-width: 720px; margin: 0 auto;">
 			<p>Questions about our methodology? We are happy to walk through the data in detail.</p>
-			<p><a href="<?php echo home_url( '/contact/' ); ?>" class="btn btn--primary">Get in Touch</a></p>
+			<p><a href="<?php echo home_url( '/contact/' ); ?>" class="flx-btn">Get in Touch</a></p>
 		</div>
 	</div>
 </section>

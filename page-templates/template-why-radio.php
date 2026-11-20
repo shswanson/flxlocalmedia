@@ -204,7 +204,7 @@ flxlm_pg_open();
 			<p class="section__subtitle">No pressure, no jargon. Let's talk about what radio can do for your business.</p>
 		</div>
 		<div class="text-center">
-			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary btn--lg">Get in Touch</a>
+			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="flx-btn">Get in Touch</a>
 		</div>
 		<p class="methodology-link">National figures: Nielsen Audio Today 2026 and Edison Research Share of Ear, Q4 2025. Local figures: U.S. Census Bureau, American Community Survey 5-Year Estimates, 2022. Finger Lakes Daily News users: Google Analytics 4, September 2026. <a href="<?php echo esc_url( home_url( '/methodology/' ) ); ?>">See our full methodology.</a></p>
 	</div>

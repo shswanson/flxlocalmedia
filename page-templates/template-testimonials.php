@@ -27,7 +27,7 @@ get_header();
 			<h1 class="hb-title" id="hb-title">Radio works.</h1>
 			<p class="hb-lead">Hear it from Finger Lakes businesses that advertise with FLX Local Media. These are their words, in their own videos.</p>
 			<div class="hb-actions">
-				<a class="hb-btn hb-btn--primary" href="<?php echo esc_url( flxlm_hub_contact_url( 'radio' ) ); ?>">Get a free plan for radio</a>
+				<?php flxlm_pg_cta_button( 'Get a free plan for radio', 'A plan, not a pitch', flxlm_hub_contact_url( 'radio' ) ); ?>
 			</div>
 		</div>
 	</section>

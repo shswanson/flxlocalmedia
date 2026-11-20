@@ -50,7 +50,7 @@ flxlm_pg_open();
 								</p>
 							<?php endif; ?>
 							<p class="archive-card__excerpt"><?php echo esc_html( wp_trim_words( wp_strip_all_tags( get_the_content() ), 24 ) ); ?></p>
-							<p><a class="btn btn--outline" href="<?php the_permalink(); ?>">View Job</a></p>
+							<p><a class="flx-btn flx-btn--ghost flx-btn--sm" href="<?php the_permalink(); ?>">View Job</a></p>
 						</div>
 					</article>
 				<?php endwhile; ?>

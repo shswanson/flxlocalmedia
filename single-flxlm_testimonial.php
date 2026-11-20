@@ -43,7 +43,7 @@ while ( have_posts() ) : the_post();
 			<img src="<?php echo esc_url( $poster ); ?>" alt="<?php echo esc_attr( $person ); ?>" style="<?php echo $img_style; ?>" width="1920" height="1080" />
 			<?php if ( $video_url ) : ?>
 				<button class="story-hero__image-play" data-video-lightbox aria-label="<?php printf( esc_attr__( 'Play testimonial from %s', 'flxlm' ), $person ); ?>">
-					<svg width="24" height="28" viewBox="0 0 28 32" fill="none" aria-hidden="true"><polygon points="4,2 26,16 4,30" fill="#fff"/></svg>
+					<svg width="24" height="28" viewBox="0 0 28 32" fill="none" aria-hidden="true"><polygon points="4,2 26,16 4,30" fill="currentColor"/></svg>
 				</button>
 			<?php endif; ?>
 		</div>
@@ -68,8 +68,8 @@ while ( have_posts() ) : the_post();
 		<div class="story-hero__role"><?php echo esc_html( $title_role ); ?>, <?php echo esc_html( $business ); ?></div>
 
 		<?php if ( $video_url ) : ?>
-			<button class="story-hero__play-cta" data-video-lightbox aria-label="<?php printf( esc_attr__( 'Play testimonial from %s', 'flxlm' ), $person ); ?>">
-				<svg width="18" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true"><polygon points="3,1 14,8 3,15" fill="#fff"/></svg>
+			<button class="flx-btn" data-video-lightbox aria-label="<?php printf( esc_attr__( 'Play testimonial from %s', 'flxlm' ), $person ); ?>">
+				<svg width="18" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true"><polygon points="3,1 14,8 3,15" fill="currentColor"/></svg>
 				Watch the Full Story
 			</button>
 		<?php endif; ?>
@@ -124,7 +124,7 @@ if ( ! empty( $meta_items ) ) : ?>
 <section class="section section--cream">
 	<div class="container" style="max-width: 800px;">
 		<div class="transcript">
-			<button class="transcript__toggle">Show Full Transcript</button>
+			<button class="transcript__toggle flx-btn flx-btn--ghost flx-btn--sm">Show Full Transcript</button>
 			<div class="transcript__content">
 				<?php echo wp_kses( $transcript, array( 'p' => array(), 'strong' => array(), 'br' => array(), 'em' => array() ) ); ?>
 			</div>

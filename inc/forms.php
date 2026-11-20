@@ -131,7 +131,7 @@ function flxlm_render_contact_form() {
 		</div>
 
 		<div class="flxlm-form__row">
-			<button type="submit" class="btn btn--primary">Request My Free Review</button>
+			<button type="submit" class="flx-btn">Request My Free Review</button>
 		</div>
 	</form>
 	<?php

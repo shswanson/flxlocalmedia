@@ -119,62 +119,6 @@
 	margin-top: 30px;
 }
 
-.hb-btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	padding: 15px 28px;
-	border: 2px solid transparent;
-	border-radius: 999px;
-	font-size: var(--fs-btn);
-	font-weight: var(--fw-btn);
-	line-height: 1.2;
-	text-align: center;
-	text-decoration: none;
-	cursor: pointer;
-	transition: transform 0.15s, background 0.15s, color 0.15s;
-}
-
-.hb-btn:hover {
-	transform: translateY(-1px);
-}
-
-.hb-btn--primary {
-	background: var(--hb-cyan);
-	border-color: var(--hb-cyan);
-	color: var(--hb-deep);
-	box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
-}
-
-.hb-btn--primary:hover {
-	background: #fff;
-	border-color: #fff;
-	color: var(--hb-deep);
-}
-
-.hb-btn--ghost {
-	border-color: rgba(255, 255, 255, 0.7);
-	color: #fff;
-}
-
-.hb-btn--ghost:hover {
-	background: #fff;
-	border-color: #fff;
-	color: var(--hb-navy);
-}
-
-.hb-btn--solid {
-	background: var(--hb-navy);
-	border-color: var(--hb-navy);
-	color: #fff;
-}
-
-.hb-btn--solid:hover {
-	background: var(--hb-ink);
-	border-color: var(--hb-ink);
-	color: #fff;
-}
-
 /* ---------- Sections ---------- */
 .hb-section {
 	padding: 72px 0;
@@ -239,11 +183,11 @@
 	text-align: center;
 }
 
-.hb-more a:not(.hb-btn) {
+.hb-more a:not(.flx-btn) {
 	color: var(--hb-ink);
 }
 
-.hb-more a:not(.hb-btn):hover {
+.hb-more a:not(.flx-btn):hover {
 	color: var(--hb-navy);
 }
 
@@ -414,11 +358,9 @@
 
 @media (prefers-reduced-motion: reduce) {
 	.hb-np__dot { animation: none; }
-	.hb-tile,
-	.hb-btn { transition: none; }
+	.hb-tile { transition: none; }
 	.hb-tile:hover,
-	.hb-tile:focus-within,
-	.hb-btn:hover { transform: none; }
+	.hb-tile:focus-within { transform: none; }
 }
 
 .hb-tile__link {
@@ -1098,7 +1040,7 @@
 		height: 380px;
 	}
 
-	.hb-actions .hb-btn {
+	.hb-actions .flx-btn:not(.flx-btn--plan) {
 		width: 100%;
 	}
 
@@ -1151,10 +1093,6 @@ body.flxlm-dark-hero .hb-hero {
 .flxlm-hub--home .hb-hero .hb-lead {
 	margin-top: 18px;
 	opacity: 0.88;
-}
-
-.flxlm-hub--home .hb-btn--primary {
-	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
 }
 
 .flxlm-hub--home .hb-section {

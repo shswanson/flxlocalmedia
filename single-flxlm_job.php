@@ -47,7 +47,7 @@ $flxlm_job_lead = implode( ' <span class="job-meta__sep" aria-hidden="true">&mid
  * duplicating it, so there is still only one form on the page.
  */
 $flxlm_job_apply = function_exists( 'flxlm_ats_render_form' )
-	? '<a class="btn btn--primary" href="#apply">Apply for this job</a>'
+	? '<a class="flx-btn" href="#apply">Apply for this job</a>'
 	: '';
 
 flxlm_pg_begin( array(

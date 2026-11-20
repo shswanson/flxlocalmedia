@@ -28,7 +28,7 @@ get_header();
 
 		<div style="margin-top: var(--space-3xl); text-align: center;">
 			<p style="color: var(--color-text-muted, #64748b); margin-bottom: var(--space-lg);">Ready to get started?</p>
-			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--primary btn--lg">Contact Us</a>
+			<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="flx-btn">Contact Us</a>
 		</div>
 	</div>
 </section>

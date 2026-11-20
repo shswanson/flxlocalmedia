@@ -173,7 +173,7 @@ function flxlm_ats_render_form( $job_id = 0 ) {
 			</div>
 
 			<div class="flxlm-form__row">
-				<button type="submit" class="btn btn--primary">Submit Application</button>
+				<button type="submit" class="flx-btn">Submit Application</button>
 			</div>
 
 			<?php

@@ -30,7 +30,7 @@ flxlm_pg_open();
 					<span class="resource-card__tag">Client Stories</span>
 					<h2 class="resource-card__title">Video Testimonials</h2>
 					<p class="resource-card__desc">Watch Finger Lakes business owners share how radio, digital, and multi-channel marketing helped them grow.</p>
-					<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="btn btn--primary">Watch Stories</a>
+					<a href="<?php echo esc_url( home_url( '/testimonials/' ) ); ?>" class="flx-btn">Watch Stories</a>
 				</div>
 			</div>
 		<?php endif; ?>

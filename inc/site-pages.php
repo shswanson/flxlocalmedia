@@ -207,14 +207,14 @@ function flxlm_pg_cta_button( $label = 'Get a free plan', $note = 'A plan, not a
 		$url = home_url( '/contact/#review' );
 	}
 	?>
-	<a class="pg-cta" href="<?php echo esc_url( $url ); ?>">
-		<span class="pg-cta__tx">
+	<a class="flx-btn flx-btn--plan" href="<?php echo esc_url( $url ); ?>">
+		<span class="flx-btn__tx">
 			<b><?php echo esc_html( $label ); ?></b>
 			<?php if ( '' !== $note ) : ?>
 				<small><?php echo esc_html( $note ); ?></small>
 			<?php endif; ?>
 		</span>
-		<span class="pg-cta__ic" aria-hidden="true">&rarr;</span>
+		<span class="flx-btn__ic" aria-hidden="true">&rarr;</span>
 	</a>
 	<?php
 }
@@ -261,7 +261,7 @@ function flxlm_pg_open() {
 			<?php if ( ! empty( $c['cta'] ) ) : ?>
 				<div class="pg-hero__cta"><?php flxlm_pg_cta_button(); ?></div>
 				<?php if ( ! empty( $c['hero_link'] ) ) : ?>
-					<a class="pg-hero__link" href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we build a plan <span aria-hidden="true">&rarr;</span></a>
+					<a class="flx-btn-link" href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we build a plan <span aria-hidden="true">&rarr;</span></a>
 				<?php endif; ?>
 			<?php endif; ?>
 		</div>
@@ -290,7 +290,7 @@ function flxlm_pg_close() {
 			<div class="pg-band__btn">
 				<?php flxlm_pg_cta_button(); ?>
 				<?php if ( ! is_page( 'how-we-work' ) ) : ?>
-					<a class="pg-band__link" href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we build a plan <span aria-hidden="true">&rarr;</span></a>
+					<a class="flx-btn-link" href="<?php echo esc_url( home_url( '/how-we-work/' ) ); ?>">How we build a plan <span aria-hidden="true">&rarr;</span></a>
 				<?php endif; ?>
 			</div>
 		</div>
