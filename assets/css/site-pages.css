@@ -153,7 +153,8 @@
 	background: #fff;
 }
 
-.flxlm-pg .section__title {
+.flxlm-pg .section__title,
+.flxlm-pg .post-content h2 {
 	color: var(--color-navy);
 	font-size: var(--fs-h2);
 	font-weight: var(--fw-h2);
@@ -179,7 +180,6 @@
 	line-height: var(--lh-body);
 }
 
-.flxlm-pg .post-content h2,
 .flxlm-pg .post-content h3,
 .flxlm-pg .post-content h4 {
 	color: var(--color-navy);
@@ -1766,6 +1766,9 @@ body.flxlm-pg-band .cta-banner {
 
 .flxlm-pg .fa-card__sub {
 	margin: 0 0 1.5rem;
+	font-size: var(--fs-lead);
+	font-weight: var(--fw-lead);
+	line-height: var(--lh-lead);
 	color: var(--color-text-light);
 }
 

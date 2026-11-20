@@ -219,9 +219,9 @@ html:root {
 }
 
 /* ---------- The one eyebrow ----------
-   The script kicker above a heading, on every page except the station pages (they keep
-   their own eyebrow). Navy on light backgrounds, gold on navy ones; nothing else sets it. */
-body:not(.page-template-template-station) .flx-eyebrow {
+   The script kicker above a heading, on every page, station pages included
+   (the station hero label is .st-eyebrow, a separate class). Navy on light backgrounds, gold on navy ones; nothing else sets it. */
+body .flx-eyebrow {
 	display: inline-block;
 	margin: 0 0 10px;
 	font-family: var(--ff-eyebrow-script);
@@ -235,23 +235,23 @@ body:not(.page-template-template-station) .flx-eyebrow {
 	transform-origin: left bottom;
 }
 
-body:not(.page-template-template-station) .flx-eyebrow a {
+body .flx-eyebrow a {
 	color: inherit;
 	text-decoration: none;
 }
 
-body:not(.page-template-template-station) .flx-eyebrow a:hover,
-body:not(.page-template-template-station) .flx-eyebrow a:focus-visible {
+body .flx-eyebrow a:hover,
+body .flx-eyebrow a:focus-visible {
 	color: #fff;
 }
 
-body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header) .flx-eyebrow {
+body :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header) .flx-eyebrow {
 	color: #e3a72f;
 }
 
 /* ---------- The one button family ----------
-   Every button and button-like link on every page except the station pages (they keep their
-   own; only the shared footer band carries both classes). Nothing else sets a button.
+   Every button and button-like link on every page, station pages included (the station
+   hero buttons are .st-cta-btn and .st-btn, separate classes). Nothing else sets a button.
    .flx-btn            gold fill, navy text: the primary button
    .flx-btn--ghost     outline: navy on light, white on navy
    .flx-btn--plan      the two-line pill with the arrow circle ("Get a free plan / A plan, not a pitch");
@@ -259,7 +259,7 @@ body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-h
    .flx-btn--sm        compact, for the header bar and list cards
    .flx-btn--block     full width (the side card)
    .flx-btn-link       the quiet text link under a button ("How we build a plan"); every page */
-body:not(.page-template-template-station) .flx-btn {
+body .flx-btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -279,71 +279,71 @@ body:not(.page-template-template-station) .flx-btn {
 	transition: transform 0.15s, background 0.15s, border-color 0.15s, color 0.15s;
 }
 
-body:not(.page-template-template-station) .flx-btn:hover,
-body:not(.page-template-template-station) .flx-btn:focus-visible {
+body .flx-btn:hover,
+body .flx-btn:focus-visible {
 	border-color: var(--gold-300);
 	background: var(--gold-300);
 	color: var(--navy-800);
 	transform: translateY(-1px);
 }
 
-body:not(.page-template-template-station) .flx-btn--sm {
+body .flx-btn--sm {
 	padding: 0.6rem 1.1rem;
 	font-size: 0.92rem;
 }
 
-body:not(.page-template-template-station) .flx-btn--block {
+body .flx-btn--block {
 	display: flex;
 	width: 100%;
 }
 
-body:not(.page-template-template-station) .flx-btn--ghost {
+body .flx-btn--ghost {
 	border-color: var(--navy-800);
 	background: transparent;
 	color: var(--navy-800);
 }
 
-body:not(.page-template-template-station) .flx-btn--ghost:hover,
-body:not(.page-template-template-station) .flx-btn--ghost:focus-visible {
+body .flx-btn--ghost:hover,
+body .flx-btn--ghost:focus-visible {
 	border-color: var(--navy-800);
 	background: var(--navy-800);
 	color: #fff;
 }
 
-body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header, .story-hero) .flx-btn--ghost {
+body :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header, .story-hero) .flx-btn--ghost {
 	border-color: rgba(255, 255, 255, 0.7);
 	background: transparent;
 	color: #fff;
 }
 
-body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header, .story-hero) .flx-btn--ghost:hover,
-body:not(.page-template-template-station) :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header, .story-hero) .flx-btn--ghost:focus-visible {
+body :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header, .story-hero) .flx-btn--ghost:hover,
+body :is(.section--dark, .cta-banner, .pg-hero, .pg-band, .hb-hero, .st-hero, .hero, .data-network, .page-header, .story-hero) .flx-btn--ghost:focus-visible {
 	border-color: #fff;
 	background: #fff;
 	color: var(--navy-800);
 }
 
-body:not(.page-template-template-station) .flx-btn--plan {
+body .flx-btn--plan {
 	padding: 10px 10px 10px 26px;
 	box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
 	text-align: left;
 }
 
-body:not(.page-template-template-station) .flx-btn__tx b {
+body .flx-btn__tx b {
 	display: block;
 	font-size: var(--fs-btn);
 	font-weight: var(--fw-btn);
 	line-height: 1.25;
 }
 
-body:not(.page-template-template-station) .flx-btn__tx small {
+body .flx-btn__tx small {
 	display: block;
 	font-size: var(--fs-small);
 	font-weight: var(--fw-small);
 	opacity: 0.8;
 }
 
-body:not(.page-template-template-station) .flx-btn__ic {
+body .flx-btn__ic {
 	display: grid;
 	flex: none;
 	place-items: center;
@@ -356,18 +356,18 @@ body:not(.page-template-template-station) .flx-btn__ic {
 }
 
 @media (max-width: 640px) {
-	body:not(.page-template-template-station) .flx-btn--plan {
+	body .flx-btn--plan {
 		padding-left: 20px;
 	}
 }
 
 @media (prefers-reduced-motion: reduce) {
-	body:not(.page-template-template-station) .flx-btn {
+	body .flx-btn {
 		transition: none;
 	}
 
-	body:not(.page-template-template-station) .flx-btn:hover,
-	body:not(.page-template-template-station) .flx-btn:focus-visible {
+	body .flx-btn:hover,
+	body .flx-btn:focus-visible {
 		transform: none;
 	}
 }
