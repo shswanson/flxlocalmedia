@@ -9,7 +9,7 @@
 ?>
 <section class="cta-banner">
 	<div class="container">
-		<span class="section__eyebrow" style="color: var(--color-cyan, #e3a72f);">Free local marketing review</span>
+		<span class="section__eyebrow">Free local marketing review</span>
 		<h2 class="cta-banner__title">Tell us the one thing <span>holding your business back.</span></h2>
 		<p class="cta-banner__subtitle">A short conversation with someone who knows the Finger Lakes market. We'll come back with a plan, not a pitch.</p>
 		<div class="cta-banner__actions">

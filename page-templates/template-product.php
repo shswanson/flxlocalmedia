@@ -202,6 +202,9 @@ get_header();
 								<?php if ( '' !== $way['text'] ) : ?>
 									<p><?php echo esc_html( $way['text'] ); ?></p>
 								<?php endif; ?>
+								<?php if ( ! empty( $way['url'] ) && ! empty( $way['url_label'] ) ) : ?>
+									<a class="pr-way__more" href="<?php echo esc_url( $way['url'] ); ?>"><?php echo esc_html( $way['url_label'] ); ?> <span aria-hidden="true">&rarr;</span></a>
+								<?php endif; ?>
 							</div>
 						<?php endforeach; ?>
 					</div>

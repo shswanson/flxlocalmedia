@@ -180,11 +180,9 @@ function flxlm_video_facade( $post_id, $args = array() ) {
 		<?php else : ?>
 			<div class="video-facade__placeholder"></div>
 		<?php endif; ?>
+		<?php if ( ! empty( $args['len'] ) ) : ?><span class="hb-len"><?php echo esc_html( $args['len'] ); ?></span><?php endif; ?>
 		<button class="video-facade__play" aria-label="Play testimonial from <?php echo esc_attr( $person ); ?>">
-			<svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-				<circle cx="34" cy="34" r="34" fill="rgba(0,0,0,0.6)"/>
-				<polygon points="26,20 52,34 26,48" fill="#fff"/>
-			</svg>
+			<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
 		</button>
 	</div>
 	<?php

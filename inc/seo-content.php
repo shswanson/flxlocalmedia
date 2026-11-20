@@ -511,7 +511,7 @@ function flxlm_seo_product_copy() {
 		),
 		'digital'           => array(
 			'lead'    => array( 'Digital Marketing in the Finger Lakes' ),
-			'desc'    => 'FLX Local Media builds your website, keeps your business listings correct, runs your Google and Facebook ads and makes video, from Geneva, Auburn and Penn Yan.',
+			'desc'    => 'FLX Local Media builds your website, keeps your business listings correct, manages your social media, runs your Google and Facebook ads and makes video, from Geneva, Auburn and Penn Yan.',
 			'promise' => 'Websites, listings, ads and video from a local team.',
 		),
 		'website-starter'   => array(
@@ -523,6 +523,11 @@ function flxlm_seo_product_copy() {
 			'lead'    => array( 'Business Listings Management', 'Business Listings' ),
 			'desc'    => 'We confirm your name, address, phone, website and hours once, then keep them matching on Google, Facebook, Bing and other listing sites, checked every month.',
 			'promise' => 'Correct hours, phone and address on Google, Facebook and Bing.',
+		),
+		'digital-advertising' => array(
+			'lead'    => array( 'Google Display and Retargeting Ads', 'Digital Advertising' ),
+			'desc'    => 'FLX Local Media runs Google display ads, retargeting and geofencing, search ads and Facebook and Instagram ads for Finger Lakes businesses. We choose the audiences and manage the bids.',
+			'promise' => 'Google display, retargeting and geofencing ads, run for you.',
 		),
 		'content-marketing' => array(
 			'lead'    => array( 'Content Marketing on a Local News Site', 'Content Marketing' ),

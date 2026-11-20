@@ -1118,6 +1118,20 @@ body:not(.page-template-template-station) .cta-banner__title {
 	letter-spacing: var(--ls-h2);
 }
 
+body:not(.page-template-template-station) .cta-banner .section__eyebrow {
+	display: inline-block;
+	font-family: var(--ff-eyebrow-script);
+	font-size: var(--fs-eyebrow-script);
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0;
+	text-transform: none;
+	transform: var(--rot-eyebrow-script);
+	transform-origin: left bottom;
+	margin-bottom: 10px;
+	color: #e3a72f;
+}
+
 body:not(.page-template-template-station) .cta-banner__subtitle {
 	font-size: var(--fs-lead);
 	font-weight: var(--fw-lead);
@@ -1172,6 +1186,17 @@ body:not(.page-template-template-station) .cta-banner .btn {
 	font-size: var(--fs-body);
 	font-weight: var(--fw-body);
 	line-height: var(--lh-body);
+}
+
+.flxlm-product .pr-way__more {
+	display: inline-block;
+	margin-top: 10px;
+	font-weight: 700;
+	color: var(--color-navy, #003b5b);
+}
+
+.flxlm-product .pr-way__more:hover {
+	color: #855e0a;
 }
 
 .flxlm-product .pr-logos {
@@ -1394,4 +1419,30 @@ body:not(.page-template-template-station) .cta-banner .btn {
 	.flxlm-product .st-hero__mark--app {
 		width: 110px;
 	}
+}
+
+/* One play button for every video thumbnail (token --play-bg in flx-tokens.css).
+   Each thumbnail keeps its own position and hover scale; only the look is shared. */
+.video-facade__play,
+.hb-play,
+.story-hero__image-play,
+.flxlm-pg .story-hero__image-play,
+.flxlm-station .st-pq-play {
+	display: grid;
+	place-items: center;
+	width: 64px;
+	height: 64px;
+	padding: 0 0 0 3px;
+	border-radius: 50%;
+	background: var(--play-bg);
+	color: #fff;
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.video-facade__play svg,
+.hb-play svg {
+	width: 24px;
+	height: 24px;
 }

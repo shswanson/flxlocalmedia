@@ -123,6 +123,9 @@
 	--fs-eyebrow-script: 1.65rem;
 	--rot-eyebrow-script: rotate(-3deg);
 
+	/* The one play button on every video thumbnail: dark translucent circle, white triangle. */
+	--play-bg: rgba(0, 20, 35, 0.55);
+
 	--fs-lead: 1.1875rem;
 	--fw-lead: 400;
 	--lh-lead: 1.55;
@@ -166,7 +169,7 @@
 	--frame-accent-on-dark: var(--gold-400);
 
 	/* Section accents: Stations blue, Media purple, Advertising orange,
-	   Digital Services green, Proof gold, Sports red. */
+	   Digital green, Proof gold, Sports red. */
 	--sec-stations: var(--blue-500);
 	--sec-media: var(--purple-600);
 	--sec-advertising: var(--orange-400);

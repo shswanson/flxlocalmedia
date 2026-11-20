@@ -73,7 +73,7 @@ get_header();
 				<div class="hb-feature__grid">
 					<div class="hb-feature__media">
 						<?php if ( $n_has_v ) : ?>
-							<?php flxlm_video_facade( $newest_id, array( 'class' => 'hb-facade' ) ); ?>
+							<?php flxlm_video_facade( $newest_id, array( 'class' => 'hb-facade', 'len' => $n_secs ? flxlm_hub_clock( $n_secs ) : '' ) ); ?>
 						<?php elseif ( $n_poster ) : ?>
 							<a class="hb-feature__still" href="<?php echo esc_url( get_permalink( $newest_id ) ); ?>">
 								<img src="<?php echo esc_url( $n_poster ); ?>" alt="<?php echo esc_attr( trim( $n_person . ( '' !== $n_business ? ' of ' . $n_business : '' ) ) ); ?>" width="960" height="540" loading="lazy">
@@ -81,7 +81,7 @@ get_header();
 						<?php endif; ?>
 					</div>
 					<div class="hb-feature__text">
-						<p class="hb-eyebrow hb-eyebrow--dark">In their own words<?php echo $n_secs ? ' · ' . esc_html( flxlm_hub_clock( $n_secs ) ) : ''; ?></p>
+						<p class="hb-eyebrow hb-eyebrow--dark">In their own words</p>
 						<?php if ( '' !== $n_quote ) : ?>
 							<blockquote class="hb-feature__quote">&ldquo;<?php echo esc_html( $n_quote ); ?>&rdquo;</blockquote>
 						<?php endif; ?>

@@ -66,7 +66,7 @@ get_header();
 			</div>
 			<div class="service-item">
 				<h3 class="service-item__title">Display Advertising</h3>
-				<p class="service-item__desc">Banner ads on Finger Lakes Daily News, which draws 730K+ monthly pageviews, reaching local readers where they already read and engage.</p>
+				<p class="service-item__desc">Banner ads on Finger Lakes Daily News, which draws 700K+ monthly pageviews, reaching local readers where they already read and engage.</p>
 			</div>
 			<div class="service-item">
 				<h3 class="service-item__title">Content Marketing</h3>

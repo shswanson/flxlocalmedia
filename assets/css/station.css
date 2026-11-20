@@ -767,11 +767,7 @@
 	width: 66px;
 	height: 66px;
 	transform: translate(-50%, -50%);
-	background: var(--st-primary);
-	color: var(--st-on-primary);
-	border-radius: 50%;
 	font-size: 1.5rem;
-	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 .flxlm-station .st-pq-len {

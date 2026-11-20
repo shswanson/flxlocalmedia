@@ -9,7 +9,7 @@
  *      product to the $products array. A section with no data is skipped.
  *
  *   2. flxlm_nav_groups()
- *      The Media, Advertising, Digital Services and Proof dropdowns (header.php),
+ *      The Media, Advertising, Digital and Proof dropdowns (header.php),
  *      plus the settings of the Stations dropdown, whose tiles come from
  *      flxlm_get_stations() (registry backed).
  *
@@ -500,27 +500,26 @@ function flxlm_get_products() {
 			'testimonial' => array( 'person' => 'Michael Enslow', 'business' => 'Enstech Automotive and Trailer', 'quote' => '…to have the staff actually come here and show you where you’re spending your money and show you how it’s paying off … Other forms of advertising we do, I don’t really get that.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/enstech-automotive/', 'video_seconds' => 90, 'thumb' => 'testimonial.jpg' ),
 		),
 		'digital' => array(
-			'name' => 'Digital Services',
-			'eyebrow' => 'Digital Services · Overview',
+			'name' => 'Digital',
+			'eyebrow' => 'Digital · Overview',
 			'title' => 'Be easy to find when customers look you up',
 			'tagline' => '',
-			'lead' => 'FLX Local Media builds your website, keeps your business listings correct, runs your Google and Facebook ads and produces your video, from offices in Geneva, Auburn and Penn Yan.',
-			'menu_group' => 'Digital Services', 'menu_label' => 'Overview', 'menu_blurb' => 'Websites, search, ads and video from a team in Geneva, Auburn and Penn Yan.',
+			'lead' => 'FLX Local Media builds your website, keeps your business listings correct, manages your social media, runs your Google and Facebook ads and produces your video, from offices in Geneva, Auburn and Penn Yan.',
+			'menu_group' => 'Digital', 'menu_label' => 'Overview', 'menu_blurb' => 'Websites, video and social media management from a team in Geneva, Auburn and Penn Yan.',
 			'colors' => array( 'primary' => '#003b5b', 'deep' => '#00273e', 'accent' => '#e3a72f' ),
 			'logo' => '',
 			'stats' => array(
 				array( 'value' => '3', 'label' => 'Local offices: Geneva, Auburn and Penn Yan', 'source' => 'FLX Local Media office list', 'source_detail' => 'FLX Local Media office list (existing digital page and contact pages)' ),
 				array( 'value' => '7', 'label' => 'Radio stations your digital campaigns can work alongside', 'source' => 'FLX Local Media station list', 'source_detail' => 'FLX Local Media station list' ),
 				array( 'value' => '210K+', 'label' => 'Monthly users on Finger Lakes Daily News, where display ads run', 'source' => 'Google Analytics, Sep 2026', 'source_detail' => 'Google Analytics 4, September 2026 (BigQuery export: 217,441 users)' ),
-				array( 'value' => '730K+', 'label' => 'Monthly pageviews on Finger Lakes Daily News', 'source' => 'Google Analytics, Sep 2026', 'source_detail' => 'Google Analytics 4, September 2026 (BigQuery export: 737,096 page views)' ),
+				array( 'value' => '700K+', 'label' => 'Monthly pageviews on Finger Lakes Daily News', 'source' => 'Google Analytics, Aug-Oct 2026', 'source_detail' => 'GA4 pageviews, Aug–Oct 2026 avg 716K; last 30 days 685K' ),
 			),
-			'who' => array( 'heading' => 'Who finds you online', 'paragraphs' => array( 'A customer who hears your name on the radio or sees it in the news often looks it up on a phone a little later. Three things decide what happens next: whether your business comes up, whether the phone number can be tapped, and whether the hours are right.', 'Picture a homeowner whose furnace stops on a cold night. She heard a heating company\'s radio spot last month, searches for the name and calls the result that gives her a number she can tap. This is an example, not a real customer. Digital Services is the work that makes sure that result is yours, and that your radio, website, listings and search ads all say the same thing.' ) ),
+			'who' => array( 'heading' => 'Who finds you online', 'paragraphs' => array( 'A customer who hears your name on the radio or sees it in the news often looks it up on a phone a little later. Three things decide what happens next: whether your business comes up, whether the phone number can be tapped, and whether the hours are right.', 'Picture a homeowner whose furnace stops on a cold night. She heard a heating company\'s radio spot last month, searches for the name and calls the result that gives her a number she can tap. This is an example, not a real customer. Our digital team does the work that makes sure that result is yours, and that your radio, website, listings and search ads all say the same thing.' ) ),
 			'offers' => array(
 				array( 'title' => 'Websites', 'text' => 'A website on your own web address that loads fast on phones, with tap-to-call, directions and a contact form. Plans, prices and what each includes are on the Website Starter page.', 'icon' => 'web' ),
+				array( 'title' => 'Social media management', 'text' => 'We plan and post to your Facebook and Instagram on a regular schedule, write and design the posts, answer comments and messages, and send you a simple monthly report. Paid social ads are on the Digital advertising page.', 'icon' => 'people', 'logos' => array( array( 'file' => 'ext-facebook-f.svg', 'alt' => 'Facebook' ), array( 'file' => 'ext-instagram.svg', 'alt' => 'Instagram' ) ) ),
 				array( 'title' => 'Found on Google and AI', 'text' => 'Your business details kept correct on Google, Facebook and Bing, business-details code on your site that search engines and AI assistants can read, a review link with a printable QR card, and a monthly progress report.', 'icon' => 'list', 'logos' => array( array( 'file' => 'ext-google.svg', 'alt' => 'Google' ), array( 'file' => 'ext-facebook-f.svg', 'alt' => 'Facebook' ), array( 'file' => 'ext-bing.svg', 'alt' => 'Bing' ) ) ),
-				array( 'title' => 'Google Ads', 'text' => 'Paid search that shows your business to people searching for what you sell. We choose the keywords, write the ads, manage the bids and optimize for qualified leads.', 'icon' => 'search', 'logos' => array( array( 'file' => 'ext-google-ads.svg', 'alt' => 'Google Ads' ) ) ),
-				array( 'title' => 'Retargeting and geo-targeting', 'text' => 'Stay in front of people who have visited your website, and reach people in the places you choose, on Google and on their phones.', 'icon' => 'people', 'logos' => array( array( 'file' => 'ext-google-ads.svg', 'alt' => 'Google Ads' ) ) ),
-				array( 'title' => 'Facebook and Instagram', 'text' => 'Ads aimed at the areas and audiences you pick, and posts written for your page that you approve before they go out.', 'icon' => 'people', 'logos' => array( array( 'file' => 'ext-facebook-f.svg', 'alt' => 'Facebook' ), array( 'file' => 'ext-instagram.svg', 'alt' => 'Instagram' ), array( 'file' => 'ext-meta.svg', 'alt' => 'Meta' ) ) ),
+				array( 'title' => 'Digital advertising', 'text' => 'Google display ads, retargeting and geofencing, search ads, and Facebook and Instagram ads, run for you. They have their own page.', 'icon' => 'search', 'url' => '/solutions/digital-advertising/', 'url_label' => 'See Digital advertising', 'logos' => array( array( 'file' => 'ext-google-ads.svg', 'alt' => 'Google Ads' ), array( 'file' => 'ext-meta.svg', 'alt' => 'Meta' ) ) ),
 				array( 'title' => 'Video production', 'text' => 'Planning, filming on location, editing, graphics and distribution across digital channels.', 'icon' => 'video' ),
 			),
 			'extra' => array(
@@ -530,11 +529,11 @@ function flxlm_get_products() {
 		),
 		'website-starter' => array(
 			'name' => 'Website Starter',
-			'eyebrow' => 'Digital Services · Websites',
+			'eyebrow' => 'Digital · Websites',
 			'title' => 'A website built, run and kept current for you',
 			'tagline' => '',
 			'lead' => 'We build your website, put it live on your own web address and run it for a full year on our Found plan for $1,500, then $80 a month, or $170 for Growing, and you can cancel any time after year one.',
-			'menu_group' => 'Digital Services', 'menu_label' => 'Website Starter', 'menu_blurb' => 'A website built, put live and run for you: $1,500 the first year.',
+			'menu_group' => 'Digital', 'menu_label' => 'Website Starter', 'menu_blurb' => 'A website built, put live and run for you: $1,500 the first year.',
 			'colors' => array( 'primary' => '#003b5b', 'deep' => '#00273e', 'accent' => '#e3a72f' ),
 			'logo' => '',
 			'stats' => array(
@@ -562,11 +561,11 @@ function flxlm_get_products() {
 		),
 		'listings' => array(
 			'name' => 'Listings',
-			'eyebrow' => 'Digital Services · Listings',
+			'eyebrow' => 'Digital · Listings',
 			'title' => 'Correct details everywhere customers look you up',
 			'tagline' => '',
 			'lead' => 'We confirm your name, address, phone, website and hours once, then keep them matching on Google, Facebook, Bing and dozens of other listing sites, and check every month that nothing has drifted.',
-			'menu_group' => 'Digital Services', 'menu_label' => 'Listings', 'menu_blurb' => 'Correct hours, phone and address on Google, Facebook, Bing and dozens more sites.',
+			'menu_group' => 'Digital', 'menu_label' => 'Listings', 'menu_blurb' => 'Correct hours, phone and address on Google, Facebook, Bing and dozens more sites.',
 			'colors' => array( 'primary' => '#003b5b', 'deep' => '#00273e', 'accent' => '#e3a72f' ),
 			'logo' => '',
 			'stats' => array(
@@ -590,18 +589,39 @@ function flxlm_get_products() {
 			),
 			'testimonial' => array( 'person' => 'Michael Enslow', 'business' => 'Enstech Automotive and Trailer', 'quote' => '…later on, when you\'re home and relaxing, you search for it. And being easy to find online pays off, because there\'s so much competition in the digital space.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/enstech-automotive/', 'video_seconds' => 90, 'thumb' => 'testimonial.jpg' ),
 		),
+		'digital-advertising' => array(
+			'name' => 'Digital Advertising',
+			'eyebrow' => 'Digital · Advertising',
+			'title' => 'Show up when customers search and scroll',
+			'tagline' => '',
+			'lead' => 'We run your Google display ads, retargeting and geofencing, search ads and Facebook and Instagram ads. We choose the audiences, write the ads and manage the bids.',
+			'menu_group' => 'Digital', 'menu_label' => 'Digital advertising', 'menu_blurb' => 'Google display, retargeting and geofencing, search, and Facebook and Instagram ads.',
+			'colors' => array( 'primary' => '#003b5b', 'deep' => '#00273e', 'accent' => '#e3a72f' ),
+			'logo' => '',
+			'who' => array( 'heading' => 'Who sees your ads', 'paragraphs' => array( 'Display ads reach people across the websites and apps they already use, in the ZIP codes and interests you choose. Retargeting reaches people who have already visited your website, and geofencing reaches people who were at a place you pick. Search ads reach people who are looking for what you sell right now.' ) ),
+			'offers' => array(
+				array( 'title' => 'Google display ads', 'text' => 'Banner and image ads across Google\'s display network, the websites and apps people visit every day. We aim them at Finger Lakes ZIP codes and at the interests of the customers you want.', 'icon' => 'web', 'logos' => array( array( 'file' => 'ext-google-ads.svg', 'alt' => 'Google Ads' ) ) ),
+				array( 'title' => 'Retargeting and geofencing', 'text' => 'Your ads follow people who already visited your website, across sites and apps. Or we draw a virtual fence around a place like your store, a competitor\'s lot or an event, and your ads reach the phones of people who were there.', 'icon' => 'people', 'logos' => array( array( 'file' => 'ext-google-ads.svg', 'alt' => 'Google Ads' ) ) ),
+				array( 'title' => 'Google search ads', 'text' => 'Paid search that shows your business to people searching for what you sell. We choose the keywords, write the ads, manage the bids and optimize for qualified leads.', 'icon' => 'search', 'logos' => array( array( 'file' => 'ext-google-ads.svg', 'alt' => 'Google Ads' ) ) ),
+				array( 'title' => 'Facebook and Instagram ads', 'text' => 'Paid ads on Facebook and Instagram aimed at the areas and audiences you pick. Regular posting to your page is Social media management.', 'icon' => 'people', 'logos' => array( array( 'file' => 'ext-meta.svg', 'alt' => 'Meta' ), array( 'file' => 'ext-facebook-f.svg', 'alt' => 'Facebook' ), array( 'file' => 'ext-instagram.svg', 'alt' => 'Instagram' ) ) ),
+			),
+			'extra' => array(
+				array( 'heading' => 'Works with the rest of FLX Local Media', 'items' => array( 'Radio on seven stations, so people who hear your name can find you when they search', 'Websites and Listings, so the ad lands on a page with correct details', 'Reporting you can read, so you can see what is working' ) ),
+			),
+			'testimonial' => array( 'person' => 'Brian Chapman', 'business' => 'JD Chapman Insurance', 'quote' => 'We\'ve been using FLX Digital to help drive traffic to our website to produce more leads and write more business. So that\'s been a good success for us.', 'page_url' => 'https://www.flxlocalmedia.com/testimonials/jd-chapman-insurance/', 'video_seconds' => 94, 'thumb' => 'testimonial.jpg' ),
+		),
 		'content-marketing' => array(
 			'name' => 'Content Marketing',
-			'eyebrow' => 'Digital Services · Content marketing',
+			'eyebrow' => 'Digital · Content marketing',
 			'title' => 'Explain what you do to people who read local news',
 			'tagline' => '',
 			'lead' => 'We help you tell your story on Finger Lakes Daily News with labeled sponsored articles, ads in the sections your customers read, and video.',
-			'menu_group' => 'Digital Services', 'menu_label' => 'Content marketing', 'menu_blurb' => 'Sponsored articles, section ads and video on Finger Lakes Daily News.',
+			'menu_group' => 'Digital', 'menu_label' => 'Content marketing', 'menu_blurb' => 'Sponsored articles, section ads and video on Finger Lakes Daily News.',
 			'colors' => array( 'primary' => '#003b5b', 'deep' => '#00273e', 'accent' => '#e3a72f' ),
 			'logo' => '',
 			'stats' => array(
 				array( 'value' => '210K+', 'label' => 'Monthly users on Finger Lakes Daily News', 'source' => 'Google Analytics, Sep 2026', 'source_detail' => 'Google Analytics 4, September 2026 (BigQuery export: 217,441 users)' ),
-				array( 'value' => '730K+', 'label' => 'Monthly pageviews', 'source' => 'Google Analytics, Sep 2026', 'source_detail' => 'Google Analytics 4, September 2026 (BigQuery export: 737,096 page views)' ),
+				array( 'value' => '700K+', 'label' => 'Monthly pageviews', 'source' => 'Google Analytics, Aug-Oct 2026', 'source_detail' => 'GA4 pageviews, Aug–Oct 2026 avg 716K; last 30 days 685K' ),
 				array( 'value' => '64%', 'label' => 'Of October 2026 readers were in New York State', 'source' => 'Google Analytics, Oct 2026', 'source_detail' => 'Google Analytics 4 BigQuery export, October 2026: 137,531 of 214,284 users with a New York location' ),
 				array( 'value' => '42%', 'label' => 'Of October 2026 pageviews were local news stories', 'source' => 'Google Analytics, Oct 2026', 'source_detail' => 'Google Analytics 4 page report in BigQuery (ga4_daily_pages), October 2026: 302,666 of 717,725' ),
 			),
@@ -788,6 +808,8 @@ function flxlm_get_product( $slug ) {
 					'title' => $str( $o, 'title' ),
 					'text'  => $str( $o, 'text' ),
 					'icon'  => $str( $o, 'icon' ),
+					'url'   => 0 === strpos( $str( $o, 'url' ), '/' ) ? home_url( $str( $o, 'url' ) ) : '',
+					'url_label' => $str( $o, 'url_label' ),
 					'logos' => $logos,
 				);
 			}
@@ -931,12 +953,13 @@ function flxlm_nav_groups() {
 		),
 		array(
 			'key'   => 'digital',
-			'label' => 'Digital Services',
+			'label' => 'Digital',
 			'type'  => 'links',
 			'items' => array(
-				array( 'label' => 'Digital services overview', 'url' => '/solutions/digital/', 'blurb' => 'Websites, search, social and streaming' ),
+				array( 'label' => 'Digital overview', 'url' => '/solutions/digital/', 'blurb' => 'Websites, video and social media management' ),
 				array( 'label' => 'Website Starter', 'slug' => 'website-starter', 'blurb' => 'A professional website for your business' ),
 				array( 'label' => 'Listings', 'slug' => 'listings', 'blurb' => 'Accurate business listings across search and maps' ),
+				array( 'label' => 'Digital advertising', 'slug' => 'digital-advertising', 'blurb' => 'Display, retargeting, search and social ads' ),
 				array( 'label' => 'Content marketing', 'url' => '/solutions/content-marketing/', 'blurb' => 'Stories that bring customers in' ),
 			),
 		),

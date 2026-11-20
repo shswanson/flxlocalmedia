@@ -1542,16 +1542,12 @@ p + p {
 	justify-content: center;
 	width: 72px;
 	height: 72px;
-	border-radius: 50%;
-	background: var(--color-cyan);
 	border: none;
 	cursor: pointer;
-	box-shadow: 0 4px 24px rgba(0, 59, 91, 0.4), 0 0 0 6px rgba(227, 167, 47, 0.25);
-	transition: background var(--transition), transform var(--transition);
+	transition: transform var(--transition);
 }
 
 .story-hero__image-play:hover {
-	background: var(--color-white);
 	transform: translate(-50%, -50%) scale(1.08);
 }
 
@@ -1564,9 +1560,6 @@ p + p {
 	fill: currentColor;
 }
 
-.story-hero__image-play {
-	color: var(--color-navy);
-}
 
 @media (min-width: 768px) {
 	.story-hero__image-block {

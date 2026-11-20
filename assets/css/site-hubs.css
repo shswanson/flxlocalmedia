@@ -718,10 +718,6 @@
 	height: 64px;
 	padding-left: 3px;
 	transform: translate(-50%, -50%);
-	background: var(--hb-cyan);
-	color: var(--hb-deep);
-	border-radius: 50%;
-	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 	transition: transform 0.2s;
 }
 

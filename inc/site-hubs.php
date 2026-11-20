@@ -272,7 +272,8 @@ function flxlm_enqueue_site_hubs_assets() {
 	$is_hub   = is_page_template( 'page-templates/template-solutions-radio.php' );
 	$is_proof = is_page_template( 'page-templates/template-testimonials.php' );
 	$is_home  = is_front_page();
-	if ( ! $is_hub && ! $is_proof && ! $is_home ) {
+	$is_sol   = is_page_template( 'page-templates/template-solutions.php' ); // Reuses the station tiles.
+	if ( ! $is_hub && ! $is_proof && ! $is_home && ! $is_sol ) {
 		return;
 	}
 

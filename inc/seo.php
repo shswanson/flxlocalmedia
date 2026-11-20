@@ -546,7 +546,7 @@ function flxlm_seo_llms_rank( array $e ) {
 		'radio',
 		'fldn', 'newsletter', 'discover-flx', 'flx-finest', 'flx-fm', 'apps',
 		'sports', 'shop-local', 'contests', 'seasonal', 'events',
-		'digital', 'website-starter', 'listings', 'content-marketing',
+		'digital', 'website-starter', 'listings', 'digital-advertising', 'content-marketing',
 		'why-radio', 'methodology', 'testimonials', 'case-study',
 		'privacy-policy', 'terms',
 	);
@@ -571,7 +571,7 @@ function flxlm_seo_llms_txt() {
 		'Radio stations'               => array(),
 		'Media products'               => array(),
 		'Advertising products'         => array(),
-		'Digital services'             => array(),
+		'Digital'                      => array(),
 		'Proof: client stories and case studies' => array(),
 		'Careers'                      => array(),
 		'Legal'                        => array(),
@@ -590,8 +590,8 @@ function flxlm_seo_llms_txt() {
 			$g = $e['menu_group'];
 			if ( 'Advertising' === $g ) {
 				$groups['Advertising products'][] = $e;
-			} elseif ( 'Digital Services' === $g ) {
-				$groups['Digital services'][] = $e;
+			} elseif ( 'Digital' === $g ) {
+				$groups['Digital'][] = $e;
 			} else {
 				$groups['Media products'][] = $e;
 			}
