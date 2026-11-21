@@ -89,75 +89,23 @@ function flxlm_render_contact_form() {
 
 		<div class="flxlm-form__row flxlm-form__row--two">
 			<div class="flxlm-form__field">
-				<label for="flxlm-first-name">First Name <span aria-hidden="true">*</span></label>
-				<input type="text" id="flxlm-first-name" name="first_name" required />
+				<label for="flxlm-name">Your Name <span aria-hidden="true">*</span></label>
+				<input type="text" id="flxlm-name" name="name" autocomplete="name" required />
 			</div>
 			<div class="flxlm-form__field">
-				<label for="flxlm-last-name">Last Name <span aria-hidden="true">*</span></label>
-				<input type="text" id="flxlm-last-name" name="last_name" required />
+				<label for="flxlm-business">Business Name <span aria-hidden="true">*</span></label>
+				<input type="text" id="flxlm-business" name="business_name" autocomplete="organization" required />
 			</div>
 		</div>
 
 		<div class="flxlm-form__row flxlm-form__row--two">
 			<div class="flxlm-form__field">
 				<label for="flxlm-email">Email <span aria-hidden="true">*</span></label>
-				<input type="email" id="flxlm-email" name="email" required />
+				<input type="email" id="flxlm-email" name="email" autocomplete="email" required />
 			</div>
 			<div class="flxlm-form__field">
 				<label for="flxlm-phone">Phone</label>
-				<input type="tel" id="flxlm-phone" name="phone" />
-			</div>
-		</div>
-
-		<div class="flxlm-form__row">
-			<div class="flxlm-form__field">
-				<label for="flxlm-business">Business Name</label>
-				<input type="text" id="flxlm-business" name="business_name" />
-			</div>
-		</div>
-
-		<div class="flxlm-form__row">
-			<div class="flxlm-form__field">
-				<label for="flxlm-holding-back">What is the one thing holding your business back? <span aria-hidden="true">*</span></label>
-				<textarea id="flxlm-holding-back" name="holding_back" rows="4" required></textarea>
-			</div>
-		</div>
-
-		<div class="flxlm-form__row flxlm-form__row--two">
-			<div class="flxlm-form__field">
-				<label for="flxlm-business-type">What kind of business is it?</label>
-				<input type="text" id="flxlm-business-type" name="business_type" />
-			</div>
-			<div class="flxlm-form__field">
-				<label for="flxlm-annual-spend">About how much do you spend on marketing in a year?</label>
-				<select id="flxlm-annual-spend" name="annual_spend">
-					<option value="">Select an option...</option>
-<?php foreach ( flxlm_form_spend_options() as $spend_option ) : ?>
-					<option value="<?php echo esc_attr( $spend_option ); ?>"><?php echo esc_html( $spend_option ); ?></option>
-<?php endforeach; ?>
-				</select>
-			</div>
-		</div>
-
-		<div class="flxlm-form__row">
-			<div class="flxlm-form__field">
-				<label for="flxlm-interest">I'm Interested In (optional)</label>
-				<select id="flxlm-interest" name="interest">
-					<option value="">Select an option...</option>
-					<option value="radio">Radio Advertising</option>
-					<option value="digital">Digital Marketing</option>
-					<option value="events">Event Marketing</option>
-					<option value="content">Content Marketing</option>
-					<option value="multi">Multi-Channel Package</option>
-					<option value="other">Something Else</option>
-				</select>
-			</div>
-		</div>
-
-		<div class="flxlm-form__row">
-			<div class="flxlm-form__field">
-				<label for="flxlm-message">Anything else we should know?</label>
-				<textarea id="flxlm-message" name="message" rows="5"></textarea>
+				<input type="tel" id="flxlm-phone" name="phone" autocomplete="tel" />
 			</div>
 		</div>
 
@@ -186,9 +134,18 @@ function flxlm_handle_contact_submit() {
 		wp_die( 'Security check failed.', 'Error', array( 'response' => 403 ) );
 	}
 
+	// The form asks for one name field. Pages served from cache before 2026-11-21
+	// may still post first_name/last_name and the longer question set, so accept both.
+	$full_name = trim( sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) ) );
+	if ( '' === $full_name ) {
+		$full_name = trim( sanitize_text_field( wp_unslash( ( $_POST['first_name'] ?? '' ) . ' ' . ( $_POST['last_name'] ?? '' ) ) ) );
+	}
+	$name_parts = preg_split( '/\s+/', $full_name, 2 );
+
 	$data = array(
-		'first_name'    => sanitize_text_field( wp_unslash( $_POST['first_name'] ?? '' ) ),
-		'last_name'     => sanitize_text_field( wp_unslash( $_POST['last_name'] ?? '' ) ),
+		'name'          => $full_name,
+		'first_name'    => $name_parts[0] ?? '',
+		'last_name'     => $name_parts[1] ?? '',
 		'email'         => sanitize_email( wp_unslash( $_POST['email'] ?? '' ) ),
 		'phone'         => sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) ),
 		'business_name' => sanitize_text_field( wp_unslash( $_POST['business_name'] ?? '' ) ),
@@ -209,7 +166,7 @@ function flxlm_handle_contact_submit() {
 	}
 
 	// The browser enforces the required fields; check again here for anyone who bypasses it.
-	if ( '' === $data['holding_back'] || '' === $data['first_name'] || '' === $data['last_name'] || ! is_email( $data['email'] ) ) {
+	if ( '' === $data['name'] || ! is_email( $data['email'] ) ) {
 		$back = wp_get_referer() ? wp_get_referer() : home_url( '/contact/' );
 		wp_safe_redirect( add_query_arg( 'contact', 'missing', remove_query_arg( 'contact', $back ) ) . '#review' );
 		exit;
@@ -217,28 +174,39 @@ function flxlm_handle_contact_submit() {
 
 	// Every lead goes to the assigner, who picks a rep and replies to all. Scott stays copied.
 	$to      = flxlm_get_lead_assigner();
-	$who     = '' !== $data['business_name'] ? $data['business_name'] : $data['first_name'] . ' ' . $data['last_name'];
+	$who     = '' !== $data['business_name'] ? $data['business_name'] : $data['name'];
 	$source  = '' !== $data['utm_source'] ? $data['utm_source'] : 'direct';
 	$subject = 'New lead to assign: ' . $who . ' (' . $source . ')';
 	$headers = array(
 		'Cc: ' . get_option( 'admin_email' ),
-		'Reply-To: ' . $data['first_name'] . ' ' . $data['last_name'] . ' <' . $data['email'] . '>',
+		'Reply-To: ' . $data['name'] . ' <' . $data['email'] . '>',
 	);
 
-	$body  = "Please assign this lead to a rep and reply-all with who has it.\n\n";
-	$body .= "Holding the business back: {$data['holding_back']}\n";
-	$body .= "Kind of business: {$data['business_type']}\n";
-	$body .= "Annual marketing spend: {$data['annual_spend']}\n\n";
-	$body .= "Name: {$data['first_name']} {$data['last_name']}\n";
-	$body .= "Email: {$data['email']}\n";
-	$body .= "Phone: {$data['phone']}\n";
+	$body  = "Please assign this lead to a rep and reply-all with who has it.\n";
+	$body .= "The form only asks for the basics; the rep gets the details on the first call.\n\n";
+	$body .= "Name: {$data['name']}\n";
 	$body .= "Business: {$data['business_name']}\n";
-	$body .= "Interest: {$data['interest']}\n";
+	$body .= "Email: {$data['email']}\n";
+	$body .= "Phone: {$data['phone']}\n\n";
+
+	// Older cached pages may still send these; include them only when filled in.
+	$extras = array(
+		'holding_back'  => 'Holding the business back',
+		'business_type' => 'Kind of business',
+		'annual_spend'  => 'Annual marketing spend',
+		'interest'      => 'Interest',
+		'message'       => 'Message',
+	);
+	foreach ( $extras as $key => $label ) {
+		if ( '' !== $data[ $key ] ) {
+			$body .= "{$label}: {$data[ $key ]}\n";
+		}
+	}
+
 	$body .= "Source page: {$data['source_page']}\n";
 	$body .= "UTM source: {$data['utm_source']}\n";
 	$body .= "UTM medium: {$data['utm_medium']}\n";
-	$body .= "UTM campaign: {$data['utm_campaign']}\n\n";
-	$body .= "Message:\n{$data['message']}\n";
+	$body .= "UTM campaign: {$data['utm_campaign']}\n";
 
 	wp_mail( $to, $subject, $body, $headers );
 

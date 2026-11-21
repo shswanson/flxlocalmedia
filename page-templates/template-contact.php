@@ -9,7 +9,7 @@ flxlm_pg_begin( array(
 	'accent'         => 'navy',
 	'eyebrow'        => 'Contact',
 	'title'          => 'Get a free local marketing review',
-	'lead'           => "Tell us what is holding your business back, and we'll come back with a plan, not a pitch.",
+	'lead'           => "Tell us who you are and how to reach you. We'll call to learn about your business and come back with a plan, not a pitch.",
 	'cta'            => false,
 	'band'           => false,
 	'no_footer_band' => true,
@@ -47,7 +47,7 @@ flxlm_pg_open();
 
 			<?php if ( isset( $_GET['contact'] ) && 'missing' === $_GET['contact'] ) : ?>
 				<div class="flxlm-form-error" role="alert">
-					Please fill in your name, email and the one thing holding your business back, then send it again.
+					Please fill in your name and email, then send it again.
 				</div>
 			<?php endif; ?>
 
