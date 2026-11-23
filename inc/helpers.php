@@ -795,7 +795,7 @@ function flxlm_get_station_data( $slug = '' ) {
 				'logo_white' => 'logo-white.svg',
 				'eyebrow' => 'WCGR · Radio advertising',
 				'lead' => 'Reach Rochester-area women on the station with the fewest commercials.',
-				'profile_seconds' => 0,
+				'profile_seconds' => 32,
 				'stats' => array( 'streaming_hours' => 14653, 'streaming_window' => 'last 28 days' ),
 				'persona' => array(
 					'name' => 'Meg', 'age' => 51, 'line1' => 'Marketing manager, Pittsford', 'line2' => 'Lives in Brighton', 'photo' => 'persona.jpg',
